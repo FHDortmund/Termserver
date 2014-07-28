@@ -1,0 +1,83 @@
+<?page title="menu" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<style dynamic="true">
+
+		<!-- Make Plain Grid -->
+		.GridLayoutNoBorder tr.z-row td.z-row-inner, tr.z-row
+		.z-cell,div.z-grid { border: none; overflow: hidden; zoom: 1;
+		background: white; border-top: none; border-left: none;
+		border-right: none; border-bottom: none; }
+		
+	</style>
+	<style src="/rsc/style/patientrecord.css"/>
+
+	<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./win"?>
+  
+  <window id="win" use="de.fhdo.gui.header.Menu">
+    <menubar autodrop="false" id="menubar">
+       
+      <!--<menu label="Standard Browser">
+        <menupopup>
+          <menuitem label="Hauptansicht"></menuitem>
+          <menuseparator></menuseparator>
+          <menuitem label="Abmelden" onClick="win.logout()"></menuitem>
+        </menupopup>
+      </menu>
+      <menu label="Hilfe">
+        <menupopup>
+          <menuitem label="Über Standard Browser" onClick="win.onUeberClicked()"></menuitem>
+        </menupopup>
+      </menu>-->
+    </menubar>
+    <!--<menubar autodrop="true" id="menubar">
+      <menu label="ophEPA">
+        <menupopup>
+          <menuitem label="Patientenliste"></menuitem>
+          <menuseparator></menuseparator>
+          <menuitem label="Ausloggen"></menuitem>
+        </menupopup>
+      </menu>
+      <menu label="Hilfe">
+        <menupopup>
+          <menuitem label="Über ophEPA" onClick="win.onUeberClicked()"></menuitem>
+        </menupopup>
+      </menu>
+    </menubar>-->
+
+  <!--http://docs.zkoss.org/wiki/New_ZK_Demo_Introduction-->
+
+    <grid height="74px" sclass="GridLayoutNoBorder">
+      <columns >
+        <column  width="200px"  align="center" valign="middle">
+         <toolbar height="64px" >
+            <!--<toolbarbutton label="Terminologie-Browser" 
+                         tooltiptext="Zurück zum Terminologie-Browser" 
+                         image="/rsc/img/symbols/back_32x32.png" orient="vertical"
+                         onClick="win.onBackToTermBrowser()" />-->
+            <toolbarbutton label="Abmelden" 
+                         tooltiptext="Vom Verwaltungsbereich abmelden" 
+                         image="/rsc/img/symbols/unlock_32x32.png" orient="vertical"
+                         onClick="win.onLogoutClicked()"/>
+          </toolbar>
+          </column>
+        <column  width="350px" align="center" valign="middle">            
+            <label zclass="headerTitle" value="@{win.HeaderStr}" pre="true" />                      
+        </column>
+        <column height="64px" >
+          <toolbar height="64px">
+            <toolbarbutton tooltiptext="Fachhochschule Dortmund"                        image="/rsc/img/fh_logo_klein.png"    onClick="win.onLogoFHClicked()" />            
+            <toolbarbutton tooltiptext="eBPG-Projekt"                                   image="/rsc/img/logo_ebpg_40.png"     onClick="win.onLogoEBPGClicked()" />                                    
+            <toolbarbutton tooltiptext="Europäische Union"                              image="/rsc/img/logo_EU.png"          onClick="win.onLogoEUClicked()" />             
+            <toolbarbutton tooltiptext="Nordreihn-Westfalen"                            image="/rsc/img/logo_NRW.png"         onClick="win.onLogoNRWClicked()" />             
+            <toolbarbutton tooltiptext="Bundesministerium für Gesundheit Deutschland"   image="/rsc/img/logo_BMG.png"         onClick="win.onLogoBMGClicked()" />                         
+            <toolbarbutton tooltiptext="Bundesministerium für Gesundheit Österreich"    image="/rsc/img/bmg_logo.png"         onClick="win.onLogoBMGATClicked()" />
+            <toolbarbutton tooltiptext="Fachhochschule Technikum Wien"                  image="/rsc/img/fhtw_logo.png"        onClick="win.onLogoFHTWClicked()" />
+            <toolbarbutton tooltiptext="ELGA Meine elektronische Gesundheitsakte"       image="/rsc/img/elga_logo.png"        onClick="win.onLogoELGAClicked()" />
+            <toolbarbutton tooltiptext="Bundesrechenzentrum GmbH"                       image="/rsc/img/brz_logo_neu.png"     onClick="win.onLogoBRZClicked()" />
+          </toolbar>
+        </column>
+      </columns>
+    </grid>
+
+	</window>
+</zk>

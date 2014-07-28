@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+ <definitions 
+ xmlns="http://schemas.xmlsoap.org/wsdl/" 
+ xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+ xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="Search" targetNamespace="http://search.ws.fhdo.de/" xmlns:tns="http://search.ws.fhdo.de/" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:fi="http://java.sun.com/xml/ns/wsit/2006/09/policy/fastinfoset/service" xmlns:tcp="http://java.sun.com/xml/ns/wsit/2006/09/policy/soaptcp/service" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" xmlns:sc="http://schemas.sun.com/2006/03/wss/server" xmlns:wspp="http://java.sun.com/xml/ns/wsit/policy" 
+ >
+    <message name="ListCodeSystems"/>
+    <message name="ListCodeSystemsResponse"/>
+    <message name="ListValueSets"/>
+    <message name="ListValueSetsResponse"/>
+    <message name="ReturnValueSetDetails"/>
+    <message name="ReturnValueSetDetailsResponse"/>
+    <message name="ReturnConceptDetails"/>
+    <message name="ReturnConceptDetailsResponse"/>
+    <message name="ListValueSetContents"/>
+    <message name="ListValueSetContentsResponse"/>
+    <message name="ListCodeSystemConcepts"/>
+    <message name="ListCodeSystemConceptsResponse"/>
+    <message name="ListConceptAssociationTypes"/>
+    <message name="ListConceptAssociationTypesResponse"/>
+    <portType name="Search">
+        <operation name="ListCodeSystems">
+            <input message="tns:ListCodeSystems"/>
+            <output message="tns:ListCodeSystemsResponse"/>
+        </operation>
+        <operation name="ListValueSets">
+            <input message="tns:ListValueSets"/>
+            <output message="tns:ListValueSetsResponse"/>
+        </operation>
+        <operation name="ReturnValueSetDetails">
+            <input message="tns:ReturnValueSetDetails"/>
+            <output message="tns:ReturnValueSetDetailsResponse"/>
+        </operation>
+        <operation name="ReturnConceptDetails">
+            <input message="tns:ReturnConceptDetails"/>
+            <output message="tns:ReturnConceptDetailsResponse"/>
+        </operation>
+        <operation name="ListValueSetContents">
+            <input message="tns:ListValueSetContents"/>
+            <output message="tns:ListValueSetContentsResponse"/>
+        </operation>
+        <operation name="ListCodeSystemConcepts">
+            <input message="tns:ListCodeSystemConcepts"/>
+            <output message="tns:ListCodeSystemConceptsResponse"/>
+        </operation>
+        <operation name="ListConceptAssociationTypes">
+            <input message="tns:ListConceptAssociationTypes"/>
+            <output message="tns:ListConceptAssociationTypesResponse"/>
+        </operation>
+    </portType>
+    <binding name="SearchPortBinding" type="tns:Search">
+        <operation name="ListCodeSystems">
+            <input></input>
+            <output></output>
+        </operation>
+        <operation name="ListValueSets">
+            <input/>
+            <output/>
+        </operation>
+        <operation name="ReturnValueSetDetails">
+            <input/>
+            <output/>
+        </operation>
+        <operation name="ReturnConceptDetails">
+            <input/>
+            <output/>
+        </operation>
+        <operation name="ListValueSetContents">
+            <input/>
+            <output/>
+        </operation>
+        <operation name="ListCodeSystemConcepts">
+            <input/>
+            <output/>
+        </operation>
+        <operation name="ListConceptAssociationTypes">
+            <input/>
+            <output/>
+        </operation>
+    </binding>
+    <service name="Search">
+        <port name="SearchPort" binding="tns:SearchPortBinding"/>
+    </service>
+</definitions>

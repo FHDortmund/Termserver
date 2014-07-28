@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">           
+  <window id="win" title="${labels.common.actualProceedingsExtended}" use="de.fhdo.gui.info.ActualProceedings" border="normal" closable="true" width="900px" height="700px" maximizable="false" >     
+    <caption image="/rsc/img/symbols/info16_16.png" label=""/>
+    <!--<style src="/rsc/style/ophEPA.css"/>-->
+    <borderlayout>
+      <center border="none" flex="false">
+        <include id="incListActualProceedings" src="/gui/templates/GenericList.zul"/>
+      </center>
+      <south>
+          <div style="float:right;">
+            <button label="${labels.common.ok}" style="margin-right:5px;margin-top:5px;margin-bottom:5px" onClick="win.detach();" height="25px" width="40px"/>
+          </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

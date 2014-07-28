@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <window apply="de.fhdo.gui.main.modules.PopupUserDetails" width="550px" vflex="min" sizable="true" closable="true" title="${labels.popupUserDetails.userDetails}" border="normal" position="center,center">                           
+       <borderlayout vflex="min">
+            <north title="${labels.common.user}" vflex="min">
+                <grid width="100%" height="100%" >
+                    <columns sizable="true">
+                        <column width="175px"/>
+                        <column/>
+                    </columns>
+                    <rows>                         
+                        <row><label id="lName" value="${labels.common.name}"/>          <textbox  id="tbUAName"    value="@{user.getName}" readonly="true" width="99%"/></row>
+                        <row><label            value="${labels.common.administrator}"/> <checkbox id="cbUAIsAdmin" value="@{user.isAdmin, save-when='bCreate.onClick'}" checked="@{user.isAdmin}" /></row>                                                                 
+                        <row><label            value="${labels.common.createdAt}"/>     <datebox  id="dateBoxRD"   disabled="true"  format="medium+medium" width="99%"/></row>                        
+                    </rows>
+                </grid>                
+            </north>
+            
+            <center title="${labels.common.settings}" vflex="min">
+                <grid width="100%" height="100%" >
+                    <columns sizable="true">
+                        <column width="175px"/>
+                        <column/>
+                    </columns>
+                    <rows> 
+                        <row><label value="${labels.popupUserDetails.showCrossmappings}"/>       <checkbox id="cbUAShowCM"  /></row>  
+                        <row><label value="${labels.popupUserDetails.showLinkedConcepts}"/>  <checkbox id="cbUAShowLC"  /></row>
+                        <row><label value="${labels.popupUserDetails.loadLatestVersion}"/>  <checkbox id="cbUALoadCV"  /></row>                        
+                        <row><label value="${labels.popupUserDetails.showPreferredLanguage}"/>   <combobox id="cboxLanguage" width="99%"/></row>                        
+                        <row><cell colspan="2"><label id="lReq" value="${labels.common.requiredField}*" style="font-style:italic;font-size:0.6em"/></cell></row>
+                    </rows>
+                </grid> 
+            </center>
+            
+            <south border="none" vflex="min" style="text-align:right">
+                <div style="padding-top:5px;">
+                    <button id="bCreate" label="${labels.common.createChange}" />
+                    <button id=""        label="${labels.common.close}" onClick="self.Parent.Parent.Parent.Parent.detach()"/>
+                </div>         
+            </south>
+        </borderlayout>    
+    </window>
+</zk>

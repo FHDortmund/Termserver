@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winDomainDetails"?>
+
+  <window id="winDomainDetails" title="Domänen-Details" width="500px"  height="450px" border="normal"
+     use="de.fhdo.gui.admin.modules.collaboration.DomainDetails" closable="true">
+    <borderlayout>
+      <center border="0">
+        <grid>
+          <columns>
+            <column width="120px" align="right" label=""/>
+            <column label=""/>
+          </columns>
+          <rows>
+            <row>
+              <label value="Domänen-Name:"/>
+              <textbox id="domain_name" width="97%"
+               constraint="no empty : Tragen Sie bitte einen Domänennamen ein"
+               value="@{winDomainDetails.domain.name}" sclass="mandatory"/>
+            </row>
+
+            <row>
+              <label value="Anzeigetext:"/>
+              <textbox width="97%" value="@{winDomainDetails.domain.displayText}"/>
+            </row>
+
+            <row>
+              <label value="OID:"/>
+              <textbox width="97%" cols="99" value="@{winDomainDetails.domain.domainOid}"/>
+            </row>
+
+            <row>
+              <label value="Beschreibung:"/>
+              <textbox width="97%" rows="4" value="@{winDomainDetails.domain.description}"/>
+            </row>
+            
+            <row>
+              <label value="Code System:"/>
+              <textbox width="97%" value="@{winDomainDetails.domain.domainCodesys}"/>
+            </row>
+            <row>
+              <label value="Typ:"/>
+              <textbox width="97%" value="@{winDomainDetails.domain.domainType}"/>
+            </row>
+            <row>
+              <label value="Sortierung:"/>
+              <combobox model="@{winDomainDetails.sortTypeList}"
+               selectedItem="@{winDomainDetails.selectedSortType}" value="@{winDomainDetails.selectedSortType.displayText}"
+
+               width="98%">
+                <comboitem self="@{each=itemType2}" label="@{itemType2.displayText}" value="@{itemType2.code}" />
+              </combobox>
+            </row>
+            <row id="defaultRow">
+              <label value="Standard-Wert:"/>
+              <hbox width="100%">
+                <bandbox id="bbStandard" mold="rounded" autodrop="true" width="305px"
+               onOpen="winDomainDetails.showStandardList()">
+                  <bandpopup>
+                    <vbox>
+                      <textbox id="filterStandard" width="376px" 
+                      onChanging="winDomainDetails.filterChangedName(event)"
+                      />
+                      <separator/>
+                      <listbox id="standardList" width="380px" mold="paging" pageSize="6"
+             					onSelect="winDomainDetails.filterSelected(self.selectedItem);">
+                        <listhead>
+                          <listheader label=""/>
+                        </listhead>
+                      </listbox>
+                    </vbox>
+                  </bandpopup>
+                </bandbox>
+                <button image="/rsc/img/symbols/delete_12x12.png" height="24px" 
+                onClick="winDomainDetails.filterRemove()" tooltiptext="Entfernt den Standard-Wert" />
+              </hbox>
+            </row>
+
+
+          </rows>
+        </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right">
+          <button label="OK" onClick="winDomainDetails.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" onClick="winDomainDetails.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

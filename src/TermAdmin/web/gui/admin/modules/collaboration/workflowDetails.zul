@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winWorkflowDetails"?>
+
+  <window id="winWorkflowDetails" title="Workflow-Details" width="600px"  height="350px" border="normal"
+          use="de.fhdo.gui.admin.modules.collaboration.WorkflowDetails" closable="true"
+          sizable="true">
+    <borderlayout>
+      <center border="0">
+        <grid>
+          <columns>
+            <column width="100px" align="right" label=""/>
+            <column label=""/>
+          </columns>
+          <rows>
+            <row>
+              <label value="Status 'Von':"/>
+              <combobox  id="cb_StatusFrom" width="99%" sclass="mandatory" readonly="true" />
+            </row>
+            <row>
+              <label value="Status 'Zu':"/>
+              <combobox  id="cb_StatusTo" width="99%" sclass="mandatory" readonly="true" />
+            </row>
+            <row>
+              <label value="Aktion:"/>
+              <combobox  id="cb_Aktion" width="99%" sclass="mandatory" readonly="true" />
+            </row>
+            
+            <row>
+              <label value="Rollen:"/>
+              
+            </row>
+          </rows>
+        </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right">
+          <button label="OK" onClick="winWorkflowDetails.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" onClick="winWorkflowDetails.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

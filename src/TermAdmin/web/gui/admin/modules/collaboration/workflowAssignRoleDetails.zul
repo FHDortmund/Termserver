@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winSelectRole"?>
+
+  <window id="winSelectRole" title="Rollen wählen" width="600px"  height="650px" border="normal"
+          use="de.fhdo.gui.admin.modules.collaboration.WorkflowAssignRoleDetails" closable="true"
+          sizable="true" onClose="winSelectRole.onCancelClicked()">
+
+    <borderlayout>
+      <center border="0">
+        <include id="incList" src="/gui/templates/GenericList.zul" width="100%" height="100%"/>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right">
+          <button label="Schließen" onClick="winSelectRole.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

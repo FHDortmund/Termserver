@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : zk.xml
+    Created on : 20. Oktober 2010, 10:34
+    Author     : Robert Mützner
+    Description:
+        Purpose of the document follows.
+-->
+
+<zk>
+  <system-config>
+    <disable-event-thread >false</disable-event-thread>
+    <!--<upload-charset>ISO-8859-1</upload-charset>-->
+    <upload-charset-finder-class>de.fhdo.helper.UploadCharsetFinder</upload-charset-finder-class>    
+
+    
+  </system-config>
+  
+  
+
+  <language-config>
+    <addon-uri>/WEB-INF/lang-addon.xml</addon-uri>
+  </language-config>
+
+
+  <session-config>
+    <session-timeout>86400</session-timeout>
+    <timer-keep-alive>false</timer-keep-alive>
+    <device-type>ajax</device-type>
+    <timeout-message>Ihre Sitzung ist aus Sicherheitsgründen abgelaufen. Bitte laden Sie die Seite erneut.</timeout-message>
+  </session-config>
+  
+  <device-config>    
+    <device-type>ajax</device-type>    
+    <server-push-class>org.zkoss.zk.ui.impl.PollingServerPush</server-push-class>
+  </device-config>
+  
+  <desktop-config>
+   <theme-uri>/rsc/style/format.css</theme-uri>
+  </desktop-config>
+
+  
+  <preference>    
+    <name>PollingServerPush.delay.min</name>    
+    <value>5000</value>
+  </preference>
+  <preference>    
+    <name>PollingServerPush.delay.max</name>    
+    <value>20000</value>
+  </preference>
+  <preference>    
+    <name>PollingServerPush.delay.factor</name>    
+    <value>5</value>
+  </preference>
+  
+  
+</zk>

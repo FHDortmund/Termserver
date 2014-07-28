@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <window id="win" use="de.fhdo.gui.admin.Logout"  border="0"
+          height="100%" width="100%" onCreate="win.forwardLogout()">
+    </window>
+</zk>

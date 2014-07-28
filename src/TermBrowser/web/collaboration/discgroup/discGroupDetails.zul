@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winDiscGroupDetails"?>
+
+  <window id="winDiscGroupDetails" title="Diskussionsgruppen-Details" width="1200px"  height="425px" border="normal"
+          use="de.fhdo.collaboration.discgroup.DiscGroupDetails" closable="true"
+          sizable="true">
+    <borderlayout>
+      <north border="0">
+        <grid>
+          <columns>
+            <column width="200px" align="right" label=""/>
+            <column label=""/>
+          </columns>
+          <rows>
+            <row visible="false" id="row_groupID">
+              <label value="Group-ID:"/>
+              <textbox  id="tb_groupID"
+                          width="97%" value="@{winDiscGroupDetails.dgd.group.id}"
+                          readonly="true" />
+            </row>
+            <row>
+              <label value="Name der Diskussionsgruppe:"/>
+              <textbox width="50%" value="" id="tb_DiscussiongroupName" readonly="false" sclass="mandatory"/>
+            </row>
+          </rows>
+        </grid>
+      </north>
+      <center border="0">
+          <grid id ="centerGrid">
+            <columns>
+                <column label=""/>
+            </columns>
+            <rows>
+                <row>
+                    <separator/>
+                </row>
+                <row>
+                    <label value="Wählen Sie die Teilnehmer aus. Links finden sie eine Liste aller Benutzer. Rechts finden Sie die Benutzer in der Gruppe." />
+                </row>
+                <row>
+                    <include width="100%" id="incListUser" src="/collaboration/discgroup/duallistboxUser.zul"/>
+                </row>
+                <row visible="true">
+                    <label value="Information: Sind Personen nicht in der Personenliste (links) angeführt, so können sich diese per Kontakt Formular im System registrieren lassen. Danach ist die Mitarbeit für diese Personen möglich."/>
+                </row>
+                <row visible="true">
+                    <separator/>
+                </row>
+                <row id="r_cbAbmelden" visible="false">
+                    <checkbox id="cb_cbAbmelden" label="Von der Diskussionsgruppe abmelden?"/>
+                </row>
+            </rows>
+          </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right">
+          <button label="OK" onClick="winDiscGroupDetails.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" id="bAbort" onClick="winDiscGroupDetails.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

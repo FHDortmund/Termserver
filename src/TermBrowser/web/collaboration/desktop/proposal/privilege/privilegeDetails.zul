@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winPrivilegeDetails"?>
+
+  <window id="winPrivilegeDetails" title="Privilegien-Details" width="1200px"  height="680px" border="normal"
+          use="de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeDetails" closable="true"
+          sizable="true">
+    <borderlayout>
+      <center border="0">
+          <grid id ="centerGrid">
+            <columns>
+                <column label=""/>
+            </columns>
+            <rows>
+                <row>
+                    <separator/>
+                </row>
+                <row>
+                    <label value="Wählen sie die Diskussionsgruppen aus. Links finden Sie alle Diskussionsgruppen. Rechts die bereits zugewiesenen."/>
+                </row> 
+                <row>
+                    <include width="100%" id="incListDiscGroup" src="/collaboration/desktop/proposal/privilege/duallistboxDiscGroup.zul"/>
+                </row>
+                <row>
+                    <separator/>
+                </row>
+                <row>
+                    <label value="ODER/UND"/>
+                </row>
+                <row>
+                    <separator/>
+                </row>
+                <row>
+                    <label value="Wählen sie die Benutzer aus. Links finden Sie alle Benutzer. Rechts die bereits zugewiesenen." />
+                </row>
+                <row>
+                    <include width="100%" id="incListUser" src="/collaboration/desktop/proposal/privilege/duallistboxUser.zul"/>
+                </row>
+                <row>
+                    <separator/>
+                </row>
+            </rows>
+          </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right">
+          <button label="OK" onClick="winPrivilegeDetails.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" onClick="winPrivilegeDetails.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

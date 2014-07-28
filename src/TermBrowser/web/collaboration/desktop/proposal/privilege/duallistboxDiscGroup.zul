@@ -1,0 +1,6 @@
+<!-- Define Component Class -->
+<?component name="dual-listbox" extends="div" class="de.fhdo.collaboration.desktop.proposal.privilege.DualListboxDiscGroup"?>
+<window id="duallistboxDiscGroup" apply="de.fhdo.collaboration.desktop.proposal.privilege.DualComposerDiscGroup">
+    <!-- Direct Use -->
+    <dual-listbox id="dualLBoxDiscGroup" />
+</window>

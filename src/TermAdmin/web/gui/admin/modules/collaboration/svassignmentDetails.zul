@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winSvAssignmentDetails"?>
+
+  <window id="winSvAssignmentDetails" title="Inhaltsverwalter >>> Terminologie Details" width="1000px"  height="500px" border="normal"
+          use="de.fhdo.gui.admin.modules.collaboration.SvAssignmentDetails" closable="true"
+          sizable="true">
+    <borderlayout>
+      <center border="0">
+        <grid width="100%" height="100%">
+            <columns sizable="true">
+              <column width="100%"/>
+            </columns>
+            <rows style="vertical-align: top">
+              <row>
+                  <grid width="100%" height="100%">
+                    <columns sizable="true">
+                      <column width="400px"/>
+                      <column/>
+                    </columns>
+                    <rows style="vertical-align: top">
+                      <row>
+                        <label value="Zugehöriges Code System/Value Set"/>
+                      </row>
+                      <row>
+                        <label value="Bezeichnung" />
+                        <label id="lName" value="@{winSvAssignmentDetails.svAssignmentData.termName}"/>
+                      </row>
+                      <row>
+                        <label value="Typ"/>
+                        <label id="lTyp" value="@{winSvAssignmentDetails.svAssignmentData.classname}"/>
+                      </row>
+                    </rows>
+                  </grid>
+              </row>
+              <row>
+                  <grid width="100%" height="100%">
+                    <columns sizable="true">
+                      <column/>
+                    </columns>
+                    <rows style="vertical-align: top">
+                      <row>
+                        <label value="Zugehöriger Inhaltsverwalter auswählen: "/>
+                      </row>
+                      <row id="rListBoxUser">
+                          <include width="100%" id="incListUser" src="/gui/admin/modules/collaboration/duallistboxUser.zul"/>
+                      </row>
+                    </rows>
+                  </grid>
+              </row>
+            </rows>
+        </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right">
+          <button label="OK" onClick="winSvAssignmentDetails.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" onClick="winSvAssignmentDetails.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

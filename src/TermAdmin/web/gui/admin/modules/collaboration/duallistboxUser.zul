@@ -1,0 +1,7 @@
+<!-- Define Component Class -->
+<?component name="dual-listbox" extends="div" class="de.fhdo.gui.admin.modules.collaboration.DualListboxUser"?>
+ 
+<window id="duallistboxUser" apply="de.fhdo.gui.admin.modules.collaboration.DualComposerUser">
+    <!-- Direct Use -->
+    <dual-listbox id="dualLBoxUser" />
+</window>

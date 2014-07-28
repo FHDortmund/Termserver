@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winProposalViewVote"?>
+  <window border="none" height="100%" width="100%" 
+          id="winProposalViewVote" 
+          use="de.fhdo.collaboration.desktop.proposal.ProposalViewVote">
+    
+    <borderlayout>
+      <west title="Ihre Stimme" width="380px" collapsible="true" splittable="true">
+        <vbox style="padding: 4px;">
+          <vbox id="vboxAbstimmung">
+            <label value="Stimmen Sie hier für den Vorschlag ab."/>
+            <label value="Jeder berechtigte Benutzer darf für jeden Vorschlag 1 Stimme abgeben!"/>
+          </vbox>
+          
+          <vbox id="vboxAbstimmungErgebnis" visible="false">
+            <label value="Die Abstimmung ist beendet. Falls Sie abgestimmt haben, sehen Sie hier Ihre Entscheidung."/>
+          </vbox>
+          
+          <vbox id="vboxAbstimmungVorher" visible="false">
+            <label value="Die Abstimmung ist noch nicht gestartet."/>
+          </vbox>
+          
+          <separator/><separator/>
+          
+          <groupbox id="gb" mold="3d" closable="false" visible="false">
+            <caption label="Ihre Stimme"></caption>
+
+            <radiogroup id="rgVote" onCheck="buttonSpeichern.disabled=false; tbBegruendung.disabled=rgVote.selectedIndex==0;"
+                        >
+              <div><radio label="nicht abgegeben" checked="true"/></div>
+              <separator/>
+              <div style="background-color:#F5A9A9;"><radio label="Ablehnung"/></div>
+              <separator/>
+              <div style="background-color:#A9F5A9;"><radio label="Zustimmung"/></div>
+              <separator/>
+              <div style="background-color:#F5D0A9;"><radio label="Zustimmung mit Modifikation"/></div>
+            </radiogroup>
+            
+            <separator/><separator/>
+            <label value="Begründung:"/>
+            <separator/>
+            <textbox id="tbBegruendung" rows="10" width="99%" disabled="true"/>
+            
+            <separator/><separator/>
+            <button id="buttonSpeichern" label="Speichern" onClick="winProposalViewVote.saveVoting()" disabled="true" 
+                    autodisable="true"/>
+	      </groupbox>
+          
+          <groupbox id="gbStimmergebnis" mold="3d" closable="false" visible="false">
+            <caption label="Ihre Stimme"></caption>
+            <label value="-" id="labelStimmeErgebnis" />
+
+            <separator/><separator/>
+            <label value="Begründung:"/>
+            <separator/>
+            <textbox id="tbBegruendungErgebnis" rows="10" width="99%" disabled="true"/>
+	      </groupbox>
+          
+        </vbox>
+      </west>
+      
+      <center border="0" title="Auswertung">
+        <borderlayout>
+          <north title="Statistiken" height="200px">
+            <grid style="border: 0px #CCC;" vflex="true">
+              <columns>
+                <column width="350px" align="right" label=""/>
+                <column label=""/>
+              </columns>
+              <rows>
+                <row>
+                  <label value="Anzahl Teilnehmer:"/>
+                  <label id="labelAnzTeilnehmer"/>
+                </row>
+                <row>
+                  <label value="Stimmen Gesamt:"/>
+                  <label id="labelAnzStimmen"/>
+                </row>
+                <row>
+                  <label value="Anzahl Ablehnungen:"/>
+                  <label id="labelAblehnungen"/>
+                </row>
+                <row>
+                  <label value="Anzahl Zustimmungen:"/>
+                  <label id="labelZustimmungen"/>
+                </row>
+                <row>
+                  <label value="Anzahl Zustimmungen mit Modifikation:"/>
+                  <label id="labelZustimmungenModifikation"/>
+                </row>
+
+
+              </rows>
+            </grid>
+          </north>
+          <center title="Benutzer" margins="5,0,0,0">
+            
+            
+            <include id="incList" src="/gui/templates/GenericList.zul"/>
+          </center>
+        </borderlayout>
+      </center>
+      <!--<south border="0" collapsible="true">
+        <div>
+          <separator bar="true" />
+        
+          <div align="right" style="margin-right:8px; margin-bottom:4px; margin-top:4px;">
+            <button label="zurück" onClick="winProposalView.onOkClicked()" 
+                  autodisable="self" 
+                  image="/rsc/img/symbols/back_32x32.png"
+                  />
+          </div>
+        </div>
+      </south>-->
+    </borderlayout>
+    
+  </window>
+</zk>

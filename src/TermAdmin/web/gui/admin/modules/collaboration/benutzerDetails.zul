@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winBenutzerDetails"?>
+
+  <window id="winBenutzerDetails" title="Stammdaten" width="600px"  height="375px" border="normal"
+          use="de.fhdo.gui.admin.modules.collaboration.BenutzerDetails" closable="true"
+          sizable="true">
+    <borderlayout>
+      <center border="0">
+        <grid>
+          <columns>
+            <column width="200px" align="right" label=""/>
+            <column label=""/>
+          </columns>
+          <rows>
+            <row visible="false" id="row_patientID">
+              <label value="User-ID:"/>
+              <textbox  id="tb_userID"
+                          width="97%" value="@{winBenutzerDetails.user.id}"
+                          readonly="true" />
+            </row>
+            <row>
+              <label value="Benutzername:"/>
+              <textbox width="97%" value="@{winBenutzerDetails.user.username}" id="tb_Benutzername"
+                         constraint="no empty : Tragen Sie bitte einen Benutzernamen ein" readonly="true" sclass="mandatory"/>
+            </row>
+            <row>
+              <label value="Email:"/>
+              <textbox width="97%" value="@{winBenutzerDetails.user.email}" id="tb_Email"
+                         readonly="false" sclass="mandatory"/>
+            </row>
+            <row>
+              <label value="Email Benachrichtigungen:"/>
+              <checkbox id="cb_sendMail" 
+                   checked="@{winBenutzerDetails.user.sendMail}"/>
+            </row>
+            <row>
+              <label value="Aktiv:"/>
+              <checkbox id="cb_aktiv" 
+                   checked="@{winBenutzerDetails.user.enabled}"/>
+            </row>
+            <row>
+              <label value="Mail aktiviert:"/>
+              <checkbox id="cb_mailAktiv" 
+                   checked="@{winBenutzerDetails.user.activated}"/>
+            </row>
+            <row>
+              <label value="Benutzerrolle:"/>
+              <combobox  id="cb_UserRole" width="99%" sclass="mandatory" />
+            </row>
+            
+            <!--<row>
+              <label value="Administrator:"/>
+              <checkbox disabled="false"
+                   checked="@{winBenutzerDetails.user.isAdmin}"/>
+            </row>-->
+
+            <row>
+              <label value="Vorname:"/>
+              <textbox width="97%" value="@{winBenutzerDetails.user.firstName}"/>
+            </row>
+            <row>
+              <label value="Name:"/>
+              <textbox width="97%" value="@{winBenutzerDetails.user.name}"/>
+            </row>
+            <row>
+              <label value="Organisation:"/>
+              <textbox width="97%" value="@{winBenutzerDetails.user.organisation.organisation}" sclass="mandatory"/>
+            </row>
+          </rows>
+        </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right">
+          <button label="OK" onClick="winBenutzerDetails.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" onClick="winBenutzerDetails.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

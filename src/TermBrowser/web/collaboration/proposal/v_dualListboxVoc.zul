@@ -1,0 +1,40 @@
+<!-- View of customized component DualListbox -->
+<hlayout height="200px" style="padding:10px">
+    <zscript>
+        de.fhdo.collaboration.proposal.ComparatorVocInfo ascVo = new de.fhdo.collaboration.proposal.ComparatorVocInfo(true,0);
+        de.fhdo.collaboration.proposal.ComparatorVocInfo dscVo = new de.fhdo.collaboration.proposal.ComparatorVocInfo(false,0);
+        de.fhdo.collaboration.proposal.ComparatorVocInfo ascVe = new de.fhdo.collaboration.proposal.ComparatorVocInfo(true,1);
+        de.fhdo.collaboration.proposal.ComparatorVocInfo dscVe = new de.fhdo.collaboration.proposal.ComparatorVocInfo(false,1);
+    </zscript>
+    <listbox id="lbVoc" hflex="1" vflex="true" multiple="true">
+        <listhead>
+            <listheader id="lhVokabularD" label="Code System" width="238px" sortAscending="${ascVo}" sortDescending="${dscVo}" ></listheader>
+            <listheader id="lhVersionD" label="Version" width="238px" sortAscending="${ascVe}" sortDescending="${dscVe}" ></listheader>
+        </listhead>
+        <template name="model">
+            <listitem>
+                <listcell label="${each.vocabularyName }"/>
+                <listcell label="${each.versionName }"/>
+            </listitem>
+        </template>
+    </listbox>
+    <zscript><![CDATA[
+    String imgPath = "/rsc/img/duallistbox";
+]]></zscript>
+    <vbox spacing="10px" width="24px">
+        <image style="cursor:pointer" id="chooseBtn" src="${imgPath}/rightarrow_g.png" />
+        <image style="cursor:pointer" id="removeBtn" src="${imgPath}/leftarrow_g.png" />   
+    </vbox>
+    <listbox id="lbVocChoosen" hflex="1" vflex="true" multiple="true">
+        <listhead>
+            <listheader id="lhVokabularC" label="Code System" width="238px" sortAscending="${ascVo}" sortDescending="${dscVo}" ></listheader>
+            <listheader id="lhVersionC" label="Version" width="238px" sortAscending="${ascVe}" sortDescending="${dscVe}" ></listheader>
+        </listhead>
+        <template name="model">
+            <listitem>
+                <listcell label="${each.vocabularyName }"/>
+                <listcell label="${each.versionName }"/>
+            </listitem>
+        </template>
+    </listbox>
+</hlayout>

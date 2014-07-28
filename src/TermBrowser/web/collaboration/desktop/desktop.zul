@@ -1,0 +1,17 @@
+<?page title="Kollaborationsplattform" contentType="text/html;charset=UTF-8"?>
+<!--<?link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"?>-->
+<zk xmlns="http://www.zkoss.org/2005/zul">       
+  <window border="none" height="100%" width="100%" 
+          id="winDesktop"
+          use="de.fhdo.collaboration.desktop.Desktop">
+    <borderlayout>     
+      <west id="westId" title="Vorschläge" collapsible="false" flex="true" >
+        <include id="incList" src="/gui/templates/GenericList.zul"/>
+      </west>
+      <east id= "eastId" title="Meine Terminologien" size="20%" 
+            collapsible="false" flex="true" > 
+        <include id="incListMyTerm" src="/gui/templates/GenericList.zul"/>
+      </east>
+    </borderlayout>
+  </window>
+</zk>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?component name="mycomp" macroURI="ComponentTreeAndContent.zul" inline="true" ?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <window id="windowCSVS" border="none" height="100%" width="100%" use="de.fhdo.gui.main.ContentCSVSAssociationEditor">    
+        <mycomp id="componentTreeAndContent"/>
+    </window>
+</zk>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+        
+  <appender name="file_appender" class="org.apache.log4j.RollingFileAppender">
+    <param name="file" value="/Programmierung/Apache Tomcat 6.0.26/logs/term.log" />
+    <param name="Append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} %-5p: %m%n"/>
+    </layout>
+  </appender>
+  
+  <appender name="console_appender" class="org.apache.log4j.ConsoleAppender">
+	<layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss} %-5p: %m%n"/>
+    </layout>
+  </appender>
+
+  <logger name="org.hibernate"> 
+    <level value="WARN"/>  
+  </logger> 
+  
+  <logger name="org.hibernate.SQL"> 
+    <level value="warn"/> 
+</logger> 
+ 
+<logger name="org.hibernate.type"> 
+    <level value="warn"/> 
+</logger> 
+
+
+  <root>
+    <priority value ="DEBUG" />
+    <!--<appender-ref ref="file_appender"/>-->
+	<appender-ref ref="console_appender"/>
+  </root>
+  
+  
+
+
+</log4j:configuration>

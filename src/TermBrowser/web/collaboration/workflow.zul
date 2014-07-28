@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">           
+  <window id="win" title="Workflow" border="normal" closable="true" width="470px" height="610px" maximizable="false" >     
+    <caption image="/rsc/img/symbols/info16_16.png" label=""/>
+    
+    <image src="/rsc/img/collab/Objektlebenszyklus.png" />
+       
+  </window>
+</zk>

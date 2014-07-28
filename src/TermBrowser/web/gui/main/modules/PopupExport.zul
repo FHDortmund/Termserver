@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window apply="de.fhdo.gui.main.modules.PopupExport" width="550px" vflex="min" 
+          closable="true" border="normal" position="center,center"
+          title="Export">
+    <borderlayout vflex="min">
+      <center border="none" vflex="min">
+        <grid width="100%" height="100%" >
+          <columns sizable="true">
+            <column width="175px"/>
+            <column/>
+          </columns>
+          <rows> 
+            <row>
+              <label id="lFormat" value="Export-Format"/>    
+              <combobox id="cboxFormat" width="99%" readonly="true"/>
+            </row>
+            <row id="rowProgress" visible="false">
+              <label value="Fortschritt"/>  
+              <vbox>
+                <!--<progressmeter id="progress" />-->
+                <label id="lProgress" />
+              </vbox>
+            </row>
+            <row id="rowHinweis" >
+              <label value="Hinweis"/>
+              <label value="Der Export kann je nach Terminologiegröße einige Minuten in Anspruch nehmen. Bitte haben Sie etwas Geduld." />
+            </row>
+            <!--<row>
+              <label id="lFilename" value="Dateiname"/>        
+              <textbox id="tbFilename" width="97%"/>
+            </row>-->
+          </rows>
+        </grid> 
+      </center>
+      <south border="none" vflex="min" style="text-align:right">
+        <div style="padding-top:5px; padding-right:8px; padding-bottom:4px;">
+          <button id="bExport" label="Exportieren" />
+          <button id="bClose" label="${labels.common.close}" />
+        </div>         
+      </south>
+    </borderlayout>    
+  </window>
+</zk>

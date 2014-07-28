@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="windowSearch" apply="de.fhdo.gui.main.modules.PopupSearch" closable="true"
+          title="${labels.popupSearch.conceptSearch}"
+          border="normal" position="center"
+          
+          width="70%" height="95%" sizable="true">                          
+    <borderlayout>
+      <north border="0">
+        <div>
+            
+            <hbox style="margin-left: 8px; margin-top:8px; margin-bottom: 8px">
+              <div>
+                <label value="${labels.common.term}"/>
+                <label value=": "/>
+                <separator /> 
+                <label value="${labels.common.code}"/> 
+                <label value=": "/>
+              </div>
+              <div>
+                <textbox id="tbTerm" width="300px" focus="true"/> 
+                <separator /> 
+                <textbox id="tbCode" width="100px"/> 
+              </div>
+              
+              <div>
+                <button id="bSearch"  
+                        label="${labels.popupSearch.startSearch}" 
+                        height="58px"
+                
+                        image="/rsc/img/list/folder_magnify.png"
+                        autodisable="self"/> 
+              </div>
+              <div>
+                <radiogroup id="rgPreferred" orient="vertical">  
+                  <radio label="${labels.popupSearch.onlyPreferredTerms}" value="true"/> 
+                  <radio label="${labels.popupSearch.onlyNonPreferredTerms}" value="false"/>
+                  <radio label="${labels.popupSearch.showAllTerms}" value ="nomatter"/>                        
+                </radiogroup> 
+              </div>
+              
+              <div>
+                <label id="lHitsPerPage" value="Treffer pro Seite" style="margin-left:4px;"/>
+                <label value=":"/> 
+                <textbox id="tbHitsPerPage" width="30px" value="@{pagingType.pageSize}"/>
+                <separator /> 
+                <checkbox id ="cbShowHierachyDetails" 
+                          label="${labels.popupSearch.showHierachyDetails}" 
+                          disabled="false" 
+                          checked="@{searchType.traverseConceptsToRoot}" 
+                          value="@{searchType.traverseConceptsToRoot}" /> 
+              </div>
+              
+              <!--<div>
+                
+                
+
+                <separator/>                    
+                
+                <separator/>
+                <separator orient="vertical" spacing="100px"/>
+                <label id="l_status" value="" style="font-size:1.2em;"/>
+              </div>-->
+            </hbox>
+            
+          
+          <paging id="paging"/>
+        </div>
+      </north>
+      <center border="0">                                   
+        <tree id="treeSearch" zclass="z-tree" vflex="true" width="100%" >
+          <treecols sizable="true">
+            <treecol label="${labels.common.concept}" ></treecol>
+            <treecol label="${labels.common.code}" width="100px"></treecol>
+          </treecols>
+        </tree>
+      </center>
+      <south border="0">
+        <div> 
+          <!--<label value="${labels.popupSearch.SearchForTerm}"/> 
+          <textbox id="tbTerm" width="300px" focus="true"/> 
+          <separator orient="vertical"/> 
+          <label value="${labels.popupSearch.SearchForCode}"/> 
+          <textbox id="tbCode" width="100px"/> 
+          <separator/>
+          <checkbox id ="cbShowHierachyDetails" label="${labels.popupSearch.showHierachyDetails}" disabled="false" checked="@{searchType.traverseConceptsToRoot}" value="@{searchType.traverseConceptsToRoot}" /> 
+          <separator orient="vertical"/> 
+          <label id="lHitsPerPage" value="Treffer pro Seite"/> 
+          <textbox id="tbHitsPerPage" width="30px" value="@{pagingType.pageSize}"/>
+          
+          <separator/>                    
+          <radiogroup id="rgPreferred" orient="vertical">  
+            <radio label="${labels.popupSearch.onlyPreferredTerms}" value="true"/> 
+            <radio label="${labels.popupSearch.onlyNonPreferredTerms}" value="false"/>
+            <radio label="${labels.popupSearch.showAllTerms}" value ="nomatter"/>                        
+          </radiogroup> 
+          <separator/>
+          <separator orient="vertical" spacing="100px"/>
+          <label id="l_status" value="" style="font-size:1.2em;"/> -->
+          
+          <separator orient="vertical" />                    
+          <div style="text-align:right">
+            <button id="bDetails" label="${labels.common.details}"       image="/rsc/img/list/magnifier.png" disabled="true"/> 
+            <!--<separator orient="vertical"/>                        
+            <button id="bSearch"  label="${labels.popupSearch.startSearch}" image="/rsc/img/list/folder_magnify.png" /> -->
+            <separator orient="vertical"/>                                      
+            <button               label="${labels.common.close}"     onClick="windowSearch.detach()"/>
+          </div>
+        </div> 
+      </south>
+    </borderlayout>         
+  </window>
+</zk>

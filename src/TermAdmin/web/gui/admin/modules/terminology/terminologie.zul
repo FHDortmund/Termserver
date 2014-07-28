@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="winTerminology" border="none" width="100%" height="100%"
+          use="de.fhdo.gui.admin.modules.terminology.Terminologie">
+
+    <!--<include id="incList" src="/gui/templates/GenericList.zul"/>-->
+    <tabbox height="100%" width="100%" id="tabboxNavigation" onSelect="winMetadaten.onNavigationSelect(event)">
+      <tabs>
+        
+        
+      </tabs>
+      <tabpanels>
+        
+        
+      </tabpanels>
+    </tabbox>
+  </window>
+</zk>

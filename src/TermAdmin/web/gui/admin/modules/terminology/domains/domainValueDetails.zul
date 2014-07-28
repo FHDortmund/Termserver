@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winDD"?>
+  
+  <window id="winDD" title="Domänen-Details" width="500px"  height="350px" border="normal"
+     use="de.fhdo.gui.admin.modules.terminology.domains.DomainValueDetails" closable="true">
+    <borderlayout>
+      <center border="0">
+        <grid>
+          <columns>
+            <column width="120px" align="right" label=""/>
+            <column label=""/>
+          </columns>
+          <rows>
+            <row>
+              <label value="Code:"/>
+              <textbox id="domain_code" width="97%"
+               constraint="no empty : Tragen Sie bitte einen Code ein"
+               value="@{winDD.domainValue.domainCode}" sclass="mandatory"/>
+            </row>
+            <row>
+              <label value="Anzeige-Text:"/>
+              <textbox id="domain_display" width="97%" sclass="mandatory" value="@{winDD.domainValue.domainDisplay}"/>
+            </row>
+
+            <!--<row>
+              <label value="Domain-Def:"/>
+              <textbox id="domain_def" width="97%" value="@{winDD.domainValue.domainDef}"/>
+            </row>-->
+            <row>
+              <label value="Attribut1-Classname:"/>
+              <textbox id="attribut1_classname" width="97%" value="@{winDD.domainValue.attribut1classname}"/>
+            </row>
+            <row>
+              <label value="Attribut1-Value:"/>
+              <textbox id="attribut1_value" width="97%" value="@{winDD.domainValue.attribut1value}"/>
+            </row>
+            <row>
+              <label value="Reihenfolge:"/>
+              <textbox id="order_no" width="97%" value="@{winDD.domainValue.orderNo}" sclass="mandatory"/>
+            </row>
+            <!--<row>
+              <label value="Attribut1:"/>
+              <textbox id="attrib1" width="97%" value="@{winDD.domainValue.attrib1}"/>
+            </row>
+            <row>
+              <label value="Attribut2:"/>
+              <textbox id="attrib2" width="97%" value="@{winDD.domainValue.attrib2}"/>
+            </row>
+            <row>
+              <label value="Attribut3:"/>
+              <textbox id="attrib3" width="97%" value="@{winDD.domainValue.attrib3}"/>
+            </row>-->
+            <row>
+              <label value="Bild:"/>
+              <textbox id="imageFile" width="97%" value="@{winDD.domainValue.imageFile}"/>
+            </row>
+            <row>
+              <label value="Übergeordnete ID:"/>
+              <textbox id="ueberID" width="97%" value=""/>
+            </row>
+          </rows>
+        </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right" style="margin-right:8px;">
+          <button label="OK" onClick="winDD.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" onClick="winDD.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

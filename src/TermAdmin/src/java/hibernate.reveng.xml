@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+  <schema-selection match-catalog="web5db1"/>
+  <table-filter match-name="property"/>
+  <table-filter match-name="licence_type"/>
+  <table-filter match-name="domain_value"/>
+  <table-filter match-name="sys_param"/>
+  <table-filter match-name="domain"/>
+  <table-filter match-name="domain_value_has_code_system"/>
+  <table-filter match-name="code_system"/>
+  <table-filter match-name="property_version"/>
+  <table-filter match-name="code_system_version"/>
+  <table-filter match-name="code_system_entity_version"/>
+  <table-filter match-name="code_system_entity_version_association"/>
+  <table-filter match-name="code_system_concept"/>
+  <table-filter match-name="domain_value_has_code_system"/>
+  <table-filter match-name="session"/>
+  <table-filter match-name="value_set_version"/>
+  <table-filter match-name="term_user"/>
+  <table-filter match-name="code_system_metadata_value"/>
+  <table-filter match-name="concept_value_set_membership"/>
+  <table-filter match-name="code_system_version_entity_membership"/>
+  <table-filter match-name="association_type"/>
+  <table-filter match-name="code_system_concept_translation"/>
+  <table-filter match-name="value_set"/>
+  <table-filter match-name="domainvalue2domainvalue"/>
+  <table-filter match-name="licenced_user"/>
+  <table-filter match-name="code_system_entity"/>
+  <table-filter match-name="metadata_parameter"/>
+</hibernate-reverse-engineering>

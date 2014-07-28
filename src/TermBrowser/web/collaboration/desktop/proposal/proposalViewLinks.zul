@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winProposalViewLinks"?>
+  <window border="none" height="100%" width="100%" 
+          id="winProposalViewLinks" 
+          use="de.fhdo.collaboration.desktop.proposal.ProposalViewLinks">
+    
+    <include id="incList" src="/gui/templates/GenericList.zul"/>
+    <!--<borderlayout>
+      <center border="0">
+        
+      </center>
+    </borderlayout>-->
+    
+  </window>
+</zk>

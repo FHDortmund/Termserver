@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="popupGlobalSearch" use="de.fhdo.gui.main.modules.PopupGlobalSearch" 
+          closable="true" title="${labels.common.searchGlob}"
+          border="normal" width="90%" height="90%" sizable="true"
+          onOK="popupGlobalSearch.onSearchClicked()">
+    <borderlayout>
+      <north border="0">
+        <hbox style="margin-left: 8px; margin-top:8px; margin-bottom: 8px">
+          <div>
+            <label value="${labels.common.term}"/>
+            <label value=": "/>
+            <separator /> 
+            <label value="${labels.common.code}"/> 
+            <label value=": "/>
+          </div>
+          
+          <div>
+            <textbox id="tbTerm" width="300px" focus="true"/> 
+            <separator /> 
+            <textbox id="tbCode" width="100px"/> 
+          </div>
+          
+          <div>
+            <button id="bSearch"  
+                    label="${labels.popupSearch.startSearch}" 
+                    height="44px"
+                    onClick="popupGlobalSearch.onSearchClicked()" 
+                    image="/rsc/img/list/folder_magnify.png"
+                    autodisable="self"/> 
+          </div>
+          
+          <div>
+            <label id="l_status" value="" style="font-size:1.2em;"/>
+          </div>
+          
+          <!--<label value="${labels.popupSearch.SearchForTerm}"/>
+          <textbox id="tbTerm" width="300px" focus="true"/> 
+          <separator orient="vertical"/> 
+          <label value="${labels.popupSearch.SearchForCode}"/> 
+          <textbox id="tbCode" width="100px"/> 
+          <separator orient="horizontal" spacing="25px"/>
+          <separator orient="vertical" spacing="100px"/>
+          <label id="l_status" value="" style="font-size:1.2em;"/>
+          <separator orient="vertical" />-->
+        </hbox>
+      </north>
+      <center border="0">
+        <include id="incList" src="/gui/templates/GenericList.zul"/>
+      </center>
+      <south border="0" size="33px">
+        <div style="text-align:right; margin-right:4px;margin-top:6px;">
+          <button label="${labels.common.close}" onClick="popupGlobalSearch.detach()"/>
+        </div>
+      </south>
+    </borderlayout>         
+  </window>
+</zk>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<keytabs xmlns="urn:ehd/001">
+  <keytab S="1.2.276.0.76.3.1.1.5.3.1" SN="S_DTA_FALLGRUPPIERUNG" SV="1.01">
+    <key V="1" DN="Status" S="1.2.276.0.76.3.1.1.5.3.1" SV="1.01"/>
+    <key V="2" DN="Altersgruppen" S="1.2.276.0.76.3.1.1.5.3.1" SV="1.01"/>
+    <key V="3" DN="Krankheitsarten" S="1.2.276.0.76.3.1.1.5.3.1" SV="1.01"/>
+    <key V="9" DN="Gesamt" S="1.2.276.0.76.3.1.1.5.3.1" SV="1.01"/>
+  </keytab>
+</keytabs>

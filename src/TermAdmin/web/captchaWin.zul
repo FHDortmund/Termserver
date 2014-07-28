@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./captchaWin"?>
+  <window id="captchaWin" title="Sicherheitsabfrage" 
+    width="300px" minimizable="false" closable="true" onOK="captchaWin.captchaCheck()" border='normal'
+    use="de.fhdo.gui.CaptchaWin">
+    <label value="Bitte geben Sie die Zeichen in das Textfeld ein, und drücken Sie auf OK." />
+    <separator/>
+    <grid>
+      <columns>                
+        <column width="100px" />
+      </columns>            
+      <rows> 
+        <row>
+          <div align="right">
+            <label value="Captcha:" />
+          </div>
+          <vbox width="400px">
+            <bw.captcha id="cpa" length="5" width="280px" height="50px"/>
+            <button label="Bild neu generieren" onClick="cpa.randomValue();"/>
+            <textbox id="tfCaptcha" value="" width="97%" />
+          </vbox>
+        </row>
+        <row id="warningRow" visible="false" >
+          <div align="right">
+            <image src="/rsc/img/symbols/warning_32x32.png" width="32" height="32"/>
+          </div>
+          <div align="left">
+            <label value="Captcha falsch. Bitte versuchen Sie es erneut." />
+          </div>
+        </row>
+        <row>
+          <cell sclass="loginCtl" colspan="2">
+            <button label="OK" onClick="captchaWin.captchaCheck()" width="98%"/>
+          </cell>
+        </row>            
+      </rows>        
+    </grid>        
+  
+  </window>
+</zk>

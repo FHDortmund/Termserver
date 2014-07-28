@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winProposalView"?>
+  <window border="normal" height="98%" width="98%" 
+          id="winProposalView" 
+          title="Vorschlag-Details"
+          closable="true" sizable="true"
+          maximizable="true"
+          use="de.fhdo.collaboration.desktop.ProposalView">
+    
+    <borderlayout>
+      <center border="0">
+        <tabbox height="100%" onSelect="winProposalView.onTabChanged()" id="tb">
+          <tabs>
+            <tab label="Vorschlag" />
+            <tab label="Links" />
+            <tab label="Diskussion" id="tabDiscussion" />
+            <tab label="Abstimmung" id="tabAbstimmung"/>
+          </tabs>
+          <tabpanels>
+            <tabpanel>
+              <include id="incVorschlag" />
+            </tabpanel>
+            <tabpanel>
+              <include id="incLinks" />
+            </tabpanel>
+            <tabpanel>
+              <include id="incDiskussion" />
+            </tabpanel>
+            <tabpanel>
+              <include id="incAbstimmung" />
+            </tabpanel>
+          </tabpanels>
+          
+        </tabbox>
+        <!--<borderlayout>
+          <center border="0" title="Vorschlag">
+            
+          </center>
+          <east title="Privilegien">
+            
+          </east>
+          <south title="Zugehörige Konzepte/Objekte">
+            
+          </south>
+          
+        </borderlayout>-->
+        
+        <!--<grid>
+          <columns>
+            <column width="140px" align="right" label=""/>
+            <column label=""/>
+          </columns>
+          <rows>
+            <row>
+              <label value="Name:"/>
+              <textbox width="97%"
+             value="@{winCategoryDetails.category.name}" sclass="mandatory"/>
+            </row>
+            <row>
+              <label value="Farbe (Style):"/>
+              <textbox width="97%" multiline="true" rows="5"
+                       value="@{winCategoryDetails.category.color}"/>
+            </row>
+          </rows>
+        </grid>-->
+      </center>
+      <south border="0" collapsible="true">
+        <div>
+          <separator bar="true" />
+          
+          <div align="left" style="float:left; margin-left:8px; margin-bottom:4px; margin-top:4px;">
+            <hbox>
+                <toolbarbutton label="" 
+                             tooltiptext="Zeigt den Workflow an" 
+                             image="/rsc/img/collab/FlowBlock.png" orient="vertical"
+                             onClick="winProposalView.onShowWorkflow()" />
+
+              
+              <hbox style="margin-top:14px;">
+                <label value="Aktueller Status: " />
+                <label id="labelStatus" />
+              </hbox>
+              
+              <hbox id="boxStatusButtons" style="margin-top:9px; margin-left:8px;"/>
+            </hbox>
+          </div>
+          
+          <div align="left" style="float:left; margin-left:8px; margin-bottom:4px; margin-top:4px;">
+            <hbox>
+              <hbox style="margin-top:11px;">
+                <separator orient="vertical" bar="true" />
+              </hbox>
+              
+              <hbox style="margin-top:14px;">
+                <label value="Vorschlag: " />
+                <label value="@{winProposalView.proposal.description}" maxlength="80" />
+              </hbox>
+              <!--<hbox style="margin-top:14px;">
+                <label value="aktueller Status: " />
+                <label id="labelStatus" />
+              </hbox>
+              
+              <hbox id="boxStatusButtons" style="margin-top:9px; margin-left:8px;"/>-->
+            </hbox>
+          </div>
+        
+          <div align="right" style="margin-right:8px; margin-bottom:4px; margin-top:4px;">
+            <button label="zurück" onClick="winProposalView.onOkClicked()" 
+                  autodisable="self"  style="font-weight: bold;"
+                  image="/rsc/img/symbols/back_32x32.png"
+                  />
+          </div>
+        </div>
+      </south>
+    </borderlayout>
+    
+  </window>
+</zk>

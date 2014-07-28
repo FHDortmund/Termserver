@@ -1,0 +1,6 @@
+<!-- Define Component Class -->
+<?component name="dual-listbox" extends="div" class="de.fhdo.collaboration.desktop.proposal.privilege.DualListboxUser"?>
+<window id="duallistboxUser" apply="de.fhdo.collaboration.desktop.proposal.privilege.DualComposerUser">
+    <!-- Direct Use -->
+    <dual-listbox id="dualLBoxUser" />
+</window>

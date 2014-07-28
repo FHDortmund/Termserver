@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./win"?>
+  <window id="win" use="de.fhdo.gui.header.StatusBar">
+    
+    <div sclass="z-toolbar" style="padding:0">
+      <hbox pack="stretch" 
+            width="100%">
+        <toolbar id="tb" height="20px" align="start" width="100%" >
+          <toolbarbutton id="labelVersion" label="" tooltiptext="${labels.statusBar.tbVersion}" visible="false">
+            <attribute name="onClick">
+          <![CDATA[       
+           Window win = (Window) Executions.createComponents("/gui/info/about.zul", null, null);
+           win.doModal();
+          ]]></attribute>
+          </toolbarbutton>
+          <toolbarbutton id="tb_user" image="/rsc/img/symbols/user_16x16.png" label="-" onClick='win.onUserClicked()'
+                         tooltiptext="${labels.statusBar.userLoggedIn}" visible="false"/>
+          
+          <!--<toolbarbutton id="tb_loginInfo" image="/rsc/img/symbols/info16_16.png" label="" tooltiptext="${labels.statusBar.userLoggedInInfo}" visible="false"/>-->
+      
+      
+          <!--<toolbarbutton id="tb_logout" image="/rsc/img/symbols/unlock_16x16.png" label="${labels.common.logoffKollab}" onClick='win.onLogoutClicked()'
+          tooltiptext="${labels.statusBar.tooltipLogoffKollab}" visible="false"/>--> <!--Ist jetzt im menu.zul--> 
+          <toolbarbutton id="tb_termadmin" image="/rsc/img/symbols/settings_16x16.png" label="Verwaltungsbereich" onClick='win.onCallAdminClicked()'
+                         tooltiptext="Wechselt zum Verwaltungsbereich"/>
+      
+          <!--<toolbarbutton  label="|"/>-->
+        </toolbar>
+    
+        <toolbar id="tb3" height="20px" align="end">
+          <div style="margin-right:4px;margin-top:2px;">
+            <label id="labelTermserver" value="" style="font-size:10pt;color:black;" />
+          </div>
+        </toolbar>
+      </hbox>
+    </div>
+    
+    <zscript>
+      labelVersion.setLabel("v" + de.fhdo.Definitions.VERSION);
+    </zscript>
+  </window>
+</zk>

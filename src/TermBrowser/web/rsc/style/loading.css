@@ -1,0 +1,35 @@
+/* 
+    Document   : loading
+    Created on : 08.04.2011, 10:29:48
+    Author     : Robert Mützner
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+.z-loading
+{
+  top: 50% !important;
+  left: 45% !important;
+  align: center;
+  vertical-align: middle;
+   background-color:#808080;
+   border:1px outset #A0A0A0;
+   font-weight: bold;
+   padding:2px;
+}
+.z-loading-indicator
+{
+  color: gray;
+	border:0 none;
+}
+.z-loading-icon
+{
+}
+
+
+

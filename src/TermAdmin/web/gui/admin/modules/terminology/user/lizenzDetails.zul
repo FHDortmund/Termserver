@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winLizenzDetails"?>
+
+    <window id="winLizenzDetails" title="Lizenz-Details" width="600px"  height="500px" border="normal"
+     use="de.fhdo.gui.admin.modules.terminology.user.LizenzDetails" closable="true">
+    <borderlayout>
+      <center border="0">
+        <grid>
+          <columns>
+            <column width="120px" align="right" label=""/>
+            <column label=""/>
+          </columns>
+          <rows>
+            <row>
+              <label value="Codesystem-Version:"/>
+              <bandbox id="bbStandard" mold="rounded" autodrop="true" width="99%" 
+                       onOpen="winLizenzDetails.initCSVList()"
+                       sclass="mandantory">
+                  <bandpopup>
+                    <include id="incList" src="/gui/templates/GenericList.zul" width="100%" height="340px"/>
+                  </bandpopup>
+                </bandbox>
+            </row>
+
+            <row>
+              <label value="Gültig von:"/>
+              <hbox>
+                <checkbox label="" id="cbValidFrom" checked="@{winLizenzDetails.showValidFrom}">
+                  <attribute name="onClick"><![CDATA[validfromRow.setVisible(self.isChecked());]]>
+                  </attribute>
+                </checkbox>
+                <div id="validfromRow" visible="@{winLizenzDetails.showValidFrom}">
+                  <datebox value="@{winLizenzDetails.licencedUser.validFrom}"/>
+                </div>
+
+              </hbox>
+            </row>
+            
+            <row>
+              <label value="Gültig bis:"/>
+              <!--<datebox value="@{winLizenzDetails.licencedUser.validTo}"/>-->
+              <hbox>
+                <checkbox label="" id="cbValidTo" checked="@{winLizenzDetails.showValidTo}">
+                  <attribute name="onClick"><![CDATA[validtoRow.setVisible(self.isChecked());]]>
+                  </attribute>
+                </checkbox>
+                <div id="validtoRow" visible="@{winLizenzDetails.showValidTo}">
+                  <datebox value="@{winLizenzDetails.licencedUser.validTo}"/>
+                </div>
+
+              </hbox>
+            </row>
+
+            <row>
+              <label value="Lizenztyp:"/>
+              <hbox>
+                <div style="margin-top:3px;">
+                  <checkbox label="" id="cbLicenceType" checked="@{winLizenzDetails.showLicenceType}"
+                            >
+                    <attribute name="onClick"><![CDATA[licenceTypeRow.setVisible(self.isChecked());]]>
+                    </attribute>
+                  </checkbox>
+                </div>
+                <div id="licenceTypeRow" visible="@{winLizenzDetails.showLicenceType}">
+                  <hbox>
+                    <combobox id="comboLicenceType"
+                              readonly="true"
+                              width="98%"
+                              style="margin-top:3px;">
+                    </combobox>
+
+                    <button label="Liste bearbeiten..." onClick="winLizenzDetails.editLicenceTypes()" autodisable="self"/>
+                  </hbox>
+                </div>
+
+              </hbox>
+            </row>
+
+            
+            <!--<row>
+              <label value="Sortierung:"/>
+              <combobox model="@{winLizenzDetails.sortTypeList}"
+               selectedItem="@{winLizenzDetails.selectedSortType}" value="@{winLizenzDetails.selectedSortType.domainDisplay}"
+
+               width="98%">
+                <comboitem self="@{each=itemType2}" label="@{itemType2.domainDisplay}" value="@{itemType2.domainCode}" />
+              </combobox>
+            </row>-->
+            
+
+
+          </rows>
+        </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right" style="margin-right:8px;">
+          <button label="OK" onClick="winLizenzDetails.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" onClick="winLizenzDetails.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

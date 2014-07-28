@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winProposalViewDiscussion"?>
+  <window border="none" height="100%" width="100%" 
+          id="winProposalViewDiscussion" 
+          use="de.fhdo.collaboration.desktop.proposal.ProposalViewDiscussion">
+    
+    
+    
+    <borderlayout>
+      
+      <center border="0">
+        <include id="incList" src="/gui/templates/GenericList.zul"/>
+        <!--<grid>
+          <columns>
+            <column value="Test" />
+          </columns>
+          
+        </grid>-->
+      </center>
+    </borderlayout>
+    
+  </window>
+</zk>

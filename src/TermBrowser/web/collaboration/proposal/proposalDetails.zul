@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winProposalDetails"?>
+  <window id="winProposalDetails" width="1100px" height="675px" closable="true" sizable="true"
+     use="de.fhdo.collaboration.proposal.ProposalDetails"
+     title="${labels.collab.newProposal}" border="normal">
+    <borderlayout>
+      <center border="0">
+        <div>
+        <groupbox mold="3d" width="100%" closable="false">
+          <caption label="${labels.collab.proposal}" />
+          <label value="${labels.collab.proposalHeader}"/>
+          <textbox id="tbProposal" width="99%" rows="5" value="@{winProposalDetails.proposal.description}"
+                   tooltiptext="Geben Sie hier Ihren Vorschlag in Textform ein." sclass="mandatory"/>
+        </groupbox>
+        
+        <separator />
+        
+        <groupbox mold="3d" width="100%" closable="false">
+          <caption label="Objekt" />
+          
+          <tabbox id="tbAuswahl">
+            <tabs>
+              <tab label="Neues Code System/Value Set"/>
+              <tab label="Begriff" selected="true" id="tabSubConcept"/>
+              
+            </tabs>
+            
+            <tabpanels  height="425px" style="overflow:auto">
+              <!-- VOKABULAR -->
+              <tabpanel>
+                <grid width="100%" height="100%" >
+                  <columns sizable="true">
+                    <column width="225px"/>
+                    <column/>
+                  </columns>
+                  <rows style="vertical-align: top"> 
+                    <row>
+                      <label value="${labels.common.codeSystem}"/>
+                      <checkbox id="cbVoc" width="99%" checked="true" sclass="mandatory" onCheck="winProposalDetails.vocOrValChecked(0)"/>
+                    </row>
+                    <row>
+                      <label value="${labels.common.valueSet}"/>
+                      <checkbox id="cbVal" width="99%" checked="false" sclass="mandatory" onCheck="winProposalDetails.vocOrValChecked(1)"/>
+                    </row>
+                    <row id="rVocName">
+                      <label value="${labels.common.name}"/>
+                      <textbox id="tbVocName" width="99%" sclass="mandatory"/>
+                    </row>
+                    <row id="rVocDescription">
+                      <label value="${labels.common.description}"/>
+                      <textbox id="tbVocDescription" width="99%" rows="5"/>
+                    </row>
+                    
+                    <row>
+                      <label id="lVersion" value="${labels.common.codeSystemVersion}"/>
+                    </row>
+                    <row id="rVocVersionName">
+                      <label value="${labels.common.name}"/>
+                      <textbox id="tbVocVersionName" width="99%" sclass="mandatory"/>
+                    </row>
+                    <row id="rVocVersionDescription">
+                      <label id="lVocVersionDescription" value="${labels.common.description}"/>
+                      <textbox id="tbVocVersionDescription" width="99%" rows="5"/>
+                    </row>
+                    
+                  </rows>
+                </grid> 
+              </tabpanel>
+              
+              <!-- BEGRIFF -->
+              <tabpanel>
+                <grid width="50%" height="50%">
+                  <columns sizable="true">
+                    <column width="155px"/>
+                    <column/>
+                  </columns>
+                  <rows style="vertical-align: top"> 
+                    <row>
+                      <label value="Zugehöriges Code System/Value Set"/>
+                      <label id="lConceptVocabulary" value="@{winProposalDetails.sourceString}"/>
+                    </row>
+                    <row id="rOriginalCodeSystem" visible ="false" >
+                      <label value="Ursprungs CodeSystem"/>
+                      <label id="lOriginalCodeSystem" value=""/>
+                    </row>
+                    <row visible="@{winProposalDetails.subConceptVisible}">
+                      <label value="Überbegriff"/>
+                      <label id="lParentConcept"/>
+                    </row>
+                    <row id="rCode">
+                      <label value="${labels.common.code}"/>
+                      <textbox id="tbCode" width="99%" sclass="mandatory"/>
+                    </row>
+                    <row id="rTerm">
+                      <label value="${labels.common.term}"/>
+                      <textbox id="tbTerm" width="99%" sclass="mandatory"/>
+                    </row>
+                    <!--<row>
+                      <label value="${labels.common.termPreferred}"/>
+                      <textbox id="tbTermPreferred" width="99%"/>
+                    </row>-->
+                    <row id="rAbbrevation">
+                      <label value="${labels.common.abbrevation}"/>
+                      <textbox id="tbAbbrevation" width="99%"/>
+                    </row>
+                    
+                    <row id="rPreferred">
+                      <label value="${labels.common.isPreferredTerm}"/>
+                      <checkbox id="cbPreferred" width="100%" checked="true"/>
+                    </row>
+                    
+                    <row id="rDescription">
+                      <label value="${labels.common.description}"/>
+                      <textbox id="tbDescription" width="99%" rows="5"/>
+                    </row>
+                    
+<!--<row><label value="${labels.common.termPreferred}"/>           <textbox  id="tbTermPL"      value="@{termPL}"                                           width="99%" readonly="true"/></row>    
+<row><label value="${labels.common.abbrevation}"/>             <textbox  id="tbAbbrevation" value="@{csc.termAbbrevation, save-when='bCreate.onClick'}" width="99%"/></row>
+<row><label value="${labels.common.code}" id="lCode" />        <textbox  id="tbCode"        value="@{csc.code, save-when='bCreate.onClick'}"            width="99%"/></row>
+<row><label value="${labels.common.status}"/>                  <textbox  id="tbStatus"      value="@{csev.status, save-when='bCreate.onClick'}"         width="99%"/></row>
+<row><label value="${labels.common.statusLastEdited}"/>        <datebox  id="dateBoxSD" width="100%" format="short+medium"/></row>                                                        
+<row><label value="${labels.common.insertedAt}"/>              <datebox  id="dateBoxID" width="100%" format="short+medium"/> </row>
+<row><label value="${labels.common.releasedAt}"/>              <datebox  id="dateBoxED" width="100%" format="short+medium"/> </row>                                                 
+<row><label value="${labels.common.isPreferredTerm}" id="lPref"/><checkbox id="cbPreferred" value="@{csc.isPreferred, save-when='bCreate.onClick'}"   checked="@{csc.isPreferred}"      width="100%"/></row>
+<row><label value="${labels.common.mainAxis}"/>                <checkbox id="cbAxis"        value="@{csvem.isAxis, save-when='bCreate.onClick'}"      checked="@{csvem.isAxis}"         width="100%"/></row>
+<row><label value="${labels.common.mainClass}"/>               <checkbox id="cbMainClass"   value="@{csvem.isMainClass, save-when='bCreate.onClick'}" checked="@{csvem.isMainClass}"    width="100%"/></row>
+                                <row>
+                    <cell colspan="2"> <label id="lReq" value="* ${labels.common.requiredField}" style="font-style:italic;font-size:0.6em"/> </cell>  
+                    </row>-->
+                  </rows>
+                </grid>
+                <grid width="100%">
+                  <columns sizable="true">
+                    <column width="100%"/>
+                  </columns>
+                  <rows style="vertical-align: top"> 
+                    <row id="rChooseVoc">
+                        <label value="Wählen Sie das Code System aus:"/>
+                    </row> 
+                    <row id="rListBoxVoc">
+                        <include width="100%" id="incListVoc" src="/collaboration/proposal/duallistboxVoc.zul"/>
+                    </row>
+                  </rows>
+                </grid>
+                <grid  width="100%">
+                <columns sizable="true">
+                    <column width="200px"/>
+                    <column/>
+                  </columns>
+                  <rows style="vertical-align: top"> 
+                    <row id="rVsCode">
+                      <label value="Bitte Konzept-Code eingeben: "/>
+                      <textbox id="tbCodeVs" width="40%" sclass="mandatory"/>
+                    </row>
+                  </rows>
+                </grid>  
+              </tabpanel>
+              
+            
+              
+            </tabpanels>
+          </tabbox>
+            
+          
+        </groupbox>
+        </div>
+          <!--<grid>
+            <columns>
+              <column width="140px" align="right" label=""/>
+              <column label=""/>
+            </columns>
+            <rows>
+              <row>
+                <label value="Vorschlag:"/>
+                <textbox width="97%" value="@{winProposalDetails.proposal.description}" sclass="mandatory"/>
+              </row>
+              
+          </rows>
+        </grid>-->
+      </center>    
+      <south height="28px" border="0" collapsible="true">
+        <div align="right" style="margin-right:0px;">
+          <button label="Vorschlag erstellen" onClick="winProposalDetails.onOkClicked()" autodisable="self"
+                  tooltiptext="Erstellt den Vorschlag und benachrichtigt verantwortliche Personen"          />
+          <button label="Abbrechen" onClick="winProposalDetails.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

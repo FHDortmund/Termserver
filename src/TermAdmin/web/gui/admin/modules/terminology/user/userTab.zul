@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window border="none" width="100%" height="100%" >
+    <!--<include id="incList" src="/gui/templates/GenericList.zul"/>-->
+    <tabbox height="100%" width="100%">
+      <tabs>
+        <tab label="Benutzerliste" id="tabBenutzer"/>
+        <tab label="Lizenzen" id="tabLizenzen"/>
+      </tabs>
+      <tabpanels>
+        <tabpanel>
+          <include src="/gui/admin/modules/terminology/user/user.zul"/>
+        </tabpanel>
+        <tabpanel>
+          <include src="/gui/admin/modules/terminology/user/lizenzen.zul"/>
+        </tabpanel>
+      </tabpanels>
+    </tabbox>
+  </window>
+</zk>

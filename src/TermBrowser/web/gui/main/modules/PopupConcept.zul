@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="poppy" apply="de.fhdo.gui.main.modules.PopupConcept" closable="true" border="normal" 
+          position="center,center" width="950px" vflex="min" sizable="true">
+    <borderlayout vflex="min">
+      <center border="none" >
+        <tabbox id="tabboxFilter" vflex="min">  <!--//onSelect="windowCSVS.setActiveTab()" Bei Konzeptdetails notwendig?-->
+          <tabs>
+            <tab id="tabDetails"        label="${labels.common.details}" />
+            <tab id="tabMetadata"       label="${labels.common.metadata}"/>
+            <tab id="tabTranslations"   label="${labels.common.translations}"/>
+            <tab id="tabCrossmapping"   label="${labels.popupConcept.crossmappings}"  visible="false" />
+            <tab id="tabLinkedConcepts" label="${labels.popupConcept.linkedConcepts}" visible="false" />
+            <tab id="tabOntologies"     label="${labels.popupConcept.ontologies}"     visible="false" />
+          </tabs>
+          <tabpanels>
+            <tabpanel id="tabpanelDetails">
+              <div align="right" style="float:right; margin-top:-24px;">
+                <label style="color:grey;" value="ID: "></label>
+                <label id="labelId" style="color:grey;" value="@{csc.codeSystemEntityVersionId}"></label>
+              </div>
+              <grid width="100%" height="100%">
+                <columns sizable="true">
+                  <column width="240px"/>
+                  <column/>
+                </columns>
+                <rows style="vertical-align: top"> 
+                  <row>
+                    <label value="${labels.common.code}" id="lCode" />
+                    <textbox id="tbCode" value="@{csc.code, save-when='bCreate.onClick'}" hflex="true"/>
+                  </row>
+                  <row>
+                    <label value="${labels.common.designation}" id="lName"/>
+                    <textbox id="tbTerm" alue="@{csc.term, save-when='bCreate.onClick'}" hflex="true"/>
+                  </row>
+                  <row id="rMeaning" >
+                    <label value="${labels.common.meaning}" id="lMeaning"/>   
+                    <textbox  id="tbMeaning"        value="@{csc.meaning, save-when='bCreate.onClick'}" multiline="true" hflex="true"/>
+                  </row>
+                  <row id="rBedeutung" visible="false" >
+                    <label value="${labels.common.bedeutung}"/>        
+                    <textbox  id="tbBedeutung" multiline="true" hflex="true"/>
+                  </row>
+                  <row visible="false">
+                    <label value="${labels.common.termPreferred}"/>           
+                    <textbox  id="tbTermPL"      value="@{termPL}"                                           hflex="true" readonly="true"/>
+                  </row>    
+                  <row>
+                    <label value="${labels.common.abbrevation}"/>             
+                    <textbox  id="tbAbbrevation" value="@{csc.termAbbrevation, save-when='bCreate.onClick'}" hflex="true"/>
+                  </row>
+                  <row>
+                    <label value="${labels.common.description}"/>             
+                    <textbox  id="tbDescription" value="@{csc.description, save-when='bCreate.onClick'}" multiline="true" rows="5" hflex="true"/>
+                  </row>
+                  <row id="rHints" >
+                    <label value="${labels.common.hints}"/>                   
+                    <textbox  id="tbHints"       value="@{csc.hints, save-when='bCreate.onClick'}" multiline="true" rows="5" hflex="true"/>
+                  </row>
+                  <row id="rAwbeschreibung" visible="false" >
+                    <label value="${labels.common.awbeschreibung}"/>        
+                    <textbox  id="tbAwbeschreibung" multiline="true" hflex="true"/>
+                  </row>
+                  <row id="rHinweise" visible="false" >
+                    <label value="${labels.common.hinweise}"/>        
+                    <textbox  id="tbHinweise" multiline="true" hflex="true"/>
+                  </row>
+                  <row>
+                    <label value="${labels.common.status}"/>
+                    <!--<textbox  id="tbStatus" value="" hflex="true"/>-->
+                    <combobox id="cbStatus" width="150px"/>
+                  </row>
+                  <row id="rStructureEntry" visible="false" >
+                    <label value="${labels.common.structureEntry}"/>          
+                    <checkbox id="cbStructureEntry" hflex="true"/>
+                  </row>
+                  <row id="rOrderNr" visible="false" >
+                    <label value="${labels.common.orderNr}"/>        
+                    <textbox  id="tbOrderNr" hflex="true"/>
+                  </row>
+                  <row>
+                    <label value="${labels.common.statusLastEdited}"/>        
+                    <datebox  id="dateBoxSD" width="150px" format="medium+medium"/>
+                  </row>                                                        
+                  <row>
+                    <label value="${labels.common.insertedAt}"/>              
+                    <datebox  id="dateBoxID" width="150px" format="medium+medium"/> 
+                  </row>
+                  <row>
+                    <label value="${labels.common.releasedAt}"/>              
+                    <datebox  id="dateBoxED" width="150px" format="medium+medium"/> 
+                  </row>                                                 
+                  <row>
+                    <label value="${labels.common.preferred}" id="lPref"/>
+                    <checkbox id="cbPreferred" value="@{csc.isPreferred, save-when='bCreate.onClick'}"   checked="@{csc.isPreferred}"/>
+                  </row>
+                  <row>
+                    <hbox>
+                      <label value="${labels.common.mainAxis}"/>
+                      <label value="/"/>
+                      <label value="${labels.common.mainClass}"/>
+                    </hbox>
+                    <hbox>
+                      <checkbox id="cbAxis" value="@{csvem.isAxis, save-when='bCreate.onClick'}" checked="@{csvem.isAxis}"/>
+                      <label value="/"/>
+                      <checkbox id="cbMainClass"   value="@{csvem.isMainClass, save-when='bCreate.onClick'}" checked="@{csvem.isMainClass}"/>
+                    </hbox>
+                  </row>
+                  <!--<row>
+                    <label value="${labels.common.mainClass}"/>               
+                    
+                  </row>-->
+                  <row>
+                    <label value="${labels.common.isLeaf}"/>               
+                    <checkbox id="cbIsLeaf"   value="@{csev.isLeaf, save-when='bCreate.onClick'}" checked="@{csev.isLeaf}"/>
+                  </row>
+                  <row>
+                    <cell colspan="2"> 
+                      <label id="lReq" value="* ${labels.common.requiredField}" style="font-style:italic;font-size:0.6em"/> 
+                    </cell>    
+                  </row>
+                </rows>
+              </grid> 
+            </tabpanel>
+            <tabpanel id="tabpanelMetadata" apply="de.fhdo.gui.main.modules.MetaDataComposer">
+              <listbox id="listMetadata" vflex="true" height="65%" width="99%" >
+                <listhead></listhead>
+              </listbox>
+              <div style="padding-top:5px; margin-right:4px; margin-bottom:4px;">
+                <button id="bMetaParaChange"    label="${labels.common.changeMetaPara}" />
+              </div>
+              
+            </tabpanel>
+            <tabpanel id="tabpanelTranslations" apply="de.fhdo.gui.main.modules.TranslationComposer">
+              <listbox  id="listTranslations" vflex="true" height="85%" width="99%">
+                <listhead></listhead>
+              </listbox>
+              <grid id="gridT" width="100%" height="25%">
+                <columns sizable="true">
+                  <column width="175px"/>
+                  <column/>
+                </columns>
+                <rows>
+                  <row>
+                    <button id="bTranslationNew" disabled="false" hflex="1" label="${labels.common.newTranslation}" />
+                  </row>
+                  <row>
+                    <button id="bTranslationChange" disabled="true" hflex="1" label="${labels.common.changeTranslation}" />
+                  </row>
+                  <row>
+                    <button id="bTranslationDelete" disabled="true" hflex="1" label="${labels.common.deleteTranslation}" />
+                  </row>        
+                </rows>
+              </grid>
+            </tabpanel>
+            <tabpanel id="tabpanelCrossmappings">
+              <listbox  id="listCrossmappings" vflex="true" height="99%" width="99%" >
+                <listhead></listhead>
+              </listbox>
+            </tabpanel>
+            <tabpanel id="tabpanelLinkedConcepts">
+              <listbox  id="listLinkedConcepts" vflex="true" height="99%" width="99%" >
+                <listhead></listhead>
+              </listbox>
+            </tabpanel>
+            <tabpanel id="tabpanelOntologies">
+              <listbox  id="listOntologies" vflex="true" height="99%" width="99%" >
+                <listhead></listhead>
+              </listbox>
+            </tabpanel>
+          </tabpanels>
+        </tabbox>
+      </center>
+      <south border="none" vflex="min" style="text-align:right">
+        <div style="padding-top:5px; margin-right:4px; margin-bottom:4px;">
+          <checkbox id="cbNewVersion" label="${labels.common.createNewVersion}" value="{@versioning.createNewVersion, save-when='bCreate.onClick'}" checked="@{versioning.createNewVersion}"/> 
+          <separator orient="vertical"/>
+          <button id="bCreate" label="${labels.common.saveChanges}" />         
+          <button label="${labels.common.close}" onClick="self.Parent.Parent.Parent.Parent.detach()" />  
+        </div>         
+      </south>
+    </borderlayout>
+  </window>
+</zk>

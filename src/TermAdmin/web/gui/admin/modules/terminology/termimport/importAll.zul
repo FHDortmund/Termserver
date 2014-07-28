@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="winImportAll" border="none" width="100%" height="100%"
+          use="de.fhdo.gui.admin.modules.terminology.termimport.ImportAll" >
+    <borderlayout>
+      <north title="Dateiauswahl">
+        <div style="margin:8px;">
+          <hbox width="100%">
+            <textbox id="textboxDateiname" readonly="true" hflex="true"/>
+            <button label="Datei wählen..." 
+                    upload="true,maxsize=50240"
+                    onUpload="winImportAll.onDateinameSelect(event)" />
+          </hbox>
+          
+          <label value="Import-Art: "/>
+          <radiogroup Id="rgKind" onCheck="winImportAll.kindChanged()">
+            <radio label="Codesystem"/>
+            <radio label="Valueset"/>
+          </radiogroup>
+          <separator />
+          
+          <label value="Format: "/>
+          <combobox id="cbFormat" width="300px" readonly="true" onChange="winImportAll.preview()"/>
+          <!--<radiogroup Id="rgFormatCodesystem" visible="false" onCheck="winImportAll.preview()">
+            <radio label="ClaML"/>
+            <radio label="CSV"/>
+            <radio label="ELGA SVS"/>
+            <radio label="LOINC"/>
+          </radiogroup>
+          <radiogroup Id="rgFormatValueset" visible="false" onCheck="winImportAll.preview()">
+            <radio label="CSV"/>
+            <radio label="ELGA SVS"/>
+          </radiogroup>-->
+          
+          <separator />
+          <separator />
+          
+          <label value="Vorschau: "/>
+          <include id="incListPreview" src="/gui/templates/GenericList.zul"
+                   height="160px" width="99%" visible="true"/>
+        </div>
+      </north>
+      <west title="Code System Auswahl" size="500px" visible="false" id="westCS">
+        <borderlayout>
+          <north border="none">
+            <div style="margin:8px;">
+              <label value="Wählen Sie ein Code System aus, in welches Sie die Datei importieren möchten."/>
+              <separator />
+              <label id="labelVersion" value="Neuer Versions-Name: "/> 
+              <textbox id="tbVersion" onChange="winImportAll.showStatus()" width="200px"/>
+            </div>
+          </north>
+          <center border="none">
+            <include id="incList" src="/gui/templates/GenericList.zul"
+                     height="100%" width="99%"/>
+          </center>
+          
+        </borderlayout>
+      </west>
+      <center flex="true" title="Import" id="eastImport">
+        <div style="margin:8px;">
+          <label value="Status: "/>
+          <label id="labelStatus"/>
+          <separator />
+          <button id="buttonImport" label="Import starten" onClick="winImportAll.startImport()" disabled="true"/>
+          <button id="buttonCancel" label="Abbrechen" onClick="winImportAll.cancelImport()" visible="false"/>
+          <separator />
+          <progressmeter id="progress" value="0" visible="false"/>
+          <separator />
+          <label value="-" id="labelImportStatus"/>
+        </div>
+      </center>
+    </borderlayout>
+  </window>
+</zk>

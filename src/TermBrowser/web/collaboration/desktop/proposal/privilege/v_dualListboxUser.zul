@@ -1,0 +1,48 @@
+<!-- View of customized component DualListbox -->
+<hlayout height="200px" style="padding:10px">
+    <zscript>
+        de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorUserInfo ascFi = new de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorUserInfo(true,0);
+        de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorUserInfo dscFi = new de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorUserInfo(false,0);
+        de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorUserInfo ascNa = new de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorUserInfo(true,1);
+        de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorUserInfo dscNa = new de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorUserInfo(false,1);
+        de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorUserInfo ascOr = new de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorUserInfo(true,2);
+        de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorUserInfo dscOr = new de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorUserInfo(false,2);
+    </zscript>
+    <listbox id="lbUser" hflex="1" vflex="true" multiple="true">
+        <listhead>
+            <listheader id="lhVornameD" label="Vorname" width="200px" sortAscending="${ascFi}" sortDescending="${dscFi}" ></listheader>
+            <listheader id="lhNachnameD" label="Nachname" width="200px" sortAscending="${ascNa}" sortDescending="${dscNa}" ></listheader>
+            <listheader id="lhOrganisationD" label="Organisation" sortAscending="${ascOr}" sortDescending="${dscOr}" ></listheader>
+        </listhead>
+        <template name="model">
+            <listitem>
+                <listcell label="${each.firstName }"/>
+                <listcell label="${each.name }"/>
+                <listcell label="${each.organisation }"/>
+            </listitem>
+        </template>
+    </listbox>
+    <zscript><![CDATA[
+    String imgPath = "/rsc/img/duallistbox";
+]]></zscript>
+    <vbox spacing="10px" width="24px">
+        <image style="cursor:pointer" id="chooseAllBtn" src="${imgPath}/rightrightarrow_g.png" />
+        <image style="cursor:pointer" id="chooseBtn" src="${imgPath}/rightarrow_g.png" />
+        <image style="cursor:pointer" id="removeBtn" src="${imgPath}/leftarrow_g.png" />
+        <image style="cursor:pointer" id="removeAllBtn" src="${imgPath}/leftleftarrow_g.png" />
+    </vbox>
+    <listbox id="lbUserChoosen" hflex="1" vflex="true" multiple="true">
+        <listhead>
+            <listheader id="lhVornameC" label="Vorname" width="200px" sortAscending="${ascFi}" sortDescending="${dscFi}" ></listheader>
+            <listheader id="lhNachnameC" label="Nachname" width="200px" sortAscending="${ascNa}" sortDescending="${dscNa}" ></listheader>
+            <listheader id="lhOrganisationC" label="Organisation" sortAscending="${ascOr}" sortDescending="${dscOr}" ></listheader>
+        </listhead>
+        <template name="model">
+            <listitem>
+                <listcell label="${each.firstName }"/>
+                <listcell label="${each.name }"/>
+                <listcell label="${each.organisation }"/>
+            </listitem>
+        </template>
+    </listbox>
+</hlayout>

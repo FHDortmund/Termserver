@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="loginWin" title="${labels.common.logon}" width="400px" height="240px"
+          closable="true" onOK="loginWin.loginCheck()" border='normal' use="de.fhdo.gui.admin.Login">
+    <style>   
+      div.minimize 
+      {  
+      border: 1px solid #79858E;           
+      background: #D3E1EC;         
+      position: absolute;           
+      opacity: 0.8;               
+      }      
+      div.loginGrid 
+      {          
+      border: none;       
+      }        
+      td.loginCtl
+      {           
+      text-align: center;   
+      }       
+      td.loginCtl .z-label 
+      {           
+      color: red;               
+      font-style: italic;      
+      }        
+    </style>
+    <borderlayout>
+      <center border="none">
+        <grid sclass="loginGrid">            
+          <columns>                
+            <column width="100px" />            
+          </columns>            
+          <rows>                
+            <row> 
+              <label value="${labels.common.username}" />
+              <textbox id="name" value="" width="95%"/>
+            </row>
+            <row>
+              <label value="${labels.common.password}" />
+              <textbox id="pwd" type="password" width="95%"/>
+            </row>
+            <row id="warningRow" visible="false" >
+              <div align="right">
+                <image src="/rsc/img/symbols/warning_32x32.png" width="32" height="32"/>
+              </div>
+              <div align="left">
+                <label value="${labels.login.usernameUnknownOrError}" />
+              </div>
+            </row>
+            <row>
+              <cell sclass="loginCtl" colspan="2">
+                <vlayout>
+                  <label id="mesg" />
+                </vlayout>
+              </cell>
+            </row>
+          </rows>
+        </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right" style="margin-right:8px;">
+          <!--<button id="loginButton" label="${labels.common.doLogin}" onClick="loginWin.loginCheck()" autodisable="self"
+                  image="/rsc/img/symbols/LoginServer_16x16.png"/> -->
+          <button id="loginButton" label="${labels.common.doLogin}" onClick="loginWin.loginCheck()" autodisable="self"
+                  /> 
+          <button label="${labels.common.close}" onClick="loginWin.detach()" autodisable="self"/> 
+        </div>
+      </south>
+      
+    </borderlayout>
+  </window>
+</zk>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">           
+  <window id="win" title="${labels.common.impressum}" use="de.fhdo.gui.info.Impressum" border="normal" closable="true" width="500px" height="700px" maximizable="false" >     
+    <caption image="/rsc/img/symbols/info16_16.png" label=""/>
+    <!--<style src="/rsc/style/ophEPA.css"/>-->
+    <borderlayout>
+      <center border="none" flex="false">
+        <vbox>
+          <separator></separator>
+          <separator></separator>
+          <label id="id_textfield" value="" multiline="true"/>
+          <separator></separator>
+          <separator></separator>
+        </vbox>
+      </center>
+      <south>
+          <div style="float:right;">
+            <button label="${labels.common.close}" style="margin-right:5px;margin-top:5px;margin-bottom:5px" onClick="win.detach();" height="25px" width="75px"/>
+          </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

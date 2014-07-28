@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winEnquiryDetails"?>
+
+  <window id="winEnquiryDetails" title="Anfrage Details" width="800px"  height="675px"
+          use="de.fhdo.gui.admin.modules.collaboration.EnquiryDetails" closable="true" border="normal">
+    <borderlayout>
+      <north border="0">
+          <grid span="true" vflex="true" height = "500px">
+            <columns>
+              <column width="130px" align="right" label=""/>
+              <column label=""/>
+            </columns>
+            <rows>
+              <row visible="false" id="row_enquiryID">
+              <label value="Enquiry-ID:"/>
+              <textbox  id="tb_enquiryID"
+                          width="97%" value="@{winEnquiryDetails.enquiry.id}"
+                          readonly="true" />
+              </row>
+              <row>
+                  <separator></separator>
+                  <separator></separator>
+              </row>
+              <row>
+                  <label id="l_ChooseType" visible="true" value="Anfragetyp: "/>
+                  <textbox visible="true" width="97%" value="@{winEnquiryDetails.enquiry.requestType}" id="tb_ChooseType" readonly="true"/>
+              </row>
+              <row>
+                  <separator></separator>
+                  <separator></separator>
+              </row>
+              <row>
+                   <separator></separator>
+                   <label id="l_GeneralInfo" visible="true" value="Allgemeine Information: "/>
+              </row>
+              <row id="row_Username" visible="false">
+                <label id="l_Username" visible="true" value="Benutzername: "/>
+                <textbox visible="true" width="97%" value="@{winEnquiryDetails.enquiry.collaborationuser.username}" id="tb_Username" readonly="false"/>
+              </row>
+              <row>
+                <label id="l_Vorname" visible="true" value="Vorname: "/>
+                <textbox visible="true" width="97%" value="@{winEnquiryDetails.enquiry.collaborationuser.firstName}" id="tb_Vorname" readonly="false"/>
+              </row>
+              <row>
+                <label  id="l_Nachname" visible="true" value="Nachname: "/>
+                <textbox  visible="true" width="97%" value="@{winEnquiryDetails.enquiry.collaborationuser.name}" id="tb_Nachname" readonly="false"/>
+              </row>
+              <row>
+                <label id="l_Organisation" visible="true" value="Organisation: "/>
+                <textbox  visible="true" width="97%" value="@{winEnquiryDetails.enquiry.collaborationuser.organisation.organisation}" id="tb_Organisation" readonly="false"/>
+              </row>
+              <row>
+                <label id="l_Email" visible="true" value="Email-Addresse: "/>
+                <textbox  visible="true" width="97%" value="@{winEnquiryDetails.enquiry.collaborationuser.email}" id="tb_Email" readonly="false"/>
+              </row>
+              <row>
+                <label id="l_Phone" visible="true" value="Telefonnummer: "/>
+                <textbox  visible="true" width="97%" value="@{winEnquiryDetails.enquiry.collaborationuser.phone}" id="tb_Phone" readonly="false"/>
+              </row>
+              <row>
+                <label id="l_RequestDescription" visible="true" value="Beschreibung des Anliegens: "/>
+                <textbox multiline="true" visible="true" width="97%" value="@{winEnquiryDetails.enquiry.requestDescription}" id="tb_RequestDescription" readonly="false"/>
+              </row>
+              <row id="row_ExtendedInfo" visible="false">
+                   <separator></separator>
+                   <label id="l_ExtendedInfo" visible="true" value="Erweiterte Information: "/>
+
+              </row>
+              <row id="row_TermName" visible="false">
+                <label id="l_TermName" visible="true" value="Name der Terminologie: "/>
+                <textbox visible="true" width="97%" value="@{winEnquiryDetails.enquiry.termName}" id="tb_TermName" readonly="false"/>
+              </row>
+              <row id="row_TermDescription" visible="false">
+                <label id="l_TermDescription" visible="true" value="Beschreibung der Terminologie: "/>
+                <textbox multiline="true" visible="true" width="97%" value="@{winEnquiryDetails.enquiry.termDescription}" id="tb_TermDescription" readonly="false"/>
+              </row>
+              <row id="row_IntendedValidityRange" visible="false">
+                <label id="l_IntendedValidityRange" visible="true" value="Beabsichtigter Geltungsbereich: "/>
+                <textbox visible="true" width="97%" value="@{winEnquiryDetails.enquiry.intendedValidityRange}" id="tb_IntendedValidityRange" readonly="false"/>
+              </row>
+              <row id="row_MoreExtendedInfo" visible="false">
+                   <separator></separator>
+                   <label id="l_MoreExtendedInfo" visible="true" value="Inhaltsverwalter: "/>
+              </row>
+              <row id="row_UsernameExt" visible="false">
+                <label id="l_UsernameExt" visible="true" value="Benutzername: "/>
+                <textbox visible="true" width="97%" value="@{winEnquiryDetails.userExt.username}" id="tb_UsernameExt" readonly="false"/>
+              </row>
+              <row id="row_VornameExt" visible="false">
+                <label id="l_VornameExt" visible="true" value="Vorname: "/>
+                <textbox visible="true" width="97%" value="@{winEnquiryDetails.userExt.firstName}" id="tb_VornameExt" readonly="false"/>
+              </row>
+              <row id="row_NachnameExt" visible="false">
+                <label  id="l_NachnameExt" visible="true" value="Nachname: "/>
+                <textbox  visible="true" width="97%" value="@{winEnquiryDetails.userExt.name}" id="tb_NachnameExt" readonly="false"/>
+              </row>
+              <row id="row_OrganisationExt" visible="false">
+                <label id="l_OrganisationExt" visible="true" value="Organisation: "/>
+                <textbox  visible="true" width="97%" value="@{winEnquiryDetails.userExt.organisation.organisation}" id="tb_OrganisationExt" readonly="false"/>
+              </row>
+              <row id="row_EmailExt" visible="false">
+                <label id="l_EmailExt" visible="true" value="Email-Addresse: "/>
+                <textbox  visible="true" width="97%" value="@{winEnquiryDetails.userExt.email}" id="tb_EmailExt" readonly="false"/>
+              </row>
+              <row id="row_PhoneExt" visible="false">
+                <label id="l_PhoneExt" visible="true" value="Telefonnummer: "/>
+                <textbox  visible="true" width="97%" value="@{winEnquiryDetails.userExt.phone}" id="tb_PhoneExt" readonly="false"/>
+              </row>
+            </rows>
+          </grid>
+      </north>
+      <center>
+        <grid>
+            <columns>
+              <column vflex="true"/>
+            </columns>
+            <rows>
+              <row>
+                <checkbox disabled="false" id="cb_UserTransfer" onCheck="winEnquiryDetails.selectedUserTransfer(1)" label="Benutzer mit Angaben erstellen?" visible="false"/> 
+              </row>
+              <row>
+                <checkbox disabled="false" id="cb_UserExTransfer" onCheck="winEnquiryDetails.selectedUserTransfer(2)" label="Benutzer mit Inhaltsverwalter-Angaben erstellen?" visible="false"/>
+              </row>
+              <row>
+                <checkbox id="cb_CloseIssue" label="Diese Anfrage schließen?" visible="true"/>
+              </row>
+            </rows>
+        </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right">
+          <button label="OK" onClick="winEnquiryDetails.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" onClick="winEnquiryDetails.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

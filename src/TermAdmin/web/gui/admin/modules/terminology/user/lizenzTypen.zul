@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winLizenzTypen"?>
+
+    <window id="winLizenzTypen" title="Lizenz-Details" width="600px"  height="500px" border="normal"
+            use="de.fhdo.gui.admin.modules.terminology.user.LizenzTypen" closable="true"
+            onClose="winLizenzTypen.onOkClicked()">
+    <borderlayout>
+      <center border="0">
+        <include id="incList" src="/gui/templates/GenericList.zul" width="100%" height="400px"/>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right" style="margin-right:8px;">
+          <button label="Schließen" onClick="winLizenzTypen.onOkClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

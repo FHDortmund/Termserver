@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./win"?>
+  <window id="win" use="de.fhdo.gui.main.StatusBar">
+    <toolbar id="tb" height="20px" align="start" width="100%">
+      <toolbarbutton id="tb_user" image="/rsc/img/symbols/user_16x16.png" label="-" onClick='win.onUserClicked()'
+      tooltiptext="Bearbeiten Sie Ihr TermServer Profil"/>
+      <toolbarbutton id="tb_loginInfo" image="/rsc/img/symbols/info16_16.png" label="-" tooltiptext="Info über den Login-Status"/>
+      <toolbarbutton id="tb_logout" image="/rsc/img/symbols/unlock_16x16.png" label="Abmelden" onClick='win.onLogoutClicked()'
+      tooltiptext="Meldet den aktuellen Benutzer vom System ab" visible="false"/>
+      <toolbarbutton id="tb_termbrowser" image="/rsc/img/symbols/find_16x16.png" label="Terminologie-Browser" onClick='win.onCallBrowserClicked()'
+      tooltiptext="Wechselt zum Terminologie-Browser" visible="false"/>
+    </toolbar>
+  </window>
+</zk>

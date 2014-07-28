@@ -1,0 +1,42 @@
+<!-- View of customized component DualListbox -->
+<hlayout height="200px" style="padding:10px">
+    <zscript>
+        de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorDiscGroupInfo ascVo = new de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorDiscGroupInfo(true,0);
+        de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorDiscGroupInfo dscVo = new de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorDiscGroupInfo(false,0);
+        de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorDiscGroupInfo ascVe = new de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorDiscGroupInfo(true,1);
+        de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorDiscGroupInfo dscVe = new de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeComparatorDiscGroupInfo(false,1);
+    </zscript>
+    <listbox id="lbDiscGroup" hflex="1" vflex="true" multiple="true">
+        <listhead>
+            <listheader id="lhDiscGroupD" label="Diskussionsgruppe" width="200px" sortAscending="${ascVo}" sortDescending="${dscVo}" ></listheader>
+            <listheader id="lhDiscGroupHeadD" label="Verantwortlicher" width="200px" sortAscending="${ascVe}" sortDescending="${dscVe}" ></listheader>
+        </listhead>
+        <template name="model">
+            <listitem>
+                <listcell label="${each.discussionGroupName }"/>
+                <listcell label="${each.discussionGroupHead }"/>
+            </listitem>
+        </template>
+    </listbox>
+    <zscript><![CDATA[
+    String imgPath = "/rsc/img/duallistbox";
+]]></zscript>
+    <vbox spacing="10px" width="24px">
+        <image style="cursor:pointer" id="chooseAllBtn" src="${imgPath}/rightrightarrow_g.png" />
+        <image style="cursor:pointer" id="chooseBtn" src="${imgPath}/rightarrow_g.png" />
+        <image style="cursor:pointer" id="removeBtn" src="${imgPath}/leftarrow_g.png" />
+        <image style="cursor:pointer" id="removeAllBtn" src="${imgPath}/leftleftarrow_g.png" />   
+    </vbox>
+    <listbox id="lbDiscGroupChoosen" hflex="1" vflex="true" multiple="true">
+        <listhead>
+            <listheader id="lhDiscGroupC" label="Diskussionsgruppe" width="200px" sortAscending="${ascVo}" sortDescending="${dscVo}" ></listheader>
+            <listheader id="lhDiscGroupHeadC" label="Verantwortlicher" width="200px" sortAscending="${ascVe}" sortDescending="${dscVe}" ></listheader>
+        </listhead>
+        <template name="model">
+            <listitem>
+                <listcell label="${each.discussionGroupName }"/>
+                <listcell label="${each.discussionGroupHead }"/>
+            </listitem>
+        </template>
+    </listbox>
+</hlayout>

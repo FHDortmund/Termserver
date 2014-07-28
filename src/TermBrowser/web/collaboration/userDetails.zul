@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winUserDetails"?>
+
+  <window id="winUserDetails" title="Benutzer-Daten" width="600px"  height="215px" border="normal"
+          use="de.fhdo.collaboration.UserDetails" closable="true"
+          sizable="true">
+    <borderlayout>
+      <center border="0">
+        <grid>
+          <columns>
+            <column width="200px" align="right" label=""/>
+            <column label=""/>
+          </columns>
+          <rows>
+            <row>
+              <label value="Benutzername:"/>
+              <textbox width="97%" value="@{winUserDetails.user.username}" id="tb_Benutzername"
+                       readonly="true" sclass="mandatory"/>
+            </row>
+            <row>
+              <label value="Email:"/>
+              <textbox width="97%" value="@{winUserDetails.user.email}" id="tb_Email"
+                       readonly="false" sclass="mandatory"/>
+            </row>
+            <row>
+              <label value="Email Benachrichtigung:"/>
+              <checkbox checked="@{winUserDetails.user.sendMail}"/>
+            </row>
+            <!--<row>
+              <label value="Vorname:"/>
+              <textbox width="97%" value="@{winUserDetails.user.firstName}"/>
+            </row>-->
+            <!--<row>
+              <label value="Nachname:"/>
+              <textbox width="97%" value="@{winUserDetails.user.name}"/>
+            </row>-->
+            
+            <row id="row_Passwort">
+              <label value="Passwort:"/>
+              <button id="buttonPW" label="Passwort ändern" onClick="winUserDetails.changePassword()"/>
+            </row>
+
+          </rows>
+        </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right">
+          <button label="OK" onClick="winUserDetails.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" onClick="winUserDetails.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

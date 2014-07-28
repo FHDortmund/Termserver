@@ -1,0 +1,16 @@
+<?page title="Kollaborationsplattform" contentType="text/html;charset=UTF-8"?>
+<!--<?link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"?>-->
+<zk xmlns="http://www.zkoss.org/2005/zul">       
+  <window border="none" height="100%" width="100%" 
+          id="winDiscGroupMain"
+          use="de.fhdo.collaboration.discgroup.DiscGroupMain">
+        <borderlayout>
+          <west id="leadingId" title="Leitende Funktion" size="50%" collapsible="false" flex="true" >
+            <include id="incList" src="/gui/templates/GenericList.zul"/>
+          </west>
+          <east id="participatingId" title="Teilnehmende Funktion" size="50%" collapsible="false" flex="true" >
+            <include id="incListR" src="/gui/templates/GenericList.zul"/>
+          </east>
+        </borderlayout>
+  </window>
+</zk>

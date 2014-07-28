@@ -1,0 +1,76 @@
+﻿<html>
+  <head>
+    <title>Terminologieserver FH Dortmund</title>
+    <link rel="STYLESHEET" type="text/css" href="rsc/termstyles.css">
+  </head>
+
+  <body>
+
+	<h2>Terminologieserver - Überblick</h2>
+	<h4>Was sind Terminologien?</h4><br>
+	Als Terminologie wird die Gesamtheit aller Begriffe und Benennungen einer Fachsprache bezeichnet.<br>
+	Es gibt mehrere Darstellungsformen von Terminologien:
+	<ul style="text-indent:0em;">
+    <li>Wörterbuch
+    Wörterbücher können aus einer oder mehreren Spalten bestehen. Diese enthalten eine Auflistung von Begriffen.</li>
+    <li>Wörter-buch mit enthaltenen Taxonomien
+    Diese Form besteht aus Einträgen, welche auf unterschiedlichen Ebenen liegen können. Im Allgemeinen ist ein solcher Aufbau mittels einer Baumstruktur gut darstellbar. Ein Begriff Computertomographie kann z.B. auf Ebene 1 sein, "Schädel-CT" oder "Thorax -CT" liegen entsprechend auf Ebene 2.</li>
+    <li>Mehrachsige Begriffssysteme
+    Bei einer solchen Form setzen sich Begriffe aus mehreren Achsen zusammen. Wenn z.B. eine Achse Körperteile und eine andere Achse Krankheitstypen enthält, wird ein Beinbruch aus dem Begriff "Bein" der Achse Körperteile und dem Begriff "Bruch" der Achse Krankheitstypen zusammengesetzt.</li>
+    </ul>
+    Eine spezielle Form ist ein "kontrolliertes Vokabular" Man spricht von dieser Form, wenn Einträge nur von einer zentralen Stelle festgelegt werden dürfen.
+	
+	<br><br><h4>Terminologieserver</h4><br>
+	Ein Terminologieserver ist ein Anwendungssystem, welches Terminologien - meist in Form von kontrollierten Vokabularen, aber auch in Form von Ordnungssystemen wie Klassifikationen - für Benutzer bzw. Anwendungssysteme maschinenlesbar zur Verfügung stellt. Dadurch wird die semantische Interoperabilität in einem verteilten System unterstützt.
+	<br><br>
+	Sowohl Primärsysteme als auch Endanwender sollen mit verschiedenen Mitteln auf den Terminologieserver zugreifen können. Während Primärsysteme ihre lokalen Terminologien per Webservice synchronisieren, pflegen oder recherchieren Endanwender Terminologien per dialogbasierter Weboberfläche.
+    
+	
+	<br><br><h4>Terminologieserver der FH-Dortmund</h4><br>
+Das Projekt "Terminologieserver" der FH Dortmund bietet die Möglichkeit, Terminologien auf einem Server zu speichern und diese per Webservices abzurufen oder zu pflegen. Besondere Merkmale sind die Versionsverwaltung sowie die Möglichkeit des Cross-Mappings .
+Der Terminologieserver hat vier Diensteklassen mit den jeweiligen Funktionen, welche an den Standard CTS II angelehnt sind (HL7 Common Terminology Services 2 Service Functional Model):<br><br>
+<ul>
+<li>Administration (Administration)
+<ul>
+<li>Vokabular importieren (Import Code System)</li>
+<li>Vokabular exportieren (Export Code System)</li>
+</ul>
+<li>Suche/Zugriff (Search)</li>
+<ul>
+<li>Vokabulare auflisten (List Code Systems)</li>
+<li>Details zu Vokabularen erhalten (Return Code System Details)</li>
+<li>Begriffe auflisten (List Code System Concepts)</li>
+<li>Details zu Begriffen erhalten (Return Concept Details)</li>
+<li>Verbindungstypen auflisten (List Concept Association Types)</li>
+<li>Details zu Verbindungstypen erhalten (Return Concept Ass. Type Details)</li>
+<li>ValueSets  auflisten (List ValueSets)</li>
+<li>Details zu ValueSets erhalten (Return ValueSets Details)</li>
+<li>Inhalte zu ValueSets auflisten (List ValueSet Contents)</li>
+</ul>
+<li>Pflege (Authoring)</li>
+<ul>
+<li>Vokabular erstellen (Create Code System)</li>
+<li>Vokabular bearbeiten (Maintain Code System Version)</li>
+<li>Status eines Vokabulars ändern (Update Code System Version Status)</li>
+<li>Begriff erstellen (Create Concept)</li>
+<li>Begriff bearbeiten (Maintain Concept)</li>
+<li>Status eines Begriffs ändern (Update Concept Status)</li>
+<li>ValueSet erstellen (Create ValueSet)</li>
+<li>ValueSet bearbeiten (Maintain ValueSet)</li>
+<li>Status eines ValueSets ändern (Update ValueSet Status)</li>
+</ul>
+<li>Konzept-Verbindungen (Concept Association)</li>
+<ul>
+<li>Verbindungen zwischen Begriffen auflisten (List Concept Associations)</li>
+<li>Details zu Verbindungen erhalten (Return Concept Association Details)</li>
+<li>Verbindungen erstellen (Create Concept Association)</li>
+<li>Verbindungen bearbeiten (Maintain Concept Association)</li>
+</ul>
+</ul>
+Die oben genannten Dienste basieren auf dem <a href="http://wiki.hl7.org/index.php?title=CTS2">HL7 CTS 2 - Common Terminology Services 2</a> (letzter Zugriff am 30.11.2011).
+Der Terminologieserver bietet seine Dienste über Webservices an, welche öffentlich erreichbar sind.
+
+<br><br><a href="../index.jsp">zur&uuml;ck</a>
+	
+  </body>
+</html>

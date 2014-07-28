@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page title="Login - Kollaboration" contentType="text/html;charset=UTF-8"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winLogin"?>
+  <window id="winLogin" use="de.fhdo.collaboration.Login" border="0"
+          height="100%" width="100%" onOK="winLogin.onKeyPressed(event)">
+
+    <borderlayout width="100%" height="100%">
+      <north size="300px" border="0">
+        <div align="center" height="200px">
+          <separator />
+          <separator />
+          <!--<image src="rsc/img/logo_ebpg.png"></image>-->
+          <separator />
+          <separator /> 
+          <separator />
+          <separator />
+          <separator />
+          <separator />
+          <separator />
+          <separator />
+          <separator />
+          <separator />
+          <separator />
+          <separator />
+          <div>
+            <!--<image src="/rsc/img/logo.png" width="32px" height="32px" style="margin-top:0px;" />-->
+            <label id="labelVersion" value="Kollaborationsplattform" style="font-size:32px;font-weight:bold;vertical-align:top;margin-left:8px;" />
+          </div>
+          <separator />
+          <separator />
+          <separator />
+          <label value="${labels.appdescription}" style="font-size:14px;"/>
+          <separator />
+          <separator />
+          <label value="${labels.fh_implementation}" style="font-size:14px;"/>
+
+        </div>
+
+      </north>
+      <center border="0" autoscroll="false">
+        <div align="center" height="400px">
+          <separator />
+
+          <panel title="Anmeldung Kollaborationsplattform" framable="true" width="410px" 
+                     border="normal" >
+            <panelchildren>
+
+              <grid width="400px">
+                <columns>
+                  <column width="110px" />
+                  <column />
+                </columns>
+                <rows>
+                  <row id="activationRow" visible="false" >
+                    <div align="right">
+                      <image src="/rsc/img/symbols/info32_32.png" width="32" height="32"/>
+                    </div>
+                    <div align="left">
+                      <label value="Ihr Benutzer wurde erfolgreich aktiviert." />
+                    </div>
+                  </row>
+
+                  <row>
+                    <div align="right">
+                      <label value="Benutzer:" />
+                    </div>
+                    <textbox id="tfUser" value="@{winLogin.username}" width="97%"
+                                 onChanging="warningRow.visible=false;"/>
+                  </row>
+                  <row>
+                    <div align="right">
+                      <label value="Passwort:"  />
+                    </div>
+                    <textbox width="97%" type="password" id="tfPassword" value=""
+                                 onChange="warningRow.visible=false;"/>
+                  </row>
+
+                  <row id="warningRow" visible="false" >
+                    <div align="right">
+                      <image src="/rsc/img/symbols/warning_32x32.png" width="32" height="32"/>
+                    </div>
+                    <div align="left">
+                      <label value="Benutzername unbekannt, Passwort falsch oder der Benutzer ist noch nicht aktiviert." />
+                      <separator/>
+                      <button id="pwVergessenButton" label="neues Passwort zuschicken" onClick="winLogin.sendPassword()" 
+                                  autodisable="self"/>
+                    </div>
+                  </row>
+
+                  <row>
+                    <label id="temp" visible="true" value="" style="color:#DF0101;"/>
+                    <div align="center">
+                      <button id="loginButton" label="Login" 
+                                  onClick="winLogin.login()" autodisable="self"
+                                  image="/rsc/img/symbols/unlock_32x32.png"/>
+                    </div>
+                  </row>
+
+                </rows>
+              </grid>
+
+            </panelchildren>
+          </panel>
+          <separator />
+          <separator />
+          <label id="infoLabel" multiline="true"/>
+          
+          
+          <separator />
+          <separator />
+          <separator />
+          <separator />
+          <separator />
+          <separator />
+          
+          <button label="Zurück zum Terminologie-Browser" 
+                  onClick="winLogin.backToTermBrowser()" autodisable="self"
+                  image="/rsc/img/symbols/back_32x32.png"/>
+          
+        </div>
+      </center>
+     
+      
+      <south height="70px" border="0">
+        <borderlayout>
+          <west  border="none" >
+            <hbox style="margin-top:25px;margin-left:5px">
+              <label value="Umgesetzt von: " style="color:#808080;font-size:12px"/>
+              <image src="/rsc/img/fhdo_logo.png" height="40px" width="110px"/>
+              <image src="/rsc/img/fhtw_logo.png" height="50px" width="144px"/>
+            </hbox>
+          </west>
+          <center border="none" >
+          </center>
+          <east border="none">
+            <hbox style="margin-top:25px;">
+              <label value="Gefördert durch: " style="color:#808080;font-size:12px"/>
+              <image src="/rsc/img/eu.jpg" height="40px" width="179px"/>
+              <image src="/rsc/img/nrw.png" height="40px" width="144px"/>
+              <image src="/rsc/img/bmg_logo.png" height="40px" width="144px"/>
+              <image src="/rsc/img/elga_logo.png" height="45px" width="45px"/>
+              <image src="/rsc/img/brz_logo_neu.png" height="45px" width="45px"/>
+            </hbox>
+          </east>
+        </borderlayout>
+        
+      </south>
+    </borderlayout>
+    
+  </window>
+</zk>

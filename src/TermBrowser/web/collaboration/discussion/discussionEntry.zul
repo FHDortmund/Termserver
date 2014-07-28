@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window border="0" width="100%" 
+          title="" height="220px" 
+          
+          use="de.fhdo.collaboration.discussion.DiscussionEntry"
+          >
+    
+
+    <borderlayout style="margin-top:0px; margin-left:0px;" width="100%" height="100%">
+      <west border="0" style="background:#EAEAEA ;" width="200px">
+        <div style="margin:12px;">
+          <label id="labelUsername" value="Benutzername" style="font-weight: bold; color:#000000;"/>
+          <separator bar="true" width="180px" spacing="12px;"/>
+          <vbox>
+            <label id="labelName" value="Max Mustermann"/>
+            <label id="labelOrg" value="FH Dortmund"/>
+          </vbox>
+        </div>
+      </west>
+      <center  border="0">
+        <borderlayout width="100%" height="100%" style="margin-top:12px; margin-left:12px;margin-right:12px;">
+          <north border="0">
+            <div>
+              <div align="left" style="float:left;" >
+                <label id="labelDatum" value="22.05.2013, 16:24" style="color:#000000;"/>
+                <label id="labelAenderung" value="" />
+              </div>
+              
+              <div align="right">
+                <label id="labelPostNumber" value="#" />
+              </div>
+              
+              <separator bar="true" width="100%"  spacing="12px;"/>
+            </div>
+          </north>
+          <center border="0" autoscroll="false">
+            <borderlayout width="100%" height="100%">
+              <north id="blZitat" border="0" >
+                <groupbox closable="false">
+                  <caption id="zitatCaption" label="Zitat" />
+                  <html id="contentQuote" />
+                </groupbox>
+              </north>
+              <center border="0">
+                <html id="content" content="Test" />
+              </center>
+            </borderlayout>
+            
+          </center>
+          <south border="0" height="44px;">
+            <div>
+              <separator bar="true" width="100%"  spacing="12px;"/>
+              <div align="right" style="min-height:100px;">
+                <button id="buttonEdit" label="Bearbeiten" image="/rsc/img/genericlist/pencil.png"
+                        autodisable="self" tooltiptext="Bearbeitet den Eintrag (nur für den Ersteller möglich)"
+                        />
+                <button id="buttonZitieren" label="Zitieren" image="/rsc/img/genericlist/add.png"
+                        autodisable="self" 
+                        
+                        tooltiptext="Erstellt eine Antwort und zitiert diesen Beitrag"/>
+              </div>
+            </div>
+          </south>
+        </borderlayout>
+        
+        
+        <!--<div style="margin:12px;">
+          <label id="labelDatum" value="22.05.2013, 16:24" style="color:#000000;"/>
+          <separator bar="true" width="100%"  spacing="12px;"/>
+          
+        
+          <div style="min-height:100px;">
+            <html id="content" content="Test"/>
+          </div>
+          
+          <separator bar="true" width="100%"  spacing="12px;"/>
+          
+          <div align="right" style="min-height:100px;">
+            <button id="buttonEdit" label="Bearbeiten" onClick="onNew()" image="/rsc/img/genericlist/pencil.png"
+                    autodisable="self" tooltiptext="Bearbeitet den Eintrag (nur für den Ersteller möglich)" />
+            <button id="buttonZitieren" label="Zitieren" image="/rsc/img/genericlist/add.png"
+                    autodisable="self" 
+                    tooltiptext="Erstellt eine Antwort und zitiert diesen Beitrag"/>
+          </div>
+          
+        </div>-->
+      </center>
+    </borderlayout>
+    
+    
+  </window>
+</zk>

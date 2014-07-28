@@ -1,0 +1,28 @@
+
+
+.mandatory
+{
+  background: #FFE0BB;
+}
+
+.completed
+{
+  color: #888888;
+}
+
+.abgelaufen
+{
+  color: #FF0000;
+}
+
+.z-textbox-disd, .z-textbox-disd * 
+{
+  color: green !important;
+  filter: alpha(opacity=100); 
+}
+
+.headerTitle
+{
+  color: #606060;
+  font-size: 18px;
+}

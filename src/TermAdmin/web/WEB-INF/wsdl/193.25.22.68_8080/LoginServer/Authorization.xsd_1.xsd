@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.2-hudson-740-. --><xs:schema xmlns:tns="http://authorization.ws.fhdo.de/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://authorization.ws.fhdo.de/">
+
+<xs:element name="Authenticate" type="tns:Authenticate" />
+
+<xs:element name="AuthenticateResponse" type="tns:AuthenticateResponse" />
+
+<xs:element name="Login" type="tns:Login" />
+
+<xs:element name="LoginResponse" type="tns:LoginResponse" />
+
+<xs:element name="Logout" type="tns:Logout" />
+
+<xs:element name="LogoutResponse" type="tns:LogoutResponse" />
+
+<xs:complexType name="Login">
+<xs:sequence>
+<xs:element name="parameter" type="tns:loginRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="loginRequestType">
+<xs:sequence>
+<xs:element name="login" type="tns:loginType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="loginType">
+<xs:sequence>
+<xs:element name="applicationKey" type="xs:string" minOccurs="0" />
+<xs:element name="passwordHash" type="xs:string" minOccurs="0" />
+<xs:element name="username" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="LoginResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:loginResponseType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="loginResponseType">
+<xs:sequence>
+<xs:element name="accessInfos" type="tns:accessType" minOccurs="0" />
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="accessType">
+<xs:sequence>
+<xs:element name="email" type="xs:string" minOccurs="0" />
+<xs:element name="roleList" type="tns:roleType" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="token" type="xs:string" minOccurs="0" />
+<xs:element name="userId" type="xs:long" />
+<xs:element name="userName" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="roleType">
+<xs:sequence>
+<xs:element name="key" type="xs:string" minOccurs="0" />
+<xs:element name="name" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="returnType">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0" />
+<xs:element name="success" type="xs:boolean" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="Logout">
+<xs:sequence>
+<xs:element name="parameter" type="tns:logoutRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="logoutRequestType">
+<xs:sequence>
+<xs:element name="logoutInfos" type="tns:logoutType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="logoutType">
+<xs:sequence>
+<xs:element name="token" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="LogoutResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:logoutResponseType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="logoutResponseType">
+<xs:sequence>
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="Authenticate">
+<xs:sequence>
+<xs:element name="parameter" type="tns:authenticateRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="authenticateRequestType">
+<xs:sequence>
+<xs:element name="authenticateInfos" type="tns:authenticateType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="authenticateType">
+<xs:sequence>
+<xs:element name="applicationKey" type="xs:string" minOccurs="0" />
+<xs:element name="token" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="AuthenticateResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:authenticateResponseType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="authenticateResponseType">
+<xs:sequence>
+<xs:element name="accessInfos" type="tns:accessType" minOccurs="0" />
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

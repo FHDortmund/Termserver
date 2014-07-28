@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <style src="/rsc/style/admin.css"/>
+  <window id="winEnquiry" border="none" width="100%" height="100%"
+   use="de.fhdo.gui.admin.modules.collaboration.Enquiry">
+
+    <include id="incList" src="/gui/templates/GenericList.zul"/>
+    
+  </window>
+</zk>

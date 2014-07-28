@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.2-hudson-740-. --><xs:schema xmlns:tns="http://sso.ws.terminologie.fhdo.de/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://sso.ws.terminologie.fhdo.de/">
+
+<xs:element name="MPseudonym" type="tns:MPseudonym" />
+
+<xs:element name="MPseudonymResponse" type="tns:MPseudonymResponse" />
+
+<xs:element name="mPseudonymResponseType">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="returnType" type="tns:returnType" minOccurs="0" />
+<xs:element name="mPseudonymOutputType" type="tns:mPseudonymOutputType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:complexType name="MPseudonym">
+<xs:sequence>
+<xs:element name="parameter" type="tns:mPseudonymRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="mPseudonymRequestType">
+<xs:sequence>
+<xs:element name="mPseudonymInputType" type="tns:mPseudonymInputType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="mPseudonymInputType">
+<xs:sequence>
+<xs:element name="pseudonym" type="xs:string" minOccurs="0" />
+<xs:element name="type" type="xs:string" minOccurs="0" />
+<xs:element name="username" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="MPseudonymResponse">
+<xs:sequence>
+<xs:element name="return" minOccurs="0">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="returnType" type="tns:returnType" minOccurs="0" />
+<xs:element name="mPseudonymOutputType" type="tns:mPseudonymOutputType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="returnType">
+<xs:sequence>
+<xs:element name="count" type="xs:int" />
+<xs:element name="message" type="xs:string" minOccurs="0" />
+<xs:element name="overallErrorCategory" type="tns:overallErrorCategory" minOccurs="0" />
+<xs:element name="status" type="tns:status" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="mPseudonymOutputType">
+<xs:sequence>
+<xs:element name="hash" type="xs:string" minOccurs="0" />
+<xs:element name="pseudonym" type="xs:string" minOccurs="0" />
+<xs:element name="status" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:simpleType name="overallErrorCategory">
+<xs:restriction base="xs:string">
+<xs:enumeration value="INFO" />
+<xs:enumeration value="WARN" />
+<xs:enumeration value="ERROR" />
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="status">
+<xs:restriction base="xs:string">
+<xs:enumeration value="OK" />
+<xs:enumeration value="FAILURE" />
+</xs:restriction>
+</xs:simpleType>
+</xs:schema>

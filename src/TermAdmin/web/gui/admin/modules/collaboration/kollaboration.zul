@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="winKollaboration" border="none" width="100%" height="100%"
+   use="de.fhdo.gui.admin.modules.collaboration.Kollaboration">
+
+    <tabbox id="tabboxNavigation" 
+            height="100%" width="100%" 
+            onSelect="winKollaboration.onNavigationSelect(event)">
+      <tabs>
+        <tab visible="true" label="Reporting-Kollaboration" id="tabRepKollab"/>
+        <tab visible="false" label="Benutzer Kollaborationsbereich"  id="tabBenutzer"/>
+        <tab visible="false" label="Benutzer Anfragen"  id="tabAnfragen"/>
+        <tab visible="false" label="Zuordnung Inhaltsverwalter >>> Terminologien" id="tabSvAssignment" />
+        <tab visible="false" label="Workflow"  id="tabWorkflow"/>
+        <tab visible="false" label="Domains"   id ="tabDomain"/>
+        <tab visible="false" label="System-Parameter" id="tabSysParam"/>
+      </tabs>
+      <tabpanels>
+        <tabpanel>
+          <include id="incRepKollab"/>
+        </tabpanel>  
+        <tabpanel>
+          <include id="incBenutzer"/>
+        </tabpanel>
+        <tabpanel>
+          <include id="incAnfragen"/>
+        </tabpanel>
+        <tabpanel>
+          <include id="incSvAssignment"/>
+        </tabpanel>
+        <tabpanel>
+          <include id="incWorkflow"/>
+        </tabpanel>
+        <tabpanel>
+          <include id="incDomain"/>
+        </tabpanel>
+        <tabpanel>
+          <include id="incSysParam"/>
+        </tabpanel>
+      </tabpanels>
+    </tabbox>
+  </window>
+</zk>

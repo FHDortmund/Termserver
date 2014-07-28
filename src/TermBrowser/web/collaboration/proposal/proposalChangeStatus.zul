@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <!--<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winProposalChangeStatus"?>-->
+  <window id="winProposalChangeStatus" width="600px" height="240px" closable="true" sizable="false"
+          use="de.fhdo.collaboration.proposal.ProposalStatusChange"
+          title="Statusänderung" border="normal">
+    <borderlayout>
+      <center border="0">
+        
+        <grid>
+          <columns>
+            <column width="100px" align="right" label=""/>
+            <column label=""/>
+          </columns>
+          <rows>
+            <row>
+              <label value="Hinweis:"/>
+              <label value="Bitte geben Sie einen Grund für die Statusänderung ein."/>
+            </row>
+            <row>
+              <label value="Grund:"/>
+              <textbox width="98%" id="tbReason" rows="3"/>
+            </row>
+            <row id="rowZeitraum" height="50px" visible="false">
+              <label value="Diskussions-Zeitraum:"/>
+              <hbox>
+                <checkbox id="cbZeitraum" onCheck="divZeitraum.visible=cbZeitraum.checked;" />
+                <div id="divZeitraum" visible="false">
+                  <datebox id="dateVon"/>
+                  <label value="bis"/>
+                  <datebox id="dateBis"/>
+                </div>
+              </hbox>
+            </row>
+              
+          </rows>
+        </grid>
+      </center>
+      <south height="28px" border="0" collapsible="true">
+        <div align="right" style="margin-right:0px;">
+          <button label="Statusänderung unwiderruflich durchführen" onClick="winProposalChangeStatus.onOkClicked()" autodisable="self"
+          />
+          <!--<button label="Abbrechen" onClick="winProposalChangeStatus.onCancelClicked()" autodisable="self" />-->
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

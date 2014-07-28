@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <separator/>
+  <label>Bitte wählen Sie in der Navigation eine Domäne aus.</label>
+</zk>

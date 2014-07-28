@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <style src="/rsc/style/admin.css"/>
+  <window id="winUser" border="none" width="100%" height="100%"
+          use="de.fhdo.gui.admin.modules.terminology.SysParam">
+    <borderlayout>
+        <center>
+        <include id="incList" src="/gui/templates/GenericList.zul"/>
+        </center>
+        <south id="id_south" visible="false">
+            <grid span="true" vflex="true" height = "185px">
+            <columns>
+              <column width="130px" align="right" label=""/>
+              <column label=""/>
+            </columns>
+            <rows>
+              <row>
+                  <label value="CodeSystem oder ValueSet"/>
+                  <checkbox id="cbIsCodeSystem" label="CodeSystem?"/>
+              </row>
+              <row>
+                  <label value="Nur Version löschen?"/>
+                  <checkbox id="cbIsOnlyVersion" label="NurVersion?"/>
+              </row>
+              <row>
+                  <label value="CS/VS-Id"/>
+                  <textbox width="97%" value="" id="tb_CSVSId"/>
+              </row>
+              <row>
+                  <label value="CS/VS-VersionId"/>
+                  <textbox width="97%" value="" id="tb_CSVSVersionId"/>
+              </row>
+              <row>
+                  <button label="Löschen" onClick="winUser.deleteTerm()" autodisable="self" />
+                  <separator></separator>
+              </row>
+              <row>
+                  <button label="Do-Fix1" onClick="winUser.fixIt()" autodisable="self" />
+                  <separator></separator>
+              </row>
+              <row>
+                  <button label="Do-Fix2" onClick="winUser.fixItA()" autodisable="self" />
+                  <separator></separator>
+              </row>
+            </rows>
+          </grid>
+        </south>
+    </borderlayout>
+  </window>
+</zk>

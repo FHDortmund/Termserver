@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winProposalViewDetails"?>
+  <window border="none" height="100%" width="100%" 
+          id="winProposalViewDetails" 
+          use="de.fhdo.collaboration.desktop.proposal.ProposalViewDetails">
+    
+    <borderlayout>
+      <center border="0">
+        <borderlayout>
+          <center border="0" margins="0,0,5,0">
+            <borderlayout>
+              <center title="Vorschlag">
+                
+                <grid style="border: 0px #CCC;" vflex="true">
+                  <columns>
+                    <column width="140px" align="right" label=""/>
+                    <column label=""/>
+                  </columns>
+                  <rows>
+                    <row>
+                      <label value="Beschreibung:"/>
+                      <textbox width="99%" value="@{winProposalView.proposal.description}"
+                               readonly="false" rows="6" inplace="false" disabled="false"/>
+                    </row>
+                    <row>
+                      <label value="Erstellt am:"/>
+                      <datebox value="@{winProposalView.proposal.created}" inplace="false" readonly="true" disabled="true" format="medium+short" width="200px"/>
+                    </row>
+                    <row>
+                      <label value="Letzte Änderung:"/>
+                      <datebox id="db_lastChangeDate" value="@{winProposalView.proposal.lastChangeDate}" inplace="false" readonly="true" disabled="true" format="medium+short" width="200px"/>
+                    </row>
+                    <row>
+                      <label value="Gültig von:"/>
+                      <datebox value="@{winProposalView.proposal.validFrom}" inplace="false" readonly="true" disabled="true" format="medium"/>
+                    </row>
+                    <row>
+                      <label value="Gültig bis:"/>
+                      <datebox value="@{winProposalView.proposal.validTo}" inplace="false" readonly="true" disabled="true" format="medium"/>
+                    </row>
+                    <row>
+                      <label value="Erstellt von:"/>
+                      <textbox width="99%" value="@{winProposalView.erstellerFull}"
+                               readonly="true" inplace="false" disabled="true"/>
+                    </row>
+                    <row>
+                      <label value="Zugehörige Terminologie:"/>
+                      <textbox width="99%" value="@{winProposalView.proposal.vocabularyName}"
+                               readonly="true" inplace="false" disabled="true"/>
+                    </row>
+                    <row>
+                      <label value="Notiz:"/>
+                      <textbox width="99%" value="@{winProposalView.proposal.note}"
+                               readonly="false" disabled="false" rows="8" inplace="false"/>
+                    </row>
+                    <row>
+                        <label value=""/>
+                        <button id="buttonEditProposal" label="Änderungen speichern" onClick="winProposalViewDetails.reSaveProposal()" disabled="true"/>
+                    </row>
+                  </rows>
+                </grid>
+                
+              </center>
+              <south title="Zugehörige Konzepte/Objekte" margins="5,0,0,0" height="150px">
+                <include id="incListObjects" src="/gui/templates/GenericList.zul"/>
+              </south>
+
+            </borderlayout>
+          </center>
+          <east border="0" width="600px" flex="true" splittable="true" collapsible="true">
+            <borderlayout>
+              <center title="Verlauf" >
+                <include id="incListVerlauf" src="/gui/templates/GenericList.zul"/>
+              </center>
+              <south title="Diskussionsteilnehmer" height="50%">
+                <include id="incListPrivilegien" src="/gui/templates/GenericList.zul"/>
+              </south>
+
+            </borderlayout>
+          </east>
+        </borderlayout>
+        
+        
+        <!--<grid>
+          <columns>
+            <column width="140px" align="right" label=""/>
+            <column label=""/>
+          </columns>
+          <rows>
+            <row>
+              <label value="Name:"/>
+              <textbox width="97%"
+             value="@{winCategoryDetails.category.name}" sclass="mandatory"/>
+            </row>
+            <row>
+              <label value="Farbe (Style):"/>
+              <textbox width="97%" multiline="true" rows="5"
+                       value="@{winCategoryDetails.category.color}"/>
+            </row>
+          </rows>
+        </grid>-->
+      </center>
+      <!--<south border="0" collapsible="true">
+        <div>
+          <separator bar="true" />
+        
+          <div align="right" style="margin-right:8px; margin-bottom:4px; margin-top:4px;">
+            <button label="zurück" onClick="winProposalView.onOkClicked()" 
+                  autodisable="self" 
+                  image="/rsc/img/symbols/back_32x32.png"
+                  />
+          </div>
+        </div>
+      </south>-->
+    </borderlayout>
+    
+  </window>
+</zk>

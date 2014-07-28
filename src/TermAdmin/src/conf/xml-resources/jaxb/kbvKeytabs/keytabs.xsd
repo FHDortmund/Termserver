@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xs:schema targetNamespace="urn:ehd/001" elementFormDefault="qualified" attributeFormDefault="unqualified" blockDefault="substitution" xmlns="urn:ehd/001" xmlns:ehd="urn:ehd/001" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- ************************ keytabs ********************************* -->
+	<xs:element name="keytabs" type="keytabs_typ" final="extension">
+		<xs:annotation>
+			<xs:documentation>Schlüsseltabellen</xs:documentation>
+		</xs:annotation>
+		<xs:unique name="u_keytab_S_SV">
+			<xs:selector xpath="./ehd:keytab"/>
+			<xs:field xpath="@S"/>
+			<xs:field xpath="@SV"/>
+		</xs:unique>
+	</xs:element>
+	<xs:complexType name="keytabs_typ">
+		<xs:sequence>
+			<xs:element ref="keytab" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ************************ keytab ********************************* -->
+	<xs:element name="keytab" type="keytab_typ">
+		<xs:annotation>
+			<xs:documentation>Sclüsseltabelle mit S=OID, SN=Name der Schlüsseltabelle, SV=Version</xs:documentation>
+		</xs:annotation>
+		<xs:key name="k_keytab_S_SV">
+			<xs:selector xpath="."/>
+			<xs:field xpath="@S"/>
+			<xs:field xpath="@SV"/>
+		</xs:key>
+		<xs:keyref name="kref_keytab_S_SV" refer="k_keytab_S_SV">
+			<xs:selector xpath="ehd:key"/>
+			<xs:field xpath="@S"/>
+			<xs:field xpath="@SV"/>
+		</xs:keyref>
+		<xs:unique name="u_key_V_S_SV">
+			<xs:selector xpath="ehd:key"/>
+			<xs:field xpath="@V"/>
+			<xs:field xpath="@S"/>
+			<xs:field xpath="@SV"/>
+		</xs:unique>
+	</xs:element>
+	<xs:complexType name="keytab_typ">
+		<xs:sequence>
+			<xs:element ref="key" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="S" type="xs:string" use="required"/>
+		<xs:attribute name="SN" type="xs:string" use="required"/>
+		<xs:attribute name="SV" type="xs:string" use="required"/>
+	</xs:complexType>
+	<!-- ************************ key ********************************* -->
+	<xs:element name="key">
+		<xs:annotation>
+			<xs:documentation>Schlüssel mit V=Wert, DN=WertBezeichnung, S=OID zur welchen Sclüsseltabelle der Wert gehört, SV=Version der Schlüsseltabelle</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="key_typ"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="key_typ">
+		<xs:sequence>
+			<xs:element ref="fkey" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="V" type="xs:string" use="required"/>
+		<xs:attribute name="S" type="xs:string" use="required"/>
+		<xs:attribute name="SV" type="xs:string" use="required"/>
+		<xs:attribute name="DN" type="xs:string" use="required"/>
+		<xs:anyAttribute namespace="##local" processContents="lax"/>
+	</xs:complexType>
+	<xs:element name="fkey" type="fkey_typ"/>
+	<xs:complexType name="fkey_typ">
+		<xs:attribute name="V" type="xs:string" use="required"/>
+		<xs:attribute name="S" type="xs:string" use="required"/>
+		<xs:attribute name="SV" type="xs:string" use="required"/>
+		<xs:anyAttribute namespace="##local" processContents="lax"/>
+	</xs:complexType>
+
+</xs:schema>

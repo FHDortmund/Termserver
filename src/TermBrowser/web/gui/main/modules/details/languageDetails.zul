@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul"> 
+     
+  <window id="winLanguage" title="Translation-Details" width="500px"  height="150px" border="normal"
+     use="de.fhdo.gui.main.modules.details.LanguageDetails" closable="true">
+    <borderlayout>
+      <center border="0">
+        <grid>
+          <columns>
+            <column width="120px" align="right" label=""/>
+            <column label=""/>
+          </columns>
+          <rows>
+             <row>
+              <label value="${labels.common.language}"/>
+              <combobox id="cbLanguage" width="97%" sclass="mandatory"/>
+            </row>
+            <row>
+              <label value="${labels.common.value}"/>
+              <textbox id="tbValueOfLanguage" width="97%" sclass="mandatory"/>
+            </row>
+          </rows>
+        </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right" style="margin-right:8px;">
+          <button label="OK" onClick="winLanguage.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" onClick="winLanguage.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+    
+    
+</zk>

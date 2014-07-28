@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <borderlayout>
+    <north>               
+         <include src="../menu.zul" />                               
+     </north>
+     <center>
+        <window id="winMainCollab" border="0" width="100%" height="100%"
+        use="de.fhdo.collaboration.desktop.MainCollab">
+
+            <tabbox id="tabboxNavigation" height="100%" width="100%" onSelect="winMainCollab.onNavigationSelect(event)" >
+              <tabs>
+                <tab label="Vorschlags Übersicht" id="tabProposal" />
+                <tab label="Meine Diskussionsgruppen" id="tabDiscGroup" />
+              </tabs>
+              <tabpanels>  
+                <tabpanel>
+                  <include id="incProposal"/>
+                </tabpanel>
+                <tabpanel>
+                  <include id="incDiscGroup"/>
+                </tabpanel>   
+              </tabpanels>
+            </tabbox>
+        </window>
+    </center>
+    </borderlayout>
+</zk>

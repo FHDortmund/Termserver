@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page title="Kontaktformular" contentType="text/html;charset=UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winEnquiry"?>
+
+  <window id="winEnquiry" title="Kontaktformular" width="800px"  height="675px"
+          use="de.fhdo.gui.info.Enquiry" position="center" >
+    <borderlayout>
+      <north border="0">
+        <grid span="true" vflex="true" height = "500px">
+          <columns>
+            <column width="130px" align="right" label=""/>
+            <column label=""/>
+          </columns>
+          <rows>
+            <row>
+                <separator></separator>
+                <separator></separator>
+            </row>
+            <row>
+                <label id="l_ChooseType" visible="true" value="Bitte wählen sie den Anfragetyp: "/>
+                <radiogroup onCheck="winEnquiry.setSelection(self.selectedItem.label)">
+                    <vlayout>
+                        <radio label="Allgemeine Anfrage" selected="true" />
+                        <radio label="Anfrage zur Registrierung als Diskussionsteilnehmer" />
+                        <radio label="Anfrage zur Registrierung als Inhaltsverwalter" />
+                    </vlayout>
+                </radiogroup>
+            </row>
+            <row>
+                <separator></separator>
+            </row>
+            <row>
+                <separator></separator>
+                <label visible="true" value="Rot markierte Felder sind Pflichtfelder. Bitte füllen Sie diese aus!"/>
+                <separator></separator>
+            </row>
+            <row>
+                <separator></separator>
+            </row>
+            <row>
+                 <separator></separator>
+                 <label id="l_GeneralInfo" visible="true" value="Allgemeine Information: "/>
+            </row>
+            <row id="row_Username" visible="false">
+              <label id="l_Username" visible="true" value="Benutzername: "/>
+              <textbox visible="true" width="97%" value="@{winEnquiry.user.username}" id="tb_Username" readonly="false" sclass="mandatory" />
+            </row>
+            <row>
+              <label id="l_Vorname" visible="true" value="Vorname: "/>
+              <textbox visible="true" width="97%" value="@{winEnquiry.user.firstName}" id="tb_Vorname" readonly="false" sclass="mandatory"/>
+            </row>
+            <row>
+              <label  id="l_Nachname" visible="true" value="Nachname: "/>
+              <textbox visible="true" width="97%" value="@{winEnquiry.user.name}" id="tb_Nachname" readonly="false" sclass="mandatory"/>
+            </row>
+            <row>
+              <label id="l_Organisation" visible="true" value="Organisation: "/>
+              <textbox  visible="true" width="97%" value="@{winEnquiry.user.organisation.organisation}" id="tb_Organisation" readonly="false" sclass="mandatory"/>
+            </row>
+            <row>
+              <label id="l_Email" visible="true" value="Email-Adresse: "/>
+              <textbox  visible="true" width="97%" value="@{winEnquiry.user.email}" id="tb_Email" readonly="false" sclass="mandatory"/>
+            </row>
+            <row>
+              <label id="l_Phone" visible="true" value="Telefonnummer: "/>
+              <textbox  visible="true" width="97%" value="@{winEnquiry.user.phone}" id="tb_Phone" readonly="false" sclass="mandatory"/>
+            </row>
+            <row>
+              <label id="l_RequestDescription" visible="true" value="Beschreibung des Anliegens: "/>
+              <textbox  multiline="true" visible="true" width="97%" value="@{winEnquiry.enquiry.requestDescription}" id="tb_RequestDescription" readonly="false" sclass="mandatory"/>
+            </row>
+            <row id="row_ExtendedInfo" visible="false">
+                 <separator></separator>
+                 <label id="l_ExtendedInfo" visible="true" value="Erweiterte Information: "/>
+            </row>
+            <row id="row_TermName" visible="false">
+              <label id="l_TermName" visible="true" value="Name der Terminologie: "/>
+              <textbox visible="true" width="97%" value="@{winEnquiry.enquiry.termName}" id="tb_TermName" readonly="false" sclass="mandatory"/>
+            </row>
+            <row id="row_TermDescription" visible="false">
+              <label id="l_TermDescription" visible="true" value="Beschreibung der Terminologie: "/>
+              <textbox  multiline="true" visible="true" width="97%" value="@{winEnquiry.enquiry.termDescription}" id="tb_TermDescription" readonly="false" sclass="mandatory"/>
+            </row>
+            <row id="row_IntendedValidityRange" visible="false">
+              <label id="l_IntendedValidityRange" visible="true" value="Beabsichtigter Geltungsbereich: "/>
+              <textbox visible="true" width="97%" value="@{winEnquiry.enquiry.intendedValidityRange}" id="tb_IntendedValidityRange" readonly="false" sclass="mandatory"/>
+            </row>
+            <row id="row_MoreExtendedInfo" visible="false">
+                 <separator></separator>
+                 <label id="l_MoreExtendedInfo" visible="true" value="Inhaltsverwalter: "/>
+            </row>
+            <row id="row_UsernameExt" visible="false">
+              <label id="l_UsernameExt" visible="true" value="Benutzername: "/>
+              <textbox visible="true" width="97%" value="@{winEnquiry.userExt.username}" id="tb_UsernameExt" readonly="false" sclass="mandatory"/>
+            </row>
+            <row id="row_VornameExt" visible="false">
+              <label id="l_VornameExt" visible="true" value="Vorname: "/>
+              <textbox visible="true" width="97%" value="@{winEnquiry.userExt.firstName}" id="tb_VornameExt" readonly="false" sclass="mandatory"/>
+            </row>
+            <row id="row_NachnameExt" visible="false">
+              <label  id="l_NachnameExt" visible="true" value="Nachname: "/>
+              <textbox  visible="true" width="97%" value="@{winEnquiry.userExt.name}" id="tb_NachnameExt" readonly="false" sclass="mandatory"/>
+            </row>
+            <row id="row_OrganisationExt" visible="false">
+              <label id="l_OrganisationExt" visible="true" value="Organisation: "/>
+              <textbox  visible="true" width="97%" value="@{winEnquiry.userExt.organisation.organisation}" id="tb_OrganisationExt" readonly="false" sclass="mandatory"/>
+            </row>
+            <row id="row_EmailExt" visible="false">
+              <label id="l_EmailExt" visible="true" value="Email-Addresse: "/>
+              <textbox  visible="true" width="97%" value="@{winEnquiry.userExt.email}" id="tb_EmailExt" readonly="false" sclass="mandatory"/>
+            </row>
+            <row id="row_PhoneExt" visible="false">
+              <label id="l_PhoneExt" visible="true" value="Telefonnummer: "/>
+              <textbox  visible="true" width="97%" value="@{winEnquiry.userExt.phone}" id="tb_PhoneExt" readonly="false" sclass="mandatory"/>
+            </row>
+          </rows>
+        </grid>
+      </north>
+      <center  border="0">
+          <grid>
+            <columns>                
+              <column width="200px" />
+              <column label=""/>
+            </columns>            
+            <rows> 
+              <row>
+                  <separator></separator>
+                  <!--<label value="Sicherheitsabfrage:" />
+                  <vbox width="400px" height="100px">
+                    <bw.captcha id="cpa" length="5" width="200px" height="50px"/>
+                    <button label="Bild neu generieren" onClick="cpa.randomValue();"/>
+                    <textbox id="tfCaptcha" value="" width="97%" />
+                  </vbox>-->
+              </row>
+            </rows>        
+          </grid>
+      </center>
+      <south height="30px" top="25px" border="0">
+          <div align="right">
+          <button label="OK" onClick="winEnquiry.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" onClick="winEnquiry.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

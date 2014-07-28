@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winAttchDetails"?>
+
+  <window id="winAttchDetails" title="Anhang-Details" width="800px"  height="400px" border="normal"
+     use="de.fhdo.collaboration.desktop.AttachmentDetails" closable="true"
+     sizable="true">
+    <borderlayout>
+      <center border="0">
+        <grid>
+          <columns>
+            <column width="140px" align="right" label=""/>
+            <column label=""/>
+          </columns>
+          <rows>
+
+            <row>
+              <label value="Typ:"/>
+              <combobox id="cbTechnicalType" model="@{winAttchDetails.technicalTypeList}"
+                        selectedItem="@{winAttchDetails.selectedTechnicalType}" value="@{winAttchDetails.selectedTechnicalType.displayText}"
+               onChange="winAttchDetails.showContent()" readonly="true"
+               width="98%">
+                <comboitem self="@{each=itemType2}" label="@{itemType2.displayText}" value="@{itemType2.code}" />
+              </combobox>
+            </row>
+
+            <row id="documentRow">
+              <label value="Datei:"/>
+
+              <hbox>
+                <div style="margin-top:3px;"> 
+                   <textbox id="filename" width="500px"
+                            value="@{winAttchDetails.link.content}"/>
+                </div>
+                 <button                 label="Datei Auswahl"
+                                         upload="true,maxsize=20240"
+                                         onUpload="winAttchDetails.selectFile(event)"
+                                         id="buttonSelectFile"/>
+              </hbox>
+
+              
+            </row>
+            
+            <row id="mimeTypeRow">
+              <label value="Mime-Type:"/>
+              <combobox id="cbMimeType" model="@{winAttchDetails.mimeTypeList}"
+               selectedItem="@{winAttchDetails.selectedMimeType}" value="@{winAttchDetails.link.mimeType}"
+               width="98%">
+                <comboitem self="@{each=itemType3}" label="@{itemType3.displayText}" value="@{itemType3.code}" />
+              </combobox>
+            </row>
+
+            <row id="inhaltRow">
+              <label id="labelText" value="Text:"/>
+              <textbox width="97.2%" id="tbContent" value="@{winAttchDetails.link.description}" rows="5"/>
+            </row>
+           
+
+          </rows>
+        </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right">
+          <button label="OK" onClick="winAttchDetails.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" onClick="winAttchDetails.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

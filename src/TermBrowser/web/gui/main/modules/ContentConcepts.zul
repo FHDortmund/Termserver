@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<?page id="pageContentConceps"?>-->
+
+<zk xmlns="http://www.zkoss.org/2005/zul">    
+  <window id="windowConcepts" border="none" height="100%" width="100%" use="de.fhdo.gui.main.modules.ContentConcepts">
+    <borderlayout>
+      <center border="none" flex="true" margins="2,2,2,2">
+        <tabbox id="tabboxFilter">
+          <tabs>
+            <tab label="${labels.common.concepts}" id="tabConcepts"/>
+          </tabs>
+          <tabpanels>
+            <tabpanel>                
+              <toolbar width="100%" id="tbarExpandCollapse">
+                <hbox align="center" >
+                  <toolbarbutton image="/rsc/img/symbols/expand_16x16.png"   onClick="windowConcepts.expandTree()"   tooltiptext="${labels.componentTreeAndContent.expandTreeCS}"/>
+                  <toolbarbutton image="/rsc/img/symbols/collapse_16x16.png" onClick="windowConcepts.collapseTree()" tooltiptext="${labels.componentTreeAndContent.colapseTreeCS}" />                  
+                </hbox>
+              </toolbar>    
+              <borderlayout vflex="true">
+                <center border="none"  vflex="min">
+                  <tree id="treeConcepts" vflex="true" width="100%" height="100%" zclass="z-tree" span="0">                      
+                    <treecols sizable="true">
+                      <treecol label="${labels.common.name}" sort="auto" id="tcTerm" hflex="min"></treecol>
+                      <treecol label="${labels.common.code}" sort="auto" id="tcCode" hflex="min"></treecol>
+                    </treecols>                    
+                  </tree>
+                </center>
+                <south border="none" vflex="min">
+                  <div style="padding-top:5px; padding-left: 0px;">
+                    <div align="left" style="float:left;">
+                      <button id="bAssume" label="${labels.common.assumeConcept}" onClick="windowConcepts.assumeConcept()" 
+                              visible="false" />
+                      
+                      <!-- Kollaboration -->
+                      <button id="bProposeNewConcept" label="${labels.collab.proposeNewConcept}" onClick="windowConcepts.proposeNewConcept()" 
+                              visible="{windowConcepts.isCollaboration}" />
+                      
+                      <!-- Kollaboration Ende -->
+                      
+                    </div>
+                    <div align="right">  
+                      <label value="${labels.contentConcepts.moreFunctions}" style="color:gray"/>
+                      <button id="bNew"     label="${labels.contentConcepts.newConcept}" onClick="windowConcepts.showPopupConcept(2,3)"    image="/rsc/img/list/add.png"    visible="false" />
+                      <button id="bEdit"    label="${labels.common.edit}"       onClick="windowConcepts.showPopupConcept(5)"      image="/rsc/img/list/pencil.png" visible="false" disabled="true"/>
+                      <button id="bSearch"  label="${labels.common.search}"     onClick="windowConcepts.showPopupConceptSearch()" image="/rsc/img/list/folder_magnify.png"/>
+                      <button id="bDetails" label="${labels.common.details}"    onClick="windowConcepts.showPopupConcept(1)"      image="/rsc/img/list/magnifier.png"              disabled="true"/>             
+                    </div>
+                  </div>
+                </south>
+              </borderlayout>              
+            </tabpanel>
+          </tabpanels>
+        </tabbox>
+      </center>
+    </borderlayout>
+  </window>
+</zk>

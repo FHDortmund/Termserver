@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.2-hudson-740-. --><xs:schema xmlns:tns="http://authorization.ws.terminologie.fhdo.de/" xmlns:ns1="de.fhdo.termserver.types" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://authorization.ws.terminologie.fhdo.de/">
+
+<xs:import namespace="de.fhdo.termserver.types" schemaLocation="http://127.0.0.1:8080/TermServer/Authorization?xsd=2" />
+
+<xs:element name="Login" type="tns:Login" />
+
+<xs:element name="LoginResponse" type="tns:LoginResponse" />
+
+<xs:element name="Logout" type="tns:Logout" />
+
+<xs:element name="LogoutResponse" type="tns:LogoutResponse" />
+
+<xs:element name="associationType" type="ns1:associationType" />
+
+<xs:element name="codeSystem" type="ns1:codeSystem" />
+
+<xs:element name="codeSystemConcept" type="ns1:codeSystemConcept" />
+
+<xs:element name="codeSystemConceptTranslation" type="ns1:codeSystemConceptTranslation" />
+
+<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" />
+
+<xs:element name="codeSystemEntityVersion" type="ns1:codeSystemEntityVersion" />
+
+<xs:element name="codeSystemEntityVersionAssociation" type="ns1:codeSystemEntityVersionAssociation" />
+
+<xs:element name="codeSystemMetadataValue" type="ns1:codeSystemMetadataValue" />
+
+<xs:element name="codeSystemVersion" type="ns1:codeSystemVersion" />
+
+<xs:element name="codeSystemVersionEntityMembership" type="ns1:codeSystemVersionEntityMembership" />
+
+<xs:element name="codeSystemVersionEntityMembershipId" type="ns1:codeSystemVersionEntityMembershipId" />
+
+<xs:element name="conceptValueSetMembership" type="ns1:conceptValueSetMembership" />
+
+<xs:element name="conceptValueSetMembershipId" type="ns1:conceptValueSetMembershipId" />
+
+<xs:element name="domain" type="ns1:domain" />
+
+<xs:element name="domainValue" type="ns1:domainValue" />
+
+<xs:element name="licenceType" type="ns1:licenceType" />
+
+<xs:element name="licencedUser" type="ns1:licencedUser" />
+
+<xs:element name="licencedUserId" type="ns1:licencedUserId" />
+
+<xs:element name="loginResponseType">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
+<xs:element name="login" type="tns:loginType" minOccurs="0" />
+<xs:element name="termUser" type="ns1:termUser" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+
+<xs:element name="metadataParameter" type="ns1:metadataParameter" />
+
+<xs:element name="property" type="ns1:property" />
+
+<xs:element name="propertyVersion" type="ns1:propertyVersion" />
+
+<xs:element name="session" type="ns1:session" />
+
+<xs:element name="sysParam" type="ns1:sysParam" />
+
+<xs:element name="termUser" type="ns1:termUser" />
+
+<xs:element name="valueSet" type="ns1:valueSet" />
+
+<xs:element name="valueSetVersion" type="ns1:valueSetVersion" />
+
+<xs:complexType name="Logout">
+<xs:sequence>
+<xs:element name="parameter" type="tns:logoutRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="logoutRequestType">
+<xs:sequence>
+<xs:element name="login" type="tns:loginType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="loginType">
+<xs:sequence>
+<xs:element name="ip" type="xs:string" minOccurs="0" />
+<xs:element name="password" type="xs:string" minOccurs="0" />
+<xs:element name="sessionID" type="xs:string" minOccurs="0" />
+<xs:element name="username" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="LogoutResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:logoutResponseType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="logoutResponseType">
+<xs:sequence>
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="returnType">
+<xs:sequence>
+<xs:element name="count" type="xs:int" />
+<xs:element name="message" type="xs:string" minOccurs="0" />
+<xs:element name="overallErrorCategory" type="tns:overallErrorCategory" minOccurs="0" />
+<xs:element name="status" type="tns:status" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="Login">
+<xs:sequence>
+<xs:element name="parameter" type="tns:loginRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="loginRequestType">
+<xs:sequence>
+<xs:element name="login" type="tns:loginType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="LoginResponse">
+<xs:sequence>
+<xs:element name="return" minOccurs="0">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
+<xs:element name="login" type="tns:loginType" minOccurs="0" />
+<xs:element name="termUser" type="ns1:termUser" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<xs:simpleType name="overallErrorCategory">
+<xs:restriction base="xs:string">
+<xs:enumeration value="INFO" />
+<xs:enumeration value="WARN" />
+<xs:enumeration value="ERROR" />
+</xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="status">
+<xs:restriction base="xs:string">
+<xs:enumeration value="OK" />
+<xs:enumeration value="FAILURE" />
+</xs:restriction>
+</xs:simpleType>
+</xs:schema>

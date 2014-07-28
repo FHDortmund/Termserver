@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="winDB" border="none" width="100%" height="100%"
+          use="de.fhdo.gui.admin.modules.terminology.Datenbank">
+    <borderlayout>
+      <north border="0">
+        <groupbox closable="false" width="50%">
+          <caption label="Export" />
+     
+          <grid>
+            <columns>
+              <column width="100px"/>
+              <column />
+            </columns>
+            <rows>
+              <row>	
+                <label value="Beschreibung: "/>
+                <textbox id="tbDateiname" width="97%"/>
+              </row>
+            </rows>
+          </grid>
+      
+          <separator/>
+          <div align="center">
+            <button label="DB-Dump erstellen" onClick="winDB.createDump()" 
+              image="/rsc/img/symbols/export_32x32.png"/>
+          </div>
+     
+        </groupbox>
+      </north>
+      <center border="0">
+        <groupbox closable="false" width="100%" height="100%">
+          <caption label="Import" />
+     
+          <include id="incList" src="/gui/templates/GenericList.zul"
+          width="100%" height="100%"/>
+        </groupbox>
+      </center>
+    </borderlayout>
+  
+  </window>
+  
+</zk>

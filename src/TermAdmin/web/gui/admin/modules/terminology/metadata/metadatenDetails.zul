@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winMdDetails"?>
+  
+  <window id="winMdDetails" title="Weitere Attribute-Details" width="500px"  height="150px" border="normal"
+     use="de.fhdo.gui.admin.modules.terminology.metadata.MetadatenDetails" closable="true">
+    <borderlayout>
+      <center border="0">
+        <grid>
+          <columns>
+            <column width="120px" align="right" label=""/>
+            <column label=""/>
+          </columns>
+          <rows>
+            <row>
+              <label value="Parameter-Name:"/>
+              <textbox id="domain_code" width="97%"
+               value="@{winMdDetails.metadataParameter.paramName}" sclass="mandatory"/>
+            </row>
+            
+          </rows>
+        </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right" style="margin-right:8px;">
+          <button label="OK" onClick="winMdDetails.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" onClick="winMdDetails.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

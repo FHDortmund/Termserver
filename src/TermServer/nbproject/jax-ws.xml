@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jax-ws xmlns="http://www.netbeans.org/ns/jax-ws/1">
+  <services>
+    <service name="Administration">
+      <implementation-class>de.fhdo.terminologie.ws.administration.Administration</implementation-class>
+    </service>
+    <service name="Search">
+      <implementation-class>de.fhdo.terminologie.ws.search.Search</implementation-class>
+    </service>
+    <service name="ConceptAssociations">
+      <implementation-class>de.fhdo.terminologie.ws.conceptAssociation.ConceptAssociations</implementation-class>
+    </service>
+    <service name="Authorization">
+      <implementation-class>de.fhdo.terminologie.ws.authorization.Authorization</implementation-class>
+    </service>
+    <service name="Authoring">
+      <implementation-class>de.fhdo.terminologie.ws.authoring.Authoring</implementation-class>
+    </service>
+  </services>
+  <clients>
+  </clients>
+  <jsr109>false</jsr109>
+</jax-ws>

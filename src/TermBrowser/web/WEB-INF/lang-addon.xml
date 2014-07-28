@@ -1,0 +1,10 @@
+
+<language-addon>     <!-- The name of this addon. It must be unique -->
+  <addon-name>TermBrowser</addon-name>     <!-- Which language this addon will be added to -->
+  <language-name>xul/html</language-name>
+  <!--<javascript src="~./js/myproject/myproject.js" />-->
+  <!--<stylesheet href="~./myproject/css/myproject.css" type="text/css"/>-->
+  <stylesheet href="/rsc/style/loading.css" type="text/css"/>
+  <stylesheet href="/rsc/style/format.css" type="text/css"/>
+</language-addon>
+

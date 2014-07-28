@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">    
+    <window use="de.fhdo.gui.main.modules.AssociationEditor"  border="none" height="100%" width="100%">                          
+        <borderlayout>
+            <west width="49%">
+                <include id="incInhalteLinks"/>
+            </west>            
+            <east width="49%">  
+                <include id="incInhalteRechts"/>
+            </east>       
+            <south title="${labels.associationEditor.assoMode}">
+                <div>
+                    <radiogroup id="rgMode" orient="vertical">
+                        <radio id="rb1" label="${labels.associationEditor.crossmapping}" value="1" radiogroup="rgMode" />
+                        <radio id="rb2" label="${labels.associationEditor.link}"  value="2" radiogroup="rgMode" selected="true"/>
+<!--                        <radio id="rb3" label="Hierarchie"   value="3" radiogroup="rgMode"/>-->
+                    </radiogroup>
+                </div>
+            </south>
+        </borderlayout>             
+        
+    </window>        
+</zk>

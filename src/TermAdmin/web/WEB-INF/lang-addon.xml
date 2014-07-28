@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<language-addon>
+  <addon-name>Loading</addon-name>
+  <language-name>xul/html</language-name>
+  <stylesheet href="/rsc/style/loading.css" type="text/css"/>
+</language-addon>

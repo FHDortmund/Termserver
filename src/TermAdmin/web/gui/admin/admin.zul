@@ -1,0 +1,83 @@
+<?page title="Terminologieserver - Verwaltungsbereich" contentType="text/html;charset=UTF-8"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"?>
+<zk>
+  <borderlayout>
+    <north>
+      <include src="../header/menu.zul" id="inc_admin_menu"/>
+    </north>
+    <center border="0">
+      <window border="0" use="de.fhdo.gui.admin.Admin" id="win" height="100%" width="100%">
+        
+        <tabbox width="100%" height="100%" >
+          <tabs>
+            <tab label="Terminologie" height="32px"/>
+            <tab label="Kollaboration" height="32px"/>
+          </tabs>
+          <tabpanels>
+            <tabpanel>
+              <tabbox id="tabboxNavigation" width="100%" height="100%"  orient="vertical"
+                      onSelect="win.onNavigationSelect(event)">
+                <tabs id="tabbox_tabs" width="160px">
+                  <tab label="Benutzer" id="tabBenutzer"/>
+                  <tab label="Terminologie-Import" id="tabImport"/>
+                  <tab label="Domänen" id="tabDomains"/>
+                  <tab label="Metadaten" id="tabMetadata"/>
+                  <tab label="System-Parameter" id="tabSysParam"/>
+                  <tab label="Reporting" id="tabReporting"/>
+                  
+                  <tab label="Taxonomie-Einordnung" id="tabTaxonomie"/>
+                  <!--<tab label="Datenbank" id="tabDatenbank"/>-->
+                </tabs>
+                <tabpanels id="tabbox_tabpanels">
+                  <tabpanel>
+                    <include id="incBenutzer"/>
+                  </tabpanel>
+                  <tabpanel>
+                    <include id="incImport"/>
+                  </tabpanel>
+                  <tabpanel>
+                    <include id="incDomains"/>
+                  </tabpanel>
+                  <tabpanel>
+                    <include id="incMetadata"/>
+                  </tabpanel>
+                  <tabpanel>
+                    <include id="incSysParam"/>
+                  </tabpanel>
+                  <tabpanel>
+                    <include id="incReporting"/>
+                  </tabpanel>
+
+                  <tabpanel>
+                    <include id="incTaxonomie"/><!--<include src="/gui/admin/modules/codesysteme.zul"/>-->
+                  </tabpanel>
+                  <!--<tabpanel>
+                    <include id="incDatenbank"/>
+                  </tabpanel>-->
+            
+                </tabpanels>
+              </tabbox>
+            </tabpanel>
+              
+            <tabpanel>
+              <tabbox id="tabboxNavigationCollab" width="100%" height="100%"  orient="vertical"
+                      onSelect="win.onNavigationSelect(event)"  >
+                <tabs width="160px">
+                  <tab label="Kollaboration" id="tabKollaboration" disabled="true"/>
+                </tabs>
+                <tabpanels>
+                  <tabpanel>
+                    <include id="incKollaboration"/>
+                  </tabpanel>
+                </tabpanels>
+              </tabbox>
+            </tabpanel>
+          </tabpanels>
+        </tabbox>
+      </window>
+    </center>
+    <south height="26px">
+      <include src="../main/statusBar.zul" />
+    </south>
+  </borderlayout>
+</zk>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+    <window apply="de.fhdo.gui.main.modules.PopupErrorMessage" height="100px" width="400px" closable="true" title="${labels.common.error}" border="normal" position="center,center">                          
+       <borderlayout>
+            <center style="text-align: center; vertical-align: middle" >
+                <label id="lErrorMessage"/>
+            </center>            
+        </borderlayout>    
+    </window>
+</zk>

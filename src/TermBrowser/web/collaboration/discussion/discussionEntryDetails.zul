@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winDiscussionEntryDetails"?>
+
+  <window id="winDiscussionEntryDetails" title="Diskussionseintrag" width="785px"  height="500px" border="normal"
+          use="de.fhdo.collaboration.discussion.DiscussionEntryDetails" closable="true"
+          sizable="true">
+    <borderlayout >
+      <center border="0">
+        <vbox style="margin:8px;" >
+          <groupbox width="750px" id="gbQuote" >
+            <caption label="Zitat" />
+            <textbox readonly="true" 
+                   rows="10" width="750px" 
+                   value="@{winDiscussionEntryDetails.discussionQuoted.longDescription}"/>
+          </groupbox>
+          
+          
+          <label value="Text:"/>
+          <!--<fckeditor id="editor" value="@{winDiscussionEntryDetails.discussion.longDescription}" />-->
+          <textbox id="filename" height="180px" width="745px" 
+                   rows="10" 
+                   value="@{winDiscussionEntryDetails.discussion.longDescription}"/>
+          
+          <!--<ckeditor id="ed" width="100%"
+                    value="@{winDiscussionEntryDetails.discussion.longDescription}"
+                    customConfigurationsPath="/rsc/style/ckconfig.js" 
+                    toolbar="emptyToolbar"
+          >
+         
+          </ckeditor>-->
+
+        </vbox>
+        
+        
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right">
+          <button label="OK" onClick="winDiscussionEntryDetails.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" onClick="winDiscussionEntryDetails.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

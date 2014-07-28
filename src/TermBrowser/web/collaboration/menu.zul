@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <style dynamic="true">
+    <!-- Make Plain Grid -->
+    .GridLayoutNoBorder tr.z-row td.z-row-inner, tr.z-row
+    .z-cell,div.z-grid { border: none; overflow: hidden; zoom: 1;
+    background: white; border-top: none; border-left: none;
+    border-right: none; border-bottom: none; }
+  </style>
+  
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./win"?>
+  
+  <window id="win" use="de.fhdo.collaboration.Menu">
+    <!--<menubar autodrop="false" id="menubar">-->
+       
+      <!--<menu label="${labels.common.terminologyBrowser}">
+        <menupopup>
+          <menuitem label="${labels.common.mainview}"          onClick="win.gotoMainView()"></menuitem>
+          <menuitem label="${labels.common.associationEditor}" onClick="win.viewAssociationEditor()"></menuitem>
+        </menupopup>
+      </menu>      -->
+      <!--<menu label="${labels.common.user}">
+        <menupopup>
+          <menuitem id="menuitemAnmelden" label="${labels.common.doLogin}"  onClick="win.login()" image="/rsc/img/symbols/lock_16x16.png"></menuitem>
+          <menuitem id="menuitemAbmelden" label="${labels.common.doLogoff}" onClick="win.logout()" image="/rsc/img/symbols/unlock_16x16.png" ></menuitem>
+          <menuseparator></menuseparator>
+          <menuitem id="menuitemDetails"  label="${labels.menu.showUserDetails}" onClick="win.showUADetails()"></menuitem>
+        </menupopup>
+      </menu>     -->
+      <!--<menu label="${labels.common.help}">
+        <menupopup>
+          <menuitem label="${labels.menu.manual}" image="/rsc/img/filetypes/acrobat.png">
+              <attribute name="onClick">
+              <![CDATA[ Filedownload.save("/rsc/benutzerhandbuch.pdf", null);]]>
+              </attribute>
+          </menuitem>
+          <menuitem id="menuitemOIDPortal" label="${labels.menu.oidRegister}" onClick="win.callOidRegister()" image="/rsc/img/symbols/info16_16.png"></menuitem>
+          <menuitem label="${labels.menu.aboutTB}" onClick="win.onUeberClicked()" image="/rsc/img/symbols/info16_16.png"></menuitem>
+        </menupopup>
+      </menu>
+    </menubar>-->    
+    <grid height="65px" sclass="GridLayoutNoBorder">
+      <columns>
+        <column width="400px" valign="middle" id="toolbarColumn" align="center">
+          <!--          <toolbar height="65px" align="center" id="toolbar">   
+          </toolbar>-->
+          <toolbar height="64px">
+            <toolbarbutton label="Terminologie-Browser" 
+                         tooltiptext="zurück zum Terminologie-Browser" 
+                         image="/rsc/img/symbols/back_32x32.png" orient="vertical"
+                         onClick="win.onBackToTermBrowser()" />
+            
+            <toolbarbutton label="Workflow" 
+                         tooltiptext="Zeigt den Workflow an" 
+                         image="/rsc/img/collab/FlowBlock.png" orient="vertical"
+                         onClick="win.onShowWorkflow()" />
+            
+            <toolbarbutton label="Benutzerhandbuch Kollaborationsplattform"
+                         tooltiptext="Öffnet das Benutzerhandbuch" 
+                         image="/rsc/img/filetypes/acrobat_32x32.png" orient="vertical">
+              <attribute name="onClick">
+                    <![CDATA[ Filedownload.save("/rsc/Benutzerhandbuch_KollaborationsplattformV1.1.pdf", null);]]>
+              </attribute>
+            </toolbarbutton>
+            
+          </toolbar>
+        </column>
+        
+        <column  align="center" valign="middle">            
+          <!--<label zclass="headerTitle" value="@{win.HeaderStr}" />-->
+          <label zclass="headerTitle" value="Kollaborationsplattform" />
+        </column>
+        
+        <!--<column width="250px" >
+          <toolbar  width="140px">
+            <toolbarbutton tooltiptext="${labels.common.fhDo}" label=""
+                           image="/rsc/img/fh_logo_klein.png"
+                           onClick="win.onLogoFHClicked()" >
+            </toolbarbutton>
+            <toolbarbutton tooltiptext="${labels.common.eBPGProject}" label=""
+                           image="/rsc/img/logo_ebpg_40.png"
+                           onClick="win.onLogoClicked()" >
+            </toolbarbutton>
+          </toolbar>
+        </column>-->
+      </columns>
+    </grid>
+  </window>
+</zk>

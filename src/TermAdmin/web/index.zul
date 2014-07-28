@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page title="Verwaltungsbereich" contentType="text/html;charset=UTF-8"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winLogin"?>
+  <window id="winLogin" use="de.fhdo.gui.Index" border="0"
+          height="100%" width="100%">
+    <include id="inc" src="@{winLogin.loginZul}" height="100%" width="100%"/>
+  </window>
+</zk>

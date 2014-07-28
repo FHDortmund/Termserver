@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="winImport" border="none" width="100%" height="100%"
+   use="de.fhdo.gui.admin.modules.terminology.termimport.Import">
+
+    <!--<include id="incList" src="/gui/templates/GenericList.zul"/>-->
+    <tabbox height="100%" width="100%" id="tabboxNavigation" onSelect="winImport.onNavigationSelect(event)">
+      <tabs>
+        <tab visible="true" label="Alle" id="tabAll"/>
+        <!--<tab visible="true" label="Code System (ClaML)" id="tabCLAML"/>-->
+        <!--<tab visible="true" label="Code System (csv)" id="tabCS_CSV"/>-->
+        <!--<tab visible="true" label="Value Set (csv)" id="tabVS_CSV"/>-->
+        <tab visible="true" label="Codelisten (ELGA_SVS)" id="tabCS_SVS"/>
+        <tab visible="true" label="Value Set (ELGA_SVS)" id="tabVS_SVS"/>
+        <!--<tab visible="true" label="LOINC (csv)" id="tabLOINC"/>-->
+        <tab visible="false" label="Leistungskatalog und KAL BMG AT (csv)" id="tabLEIKAT"/>
+        <tab visible="false" label="ICD-10 BMG AT (csv)" id="tabICDBMG"/>
+        <!--<tab visible="false" label="KBV Schlüsseltabellen" id="tabKBV"/>-->
+      </tabs>
+      <tabpanels>
+        <tabpanel> <!-- ClaML -->
+          <include id="incAll"/><!--<include src="/gui/admin/modules/importClaML.zul"/>-->
+        </tabpanel>
+        
+        <tabpanel> <!-- CS_SVS -->
+          <include id="incCS_SVS"/><!--<include src="/gui/admin/modules/importCS_SVS.zul"/>-->
+        </tabpanel>
+        <tabpanel> <!-- Value SetSVS -->
+          <include id="incVS_SVS"/><!--<include src="/gui/admin/modules/importVS_SVS.zul"/>-->
+        </tabpanel>
+        
+        <tabpanel> <!-- LeistungskatalogCSV & KAL -->
+          <include id="incLEIKAT"/><!--<include src="/gui/admin/modules/importLeiKatCSV.zul"/>-->
+        </tabpanel>
+        <tabpanel> <!-- ICD-10 BMG AT -->
+          <include id="incICDBMG"/><!--<include src="/gui/admin/modules/importICDAT.zul"/>-->
+        </tabpanel>
+         <!--<tabpanel>-->
+          <!--<include id="incKBV"/>--><!--<include src="/gui/admin/modules/importKBV.zul"/>-->
+        <!--</tabpanel>-->
+      </tabpanels>
+    </tabbox>
+  </window>
+</zk>
