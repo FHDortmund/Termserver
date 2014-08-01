@@ -26,6 +26,7 @@ import de.fhdo.helper.SendBackHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.TreeHelper;
 import de.fhdo.helper.ValidityRangeHelper;
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.models.comparators.ComparatorCsvVsv;
 import de.fhdo.models.TreeModel;
 import de.fhdo.models.itemrenderer.TreeitemRenderer_CS_VS_DV;
@@ -197,6 +198,8 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     if (ParameterHelper.getBoolean("hideStatusbar") != null)
       ((South) this.getRoot().getFellow("blMainSouth")).setVisible(!ParameterHelper.getBoolean("hideStatusbar"));
 
+    
+    
     // Deep Links ausfuehren
     expandTreeAndLoadConceptsByDeeplink();
   }
@@ -452,6 +455,8 @@ public class ContentCSVSDefault extends Window implements AfterCompose
 // Deep Links //////////////////////////////////////////////////////////////////    
   private void expandTreeAndLoadConceptsByDeeplink()
   {
+    logger.debug("expandTreeAndLoadConceptsByDeeplink");
+    
     // Get Parameter by URL
     String type = ParameterHelper.getString("loadType"); // getDesktop().getExecution().getParameter("loadType");
     String name = ParameterHelper.getString("loadName"); // getDesktop().getExecution().getParameter("loadName");
@@ -1006,7 +1011,8 @@ public class ContentCSVSDefault extends Window implements AfterCompose
 
   public void popupDetails(int mode)
   {
-
+    logger.debug("popupDetails: " + mode);
+    
     Object selectedItem = null;
     if (mode == 97 || mode == 98)
     {
@@ -1014,6 +1020,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     }
     else
     {
+      
       if (treeActive.getSelectedItem() != null)
         selectedItem = ((TreeNode) treeActive.getSelectedItem().getValue()).getData();
       else
@@ -1035,31 +1042,42 @@ public class ContentCSVSDefault extends Window implements AfterCompose
         }
       }
 
-      if (selectedItem instanceof CodeSystem)
+      if (selectedItem instanceof CodeSystem || selectedItem instanceof DomainValue)
       {
+        logger.debug("popupCodeSystem");
         popupCodeSystem(mode, false);
       }
       else if (selectedItem instanceof CodeSystemVersion)
       {
+        logger.debug("popupCodeSystem");
         popupCodeSystem(mode, true);
       }
       else if (selectedItem instanceof ValueSet)
       {
+        logger.debug("popupValueSet");
         popupValueSet(mode);
       }
       else if (selectedItem instanceof ValueSetVersion)
       {
+        logger.debug("popupValueSet");
         popupValueSet(mode);
       }
-      else if (selectedItem instanceof DomainValue)
-      {
+      //else if (selectedItem instanceof DomainValue)
+      
+        //logger.debug("selectedItem type not found: " + selectedItem.getClass().getCanonicalName());
         //popupDomainValue(mode);
+      
+      else
+      {
+        if(selectedItem != null)
+          logger.debug("selectedItem type not found: " + selectedItem.getClass().getCanonicalName());
       }
     }
   }
 
   private void popupCodeSystem(int mode, boolean showVersion)
   {
+    logger.debug("popupValueSet, mode: " + mode + ", showVersion: " + showVersion);
     try
     {
       Map<String, Object> data = new HashMap<String, Object>();
@@ -1072,7 +1090,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     }
     catch (Exception e)
     {
-      Logger.getLogger(ContentCSVSDefault.class.getName()).log(Level.SEVERE, null, e);
+      LoggingOutput.outputException(e, this);
     }
   }
 
@@ -1087,7 +1105,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     }
     catch (Exception e)
     {
-      Logger.getLogger(ContentCSVSDefault.class.getName()).log(Level.SEVERE, null, e);
+      LoggingOutput.outputException(e, this);
     }
   }
 
