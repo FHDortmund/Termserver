@@ -954,40 +954,40 @@ public class ContentCSVSDefault extends Window implements AfterCompose
 
       logger.debug("Auf Codesystem-Version geklickt: " + selectedCSV.getVersionId() + ", CS: " + selectedCS.getId());
 
-      if (AssignTermHelper.isUserAllowed(selectedCS))
+      //if (AssignTermHelper.isUserAllowed(selectedCS))
       {
         setActiveButtons(true, true, true, true);
       }
-      else
+      /*else
       {
         setActiveButtons(true, false, true, false);
-      }
+      }*/
     }
     else if (selectedObject instanceof ValueSet)
     {
       // Auf Value-Set geklickt
       selectedVS = (ValueSet) selectedObject;
-      if (AssignTermHelper.isUserAllowed(selectedVS))
+      //if (AssignTermHelper.isUserAllowed(selectedVS))
       {
         setActiveButtons(true, true, true, true);
       }
-      else
+      /*else
       {
         setActiveButtons(true, false, true, false);
-      }
+      }*/
     }
     else if (selectedObject instanceof ValueSetVersion)
     {
       selectedVSV = (ValueSetVersion) selectedObject;
       selectedVS = selectedVSV.getValueSet();
-      if (AssignTermHelper.isUserAllowed(selectedVS))
+      //if (AssignTermHelper.isUserAllowed(selectedVS))
       {
         setActiveButtons(true, true, true, true);
       }
-      else
+      /*else
       {
         setActiveButtons(true, false, true, false);
-      }
+      }*/
     }
     else if (selectedObject instanceof DomainValue)
     {

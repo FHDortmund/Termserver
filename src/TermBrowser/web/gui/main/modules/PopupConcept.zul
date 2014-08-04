@@ -32,7 +32,7 @@
                   </row>
                   <row>
                     <label value="${labels.common.designation}" id="lName"/>
-                    <textbox id="tbTerm" alue="@{csc.term, save-when='bCreate.onClick'}" hflex="true"/>
+                    <textbox id="tbTerm" value="@{csc.term, save-when='bCreate.onClick'}" hflex="true"/>
                   </row>
                   <row id="rMeaning" >
                     <label value="${labels.common.meaning}" id="lMeaning"/>   

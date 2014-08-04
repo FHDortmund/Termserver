@@ -830,7 +830,8 @@ public class PopupConcept extends PopupWindow
   {
         // Create Concept //////////////////////////////////////////////////////        
 //        Authoring                   port_authoring    = new Authoring_Service().getAuthoringPort();
-
+    logger.debug("create()");
+    
     // CodeSystemVersionEntityMembership
     cse.getCodeSystemVersionEntityMemberships().clear();
     cse.getCodeSystemVersionEntityMemberships().add(csvem);
@@ -838,6 +839,11 @@ public class PopupConcept extends PopupWindow
     // CodeSystemEntity(Version)
     cse.getCodeSystemEntityVersions().clear();
     cse.getCodeSystemEntityVersions().add(csev);
+    
+    CodeSystemConcept csc = csev.getCodeSystemConcepts().get(0);
+    logger.debug("Term: " + csc.getTerm());
+    logger.debug("Code: " + csc.getCode());
+    
 
     // Daten setzen mit Convertierung von Date -> XMLGregorianCalendar
     try
