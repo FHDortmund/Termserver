@@ -4,7 +4,8 @@
   <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winDomainDetails"?>
 
   <window id="winDomainDetails" title="Domänen-Details" width="500px"  height="450px" border="normal"
-     use="de.fhdo.gui.admin.modules.terminology.domains.DomainDetails" closable="true">
+     use="de.fhdo.gui.admin.modules.terminology.domains.DomainDetails" closable="true"
+     onOK="winDomainDetails.onOkClicked()">
     <borderlayout>
       <center border="0">
         <grid>

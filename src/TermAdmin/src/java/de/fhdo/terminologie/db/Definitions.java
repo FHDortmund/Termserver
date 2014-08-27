@@ -33,9 +33,10 @@ public class Definitions
   public final static long DOMAINID_CODESYSTEM_TAXONOMY = 8;
   public final static long DOMAINID_VALUESET_VALIDITYRANGE = 9;
   public final static long DOMAINID_IMPORT_FORMATS_VS = 12;
-  public static final long STATUS_CONCEPT_VISIBILITY = 13;
-  public static final long STATUS_CONCEPT_DEACTIVATED = 14;
-  public static final long STATUS = 15;
+  public static final long DOMAINID_STATUS_CONCEPT_VISIBILITY = 13;
+  public static final long DOMAINID_STATUS_CONCEPT_DEACTIVATED = 14;
+  public static final long DOMAINID_STATUS = 15;
+  public static final long DOMAINID_DATATYPES = 16;
   
   
   public final static String TECHNICAL_TYPE_PARAMETRIERUNG = "param";

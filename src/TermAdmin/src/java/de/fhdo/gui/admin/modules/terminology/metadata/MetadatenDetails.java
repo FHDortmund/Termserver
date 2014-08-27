@@ -16,25 +16,28 @@
  */
 package de.fhdo.gui.admin.modules.terminology.metadata;
 
-import de.fhdo.terminologie.db.HibernateUtil;
-import de.fhdo.terminologie.db.hibernate.CodeSystem;
-import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersion;
-import de.fhdo.terminologie.db.hibernate.CodeSystemMetadataValue;
-import de.fhdo.terminologie.db.hibernate.DomainValue;
-import de.fhdo.terminologie.db.hibernate.MetadataParameter;
 import de.fhdo.helper.ArgumentHelper;
 import de.fhdo.helper.DomainHelper;
 import de.fhdo.helper.HQLParameterHelper;
 import de.fhdo.interfaces.IUpdateModal;
+import de.fhdo.logging.LoggingOutput;
+import de.fhdo.terminologie.db.Definitions;
+import de.fhdo.terminologie.db.HibernateUtil;
+import de.fhdo.terminologie.db.hibernate.CodeSystem;
+import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersion;
+import de.fhdo.terminologie.db.hibernate.CodeSystemMetadataValue;
+import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
+import de.fhdo.terminologie.db.hibernate.MetadataParameter;
+import de.fhdo.terminologie.db.hibernate.ValueSet;
+import de.fhdo.terminologie.db.hibernate.ValueSetMetadataValue;
+import de.fhdo.terminologie.db.hibernate.ValueSetVersion;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import org.hibernate.Session;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
+import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Messagebox;
-import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 /**
@@ -48,12 +51,17 @@ public class MetadatenDetails extends Window implements AfterCompose
   private MetadataParameter metadataParameter;
   private boolean newEntry = false;
   private IUpdateModal updateListInterface;
+  private long codeSystemId;
+  private long valueSetId;
 
   public MetadatenDetails()
   {
 
-    long codeSystemId = ArgumentHelper.getWindowArgumentLong("codesystem_id");
+    codeSystemId = ArgumentHelper.getWindowArgumentLong("codesystem_id");
     logger.debug("codeSystemId: " + codeSystemId);
+
+    valueSetId = ArgumentHelper.getWindowArgumentLong("valueset_id");
+    logger.debug("valueSetId: " + valueSetId);
 
     Object o = ArgumentHelper.getWindowArgument("mp");
     if (o != null)
@@ -61,35 +69,89 @@ public class MetadatenDetails extends Window implements AfterCompose
       metadataParameter = (MetadataParameter) o;
     }
 
-    //hb_session = HibernateSession.getSession();
-    //hb_session = HibernateUtil.getSessionFactory().openSession();
-
-    /*args = Executions.getCurrent().getArg();
-     try
-     {
-     Object o = args.get("domain_id");
-     logger.debug("o: " + o.toString());
-     domainId = Long.parseLong(o.toString());
-      
-     domain_value_id = Long.parseLong(args.get("domain_value_id").toString());
-     }
-     catch (Exception e)
-     {
-     //e.printStackTrace();
-     }*/
-
     if (metadataParameter == null)
     {
       metadataParameter = new MetadataParameter();
-      metadataParameter.setCodeSystem(new CodeSystem());
-      metadataParameter.getCodeSystem().setId(codeSystemId);
+      if (codeSystemId > 0)
+      {
+        metadataParameter.setCodeSystem(new CodeSystem());
+        metadataParameter.getCodeSystem().setId(codeSystemId);
+      }
+      else if (valueSetId > 0)
+      {
+        metadataParameter.setValueSet(new ValueSet());
+        metadataParameter.getValueSet().setId(valueSetId);
+      }
       newEntry = true;
     }
 
+    initDefaultValues();
   }
 
   public void afterCompose()
   {
+    DomainHelper.getInstance().fillCombobox((Combobox) getFellow("cbParamType"), Definitions.DOMAINID_METADATAPARAMETER_TYPES, metadataParameter.getMetadataParameterType());
+    DomainHelper.getInstance().fillCombobox((Combobox) getFellow("cbDatatype"), Definitions.DOMAINID_DATATYPES, metadataParameter.getParamDatatype());
+
+    DomainHelper.getInstance().fillCombobox((Combobox) getFellow("cbLanguage"), Definitions.DOMAINID_ISO_639_1_LANGUACECODES, metadataParameter.getLanguageCd());
+
+  }
+
+  private void initDefaultValues()
+  {
+    logger.debug("initDefaultValues()");
+
+    if (newEntry || metadataParameter.getLanguageCd() == null)
+    {
+      // Codesystem lesen (für Default Language)
+      Session hb_session = HibernateUtil.getSessionFactory().openSession();
+
+      try
+      {
+        if (codeSystemId > 0)
+        {
+          CodeSystem cs_db = (CodeSystem) hb_session.get(CodeSystem.class, codeSystemId);
+
+          for (CodeSystemVersion csv_db : cs_db.getCodeSystemVersions())
+          {
+            if (csv_db.getVersionId().longValue() == cs_db.getCurrentVersionId().longValue())
+            {
+              // aktuelles CodeSystem gefunden
+              metadataParameter.setLanguageCd(csv_db.getPreferredLanguageCd());
+              break;
+            }
+          }
+        }
+
+        if (valueSetId > 0)
+        {
+          ValueSet vs_db = (ValueSet) hb_session.get(ValueSet.class, valueSetId);
+
+          for (ValueSetVersion vsv_db : vs_db.getValueSetVersions())
+          {
+            if (vsv_db.getVersionId().longValue() == vs_db.getCurrentVersionId().longValue())
+            {
+              // aktuelles ValueSet gefunden
+              metadataParameter.setLanguageCd(vsv_db.getPreferredLanguageCd());
+              break;
+            }
+          }
+        }
+
+      }
+      catch (Exception e)
+      {
+        LoggingOutput.outputException(e, this);
+      }
+      finally
+      {
+        hb_session.close();
+      }
+    }
+
+    if (metadataParameter.getLanguageCd() == null)
+      metadataParameter.setLanguageCd("");
+
   }
 
   public void onOkClicked()
@@ -97,6 +159,7 @@ public class MetadatenDetails extends Window implements AfterCompose
     // speichern mit Hibernate
     try
     {
+      boolean error = false;
       if (logger.isDebugEnabled())
         logger.debug("Daten speichern");
 
@@ -112,88 +175,147 @@ public class MetadatenDetails extends Window implements AfterCompose
         }
 
         // prüfen, ob Wert bereits existiert
-        String hql = "from MetadataParameter where codeSystemId=:cs_id and paramName=:name";
-        org.hibernate.Query q = hb_session.createQuery(hql);
-        q.setParameter("cs_id", metadataParameter.getCodeSystem().getId());
-        q.setParameter("name", metadataParameter.getParamName());
-        List list = q.list();
-        if (list != null && list.size() > 0)
+        if (newEntry)
         {
-          Messagebox.show("Dieser Parameter ist für das ausgewählte Code System bereits vorhanden!", "Achtung", Messagebox.OK, Messagebox.EXCLAMATION);
-          return;
+          String hql = "";
+          org.hibernate.Query q = null;
+
+          if (codeSystemId > 0)
+          {
+            hql = "from MetadataParameter where codeSystemId=:cs_id and paramName=:name";
+            q = hb_session.createQuery(hql);
+            q.setParameter("cs_id", codeSystemId);
+          }
+          else if (valueSetId > 0)
+          {
+            hql = "from MetadataParameter where valueSetId=:vs_id and paramName=:name";
+            q = hb_session.createQuery(hql);
+            q.setParameter("vs_id", valueSetId);
+          }
+
+          if (q != null)
+          {
+            q.setParameter("name", metadataParameter.getParamName());
+            List list = q.list();
+            if (list != null && list.size() > 0)
+            {
+              Messagebox.show("Dieser Parameter ist für das ausgewählte Code System bereits vorhanden!", "Achtung", Messagebox.OK, Messagebox.EXCLAMATION);
+              return;
+            }
+          }
         }
 
+        metadataParameter.setMetadataParameterType(DomainHelper.getInstance().getComboboxCd((Combobox) getFellow("cbParamType")));
+        metadataParameter.setParamDatatype(DomainHelper.getInstance().getComboboxCd((Combobox) getFellow("cbDatatype")));
+        metadataParameter.setLanguageCd(DomainHelper.getInstance().getComboboxCd((Combobox) getFellow("cbLanguage")));
 
         if (newEntry)
         {
-           if (logger.isDebugEnabled())
-             logger.debug("Neuer Eintrag");
+          if (logger.isDebugEnabled())
+            logger.debug("Neuer Eintrag");
 
-           // speichern
-           hb_session.save(metadataParameter);
+          // speichern
+          hb_session.save(metadataParameter);
 
-           String hqlV = "select distinct csev from CodeSystemEntityVersion csev join csev.codeSystemEntity ";
-           hqlV += "cse join cse.codeSystemVersionEntityMemberships csvem join csvem.codeSystemVersion csv join csv.codeSystem cs";
+          if (codeSystemId > 0)
+          {
+            String hqlV = "select distinct csev from CodeSystemEntityVersion csev join csev.codeSystemEntity ";
+            hqlV += "cse join cse.codeSystemVersionEntityMemberships csvem join csvem.codeSystemVersion csv join csv.codeSystem cs";
 
-           HQLParameterHelper parameterHelper = new HQLParameterHelper();
-           parameterHelper.addParameter("cs.", "id", metadataParameter.getCodeSystem().getId());
+            HQLParameterHelper parameterHelper = new HQLParameterHelper();
+            parameterHelper.addParameter("cs.", "id",codeSystemId);
 
-           // Parameter hinzufügen (immer mit AND verbunden)
-           hqlV += parameterHelper.getWhere("");
-           logger.debug("HQL: " + hqlV);
+            // Parameter hinzufügen (immer mit AND verbunden)
+            hqlV += parameterHelper.getWhere("");
+            logger.debug("HQL: " + hqlV);
 
-           // Query erstellen
-           org.hibernate.Query qV = hb_session.createQuery(hqlV);
+            // Query erstellen
+            org.hibernate.Query qV = hb_session.createQuery(hqlV);
 
-           // Die Parameter können erst hier gesetzt werden (übernimmt Helper)
-           parameterHelper.applyParameter(qV);
+            // Die Parameter können erst hier gesetzt werden (übernimmt Helper)
+            parameterHelper.applyParameter(qV);
 
-           List<CodeSystemEntityVersion> csevList = qV.list();
-           Set<CodeSystemMetadataValue> csmvSet = new HashSet<CodeSystemMetadataValue>(0);
-           for (CodeSystemEntityVersion csev : csevList)
-           {
+            List<CodeSystemEntityVersion> csevList = qV.list();
+            Set<CodeSystemMetadataValue> csmvSet = new HashSet<CodeSystemMetadataValue>(0);
+            for (CodeSystemEntityVersion csev : csevList)
+            {
+              CodeSystemMetadataValue csmv = new CodeSystemMetadataValue();
+              csmv.setMetadataParameter(metadataParameter);
+              csmv.setParameterValue("");
+              csmv.setCodeSystemEntityVersion(csev);
+              hb_session.save(csmv);
+              csmvSet.add(csmv);
+            }
 
-           CodeSystemMetadataValue csmv = new CodeSystemMetadataValue();
-           csmv.setMetadataParameter(metadataParameter);
-           csmv.setParameterValue("");
-           csmv.setCodeSystemEntityVersion(csev);
-           hb_session.save(csmv);
-           csmvSet.add(csmv);
-           }
+            metadataParameter.setCodeSystemMetadataValues(csmvSet);
+            hb_session.update(metadataParameter);
+          }
+          
+          /*if(valueSetId > 0)
+          {
+            String hqlV = "select distinct csev from CodeSystemEntityVersion csev join csev.conceptValueSetMemberships cvsm ";
+            hqlV += " join cvsm.valueSetVersion vsv join vsv.valueSet vs";
 
-           metadataParameter.setCodeSystemMetadataValues(csmvSet);
-           hb_session.update(metadataParameter);
+            HQLParameterHelper parameterHelper = new HQLParameterHelper();
+            parameterHelper.addParameter("vs.", "id", valueSetId);
 
-          //de.fhdo.db.hibernate.Domain domain = (de.fhdo.db.hibernate.Domain) hb_session.get(de.fhdo.db.hibernate.Domain.class, domainId);
-          //domainValue.setDomain(domain);
+            // Parameter hinzufügen (immer mit AND verbunden)
+            hqlV += parameterHelper.getWhere("");
+            logger.debug("HQL: " + hqlV);
 
+            // Query erstellen
+            org.hibernate.Query qV = hb_session.createQuery(hqlV);
 
-          //hb_session.save(domainValue);
+            // Die Parameter können erst hier gesetzt werden (übernimmt Helper)
+            parameterHelper.applyParameter(qV);
+
+            List<CodeSystemEntityVersion> csevList = qV.list();
+            Set<ValueSetMetadataValue> vsmvSet = new HashSet<ValueSetMetadataValue>(0);
+            for (CodeSystemEntityVersion csev : csevList)
+            {
+              ValueSetMetadataValue vsmv = new ValueSetMetadataValue();
+              vsmv.setMetadataParameter(metadataParameter);
+              vsmv.setParameterValue("");
+              vsmv.setValuesetVersionId(valueSetId);
+              vsmv.setCodeSystemEntityVersion(csev);
+              hb_session.save(vsmv);
+              vsmvSet.add(vsmv);
+            }
+
+            metadataParameter.setValueSetMetadataValues(vsmvSet);
+            hb_session.update(metadataParameter);
+          }*/
         }
         else
         {
           hb_session.merge(metadataParameter);
         }
 
-
         hb_session.getTransaction().commit();
       }
       catch (Exception e)
       {
         hb_session.getTransaction().rollback();
-          logger.error("Fehler in MetadatenDetails.java in onOkClicked(): " + e.getMessage());
+        logger.error("Fehler in MetadatenDetails.java in onOkClicked(): " + e.getMessage());
         e.printStackTrace();
+
+        error = true;
+
+        Messagebox.show(e.getMessage());
       }
       finally
       {
         hb_session.close();
       }
 
-      this.setVisible(false);
-      this.detach();
+      if (error == false)
+      {
+        this.setVisible(false);
+        this.detach();
 
-      if (updateListInterface != null)
-        updateListInterface.update(metadataParameter, !newEntry);
+        if (updateListInterface != null)
+          updateListInterface.update(metadataParameter, !newEntry);
+      }
 
     }
     catch (Exception e)
@@ -209,6 +331,12 @@ public class MetadatenDetails extends Window implements AfterCompose
     this.setVisible(false);
     this.detach();
 
+  }
+  
+  public void setLanguage(String code)
+  {
+    metadataParameter.setLanguageCd(code);
+    DomainHelper.getInstance().fillCombobox((Combobox) getFellow("cbLanguage"), Definitions.DOMAINID_ISO_639_1_LANGUACECODES, metadataParameter.getLanguageCd());
   }
 
   /**

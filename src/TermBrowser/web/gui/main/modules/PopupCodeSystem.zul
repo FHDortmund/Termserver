@@ -113,7 +113,7 @@
               </groupbox>
             </tabpanel>
             <tabpanel id="tabpanelMetaparameter" >
-              <listbox  id="listMetadataParameter" vflex="true" height="99%" hflex="true" >
+              <listbox id="listMetadataParameter" vflex="true" height="99%" hflex="true" >
                 <listhead></listhead>
               </listbox>
             </tabpanel>

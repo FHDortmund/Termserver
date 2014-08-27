@@ -5,15 +5,15 @@
   <!--<include id="incList" src="/gui/templates/GenericList.zul"/>-->
   <tabbox height="100%" width="100%">
     <tabs>
-      <tab visible="true" label="Weitere Attribute Code Systeme" id="tabMetaVok"/>
-      <tab visible="true" label="Weitere Attribute Value Sets" id="tabMetaVal"/>
+      <tab visible="true" label="Code Systeme" id="tabMetaVok"/>
+      <tab visible="true" label="Value Sets" id="tabMetaVal"/>
     </tabs>
     <tabpanels>
       <tabpanel> <!-- CS -->
-        <include src="/gui/admin/modules/terminology/metadata/metadatenCS.zul"/>
+        <include src="/gui/admin/modules/terminology/metadata/metadatenCS.zul?mode=cs"/>
       </tabpanel>
       <tabpanel> <!-- VS -->
-        <include src="/gui/admin/modules/terminology/metadata/metadatenVS.zul"/>
+        <include src="/gui/admin/modules/terminology/metadata/metadatenCS.zul?mode=vs"/>
       </tabpanel>
     </tabpanels>
   </tabbox>

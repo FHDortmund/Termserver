@@ -3,8 +3,9 @@
 <zk xmlns="http://www.zkoss.org/2005/zul">
   <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winMdDetails"?>
   
-  <window id="winMdDetails" title="Weitere Attribute-Details" width="500px"  height="150px" border="normal"
-     use="de.fhdo.gui.admin.modules.terminology.metadata.MetadatenDetails" closable="true">
+  <window id="winMdDetails" title="Weitere Attribute-Details" width="500px"  height="250px" border="normal"
+     use="de.fhdo.gui.admin.modules.terminology.metadata.MetadatenDetails" closable="true"
+     onOK="winMdDetails.onOkClicked()">
     <borderlayout>
       <center border="0">
         <grid>
@@ -15,8 +16,27 @@
           <rows>
             <row>
               <label value="Parameter-Name:"/>
-              <textbox id="domain_code" width="97%"
-               value="@{winMdDetails.metadataParameter.paramName}" sclass="mandatory"/>
+              <textbox id="domain_code" hflex="true"
+                       value="@{winMdDetails.metadataParameter.paramName}" sclass="mandatory"/>
+            </row>
+            
+            <row>
+              <label value="Parameter-Typ:"/>
+              <combobox id="cbParamType" readonly="true" hflex="true"/>
+            </row>
+            
+            <row>
+              <label value="Datentyp:"/>
+              <combobox id="cbDatatype" readonly="true" hflex="true"/>
+            </row>
+            
+            <row>
+              <label value="Sprache:"/>
+              <hbox>
+                <combobox id="cbLanguage" readonly="true"/>
+                <image src="/rsc/img/flaggen/de.png" onClick='winMdDetails.setLanguage("de")'/>
+                <image src="/rsc/img/flaggen/us.png" onClick='winMdDetails.setLanguage("en")'/>
+              </hbox>
             </row>
             
           </rows>

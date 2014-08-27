@@ -39,8 +39,6 @@ import de.fhdo.terminologie.ws.authoring.VersioningType;
 import de.fhdo.terminologie.ws.search.ListCodeSystemsInTaxonomyRequestType;
 import de.fhdo.terminologie.ws.search.ReturnCodeSystemDetailsRequestType;
 import de.fhdo.terminologie.ws.search.ReturnCodeSystemDetailsResponse;
-import de.fhdo.terminologie.ws.search.Search;
-import de.fhdo.terminologie.ws.search.Search_Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -75,7 +73,8 @@ import types.termserver.fhdo.de.MetadataParameter;
 
 /**
  *
- * @author Becker
+ * @author Sven Becker
+ * edited 2014-08-27 by Robert Mützner <robert.muetzner@fh-dortmund.de>
  */
 public class PopupCodeSystem extends PopupWindow implements IUpdateModal
 {
