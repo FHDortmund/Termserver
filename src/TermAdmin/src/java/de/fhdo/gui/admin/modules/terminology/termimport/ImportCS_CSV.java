@@ -119,7 +119,7 @@ public class ImportCS_CSV implements IImport
   {
     if (format != null)
     {
-      if (format.equalsIgnoreCase("csv") || format.equalsIgnoreCase("txt"))
+      if (format.equalsIgnoreCase("csv") || format.equalsIgnoreCase("txt") || format.equalsIgnoreCase("xls"))
         return true;
     }
     return false;

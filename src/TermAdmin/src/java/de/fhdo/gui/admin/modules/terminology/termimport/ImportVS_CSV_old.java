@@ -338,11 +338,11 @@ public class ImportVS_CSV_old extends Window implements AfterCompose, IGenericLi
       request.getImportInfos().setFormatId(300l);
       request.getImportInfos().setOrder(cbOrder.isChecked());
       
-      if(vsvOnly){
+      /*if(vsvOnly){
         request.getImportInfos().setRole(CODES.ROLE_ADMIN + ":true"); //Zwischenlösung...
       }else{
         request.getImportInfos().setRole(SessionHelper.getCollaborationUserRole() + ":false"); //Zwischenlösung...
-      }
+      }*/
 
       ImportValueSetResponse.Return response = port.importValueSet(request);
       //importWS = (Response<ImportValueSetResponse>) port.importValueSetAsync(request, this);

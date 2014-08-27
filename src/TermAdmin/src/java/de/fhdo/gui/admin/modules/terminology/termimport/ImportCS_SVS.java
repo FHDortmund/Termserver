@@ -430,14 +430,14 @@ public class ImportCS_SVS extends Window implements AfterCompose, IGenericListAc
         request.setImportInfos(new ImportType());
         request.getImportInfos().setFormatId(235l); // SVS_ID
         request.getImportInfos().setFilecontent(bytes);
-        if (csvOnly)
+        /*if (csvOnly)
         {
           request.getImportInfos().setRole(CODES.ROLE_ADMIN);
         }
         else
         {
           request.getImportInfos().setRole(SessionHelper.getCollaborationUserRole());
-        }
+        }*/
         Return response = port.importCodeSystem(request);
         //importWS = (Response<ImportCodeSystemResponse>) port.importCodeSystemAsync(request, this);
 

@@ -23,6 +23,7 @@ import clamlBindingXSD.Para;
 import clamlBindingXSD.Rubric;
 import clamlBindingXSD.RubricKind;
 import de.fhdo.logging.Logger4j;
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.Definitions;
 import de.fhdo.terminologie.db.HibernateUtil;
 
@@ -67,6 +68,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
@@ -102,11 +104,19 @@ public class ImportClaml
   private org.hibernate.Session hb_session;
   private int countImported = 0;
 
-  public ImportClaml(ImportCodeSystemRequestType request)
+  public ImportClaml()
   {
     if (logger.isInfoEnabled())
-      logger.info("====== ImportClaml gestartet ======");
+      logger.info("====== ImportClaml Constructor ======");
 
+  }
+
+  /**
+   *
+   * @param request
+   */
+  public void startImport(ImportCodeSystemRequestType request) throws Exception
+  {
     StaticStatus.importTotal = 0;
     StaticStatus.importCount = 0;
     StaticStatus.importRunning = true;
@@ -145,7 +155,8 @@ public class ImportClaml
     }
     catch (Exception ex)
     {
-      ex.printStackTrace();
+      logger.error("ImportClaml error: " + ex.getLocalizedMessage());
+      //ex.printStackTrace();
 
       logger.debug(ex.getMessage());
       try
@@ -158,6 +169,10 @@ public class ImportClaml
         logger.info(exRollback.getMessage());
         logger.info("[ImportClaml.java] Rollback fehlgeschlagen!");
       }
+
+      LoggingOutput.outputException(ex, this);
+
+      throw ex;
     }
     finally
     {
@@ -177,28 +192,27 @@ public class ImportClaml
   private void loadClamlXML(InputStream is) throws Exception
   {
 
-
     logger.debug("create JAXBContext");
-
-    /*String packagename = clamlBindingXSD.ClaML.class.getPackage().getName();
-     JAXBContext jc = JAXBContext.newInstance(packagename);
-     Unmarshaller u = jc.createUnmarshaller();*/
-
-    // First create a new XMLInputFactory
-    XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-    // Setup a new eventReader
-
-    XMLEventReader eventReader = inputFactory.createXMLEventReader(is);
-    // Read the XML document
 
     clamlBindingXSD.Class clazz = null;
     clamlBindingXSD.Rubric rubi = null;
     clamlBindingXSD.RubricKinds rks = new clamlBindingXSD.RubricKinds();
 
-    logger.debug("3");
+    /*String packagename = clamlBindingXSD.ClaML.class.getPackage().getName();
+     JAXBContext jc = JAXBContext.newInstance(packagename);
+     Unmarshaller u = jc.createUnmarshaller();*/
+    // First create a new XMLInputFactory
+    XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+    inputFactory.setProperty(XMLInputFactory.IS_VALIDATING, Boolean.FALSE);
+    inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
+
+    // Setup a new eventReader
+    XMLEventReader eventReader = inputFactory.createXMLEventReader(is);
+
+    // Read the XML document
+    logger.debug("Analyze data...");
 
     //Attribute für CreateCodeSystem
-
     String authority = "";
     String uid = "";
 
@@ -214,8 +228,11 @@ public class ImportClaml
       if (event.isStartElement())
       {
         StartElement startElement = event.asStartElement();
+        String startElementName = startElement.getName().toString();
+        //logger.debug("Start-Element: " + startElementName);
+        //logger.debug("Is-End-Element: " + startElement.isEndElement());
 
-        if (startElement.getName().toString().equals("Title"))
+        if (startElementName.equals("Title"))
         {
           Date datum = new Date();
           String title = "";
@@ -228,21 +245,20 @@ public class ImportClaml
             Attribute attribute = attributes.next();
             if (attribute.getName().toString().equals("name"))
             {
-              title = attribute.getValue().toString();
+              title = attribute.getValue();
             }
             if (attribute.getName().toString().equals("version"))
             {
-              versionName = attribute.getValue().toString();
+              versionName = attribute.getValue();
             }
             if (attribute.getName().toString().equals("date"))
             {
               SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-              datum = sdf.parse(attribute.getValue().toString());
+              datum = sdf.parse(attribute.getValue());
             }
           }
 
           //String description = "";
-          
           event = eventReader.nextEvent();
           String description = event.asCharacters().getData();
           logger.debug("description: " + description);
@@ -257,7 +273,7 @@ public class ImportClaml
            this.maintainVocabularyVersion();
            }*/
         }
-        if (startElement.getName().toString().equals("Identifier"))
+        else if (startElementName.equals("Identifier"))
         {
           // We read the attributes from this tag and add the date attribute to our object
           Iterator<Attribute> attributes = startElement.getAttributes();
@@ -266,17 +282,16 @@ public class ImportClaml
             Attribute attribute = attributes.next();
             if (attribute.getName().toString().equals("authority"))
             {
-              authority = attribute.getValue().toString();
+              authority = attribute.getValue();
             }
             if (attribute.getName().toString().equals("uid"))
             {
-              uid = attribute.getValue().toString();
+              uid = attribute.getValue();
             }
           }
 
         }
-
-        if (startElement.getName().toString().equals("RubricKind"))
+        else if (startElementName.equals("RubricKind"))
         {
           clamlBindingXSD.RubricKind rk = new clamlBindingXSD.RubricKind();
 
@@ -287,7 +302,7 @@ public class ImportClaml
             Attribute attribute = attributes.next();
             if (attribute.getName().toString().equals("name"))
             {
-              rk.setName(attribute.getValue().toString());
+              rk.setName(attribute.getValue());
               rks.getRubricKind().add(rk);
             }
           }
@@ -295,7 +310,7 @@ public class ImportClaml
         }
 
         //  if (startElement.getName().toString().equals("Class") || startElement.getName().toString().equals("Modifier") ||startElement.getName().toString().equals("Class") || startElement.getName().toString().equals("ModifierClass") ) {
-        if (startElement.getName().toString().equals("Class"))
+        else if (startElementName.equals("Class"))
         {
           clazz = new clamlBindingXSD.Class();
 
@@ -307,18 +322,18 @@ public class ImportClaml
             if (attribute.getName().toString().equals("code"))
             {
               // System.out.println("CODE:  " + attribute.getValue().toString());
-              clazz.setCode(attribute.getValue().toString());
+              clazz.setCode(attribute.getValue());
 
             }
             if (attribute.getName().toString().equals("kind"))
             {
-              clazz.setKind(attribute.getValue().toString());
+              clazz.setKind(attribute.getValue());
               // System.out.println(clazz.getKind());
             }
           }
 
         }
-        if (startElement.getName().toString().equals("Rubric"))
+        else if (startElementName.equals("Rubric"))
         {
           if (clazz != null)
           {
@@ -330,14 +345,14 @@ public class ImportClaml
               Attribute attribute = attributes.next();
               if (attribute.getName().toString().equals("kind"))
               {
-                rubi.setKind(attribute.getValue().toString());
+                rubi.setKind(attribute.getValue());
               }
             }
             clazz.getRubric().add(rubi);
           }
 
         }
-        if (startElement.getName().toString().equals("Label"))
+        else if (startElementName.equals("Label"))
         {
           if (rubi != null)
           {
@@ -351,21 +366,27 @@ public class ImportClaml
           }
 
         }
-
-        if (startElement.getName().toString().equals("Fragment"))
+        else if (startElementName.equals("Fragment"))
         {
           if (rubi != null)
           {
-            clamlBindingXSD.Label l = new clamlBindingXSD.Label();
-            event = eventReader.nextEvent();
-            l.getContent().add(event.asCharacters().getData());
-            rubi.getLabel().add(l);
+            if (event.isEndElement() == false)
+            {
+              event = eventReader.nextEvent();
+              
+              if(event.isEndElement() == false)
+              {
+                clamlBindingXSD.Label l = new clamlBindingXSD.Label();
+                l.getContent().add(event.asCharacters().getData());
+                rubi.getLabel().add(l);
+              }
+              else logger.debug("kein Text, da End-Element");
+            }
             continue;
           }
 
         }
-        
-        if (startElement.getName().toString().equals("SuperClass"))
+        else if (startElementName.equals("SuperClass"))
         {
           if (clazz != null)
           {
@@ -376,7 +397,7 @@ public class ImportClaml
               Attribute attribute = attributes.next();
               if (attribute.getName().toString().equals("code"))
               {
-                sc.setCode(attribute.getValue().toString());
+                sc.setCode(attribute.getValue());
               }
             }
 
@@ -384,7 +405,7 @@ public class ImportClaml
           }
 
         }
-        if (startElement.getName().toString().equals("Meta"))
+        else if (startElementName.equals("Meta"))
         {
           if (clazz != null)
           {
@@ -395,18 +416,19 @@ public class ImportClaml
               Attribute attribute = attributes.next();
               if (attribute.getName().toString().equals("name"))
               {
-                meta.setName(attribute.getValue().toString());
+                meta.setName(attribute.getValue());
               }
               if (attribute.getName().toString().equals("value"))
               {
-                meta.setValue(attribute.getValue().toString());
+                meta.setValue(attribute.getValue());
               }
             }
             clazz.getMeta().add(meta);
           }
         }
 
-      }
+      } // End start element
+
       if (event.isEndElement())
       {
         EndElement endElement = event.asEndElement();
@@ -479,7 +501,6 @@ public class ImportClaml
       countEvery++;
 
     }
-
 
   }
 
@@ -592,7 +613,6 @@ public class ImportClaml
      }
      this.codeSystem = resp.getCodeSystem();
      */
-
   }
 
   public AssociationType CreateAssociationType(String forwardName, String reverseName)
@@ -640,7 +660,6 @@ public class ImportClaml
 
     return assoctype;
 
-
   }
 
   private void CreateSingleConcept(clamlBindingXSD.Class cl) throws Exception
@@ -663,7 +682,6 @@ public class ImportClaml
      {
      logger.error("AktClass: " + code + " (" + aktCount + ")");
      }*/
-
     Iterator it2 = clazz.getRubric().iterator();
     Iterator it3 = clazz.getRubric().iterator();
 
@@ -696,9 +714,8 @@ public class ImportClaml
 
       rubKind = (String) rubi.getKind();
 
-      if (! (  rubKind.equals(RUBRICKINDS.preferred.getCode())
-             ||rubKind.equals(RUBRICKINDS.note.getCode())
-              ))
+      if (!(rubKind.equals(RUBRICKINDS.preferred.getCode())
+              || rubKind.equals(RUBRICKINDS.note.getCode())))
       {
         labelString = getAllRubricStrings(rubi);
         this.createNotPrefferdTerm(labelString, code, clazz, rubKind);
@@ -810,14 +827,14 @@ public class ImportClaml
   public void createPrefferedTerm(String labelString, String code, clamlBindingXSD.Class clazz) throws Exception
   {
     logger.debug("createPrefferedTerm mit Code: " + code + ", Text: " + labelString);
-    
+
     CreateConceptRequestType request = new CreateConceptRequestType();
 
     // EntityType erstellen
     CodeSystemEntity cse = new CodeSystemEntity();
     CodeSystemVersionEntityMembership csvem = new CodeSystemVersionEntityMembership();
     csvem.setIsAxis(false);
-    if(clazz.getSuperClass() != null && clazz.getSuperClass().size() > 0)
+    if (clazz.getSuperClass() != null && clazz.getSuperClass().size() > 0)
     {
       csvem.setIsAxis(false);
       csvem.setIsMainClass(false);
@@ -826,12 +843,12 @@ public class ImportClaml
     {
       csvem.setIsMainClass(true);
     }
-    
+
     if (clazz.getKind() != null && clazz.getKind().equals("chapter"))
     {
       csvem.setIsMainClass(true);
     }
-    
+
     cse.setCodeSystemVersionEntityMemberships(new HashSet<CodeSystemVersionEntityMembership>());
     cse.getCodeSystemVersionEntityMemberships().add(csvem);
 
@@ -872,7 +889,7 @@ public class ImportClaml
       {
         this.createSuperclassAssociation(code, clazz);
       }
-      
+
       //aktuelle entityVersionID aus der Response in Hashmap schreiben/merken:
       long aktEntityVersionID = 0;
 
@@ -902,7 +919,6 @@ public class ImportClaml
     csvem.setIsAxis(false);
     cse.setCodeSystemVersionEntityMemberships(new HashSet<CodeSystemVersionEntityMembership>());
     cse.getCodeSystemVersionEntityMemberships().add(csvem);
-
 
     //EntityVersionType erstellen
     CodeSystemEntityVersion csev = new CodeSystemEntityVersion();
@@ -956,7 +972,6 @@ public class ImportClaml
       aktEntityVersionID = ccsResponse.getCodeSystemEntity().getCodeSystemEntityVersions().iterator().next().getVersionId();
     }
 
-
     //den eigenen Code in der HashMap suchen (ist der Code des prefferdTerms)
     long prefferedTermEntityVersionID = (Long) referenceMap.get(code);
 
@@ -971,10 +986,9 @@ public class ImportClaml
 
     evat.setAssociationKind(Definitions.ASSOCIATION_KIND.ONTOLOGY.getCode());
     evat.setLeftId(prefferedTermEntityVersionID);
-    
+
     evat.setStatus(1);
     evat.setStatusDate(new Date());
-
 
     //AssociationType und Response aus der jeweiligen Hasmap holen
     CreateConceptAssociationTypeResponseType resp = (CreateConceptAssociationTypeResponseType) ccatresptHashmap.get(rubkind);
@@ -1069,9 +1083,9 @@ public class ImportClaml
 
   private long insertMetaData(String name, String value, String code)
   {
-    if(value == null || value.length() == 0)
+    if (value == null || value.length() == 0)
       return 0;
-    
+
     long metaDataID = 0;
     // Der SQLHelper baut die Insert-Anfrage zusammen
     if (metaDataMap.containsKey(name))
@@ -1098,7 +1112,6 @@ public class ImportClaml
     {
       logger.warn("metaDataID ist 0 für: " + name);
     }
-
 
     // Der SQLHelper baut die Insert-Anfrage zusammen
     CodeSystemMetadataValue mv = new CodeSystemMetadataValue();
@@ -1129,7 +1142,7 @@ public class ImportClaml
         if (METADATA_ATTRIBUTES.isCodeValid(meta.getName()) == false)
         {
           long metaDataID = insertMetaData(meta.getName(), meta.getValue(), clazz.getCode());
-          if(metaDataID > 0)
+          if (metaDataID > 0)
             logger.debug("[ImportClaml.java] Neues entity_version_parameter_value mit ID: " + metaDataID);
         }
       }
@@ -1142,7 +1155,7 @@ public class ImportClaml
       if (classKind.length() > 0)
       {
         long metaDataID = insertMetaData("ClaML_ClassKind", classKind, clazz.getCode());
-        if(metaDataID > 0)
+        if (metaDataID > 0)
           logger.debug("[ImportClaml.java] Neues entity_version_parameter_value mit ID: " + metaDataID);
       }
     }

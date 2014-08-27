@@ -44,7 +44,7 @@ public class ImportCodeSystem
   public ImportCodeSystemResponseType ImportCodeSystem(ImportCodeSystemRequestType parameter, String ipAddress)
   {
     if (logger.isInfoEnabled())
-      logger.info("====== ImportCodeSystem gestartet ======");
+      logger.info("====== ImportCodeSystem started ======");
 
     // Return-Informationen anlegen
     ImportCodeSystemResponseType response = new ImportCodeSystemResponseType();
@@ -55,7 +55,7 @@ public class ImportCodeSystem
       // Fehlermeldung ausgeben (Import kann nur 1x laufen)
       response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
       response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-      response.getReturnInfos().setMessage("Ein Import läuft bereits. Warten Sie darauf, bis dieser beendet ist und versuchen Sie es anschließend erneut.");
+      response.getReturnInfos().setMessage("Another import is running. Please wait until it is finished.");
       return response;
     }
 
@@ -74,7 +74,7 @@ public class ImportCodeSystem
       loggedIn = loginInfoType != null;
     }
 
-    logger.debug("Eingeloggt: " + loggedIn);
+    logger.debug("logged in: " + loggedIn);
 
     if (loggedIn == false)
     {
@@ -91,21 +91,22 @@ public class ImportCodeSystem
       try
       {
         StaticStatus.importRunning = true;
-        ImportClaml importClaml = new ImportClaml(parameter);
+        ImportClaml importClaml = new ImportClaml();
+        importClaml.startImport(parameter);
 
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
         response.getReturnInfos().setStatus(ReturnType.Status.OK);
         if (StaticStatus.cancel)
-          response.getReturnInfos().setMessage("Import abgebrochen.");
+          response.getReturnInfos().setMessage("Import cancelled.");
         else
-          response.getReturnInfos().setMessage("Import abgeschlossen.");
+          response.getReturnInfos().setMessage("Import completed.");
         response.getReturnInfos().setCount(importClaml.getCountImported());
       }
       catch (Exception e)
       {
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-        response.getReturnInfos().setMessage("Fehler beim Import: " + e.getLocalizedMessage());
+        response.getReturnInfos().setMessage("Error at ClaML import: " + e.getLocalizedMessage());
       }
     }
     else if (formatId == ImportCodeSystemRequestType.IMPORT_CSV_ID)
@@ -131,14 +132,14 @@ public class ImportCodeSystem
         {
           response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
           response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-          response.getReturnInfos().setMessage("Fehler beim Import: " + s);
+          response.getReturnInfos().setMessage("Error at CSV import: " + s);
         }
       }
       catch (Exception e)
       {
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-        response.getReturnInfos().setMessage("Fehler beim Import: " + e.getLocalizedMessage());
+        response.getReturnInfos().setMessage("Error at CSV import: " + e.getLocalizedMessage());
 
         e.printStackTrace();
       }
@@ -162,15 +163,15 @@ public class ImportCodeSystem
         {
           response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
           response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-          response.getReturnInfos().setMessage("Fehler beim Import: " + s);
+          response.getReturnInfos().setMessage("Error at LOINC import: " + s);
         }
-        logger.warn("LOINC Import-Ende");
+        logger.warn("LOINC import finished");
       }
       catch (Exception e)
       {
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-        response.getReturnInfos().setMessage("Fehler beim Import: " + e.getLocalizedMessage());
+        response.getReturnInfos().setMessage("Error at LOINC import: " + e.getLocalizedMessage());
 
         e.printStackTrace();
       }
@@ -194,7 +195,7 @@ public class ImportCodeSystem
         {
           response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
           response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-          response.getReturnInfos().setMessage("Fehler beim Import: " + s);
+          response.getReturnInfos().setMessage("Error at LOINC relationship import: " + s);
         }
         logger.warn("LOINC-Associations Import-Ende");
       }
@@ -202,7 +203,7 @@ public class ImportCodeSystem
       {
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-        response.getReturnInfos().setMessage("Fehler beim Import: " + e.getLocalizedMessage());
+        response.getReturnInfos().setMessage("Error at LOINC relationship import: " + e.getLocalizedMessage());
 
         e.printStackTrace();
       }
@@ -227,14 +228,14 @@ public class ImportCodeSystem
         {
           response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
           response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-          response.getReturnInfos().setMessage("Fehler beim Import: " + s);
+          response.getReturnInfos().setMessage("Error at KBV import: " + s);
         }
       }
       catch (Exception e)
       {
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-        response.getReturnInfos().setMessage("Fehler beim Import: " + e.getLocalizedMessage());
+        response.getReturnInfos().setMessage("Error at KBV import: " + e.getLocalizedMessage());
 
         e.printStackTrace();
       }
@@ -259,14 +260,14 @@ public class ImportCodeSystem
         {
           response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
           response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-          response.getReturnInfos().setMessage("Fehler beim Import: " + s);
+          response.getReturnInfos().setMessage("Error at SVS import: " + s);
         }
       }
       catch (Exception e)
       {
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-        response.getReturnInfos().setMessage("Fehler beim Import: " + e.getLocalizedMessage());
+        response.getReturnInfos().setMessage("Error at SVS import: " + e.getLocalizedMessage());
 
         e.printStackTrace();
       }
@@ -292,14 +293,14 @@ public class ImportCodeSystem
         {
           response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
           response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-          response.getReturnInfos().setMessage("Fehler beim Import: " + s);
+          response.getReturnInfos().setMessage("Error at import: " + s);
         }
       }
       catch (Exception e)
       {
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-        response.getReturnInfos().setMessage("Fehler beim Import: " + e.getLocalizedMessage());
+        response.getReturnInfos().setMessage("Error at import: " + e.getLocalizedMessage());
 
         e.printStackTrace();
       }
@@ -325,14 +326,14 @@ public class ImportCodeSystem
         {
           response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
           response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-          response.getReturnInfos().setMessage("Fehler beim Import: " + s);
+          response.getReturnInfos().setMessage("Error at import: " + s);
         }
       }
       catch (Exception e)
       {
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-        response.getReturnInfos().setMessage("Fehler beim Import: " + e.getLocalizedMessage());
+        response.getReturnInfos().setMessage("Error at import: " + e.getLocalizedMessage());
 
         e.printStackTrace();
       }
@@ -375,7 +376,7 @@ public class ImportCodeSystem
     {
       response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
       response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-      response.getReturnInfos().setMessage("Das Import-Format mit folgender ID ist unbekannt: " + formatId + "\n" + ImportCodeSystemRequestType.getPossibleFormats());
+      response.getReturnInfos().setMessage("Import format unknown with id: " + formatId + "\n" + ImportCodeSystemRequestType.getPossibleFormats());
     }
 
     StaticStatus.importRunning = false;
@@ -396,7 +397,7 @@ public class ImportCodeSystem
 
     if (Request.getImportInfos() == null)
     {
-      Response.getReturnInfos().setMessage("ImportInfos darf nicht NULL sein!");
+      Response.getReturnInfos().setMessage("ImportInfos may not be NULL!");
       erfolg = false;
     }
     else
@@ -409,15 +410,14 @@ public class ImportCodeSystem
        else*/ if (Request.getImportInfos().getFormatId() == null || Request.getImportInfos().getFormatId() == 0)
       {
         // TODO auf gültiges Format prüfen
-        Response.getReturnInfos().setMessage("Sie müssen ein Import-Format angeben!");
+        Response.getReturnInfos().setMessage("You have to give an import format:\n" + ImportCodeSystemRequestType.getPossibleFormats());
         erfolg = false;
       }
     }
 
     if (Request.getLoginToken() == null || Request.getLoginToken().length() == 0)
     {
-      Response.getReturnInfos().setMessage(
-              "Das Login-Token darf nicht leer sein!");
+      Response.getReturnInfos().setMessage("Login token may not be empty!");
       erfolg = false;
     }
 

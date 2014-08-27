@@ -363,14 +363,14 @@ public class ImportVS_SVS extends Window implements AfterCompose, IGenericListAc
     request.getImportInfos().setFilecontent(bytes);
     request.getImportInfos().setFormatId(301l);
     request.getImportInfos().setOrder(cbOrder.isChecked());
-    if (vsvOnly)
+    /*if (vsvOnly)
     {
       request.getImportInfos().setRole(CODES.ROLE_ADMIN);
     }
     else
     {
       request.getImportInfos().setRole(SessionHelper.getCollaborationUserRole());
-    }
+    }*/
 
     ImportValueSetResponse.Return response = port.importValueSet(request);
     //importWS = (Response<ImportValueSetResponse>) port.importValueSetAsync(request, this);

@@ -16,6 +16,8 @@
  */
 package de.fhdo.models.itemrenderer;
 
+import de.fhdo.Definitions;
+import de.fhdo.helper.DomainHelper;
 import de.fhdo.helper.LanguageHelper;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
@@ -45,7 +47,14 @@ public class ListitemRendererTranslations implements ListitemRenderer
     Listcell cellLanguage = new Listcell();
     Listcell cellTranslation = new Listcell();
 
-    // TODO cellLanguage.setLabel(LanguageHelper.getLanguageTable().get(String.valueOf(csct.getLanguageId())));
+    // get language from domain (cached values)
+    if (csct.getLanguageCd() != null && csct.getLanguageCd().length() > 0)
+    {
+      String language = DomainHelper.getInstance().getDomainValueDisplayText(Definitions.DOMAINID_LANGUAGECODES, csct.getLanguageCd());
+      language += " (" + csct.getLanguageCd() + ")";
+      cellLanguage.setLabel(language);
+    }
+
     if (editableTranslationsList)
     {
       Textbox textBox = new Textbox();
