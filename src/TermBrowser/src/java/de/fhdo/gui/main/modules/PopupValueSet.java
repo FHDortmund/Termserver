@@ -24,6 +24,8 @@ import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.ValidityRangeHelper;
 import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.interfaces.IUpdateModal;
+import de.fhdo.models.comparators.ComparatorMetadataParameter;
+import de.fhdo.models.itemrenderer.ListitemRendererMetadataParameter;
 import de.fhdo.terminologie.ws.authoring.Authoring;
 import de.fhdo.terminologie.ws.authoring.Authoring_Service;
 import de.fhdo.terminologie.ws.authoring.CreateValueSetRequestType;
@@ -34,10 +36,14 @@ import de.fhdo.terminologie.ws.authoring.UpdateValueSetStatusResponse;
 import de.fhdo.terminologie.ws.authoring.VersioningType;
 import de.fhdo.terminologie.ws.search.ListValueSetsRequestType;
 import de.fhdo.terminologie.ws.search.ListValueSetsResponse;
+import de.fhdo.terminologie.ws.search.ReturnValueSetDetailsRequestType;
+import de.fhdo.terminologie.ws.search.ReturnValueSetDetailsResponse;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,9 +59,13 @@ import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Datebox;
 import org.zkoss.zul.Label;
+import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.SimpleListModel;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
+import types.termserver.fhdo.de.MetadataParameter;
 import types.termserver.fhdo.de.ValueSet;
 import types.termserver.fhdo.de.ValueSetVersion;
 
@@ -74,6 +84,7 @@ public class PopupValueSet extends PopupWindow implements IUpdateModal
   private Textbox tbVSName, tbVSDescription, tbVSVStatus, tbVSStatus, tbVSVOid, tbVSDescriptionEng, tbWebsite, tbVSVName;
   private Checkbox cbNewVersion;
   private Button bCreate, bOidBeantragen;
+  private Listbox listMetadataParameter;
   private Label lReq, lName, lStatus;
   private Combobox cboxPreferredLanguage, cboxCSVValidityRange;
 
@@ -232,6 +243,8 @@ public class PopupValueSet extends PopupWindow implements IUpdateModal
   {
     vs = (ValueSet) arg.get("VS");
     vsv = (ValueSetVersion) arg.get("VSV");
+    
+    loadDetails();
 
     window.setTitle(Labels.getLabel("popupValueSet.valueSetDetails"));
     dateBoxRD.setDisabled(true);
@@ -299,6 +312,8 @@ public class PopupValueSet extends PopupWindow implements IUpdateModal
   {
     vs = (ValueSet) arg.get("VS");
     createNewValueSetVersion();
+    
+    loadDetails();
 
     window.setTitle(Labels.getLabel("popupValueSet.createValueSetVersion"));
     dateBoxRD.setDisabled(false);
@@ -350,6 +365,8 @@ public class PopupValueSet extends PopupWindow implements IUpdateModal
     vsv = (ValueSetVersion) arg.get("VSV");
     versioning = new VersioningType();
     versioning.setCreateNewVersion(Boolean.FALSE);
+    
+    loadDetails();
 
     window.setTitle(Labels.getLabel("popupValueSet.editValueSetVersion"));
     dateBoxRD.setDisabled(true);
@@ -389,6 +406,9 @@ public class PopupValueSet extends PopupWindow implements IUpdateModal
       editMode = EDITMODE_MAINTAIN_VERSION_NEW;
       editmodeMaintainVersionNew();
     }
+    
+    loadDetails();
+    
     versioning = new VersioningType();
     versioning.setCreateNewVersion(Boolean.FALSE);
 
@@ -425,6 +445,8 @@ public class PopupValueSet extends PopupWindow implements IUpdateModal
   {
     vs = (ValueSet) arg.get("VS");
     vsv = (ValueSetVersion) arg.get("VSV");
+    
+    loadDetails();
 
     versioning = new VersioningType();
     versioning.setCreateNewVersion(Boolean.FALSE);
@@ -470,6 +492,8 @@ public class PopupValueSet extends PopupWindow implements IUpdateModal
   {
     vs = (ValueSet) arg.get("VS");
     vsv = (ValueSetVersion) arg.get("VSV");
+    
+    loadDetails();
 
     versioning = new VersioningType();
     versioning.setCreateNewVersion(Boolean.FALSE);
@@ -593,7 +617,7 @@ public class PopupValueSet extends PopupWindow implements IUpdateModal
             {
               AssignTermHelper.assignTermToUser(response.getValueSet());
               Messagebox.show(Labels.getLabel("popupValueSet.createValueSetSuccessfully"));
-              ((ContentCSVSDefault) windowParent).refresh();
+              ((ContentCSVSDefault) windowParent).refreshVS();
               window.detach();
             }
             else
@@ -674,7 +698,7 @@ public class PopupValueSet extends PopupWindow implements IUpdateModal
           Messagebox.show(Labels.getLabel("popupValueSet.createValueSetVerisonSuccessfully"));
         else
           Messagebox.show(Labels.getLabel("popupValueSet.editValueSetVerisonSuccessfully"));
-        ((ContentCSVSDefault) windowParent).refresh();
+        ((ContentCSVSDefault) windowParent).refreshVS();
         window.detach();
       }
       else
@@ -740,7 +764,7 @@ public class PopupValueSet extends PopupWindow implements IUpdateModal
             Messagebox.show(Labels.getLabel("popupValueSet.createValueSetVerisonSuccessfully"));
           else
             Messagebox.show(Labels.getLabel("popupValueSet.editValueSetVerisonSuccessfully"));
-          ((ContentCSVSDefault) windowParent).refresh();
+          ((ContentCSVSDefault) windowParent).refreshVS();
           window.detach();
         }
         else
@@ -804,7 +828,7 @@ public class PopupValueSet extends PopupWindow implements IUpdateModal
       if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
       {
         Messagebox.show(Labels.getLabel("popupValueSet.editValueSetStatusSuccessfully"));
-        ((ContentCSVSDefault) windowParent).refresh();
+        ((ContentCSVSDefault) windowParent).refreshVS();
         window.detach();
       }
       else
@@ -814,6 +838,88 @@ public class PopupValueSet extends PopupWindow implements IUpdateModal
     {
       e.printStackTrace();
     }
+  }
+  
+  private void loadDetails()
+  {
+    ReturnValueSetDetailsRequestType parameter = new ReturnValueSetDetailsRequestType();
+
+    // Login
+    if (SessionHelper.isUserLoggedIn())
+    {
+      parameter.setLoginToken(SessionHelper.getSessionId());
+    }
+
+    // CS und CSV
+    ValueSet vsTemp = new ValueSet();
+    vsTemp.setId(vs.getId());
+    if (vsv != null)
+    {
+      ValueSetVersion vsvTemp = new ValueSetVersion();
+      vsTemp.getValueSetVersions().add(vsvTemp);
+      vsvTemp.setVersionId(vsv.getVersionId());
+    }
+    parameter.setValueSet(vsTemp);
+
+    ReturnValueSetDetailsResponse.Return response = WebServiceHelper.returnValueSetDetails(parameter);
+
+    // Meldung falls CreateConcept fehlgeschlagen
+    if (response.getReturnInfos().getStatus() != de.fhdo.terminologie.ws.search.Status.OK)
+    {
+      try
+      {
+        Messagebox.show(Labels.getLabel("common.error") + "\n" + Labels.getLabel("popupCodeSystem.loadCSDetailsFailed") + "\n\n" + response.getReturnInfos().getMessage());
+        return;
+      }
+      catch (Exception ex)
+      {
+        Logger.getLogger(PopupCodeSystem.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
+    vs = response.getValueSet();
+
+    // Verison laden, falls angegeben       
+    if (vsv != null)
+    {
+      for(ValueSetVersion vsvTemp2 : vs.getValueSetVersions())
+      {
+        if (vsvTemp2.getVersionId().equals(vsv.getVersionId()))
+        {
+          vsv = vsvTemp2;
+          break;
+        }
+      }
+    }
+
+    loadMetaParameter();
+  }
+  
+  private void loadMetaParameter()
+  {
+    // ItemRenderer
+    listMetadataParameter.setItemRenderer(new ListitemRendererMetadataParameter());
+
+    // Listhead und Listheader
+    Listheader lh1 = new Listheader("Parameter"),
+            lh2 = new Listheader("Datatype"),
+            lh3 = new Listheader("Parametertype");
+    listMetadataParameter.getListhead().getChildren().add(lh1);
+    listMetadataParameter.getListhead().getChildren().add(lh2);
+    listMetadataParameter.getListhead().getChildren().add(lh3);
+
+    // Metadaten laden    
+    List metadata = new ArrayList();
+    for (MetadataParameter mpd : vs.getMetadataParameters())
+    {
+      metadata.add(mpd);
+    }
+    listMetadataParameter.setModel(new SimpleListModel(metadata));
+
+    // sortieren
+    lh1.setSortAscending(new ComparatorMetadataParameter(true));
+    lh1.setSortDescending(new ComparatorMetadataParameter(false));
+    lh1.setSortDirection("descending");
+    lh1.sort(true);
   }
 
   public void update(Object o, boolean edited)

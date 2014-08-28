@@ -25,58 +25,63 @@ import java.util.Date;
  */
 public class VersionHelper
 {
+
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
   private static VersionHelper instance;
-  
+
   public static VersionHelper getInstance()
   {
-    if(instance == null)
+    if (instance == null)
       instance = new VersionHelper();
     return instance;
   }
 
   private static int RELOAD_AFTER_MS = 86400000;
-  
+
   Date lastDate;
   String termserverVersion = "";
   Date termserverDate;
-  
+
   public VersionHelper()
   {
+    logger.debug("New VersionHelper()");
     lastDate = null;
   }
-  
+
   public String getVersion()
   {
-    if(lastDate == null || termserverVersion.length() == 0 || lastDate.getTime() + RELOAD_AFTER_MS > new Date().getTime())
+
+    if (lastDate == null || termserverVersion.length() == 0 || (new Date().getTime() > lastDate.getTime() + RELOAD_AFTER_MS))
     {
       logger.debug("Lade Version vom Terminologieserver (WebService-Aufruf)");
+
+      logger.debug("LastDate: " + lastDate);
+      logger.debug("termserverVersion: " + termserverVersion);
+      logger.debug("RELOAD_AFTER_MS: " + RELOAD_AFTER_MS);
       GetTermserverVersionResponse.Return ret = WebServiceHelper.getVersion();
       termserverVersion = ret.getVersion();
       termserverDate = DateTimeHelper.ConvertXMLGregorianCalenderToDate(ret.getDate());
-      
+
       lastDate = new Date();
     }
-    else logger.debug("verwende Version aus dem Cache");
-    
+    else
+      logger.debug("verwende Version aus dem Cache");
+
     return termserverVersion;
   }
-  
+
   public Date getDate()
   {
-    if(lastDate == null || termserverVersion.length() == 0 || lastDate.getTime() + RELOAD_AFTER_MS > new Date().getTime())
+    if (lastDate == null || termserverVersion.length() == 0 || lastDate.getTime() + RELOAD_AFTER_MS > new Date().getTime())
     {
       GetTermserverVersionResponse.Return ret = WebServiceHelper.getVersion();
       termserverVersion = ret.getVersion();
       termserverDate = DateTimeHelper.ConvertXMLGregorianCalenderToDate(ret.getDate());
-      
+
       lastDate = new Date();
     }
-    
+
     return termserverDate;
   }
-  
-  
-  
-  
+
 }

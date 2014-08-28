@@ -17,14 +17,10 @@
 package de.fhdo.gui.header;
 
 import de.fhdo.authorization.Authorization;
-import de.fhdo.collaboration.helper.CODES;
 import de.fhdo.gui.main.modules.PopupWindow;
-import de.fhdo.helper.DES;
 import de.fhdo.helper.PropertiesHelper;
-import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.ViewHelper;
-import de.fhdo.models.TreeModelVS;
-import java.util.ArrayList;
+import de.fhdo.logging.LoggingOutput;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,9 +32,7 @@ import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Include;
-import org.zkoss.zul.Menuitem;
 import org.zkoss.zul.Messagebox;
-import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Window;
 
 /**
@@ -179,6 +173,21 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
     {
       Authorization.logout();
       Executions.sendRedirect("../../../TermAdmin/gui/admin/logout.zul");
+    }
+  }
+  
+  public void onGlobalSearch()
+  {
+    try
+    {
+      Map<String, Object> data = new HashMap<String, Object>();
+      data.put("EditMode", 97);  // TODO ???
+      Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupGlobalSearch.zul", null, data);
+      w.doModal();
+    }
+    catch (Exception e)
+    {
+      LoggingOutput.outputException(e, this);
     }
   }
 

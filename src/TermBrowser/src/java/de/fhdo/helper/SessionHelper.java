@@ -18,6 +18,7 @@ package de.fhdo.helper;
 
 import de.fhdo.collaboration.db.HibernateUtil;
 import de.fhdo.collaboration.db.classes.Collaborationuser;
+import de.fhdo.gui.main.ContentCSVSDefault;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -35,8 +36,7 @@ public class SessionHelper
 {
 
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
-  
-  
+
   public static void reset()
   {
     logger.debug("reset()");
@@ -139,7 +139,7 @@ public class SessionHelper
       return o.toString();
     }
   }
-  
+
   public static String getCollaborationUserName()
   {
     Object o = getValue("collaboration_user_name");
@@ -154,7 +154,7 @@ public class SessionHelper
       return o.toString();
     }
   }
-  
+
   public static String getCollaborationUserRole()
   {
     Object o = getValue("collaboration_user_role");
@@ -257,6 +257,7 @@ public class SessionHelper
   {
     return getCollaborationUserID(null);
   }
+
   public static long getCollaborationUserID(HttpSession httpSession)
   {
     //return 5l; 
@@ -342,13 +343,13 @@ public class SessionHelper
     {
       active = (Boolean) o;
     }
-    if(active)
+    if (active)
     {
       return getCollaborationUserID(httpSession) > 0;
     }
     return false;
   }
-  
+
   public static boolean isCollaborationFlag()
   {
     return isCollaborationActive(null);
@@ -397,38 +398,58 @@ public class SessionHelper
     else
       return Boolean.parseBoolean(o.toString());
   }
-  
-  public static String getCollaborationUserRoleFromTermAdmLogin(){
-  
-        String role ="";
-        //Nur die Benutzer hohlen welche noch nicht zur Termserver DB "zugeordnet" sind!!!
-        Session hb_session = HibernateUtil.getSessionFactory().openSession();
+
+  public static String getCollaborationUserRoleFromTermAdmLogin()
+  {
+
+    String role = "";
+    //Nur die Benutzer hohlen welche noch nicht zur Termserver DB "zugeordnet" sind!!!
+    Session hb_session = HibernateUtil.getSessionFactory().openSession();
         //hb_session_kollab.getTransaction().begin();
-       
-        String hqlC = "select distinct cu from Collaborationuser cu where cu.hidden=false AND deleted=0";
 
-        try{
+    String hqlC = "select distinct cu from Collaborationuser cu where cu.hidden=false AND deleted=0";
 
-            List<Collaborationuser> userListC = hb_session.createQuery(hqlC).list();
+    try
+    {
 
-            for(Collaborationuser cu:userListC){
+      List<Collaborationuser> userListC = hb_session.createQuery(hqlC).list();
 
-                if((cu.getUsername() + "_tadm").equals(SessionHelper.getUserName())){
-                    role = cu.getRoles().iterator().next().getName();
-                    break;
-                }                
-            }
+      for (Collaborationuser cu : userListC)
+      {
 
-        }catch(Exception e){
-          logger.error("[Fehler bei CollabUserHelper.java createCollabUserTable(): " + e.getMessage());
-        }
-        finally
+        if ((cu.getUsername() + "_tadm").equals(SessionHelper.getUserName()))
         {
-          hb_session.close();
-        } 
-        return role;
+          role = cu.getRoles().iterator().next().getName();
+          break;
+        }
+      }
+
+    }
+    catch (Exception e)
+    {
+      logger.error("[Fehler bei CollabUserHelper.java createCollabUserTable(): " + e.getMessage());
+    }
+    finally
+    {
+      hb_session.close();
+    }
+    return role;
   }
   
+  public static ContentCSVSDefault.MODE getViewMode()
+  {
+    Object o = getValue("VIEW_MODE");
+    if(o != null)
+      return (ContentCSVSDefault.MODE) o;
+    
+    return ContentCSVSDefault.MODE.CODESYSTEMS;
+  }
+  
+  public static void setViewMode(ContentCSVSDefault.MODE mode)
+  {
+    setValue("VIEW_MODE", mode);
+  }
+
 //    
 //    // Soll beim Anklicken eines CS/VS sofort die aktuelle Version geladen werden?
 //    public static boolean isShowPreferredLanguage() {

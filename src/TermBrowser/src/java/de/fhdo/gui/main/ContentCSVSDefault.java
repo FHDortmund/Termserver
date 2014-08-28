@@ -16,24 +16,25 @@
  */
 package de.fhdo.gui.main;
 
+import de.fhdo.Definitions;
 import de.fhdo.collaboration.helper.AssignTermHelper;
 import de.fhdo.gui.main.modules.ContentConcepts;
 import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.gui.main.modules.PopupWindow;
 import de.fhdo.helper.DeepLinkHelper;
+import de.fhdo.helper.DomainHelper;
 import de.fhdo.helper.ParameterHelper;
 import de.fhdo.helper.SendBackHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.TreeHelper;
-import de.fhdo.helper.ValidityRangeHelper;
 import de.fhdo.logging.LoggingOutput;
-import de.fhdo.models.comparators.ComparatorCsvVsv;
 import de.fhdo.models.TreeModel;
-import de.fhdo.models.itemrenderer.TreeitemRenderer_CS_VS_DV;
-import de.fhdo.models.TreeNode;
-import de.fhdo.models.TreeModelVS;
 import de.fhdo.models.TreeModelCS;
 import de.fhdo.models.TreeModelCSEV;
+import de.fhdo.models.TreeModelVS;
+import de.fhdo.models.TreeNode;
+import de.fhdo.models.comparators.ComparatorCsvVsv;
+import de.fhdo.models.itemrenderer.TreeitemRenderer_CS_VS_DV;
 import de.fhdo.terminologie.ws.authoring.DeleteInfo;
 import de.fhdo.terminologie.ws.authoring.RemoveTerminologyOrConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.RemoveTerminologyOrConceptResponseType;
@@ -48,7 +49,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.UiException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -84,6 +84,13 @@ import types.termserver.fhdo.de.ValueSetVersion;
 public class ContentCSVSDefault extends Window implements AfterCompose
 {
 
+  public enum MODE
+  {
+
+    CODESYSTEMS, VALUESETS, SEARCH
+  }
+  private MODE mode;
+
   protected static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
   protected CodeSystem selectedCS;
   protected CodeSystemVersion selectedCSV;
@@ -92,77 +99,62 @@ public class ContentCSVSDefault extends Window implements AfterCompose
   protected String filterString = "";
   protected Tree treeVS,
           treeCS,
-          treeSearch,
-          treeActive;
+          treeSearch;
+  //treeActive;
   protected ContentConcepts windowContentConcepts;
   protected Button bNewCS,
           bNewCSV, bEditCSV, bDetailsCSV,
           bNewVS, bNewVSV, bEditVSV, bDetailsVSV,
-          bEditSearch, bDetailsSearch,
-          bActiveDetails, bActiveEdit, bActiveNew, bActiveNewVersion,
-          bGlobSearchCSV, bGlobSearchVSV, bActiveGlobalSearch;
-  protected Tabbox tb;
-  protected Tab tabCS, tabVS, tabSearch, tabActive;
+          bEditSearch, bDetailsSearch;
+  //bActiveDetails, bActiveEdit, bActiveNew, bActiveNewVersion;
+  //bGlobSearchCSV, bGlobSearchVSV, bActiveGlobalSearch;
+  protected Tabbox tabboxFilter;
+  protected Tab tabCS, tabVS, tabSearch;//, tabActive;
   protected ArrayList<String> deepLinks = new ArrayList<String>();
   protected Window parentSendBack;
   protected String sendbackMethodName = "";
   protected West westTreeCSVSDV;
+  private boolean cs_loaded = false;
+  private boolean vs_loaded = false;
+  private boolean search_loaded = false;
+
+  public ContentCSVSDefault()
+  {
+    mode = SessionHelper.getViewMode();
+
+  }
 
 // Konstruktor /////////////////////////////////////////////////////////////////    
   @Override
   public void afterCompose()
   {
-    // tabbox
-    tb = (Tabbox) getFellow("tabboxFilter");
+    // get references
+    tabboxFilter = (Tabbox) getFellow("tabboxFilter");
     tabCS = (Tab) getFellow("tabCS");
     tabVS = (Tab) getFellow("tabVS");
     tabSearch = (Tab) getFellow("tabSearch");
 
-    // Clients.clearBusy();  // braucht man das hier noch?
-    try
-    {
-      createCSTree();
-    }
-    catch (UiException e)
-    {
-      createCSTree();
-    }
-
-    try
-    {
-      createVSTree(); // TODO erst mit Daten befuellen, wenn Tab angeklickt ist
-    }
-    catch (UiException e)
-    {
-      createVSTree();
-    }
-
-    try
-    {
-      createTreeSearch(); // TODO erst mit Daten befuellen, wenn Tab angeklickt ist
-    }
-    catch (UiException e)
-    {
-      createTreeSearch();
-    }
-
-//        ((Borderlayout)getRoot()).getCenter().setTitle(Labels.getLabel("common.mainView"));                
-    // Buttons einblenden falls eingeloggt
+    // Codesystem-Buttons
     bNewCS = (Button) getFellow("bNewCS");
     bNewCSV = (Button) getFellow("bNewCSV");
     bEditCSV = (Button) getFellow("bEditCSV");
     bDetailsCSV = (Button) getFellow("bDetailsCSV");
-    bGlobSearchCSV = (Button) getFellow("bGlobSearchCSV");
 
+    // Valueset-Buttons
     bNewVS = (Button) getFellow("bNewVS");
     bNewVSV = (Button) getFellow("bNewVSV");
     bEditVSV = (Button) getFellow("bEditVSV");
     bDetailsVSV = (Button) getFellow("bDetailsVSV");
-    bGlobSearchVSV = (Button) getFellow("bGlobSearchVSV");
 
     bDetailsSearch = (Button) getFellow("bDetailsSearch");
     bEditSearch = (Button) getFellow("bEditSearch");
 
+    // Tree
+    treeCS = (Tree) getFellow("treeCS");
+    treeVS = (Tree) getFellow("treeVS");
+
+//        ((Borderlayout)getRoot()).getCenter().setTitle(Labels.getLabel("common.mainView"));                
+    // set button visibility
     boolean bLoggedIn = SessionHelper.isUserLoggedIn();
 
     bNewCS.setVisible(bLoggedIn);
@@ -179,6 +171,8 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     setActiveTab();
 
     processURLParameter();
+
+    Clients.clearBusy();
   }
 
   private void processURLParameter()
@@ -198,8 +192,6 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     if (ParameterHelper.getBoolean("hideStatusbar") != null)
       ((South) this.getRoot().getFellow("blMainSouth")).setVisible(!ParameterHelper.getBoolean("hideStatusbar"));
 
-    
-    
     // Deep Links ausfuehren
     expandTreeAndLoadConceptsByDeeplink();
   }
@@ -207,25 +199,52 @@ public class ContentCSVSDefault extends Window implements AfterCompose
   // Tree CodeSystem /////////////////////////////////////////////////////////////        
   protected void createCSTree()
   {
-    treeCS = (Tree) getFellow("treeCS");
+    if (cs_loaded)
+      return;
 
-    createCSTreeModel();
-    createCSTreeItemRenderer();
-    createCSTreeContextMenu();
+    logger.debug("createCSTree()");
 
-    sortTreeByName(treeCS);
+    try
+    {
+      Clients.showBusy(Labels.getLabel("common.loading"));
 
-    Clients.clearBusy();
+      treeCS.setModel(TreeModelCS.getTreeModel(getDesktop()));
+      treeCS.setItemRenderer(new TreeitemRenderer_CS_VS_DV(this));
+
+      createCSTreeContextMenu();
+
+      sortTreeByName(treeCS);
+
+      cs_loaded = true;
+    }
+    catch (Exception ex)
+    {
+      LoggingOutput.outputException(ex, this);
+      Messagebox.show(ex.getLocalizedMessage());
+    }
+    finally
+    {
+      Clients.clearBusy();
+    }
   }
 
-  protected void createCSTreeModel()
+  protected void createCSTreeContextMenu()
   {
-    treeCS.setModel(TreeModelCS.getTreeModel(getDesktop()));
-  }
-
-  protected void createCSTreeItemRenderer()
-  {
-    treeCS.setItemRenderer(new TreeitemRenderer_CS_VS_DV(this));
+    Menupopup contextMenu = new Menupopup();
+    treeCS.setContext(contextMenu);
+    contextMenu.setParent(this);
+    Menuitem miNewCS = new Menuitem(Labels.getLabel("contentCSVSDefault.newCodeSystem"));
+    miNewCS.addEventListener(Events.ON_CLICK, new EventListener()
+    {
+      public void onEvent(Event event) throws Exception
+      {
+        popupCodeSystem(PopupWindow.EDITMODE_CREATE, true);
+      }
+    });
+    if (SessionHelper.isUserLoggedIn())
+    {
+      miNewCS.setParent(contextMenu);
+    }
   }
 
   public void removeEntity()
@@ -235,25 +254,25 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     { //CS
 
       removeEntity(true, false, selectedCS.getId(), null);
-      refresh();
+      refreshCS();  // TODO sinnvoll?
     }
     if (selectedCS != null && selectedCSV != null)
     { //CSV
 
       removeEntity(true, true, selectedCS.getId(), selectedCSV.getVersionId());
-      refresh();
+      refreshCS();
     }
     if (selectedVS != null && selectedVSV == null)
     { //VS
 
       removeEntity(false, false, selectedVS.getId(), null);
-      refresh();
+      refreshVS();
     }
     if (selectedVS != null && selectedVSV != null)
     { //VSV
 
       removeEntity(false, true, selectedVS.getId(), selectedVSV.getVersionId());
-      refresh();
+      refreshVS();
     }
   }
 
@@ -339,45 +358,36 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     }
   }
 
-  protected void createCSTreeContextMenu()
-  {
-    Menupopup contextMenu = new Menupopup();
-    treeCS.setContext(contextMenu);
-    contextMenu.setParent(this);
-    Menuitem miNewCS = new Menuitem(Labels.getLabel("contentCSVSDefault.newCodeSystem"));
-    miNewCS.addEventListener(Events.ON_CLICK, new EventListener()
-    {
-      public void onEvent(Event event) throws Exception
-      {
-        popupCodeSystem(PopupWindow.EDITMODE_CREATE, true);
-      }
-    });
-    if (SessionHelper.isUserLoggedIn())
-    {
-      miNewCS.setParent(contextMenu);
-    }
-  }
-
 // Tree Value Set //////////////////////////////////////////////////////////////        
   protected void createVSTree()
   {
-    treeVS = (Tree) getFellow("treeVS");
+    if (vs_loaded)
+      return;
 
-    createVSTreeModel();
-    createVSTreeItemRenderer();
-    createVSTreeContextMenu();
+    logger.debug("createCSTree()");
 
-    sortTreeByName(treeVS);
-  }
+    try
+    {
+      Clients.showBusy(Labels.getLabel("common.loading"));
 
-  protected void createVSTreeModel()
-  {
-    treeVS.setModel(TreeModelVS.getTreeModel(getDesktop()));
-  }
+      treeVS.setModel(TreeModelVS.getTreeModel(getDesktop()));
+      treeVS.setItemRenderer(new TreeitemRenderer_CS_VS_DV(this));
 
-  protected void createVSTreeItemRenderer()
-  {
-    treeVS.setItemRenderer(new TreeitemRenderer_CS_VS_DV(this));
+      createVSTreeContextMenu();
+
+      sortTreeByName(treeVS);
+
+      vs_loaded = true;
+    }
+    catch (Exception ex)
+    {
+      LoggingOutput.outputException(ex, this);
+      Messagebox.show(ex.getLocalizedMessage());
+    }
+    finally
+    {
+      Clients.clearBusy();
+    }
   }
 
   protected void createVSTreeContextMenu()
@@ -400,15 +410,36 @@ public class ContentCSVSDefault extends Window implements AfterCompose
   }
 
 // Tree Search /////////////////////////////////////////////////////////////////    
-  protected void createTreeSearch()
+  protected void createSearchTree()
   {
-    treeSearch = (Tree) getFellow("treeSearch");
+    if (search_loaded)
+      return;
 
-    createSearchTreeModel();
-    createSearchTreeItemRenderer();
-    createSearchTreeContextMenu();
+    try
+    {
+      Clients.showBusy(Labels.getLabel("common.loading"));
 
-    sortTreeByName(treeSearch);
+      treeSearch = (Tree) getFellow("treeSearch");
+
+      createSearchTreeModel();
+
+      TreeitemRenderer_CS_VS_DV t = new TreeitemRenderer_CS_VS_DV(this);
+      t.setShowType(true);
+      treeSearch.setItemRenderer(t);
+
+      sortTreeByName(treeSearch);
+
+      search_loaded = true;
+    }
+    catch (Exception ex)
+    {
+      LoggingOutput.outputException(ex, this);
+      Messagebox.show(ex.getLocalizedMessage());
+    }
+    finally
+    {
+      Clients.clearBusy();
+    }
   }
 
   protected void createSearchTreeModel()
@@ -440,23 +471,27 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     }
   }
 
-  protected void createSearchTreeItemRenderer()
+  private Tree getTreeActive()
   {
-    TreeitemRenderer_CS_VS_DV t = new TreeitemRenderer_CS_VS_DV(this);
-    t.setShowType(true);
-    treeSearch.setItemRenderer(t);
-  }
-
-  protected void createSearchTreeContextMenu()
-  {
+    if (mode == MODE.CODESYSTEMS)
+    {
+      return treeCS;
+    }
+    else if (mode == MODE.VALUESETS)
+    {
+      return treeVS;
+    }
+    else if (mode == MODE.SEARCH)
+    {
+      return treeSearch;
+    }
+    return null;
   }
 
 ////////////////////////////////////////////////////////////////////////////////    
 // Deep Links //////////////////////////////////////////////////////////////////    
   private void expandTreeAndLoadConceptsByDeeplink()
   {
-    logger.debug("expandTreeAndLoadConceptsByDeeplink");
-    
     // Get Parameter by URL
     String type = ParameterHelper.getString("loadType"); // getDesktop().getExecution().getParameter("loadType");
     String name = ParameterHelper.getString("loadName"); // getDesktop().getExecution().getParameter("loadName");
@@ -465,13 +500,21 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     if (type == null || (name == null && loadId == null))
       return;
 
+    logger.debug("expandTreeAndLoadConceptsByDeeplink");
+
+    Tree treeActive = null;
+
+    boolean isCodesystem = true;
     if (type.equalsIgnoreCase("CodeSystem"))
     {
-      tb.setSelectedTab(tabCS);
+      tabboxFilter.setSelectedTab(tabCS);
+      treeActive = treeCS;
     }
     else if (type.equalsIgnoreCase("ValueSet"))
     {
-      tb.setSelectedTab(tabVS);
+      tabboxFilter.setSelectedTab(tabVS);
+      isCodesystem = false;
+      treeActive = treeVS;
     }
     else
       return;
@@ -488,7 +531,11 @@ public class ContentCSVSDefault extends Window implements AfterCompose
       i++;
       chapter = getDesktop().getExecution().getParameter("c" + i);
     }
-    expandTree();
+
+    if (isCodesystem)
+      expandTreeCS();
+    else
+      expandTreeVS();
 
     if (name != null && name.length() > 0)
       selectTreeitemByName(treeActive.getTreechildren(), name);
@@ -699,7 +746,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
   protected void selectCurrentCSV(Treeitem ti)
   {
     logger.debug("selectCurrentCSV");
-    
+
     Iterator<CodeSystemVersion> it = selectedCS.getCodeSystemVersions().iterator();
     while (it.hasNext())
     {
@@ -710,8 +757,8 @@ public class ContentCSVSDefault extends Window implements AfterCompose
         break;
       }
     }
-    
-    if(selectedCSV != null)
+
+    if (selectedCSV != null)
       logger.debug("selectedCSV: " + selectedCSV.getVersionId());
 
     // Focus auf CSV legen 
@@ -765,22 +812,24 @@ public class ContentCSVSDefault extends Window implements AfterCompose
   public void loadConceptsBySelectedItem(boolean draggable, boolean droppable)
   {
     logger.debug("loadConceptsBySelectedItem");
-    
+
+    Tree treeActive = getTreeActive();
+
     Object source = treeActive.getSelectedItem();
     Treeitem ti = null;
     String name, versionName;
     int contentMode;
     long id, versionId, validityRange = 0;
 
-    if(selectedCS != null)
+    if (selectedCS != null)
       logger.debug("selectedCS: " + selectedCS.getId());
-    if(selectedCSV != null)
+    if (selectedCSV != null)
       logger.debug("selectedCSV: " + selectedCSV.getVersionId());
-    if(selectedVS != null)
+    if (selectedVS != null)
       logger.debug("selectedVS: " + selectedVS.getId());
-    if(selectedVSV != null)
+    if (selectedVSV != null)
       logger.debug("selectedVSV: " + selectedVSV.getVersionId());
-    
+
     // Objekte vorhanden?
     if (source != null)
     {
@@ -834,7 +883,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
       id = selectedVSV.getValueSet().getId();
       versionId = selectedVSV.getVersionId();
       name = selectedVSV.getValueSet().getName();
-//      validityRange = selectedVSV.getValidityRange();
+      //      validityRange = selectedVSV.getValidityRange();
       validityRange = -1;
       if (selectedVSV.getName() != null)
       {
@@ -853,7 +902,9 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     // Lade Content
     try
     {
-      String validityRangeDT = ValidityRangeHelper.getValidityRangeNameById(validityRange);// Lade Range of Validity
+      //String validityRangeDT = ValidityRangeHelper.getValidityRangeNameById(validityRange);// Lade Range of Validity
+      String validityRangeDT = DomainHelper.getInstance().getDomainValueDisplayText(Definitions.DOMAINID_CODESYSTEMVERSION_VALIDITYRANGE, "" + validityRange);
+
       Include inc = (Include) getFellow("incConcepts");    // lade Concepts in include@ComponentTreeAndContent         
       TreeModelCSEV treeModel = new TreeModelCSEV(source, this);
       inc.setMode("instant");
@@ -902,16 +953,48 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     ti.setOpen(open);
   }
 
-  private void setActiveButtons(Boolean bDetails, Boolean bEdit, Boolean bNew, Boolean bNewVersion)
+  private void setActiveButtons(Boolean showDetailsButton, Boolean showEditButton, Boolean showNewButton, Boolean showNewVersionButton)
   {
-    if (bActiveDetails != null && bDetails != null)
-      bActiveDetails.setDisabled(!bDetails);
-    if (bActiveEdit != null && bEdit != null)
-      bActiveEdit.setDisabled(!bEdit);
-    if (bActiveNew != null && bNew != null)
-      bActiveNew.setDisabled(!bNew);
-    if (bActiveNewVersion != null && bNewVersion != null)
-      bActiveNewVersion.setDisabled(!bNewVersion);
+    if (mode == MODE.CODESYSTEMS)
+    {
+      if (bDetailsCSV != null && showDetailsButton != null)
+        bDetailsCSV.setDisabled(!showDetailsButton);
+      if (bEditCSV != null && showEditButton != null)
+        bEditCSV.setDisabled(!showEditButton);
+      //if (bNewCS != null && showNewButton != null)
+      //  bNewCS.setDisabled(!showNewButton);
+      bNewCS.setDisabled(false);  // immer da
+      if (bNewCSV != null && showNewVersionButton != null)
+        bNewCSV.setDisabled(!showNewVersionButton);
+    }
+    else if (mode == MODE.VALUESETS)
+    {
+      if (bDetailsVSV != null && showDetailsButton != null)
+        bDetailsVSV.setDisabled(!showDetailsButton);
+      if (bEditVSV != null && showEditButton != null)
+        bEditVSV.setDisabled(!showEditButton);
+      //if (bNewVS != null && showNewButton != null)
+      //  bNewVS.setDisabled(!showNewButton);
+      bNewVS.setDisabled(false);
+      if (bNewVSV != null && showNewVersionButton != null)
+        bNewVSV.setDisabled(!showNewVersionButton);
+    }
+    else if (mode == MODE.SEARCH)
+    {
+      if (bDetailsSearch != null && showDetailsButton != null)
+        bDetailsSearch.setDisabled(!showDetailsButton);
+      if (bEditSearch != null && showEditButton != null)
+        bEditSearch.setDisabled(!showEditButton);
+    }
+
+    /*if (bActiveDetails != null && bDetails != null)
+     bActiveDetails.setDisabled(!bDetails);
+     if (bActiveEdit != null && bEdit != null)
+     bActiveEdit.setDisabled(!bEdit);
+     if (bActiveNew != null && bNew != null)
+     bActiveNew.setDisabled(!bNew);
+     if (bActiveNewVersion != null && bNewVersion != null)
+     bActiveNewVersion.setDisabled(!bNewVersion);*/
   }
 
   public void onSelect(Treeitem ti)
@@ -919,14 +1002,22 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     if (ti == null || ti.getValue() == null)
       return;
 
-    treeActive.setSelectedItem(ti);
+    logger.debug("onSelect()");
+
+    if (mode == MODE.CODESYSTEMS)
+      treeCS.setSelectedItem(ti);
+    else if (mode == MODE.VALUESETS)
+      treeVS.setSelectedItem(ti);
+    else if (mode == MODE.SEARCH)
+      treeSearch.setSelectedItem(ti);
+    else
+      return;
 
     // Auswahl zurücksetzen
     selectedCS = null;
     selectedCSV = null;
     selectedVS = null;
     selectedVSV = null;
-    setActiveButtons(false, false, false, false);
 
     Object selectedObject = ((TreeNode) ti.getValue()).getData();
 
@@ -958,10 +1049,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
       {
         setActiveButtons(true, true, true, true);
       }
-      /*else
-      {
-        setActiveButtons(true, false, true, false);
-      }*/
+
     }
     else if (selectedObject instanceof ValueSet)
     {
@@ -971,10 +1059,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
       {
         setActiveButtons(true, true, true, true);
       }
-      /*else
-      {
-        setActiveButtons(true, false, true, false);
-      }*/
+
     }
     else if (selectedObject instanceof ValueSetVersion)
     {
@@ -984,10 +1069,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
       {
         setActiveButtons(true, true, true, true);
       }
-      /*else
-      {
-        setActiveButtons(true, false, true, false);
-      }*/
+
     }
     else if (selectedObject instanceof DomainValue)
     {
@@ -999,7 +1081,8 @@ public class ContentCSVSDefault extends Window implements AfterCompose
       setActiveButtons(false, false, true, false);
     }
     else
-    { // unbekannt selektiert           
+    {
+      // unbekannt selektiert           
       selectedCS = null;
       selectedCSV = null;
       selectedVS = null;
@@ -1012,66 +1095,59 @@ public class ContentCSVSDefault extends Window implements AfterCompose
   public void popupDetails(int mode)
   {
     logger.debug("popupDetails: " + mode);
-    
+
     Object selectedItem = null;
-    if (mode == 97 || mode == 98)
-    {
-      popupGlobalSearch(mode);
-    }
+    Tree treeActive = getTreeActive();
+
+    if (treeActive.getSelectedItem() != null)
+      selectedItem = ((TreeNode) treeActive.getSelectedItem().getValue()).getData();
     else
     {
-      
-      if (treeActive.getSelectedItem() != null)
-        selectedItem = ((TreeNode) treeActive.getSelectedItem().getValue()).getData();
+      if (treeActive == treeCS)
+        selectedItem = new CodeSystem();
+      else if (treeActive == treeVS)
+        selectedItem = new ValueSet();
       else
       {
-        if (treeActive == treeCS)
-          selectedItem = new CodeSystem();
-        else if (treeActive == treeVS)
-          selectedItem = new ValueSet();
-        else
+        try
         {
-          try
-          {
-            Messagebox.show("Nicht möglich");
-          }
-          catch (Exception ex)
-          {
-            Logger.getLogger(ContentCSVSDefault.class.getName()).log(Level.SEVERE, null, ex);
-          }
+          Messagebox.show("Nicht möglich");
+        }
+        catch (Exception ex)
+        {
+          Logger.getLogger(ContentCSVSDefault.class.getName()).log(Level.SEVERE, null, ex);
         }
       }
+    }
 
-      if (selectedItem instanceof CodeSystem || selectedItem instanceof DomainValue)
-      {
-        logger.debug("popupCodeSystem");
-        popupCodeSystem(mode, false);
-      }
-      else if (selectedItem instanceof CodeSystemVersion)
-      {
-        logger.debug("popupCodeSystem");
-        popupCodeSystem(mode, true);
-      }
-      else if (selectedItem instanceof ValueSet)
-      {
-        logger.debug("popupValueSet");
-        popupValueSet(mode);
-      }
-      else if (selectedItem instanceof ValueSetVersion)
-      {
-        logger.debug("popupValueSet");
-        popupValueSet(mode);
-      }
-      //else if (selectedItem instanceof DomainValue)
-      
-        //logger.debug("selectedItem type not found: " + selectedItem.getClass().getCanonicalName());
-        //popupDomainValue(mode);
-      
-      else
-      {
-        if(selectedItem != null)
-          logger.debug("selectedItem type not found: " + selectedItem.getClass().getCanonicalName());
-      }
+    if (selectedItem instanceof CodeSystem || selectedItem instanceof DomainValue)
+    {
+      logger.debug("popupCodeSystem");
+      popupCodeSystem(mode, false);
+    }
+    else if (selectedItem instanceof CodeSystemVersion)
+    {
+      logger.debug("popupCodeSystem");
+      popupCodeSystem(mode, true);
+    }
+    else if (selectedItem instanceof ValueSet)
+    {
+      logger.debug("popupValueSet");
+      popupValueSet(mode);
+    }
+    else if (selectedItem instanceof ValueSetVersion)
+    {
+      logger.debug("popupValueSet");
+      popupValueSet(mode);
+    }
+     //else if (selectedItem instanceof DomainValue)
+
+     //logger.debug("selectedItem type not found: " + selectedItem.getClass().getCanonicalName());
+    //popupDomainValue(mode);
+    else
+    {
+      if (selectedItem != null)
+        logger.debug("selectedItem type not found: " + selectedItem.getClass().getCanonicalName());
     }
   }
 
@@ -1086,21 +1162,6 @@ public class ContentCSVSDefault extends Window implements AfterCompose
         data.put("CSV", selectedCSV);
       data.put("EditMode", mode);
       Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupCodeSystem.zul", this, data);
-      w.doModal();
-    }
-    catch (Exception e)
-    {
-      LoggingOutput.outputException(e, this);
-    }
-  }
-
-  private void popupGlobalSearch(int mode)
-  {
-    try
-    {
-      Map<String, Object> data = new HashMap<String, Object>();
-      data.put("EditMode", mode);
-      Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupGlobalSearch.zul", null, data);
       w.doModal();
     }
     catch (Exception e)
@@ -1148,69 +1209,128 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     }
   }
 
+  public void onFilterTabChanged()
+  {
+    logger.debug("onFilterTabChanged()");
+
+    Tab selTab = tabboxFilter.getSelectedTab();
+    if (selTab == tabCS)
+    {
+      mode = MODE.CODESYSTEMS;
+      createCSTree();
+    }
+    else if (selTab == tabVS)
+    {
+      mode = MODE.VALUESETS;
+      createVSTree();
+    }
+    else if (selTab == tabSearch)
+    {
+      mode = MODE.SEARCH;
+      createSearchTree();
+    }
+
+    logger.debug("save new mode in session: " + mode.name());
+    SessionHelper.setViewMode(mode);
+
+    // TODO: Buttons aktivieren
+    
+  }
+
   public void setActiveTab()
   {
-    tabActive = tb.getSelectedTab();
+    logger.debug("setActiveTab(), mode: " + mode.name());
 
-    if (tabActive == tabCS)
+    if (mode == MODE.CODESYSTEMS)
     {
-      treeActive = treeCS;
-
-      bActiveDetails = bDetailsCSV;
-      bActiveGlobalSearch = bGlobSearchCSV;
-      bActiveGlobalSearch.setDisabled(false);
-      bActiveEdit = bEditCSV;
-      bActiveNew = bNewCS;
-      bActiveNewVersion = bNewCSV;
-      setActiveButtons(false, false, true, false);
+      tabboxFilter.setSelectedIndex(0);
     }
-    else if (tabActive == tabVS)
+    else if (mode == MODE.VALUESETS)
     {
-      treeActive = treeVS;
-
-      bActiveDetails = bDetailsVSV;
-      bActiveGlobalSearch = bGlobSearchVSV;
-      bActiveGlobalSearch.setDisabled(false);
-      bActiveEdit = bEditVSV;
-      bActiveNew = bNewVS;
-      bActiveNewVersion = bNewVSV;
-      setActiveButtons(false, false, true, false);
+      tabboxFilter.setSelectedIndex(1);
     }
-    else if (tabActive == tabSearch)
+    else if (mode == MODE.SEARCH)
     {
-      treeActive = treeSearch;
-
-      bActiveDetails = bDetailsSearch;
-      bActiveGlobalSearch.setDisabled(true);
-      bActiveEdit = bEditSearch;
-      bActiveNew = null;
-      bActiveNewVersion = null;
-      setActiveButtons(false, false, false, false);
+      tabboxFilter.setSelectedIndex(2);
     }
-    // sortieren nach dem Laden des Models
-    sortTreeByName(treeActive);
+
+    // load tab content
+    onFilterTabChanged();
+
+    /*tabActive = tb.getSelectedTab();
+
+     if (tabActive == tabCS)
+     {
+     treeActive = treeCS;
+
+     bActiveDetails = bDetailsCSV;
+     //      bActiveGlobalSearch = bGlobSearchCSV;
+     //      bActiveGlobalSearch.setDisabled(false);
+     bActiveEdit = bEditCSV;
+     bActiveNew = bNewCS;
+     bActiveNewVersion = bNewCSV;
+     setActiveButtons(false, false, true, false);
+     }
+     else if (tabActive == tabVS)
+     {
+     treeActive = treeVS;
+
+     bActiveDetails = bDetailsVSV;
+     //      bActiveGlobalSearch = bGlobSearchVSV;
+     //      bActiveGlobalSearch.setDisabled(false);
+     bActiveEdit = bEditVSV;
+     bActiveNew = bNewVS;
+     bActiveNewVersion = bNewVSV;
+     setActiveButtons(false, false, true, false);
+     }
+     else if (tabActive == tabSearch)
+     {
+     treeActive = treeSearch;
+
+     bActiveDetails = bDetailsSearch;
+     //      bActiveGlobalSearch.setDisabled(true);
+     bActiveEdit = bEditSearch;
+     bActiveNew = null;
+     bActiveNewVersion = null;
+     setActiveButtons(false, false, false, false);
+     }
+     // sortieren nach dem Laden des Models
+     sortTreeByName(treeActive);*/
   }
 
-  public void expandTree()
+  public void expandTreeCS()
   {
-    TreeHelper.doCollapseExpandAll(treeActive, true);
+    TreeHelper.doCollapseExpandAll(treeCS, true);
   }
 
-  public void collapseTree()
+  public void collapseTreeCS()
   {
-    TreeHelper.doCollapseExpandAll(treeActive, false);
+    TreeHelper.doCollapseExpandAll(treeCS, false);
+  }
+
+  public void expandTreeVS()
+  {
+    TreeHelper.doCollapseExpandAll(treeVS, true);
+  }
+
+  public void collapseTreeVS()
+  {
+    TreeHelper.doCollapseExpandAll(treeVS, false);
   }
 
   private void sortTreeByName(Tree t)
   {
-    Treecol tcName = (Treecol) t.getTreecols().getChildren().get(0);
-    tcName.setSortAscending(new ComparatorCsvVsv(true));
-    tcName.setSortDescending(new ComparatorCsvVsv(false));
-    tcName.setSortDirection("descending");
-    tcName.sort(true);
+    if (t != null)
+    {
+      Treecol tcName = (Treecol) t.getTreecols().getChildren().get(0);
+      tcName.setSortAscending(new ComparatorCsvVsv(true));
+      tcName.setSortDescending(new ComparatorCsvVsv(false));
+      tcName.setSortDirection("descending");
+      tcName.sort(true);
+    }
   }
 
-  private void refreshCS()
+  public void refreshCS()
   {
     TreeModelCS.reloadData(getDesktop());
     treeCS.setModel(TreeModelCS.getTreeModel(getDesktop()));
@@ -1218,7 +1338,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     sortTreeByName(treeCS);
   }
 
-  private void refreshVS()
+  public void refreshVS()
   {
     TreeModelVS.reloadData(getDesktop());
     treeVS.setModel(TreeModelVS.getTreeModel(getDesktop()));
@@ -1226,24 +1346,11 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     sortTreeByName(treeVS);
   }
 
-  public void refresh()
+  public void refreshSearch()
   {
-    if (tabActive == tabCS)
-    {
-      refreshCS();
-    }
-    else if (tabActive == tabVS)
-    {
-      refreshVS();
-    }
-    else if (tabActive == tabSearch)
-    {
-      refreshCS();
-      refreshVS();
-    }
-    else
-    {
-    }
+    refreshCS();
+    refreshVS();
+
     setActiveButtons(false, false, true, false);
   }
 

@@ -642,10 +642,9 @@ public class PopupCodeSystem extends PopupWindow implements IUpdateModal
           // Message über Erfolg/Misserfolg                
           if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
           {
-
             AssignTermHelper.assignTermToUser(response.getCodeSystem());
             Messagebox.show(Labels.getLabel("popupCodeSystem.newCodeSystemsuccessfullyCreated"));
-            ((ContentCSVSDefault) windowParent).refresh();
+            ((ContentCSVSDefault) windowParent).refreshCS();
             window.detach();
           }
           else
@@ -785,7 +784,7 @@ public class PopupCodeSystem extends PopupWindow implements IUpdateModal
               Messagebox.show(Labels.getLabel("popupCodeSystem.newVersionSuccessfullyCreated"));
             else
               Messagebox.show(Labels.getLabel("popupCodeSystem.editVersionChangedSuccessfully"));
-            ((ContentCSVSDefault) windowParent).refresh();
+            ((ContentCSVSDefault) windowParent).refreshCS();
             window.detach();
           }
           else
@@ -837,7 +836,7 @@ public class PopupCodeSystem extends PopupWindow implements IUpdateModal
           Messagebox.show(Labels.getLabel("popupCodeSystem.newVersionSuccessfullyCreated"));
         else
           Messagebox.show(Labels.getLabel("popupCodeSystem.editVersionChangedSuccessfully"));
-        ((ContentCSVSDefault) windowParent).refresh();
+        ((ContentCSVSDefault) windowParent).refreshCS();
         window.detach();
       }
       else
@@ -883,7 +882,7 @@ public class PopupCodeSystem extends PopupWindow implements IUpdateModal
       if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
       {
         Messagebox.show(Labels.getLabel("popupCodeSystem.editCodeSystemVersionStatusSuccessfully"));
-        ((ContentCSVSDefault) windowParent).refresh();
+        ((ContentCSVSDefault) windowParent).refreshCS();
         window.detach();
       }
       else

@@ -2,7 +2,7 @@
   <west id="westTreeCSVSDV" border="0" size="350px" flex="true" maxsize="450" splittable="true" collapsible="true">
     <borderlayout >
       <center border="0" flex="true" margins="2,2,2,2">
-        <tabbox id="tabboxFilter" onSelect="windowCSVS.setActiveTab()"  >
+        <tabbox id="tabboxFilter" onSelect="windowCSVS.onFilterTabChanged()" >
           <tabs>
             <tab id="tabCS"     label="${labels.common.codeSystems}" />
             <tab id="tabVS"     label="${labels.common.valueSets}"/>
@@ -12,9 +12,15 @@
             <tabpanel id="tabpanelCS">
               <toolbar width="100%">
                 <hbox align="center" >
-                  <toolbarbutton image="/rsc/img/symbols/expand_16x16.png"   onClick="windowCSVS.expandTree()"   tooltiptext="${labels.componentTreeAndContent.expandTreeCS}"/>
-                  <toolbarbutton image="/rsc/img/symbols/collapse_16x16.png" onClick="windowCSVS.collapseTree()" tooltiptext="${labels.componentTreeAndContent.colapseTreeCS}" />
-                  <toolbarbutton image="/rsc/img/symbols/refresh.png"        onClick="windowCSVS.refresh()"      tooltiptext="${labels.componentTreeAndContent.refreshTreeCS}" />
+                  <toolbarbutton image="/rsc/img/symbols/expand_16x16.png" 
+                                 onClick="windowCSVS.expandTreeCS()" 
+                                 tooltiptext="${labels.componentTreeAndContent.expandTreeCS}"/>
+                  <toolbarbutton image="/rsc/img/symbols/collapse_16x16.png"
+                                 onClick="windowCSVS.collapseTreeCS()"
+                                 tooltiptext="${labels.componentTreeAndContent.colapseTreeCS}" />
+                  <toolbarbutton image="/rsc/img/symbols/refresh.png"
+                                 onClick="windowCSVS.refreshCS()"
+                                 tooltiptext="${labels.componentTreeAndContent.refreshTreeCS}" />
                 </hbox>
               </toolbar>                        
               <tree id="treeCS" vflex="true" zclass="z-tree" height="100%" width="100%" multiple="false"> 
@@ -23,18 +29,24 @@
                 </treecols>
               </tree>
               <div style="text-align:right;margin-top:4px;">
-                <button id="bNewCS"      label="${labels.common.codeSystem}"  onClick='windowCSVS.popupDetails(2)' image="/rsc/img/list/add.png"  disabled="true"  />
+                <button id="bNewCS"      label="${labels.common.codeSystem}"  onClick='windowCSVS.popupDetails(2)' image="/rsc/img/list/add.png"  disabled="false"  />
                 <button id="bNewCSV"     label="${labels.common.version}"     onClick='windowCSVS.popupDetails(3)' image="/rsc/img/list/add.png"       disabled="true"/>
                 <button id="bEditCSV"    label="${labels.common.edit}"        onClick='windowCSVS.popupDetails(5)' image="/rsc/img/list/pencil.png"    disabled="true"/>
-                <button id="bGlobSearchCSV" label="${labels.common.searchGlob}"     onClick="windowCSVS.popupDetails(97)" image="/rsc/img/list/folder_magnify.png" disabled="false"/>
+                <!--<button id="bGlobSearchCSV" label="${labels.common.searchGlob}"     onClick="windowCSVS.popupDetails(97)" image="/rsc/img/list/folder_magnify.png" disabled="false"/>-->
                 <button id="bDetailsCSV" label="${labels.common.details}"     onClick="windowCSVS.popupDetails(1)" image="/rsc/img/list/magnifier.png" disabled="true"/>
               </div>
             </tabpanel>                
             <tabpanel id="tabpanelVS">
               <toolbar width="100%">
-                <toolbarbutton image="/rsc/img/symbols/expand_16x16.png"     onClick="windowCSVS.expandTree()"   tooltiptext="${labels.componentTreeAndContent.expandTreeVS}"/>
-                <toolbarbutton image="/rsc/img/symbols/collapse_16x16.png"   onClick="windowCSVS.collapseTree()" tooltiptext="${labels.componentTreeAndContent.colapseTreeVS}"/>
-                <toolbarbutton image="/rsc/img/symbols/refresh.png"          onClick="windowCSVS.refresh()"      tooltiptext="${labels.componentTreeAndContent.refreshTreeVS}" />
+                <toolbarbutton image="/rsc/img/symbols/expand_16x16.png"    
+                               onClick="windowCSVS.expandTreeVS()"  
+                               tooltiptext="${labels.componentTreeAndContent.expandTreeVS}"/>
+                <toolbarbutton image="/rsc/img/symbols/collapse_16x16.png"   
+                               onClick="windowCSVS.collapseTreeVS()" 
+                               tooltiptext="${labels.componentTreeAndContent.colapseTreeVS}"/>
+                <toolbarbutton image="/rsc/img/symbols/refresh.png"        
+                               onClick="windowCSVS.refreshVS()"
+                               tooltiptext="${labels.componentTreeAndContent.refreshTreeVS}" />
               </toolbar>                            
               <tree id="treeVS" vflex="true" height="100%" width="100%"  multiple="false" checkmark="false"> 
                 <treecols sizable="true" >
@@ -42,18 +54,32 @@
                 </treecols>
               </tree>
               <div style="text-align:right;margin-top:4px;">
-                <button id="bNewVS"      label="${labels.common.valueSet}"  onClick='windowCSVS.popupDetails(2)' image="/rsc/img/list/add.png" disabled="true" />
+                <button id="bNewVS"      label="${labels.common.valueSet}"  onClick='windowCSVS.popupDetails(2)' image="/rsc/img/list/add.png" disabled="false" />
                 <button id="bNewVSV"     label="${labels.common.version}"   onClick='windowCSVS.popupDetails(3)' image="/rsc/img/list/add.png"       disabled="true"/>
                 <button id="bEditVSV"    label="${labels.common.edit}"      onClick='windowCSVS.popupDetails(5)' image="/rsc/img/list/pencil.png"    disabled="true"/>
-                <button id="bGlobSearchVSV" label="${labels.common.searchGlob}"     onClick="windowCSVS.popupDetails(98)" image="/rsc/img/list/folder_magnify.png" disabled="false"/>
+                <!--<button id="bGlobSearchVSV" label="${labels.common.searchGlob}"     onClick="windowCSVS.popupDetails(98)" image="/rsc/img/list/folder_magnify.png" disabled="false"/>-->
                 <button id="bDetailsVSV" label="${labels.common.details}"   onClick="windowCSVS.popupDetails(1)" image="/rsc/img/list/magnifier.png" disabled="true"/>
               </div>
             </tabpanel>   
             <tabpanel id="tabpanelSearch">
               <toolbar width="100%">
-                <toolbarbutton image="/rsc/img/symbols/refresh.png"        onClick="windowCSVS.refresh()"      tooltiptext="${labels.componentTreeAndContent.refreshTreeSearch}" />
-                <image src="/rsc/img/symbols/filter_16x16.png" width="16px"  height="16px" style=""/>
-                <textbox id="filter_classesSearch" width="120px" onChanging="windowCSVS.filterChanged(event)" tooltiptext="${labels.componentTreeAndContent.treeSearchFilter}"/>
+                <hbox>
+                  <div style="margin-top:-2px;">
+                    <toolbarbutton image="/rsc/img/symbols/refresh.png" 
+                                 onClick="windowCSVS.refreshSearch()" 
+                                 tooltiptext="${labels.componentTreeAndContent.refreshTreeSearch}" />
+                  </div>
+                  <div style="margin-top:1px;">
+                    <image src="/rsc/img/symbols/filter_16x16.png" 
+                           width="16px"  
+                           height="16px" 
+                    />
+                  </div>
+                  <textbox id="filter_classesSearch" 
+                           width="120px"
+                           onChanging="windowCSVS.filterChanged(event)"
+                           tooltiptext="${labels.componentTreeAndContent.treeSearchFilter}"/>
+                </hbox>
               </toolbar>                           
               <tree  id="treeSearch" vflex="true" height="100%" width="100%"  multiple="false" checkmark="false">
                 <treecols sizable="true">

@@ -69,6 +69,11 @@
       <columns height="60px">
         <column height="60px" width="325px" align="center" valign="middle">
           <toolbar height="60px" style="margin-top:-4px;">
+            <toolbarbutton id="tbb_GlobalSearch" 
+                           label="${labels.common.searchGlob}"
+                           image="/rsc/img/symbols/Search2_32x32.png" orient="vertical"
+                           onClick="win.onGlobalSearch()"/>
+            
             <toolbarbutton id="tbb_Vorschlag" label="Vorschlag..."
                            tooltiptext="Erstellt einen neuen Vorschlag unabhängig vom gewählten Kontext. Fügen Sie z.B. den Wunsch eines neuen Code Systems hinzu." 
                            image="/rsc/img/collab/Add.png" orient="vertical"
