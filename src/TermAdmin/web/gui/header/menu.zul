@@ -1,17 +1,15 @@
 <?page title="menu" contentType="text/html;charset=UTF-8"?>
 <zk>
-	<style dynamic="true">
+  <style dynamic="true">
+    <!-- Make Plain Grid -->
+    .GridLayoutNoBorder tr.z-row td.z-row-inner, tr.z-row
+    .z-cell,div.z-grid { border: none; overflow: hidden; zoom: 1;
+    background: white; border-top: none; border-left: none;
+    border-right: none; border-bottom: none; }
+  </style>
+	
 
-		<!-- Make Plain Grid -->
-		.GridLayoutNoBorder tr.z-row td.z-row-inner, tr.z-row
-		.z-cell,div.z-grid { border: none; overflow: hidden; zoom: 1;
-		background: white; border-top: none; border-left: none;
-		border-right: none; border-bottom: none; }
-		
-	</style>
-	<style src="/rsc/style/patientrecord.css"/>
-
-	<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./win"?>
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./win"?>
   
   <window id="win" use="de.fhdo.gui.header.Menu">
     <menubar autodrop="false" id="menubar">
@@ -44,24 +42,24 @@
       </menu>
     </menubar>-->
 
-  <!--http://docs.zkoss.org/wiki/New_ZK_Demo_Introduction-->
+    <!--http://docs.zkoss.org/wiki/New_ZK_Demo_Introduction-->
 
     <grid height="74px" sclass="GridLayoutNoBorder">
-      <columns >
-        <column  width="200px"  align="center" valign="middle">
-         <toolbar height="64px" >
+      <columns height="60px">
+        <column height="60px" width="200px" align="center" valign="middle" >
+          <toolbar height="64px"  style="margin-top:-4px;">
             <!--<toolbarbutton label="Terminologie-Browser" 
-                         tooltiptext="Zurück zum Terminologie-Browser" 
-                         image="/rsc/img/symbols/back_32x32.png" orient="vertical"
-                         onClick="win.onBackToTermBrowser()" />-->
+            tooltiptext="Zurück zum Terminologie-Browser" 
+            image="/rsc/img/symbols/back_32x32.png" orient="vertical"
+            onClick="win.onBackToTermBrowser()" />-->
             <toolbarbutton label="Abmelden" 
-                         tooltiptext="Vom Verwaltungsbereich abmelden" 
-                         image="/rsc/img/symbols/unlock_32x32.png" orient="vertical"
-                         onClick="win.onLogoutClicked()"/>
+                           tooltiptext="Vom Verwaltungsbereich abmelden" 
+                           image="/rsc/img/symbols/unlock_32x32.png" orient="vertical"
+                           onClick="win.onLogoutClicked()"/>
           </toolbar>
-          </column>
+        </column>
         <column  width="350px" align="center" valign="middle">            
-            <label zclass="headerTitle" value="@{win.HeaderStr}" pre="true" />                      
+          <label zclass="headerTitle" value="@{win.HeaderStr}" pre="true" />                      
         </column>
         <column height="64px" >
           <toolbar height="64px">
@@ -79,5 +77,5 @@
       </columns>
     </grid>
 
-	</window>
+  </window>
 </zk>

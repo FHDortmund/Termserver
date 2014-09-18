@@ -71,7 +71,7 @@ public class PropertiesHelper
     Properties config = new Properties();
     try
     {
-      String filename = System.getProperty("catalina.base") + "/conf/termbrowser.properties";
+      String filename = System.getProperty("catalina.base") + "/conf/termadmin.properties";
       getLogger().debug("filename: " + filename);
 
       config.load(new FileInputStream(filename));

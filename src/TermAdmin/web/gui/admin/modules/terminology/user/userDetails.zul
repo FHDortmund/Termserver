@@ -3,7 +3,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul">
   <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winUserDetails"?>
 
-  <window id="winUserDetails" title="Stammdaten" width="600px"  height="290px" border="normal"
+  <window id="winUserDetails" title="Benutzerdaten" width="600px"  height="290px" border="normal"
           use="de.fhdo.gui.admin.modules.terminology.user.UserDetails" closable="true"
           sizable="true">
     <borderlayout>

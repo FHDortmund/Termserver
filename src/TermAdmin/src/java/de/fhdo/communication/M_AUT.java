@@ -16,7 +16,7 @@
  */
 package de.fhdo.communication;
 
-import de.fhdo.collaboration.db.DBSysParam;
+//import de.fhdo.collaboration.db.DBSysParam;
 import de.fhdo.collaboration.db.classes.Collaborationuser;
 
 /**
@@ -67,19 +67,21 @@ public class M_AUT {
     
     private void getWeblink(){
     
-        WEBLINK_COLLAB = DBSysParam.instance().getStringValue("weblink", null, null) + "/gui/info/enquiry.zul";
+//        WEBLINK_COLLAB = DBSysParam.instance().getStringValue("weblink", null, null) + "/gui/info/enquiry.zul";
+      WEBLINK_COLLAB = "";
     }
     
     private void getFooter(){
         
-        MAIL_FOOTER =       "\n\nMit freundlichen Grüßen,\n" +
-                            "Ihr Terminologieserver - Team" +
-                            "\n------------------------------------------------\n" +
-                            "Liebe Benutzerin/lieber Benutzer,\n\n" +
-                            "Über diese E-Mail Adresse können keine Anfragen bearbeitet werden. Für Ihre Anliegen haben wir ein Webformular eingerichtet.\n" +
-                            "Daher bitten wir, Anfragen nicht per E-Mail sondern über das Formular zu übermitteln: " + WEBLINK_COLLAB + "\n\n" +
-                            "Mit freundlichen Grüßen,\n" +
-                            "Ihr Terminologieserver - Team";
+      MAIL_FOOTER = "";
+//        MAIL_FOOTER =       "\n\nMit freundlichen Grüßen,\n" +
+//                            "Ihr Terminologieserver - Team" +
+//                            "\n------------------------------------------------\n" +
+//                            "Liebe Benutzerin/lieber Benutzer,\n\n" +
+//                            "Über diese E-Mail Adresse können keine Anfragen bearbeitet werden. Für Ihre Anliegen haben wir ein Webformular eingerichtet.\n" +
+//                            "Daher bitten wir, Anfragen nicht per E-Mail sondern über das Formular zu übermitteln: " + WEBLINK_COLLAB + "\n\n" +
+//                            "Mit freundlichen Grüßen,\n" +
+//                            "Ihr Terminologieserver - Team";
     }
     
     public String getProposalText(String vocabularyName, String contentType, String description){

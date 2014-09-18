@@ -259,6 +259,7 @@ public class ImportClaml
           }
 
           //String description = "";
+          // TODO hier: Fehler
           event = eventReader.nextEvent();
           String description = event.asCharacters().getData();
           logger.debug("description: " + description);

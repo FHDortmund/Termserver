@@ -3,6 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/FH/FH_Projekte/Terminologieserver_GitHub/Termserver/src/TermAdmin/src/java/de/fhdo/gui/header/Menu.java</file>
+            <file>file:/C:/FH/FH_Projekte/Terminologieserver_GitHub/Termserver/src/TermAdmin/web/gui/header/menu.zul</file>
+            <file>file:/C:/FH/FH_Projekte/Terminologieserver_GitHub/Termserver/src/TermAdmin/src/java/de/fhdo/authorization/UsernamePasswordMethod.java</file>
+            <file>file:/C:/FH/FH_Projekte/Terminologieserver_GitHub/Termserver/src/TermAdmin/src/java/de/fhdo/gui/admin/modules/terminology/user/UserDetails.java</file>
+            <file>file:/C:/FH/FH_Projekte/Terminologieserver_GitHub/Termserver/src/TermAdmin/web/gui/admin/modules/terminology/user/userDetails.zul</file>
+            <file>file:/C:/FH/FH_Projekte/Terminologieserver_GitHub/Termserver/src/TermAdmin/src/java/de/fhdo/communication/Mail.java</file>
+        </group>
     </open-files>
 </project-private>

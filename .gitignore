@@ -1,3 +1,6 @@
 src/TermServer/build/
 src/TermBrowser/build/
 src/TermAdmin/build/
+src/TermServer/dist/
+src/TermBrowser/dist/
+src/TermAdmin/dist/
