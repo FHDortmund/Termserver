@@ -149,20 +149,24 @@ public class TraverseConceptToRoot
             }
 
             // Beziehung hinzufügen
-            csevCurrent.setCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1(new HashSet<CodeSystemEntityVersionAssociation>());
-            assTemp.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(null);
-            assTemp.setCodeSystemEntityVersionByCodeSystemEntityVersionId2(null);
-            csevCurrent.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().add(assTemp);
+            if (csevCurrent != null)
+            {
+              csevCurrent.setCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1(new HashSet<CodeSystemEntityVersionAssociation>());
+              assTemp.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(null);
+              assTemp.setCodeSystemEntityVersionByCodeSystemEntityVersionId2(null);
+              csevCurrent.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().add(assTemp);
 
-            logger.debug("Beziehung: " + assTemp.getId());
+              logger.debug("Beziehung: " + assTemp.getId());
 
-            // Konzept hinzufügen
-            CodeSystemEntityVersionAssociation existingAssociation = (CodeSystemEntityVersionAssociation) csevCurrent.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().toArray()[0];
-            existingAssociation.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(csevAdd);
+              // Konzept hinzufügen
+              CodeSystemEntityVersionAssociation existingAssociation = (CodeSystemEntityVersionAssociation) csevCurrent.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().toArray()[0];
+              existingAssociation.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(csevAdd);
 
-            csevCurrent = existingAssociation.getCodeSystemEntityVersionByCodeSystemEntityVersionId1();
+              csevCurrent = existingAssociation.getCodeSystemEntityVersionByCodeSystemEntityVersionId1();
 
-            logger.debug("Konzept: " + csevCurrent.getVersionId());
+              if (csevCurrent != null)
+                logger.debug("Konzept: " + csevCurrent.getVersionId());
+            }
           }
         }
         else
@@ -267,7 +271,6 @@ public class TraverseConceptToRoot
 //              "Das Login-Token darf nicht leer sein!");
 //      erfolg = false;
 //    }
-
     if (Request.getCodeSystemEntity() == null)
     {
       Response.getReturnInfos().setMessage(

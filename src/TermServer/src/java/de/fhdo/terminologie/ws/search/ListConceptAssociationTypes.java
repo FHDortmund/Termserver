@@ -78,7 +78,6 @@ public class ListConceptAssociationTypes
 
     // TODO Lizenzen prüfen
     // TODO Status von Vok-Version prüfen (wenn nicht eingeloggt)
-
     try
     {
       List<AssociationType> conceptList = null;
@@ -94,21 +93,35 @@ public class ListConceptAssociationTypes
         {
           CodeSystemVersion csv = (CodeSystemVersion) parameter.getCodeSystem().getCodeSystemVersions().toArray()[0];
           codeSystemVersionId = csv.getVersionId();
+
+          logger.debug("codeSystemVersionId: " + codeSystemVersionId);
         }
       }
-
 
       // Hibernate-Block, Session öffnen
       org.hibernate.Session hb_session = HibernateUtil.getSessionFactory().openSession();
 
       try // 2. try-catch-Block zum Abfangen von Hibernate-Fehlern
       {
-        /*if (codeSystemVersionId == 0 && codeSystemId > 0)
+        if (codeSystemVersionId > 0)
         {
-          // Aktuelle Version des Vokabulars ermitteln
-          CodeSystem cs = (CodeSystem) hb_session.get(CodeSystem.class, codeSystemId);
-          codeSystemVersionId = CodeSystemHelper.getCurrentVersionId(cs);
-        }*/
+          // check if codesystem version exists
+          CodeSystemVersion csv = (CodeSystemVersion) hb_session.get(CodeSystemVersion.class, codeSystemVersionId);
+          if (csv == null)
+          {
+            // return message
+            response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
+            response.getReturnInfos().setStatus(ReturnType.Status.OK);
+            response.getReturnInfos().setMessage("Codesystem version with given id does not exist");
+            return response;
+          }
+        }
+        /*if (codeSystemVersionId == 0 && codeSystemId > 0)
+         {
+         // Aktuelle Version des Vokabulars ermitteln
+         CodeSystem cs = (CodeSystem) hb_session.get(CodeSystem.class, codeSystemId);
+         codeSystemVersionId = CodeSystemHelper.getCurrentVersionId(cs);
+         }*/
 
         // HQL erstellen
         // Besonderheit hier: es dürfen keine Werte nachgeladen werden
@@ -142,8 +155,8 @@ public class ListConceptAssociationTypes
           hql += " WHERE ";
 
         hql += " csev.versionId=cse.currentVersionId";
-        
-        if(logger.isDebugEnabled())
+
+        if (logger.isDebugEnabled())
           logger.debug("HQL: " + hql);
 
         // Query erstellen
@@ -156,15 +169,14 @@ public class ListConceptAssociationTypes
         conceptList = (java.util.List<AssociationType>) q.list();
 
         //tx.commit();
-
-        if(logger.isDebugEnabled())
+        if (logger.isDebugEnabled())
           logger.debug("=== HIERNACH KEINE ABFRAGEN MEHR!===");
 
         if (conceptList != null)
         {
-          if(logger.isDebugEnabled())
+          if (logger.isDebugEnabled())
             logger.debug("Anzahl: " + conceptList.size());
-          
+
           java.util.List<CodeSystemEntity> entityList = new LinkedList<CodeSystemEntity>();
 
           Iterator<AssociationType> iterator = conceptList.iterator();
@@ -203,13 +215,12 @@ public class ListConceptAssociationTypes
               ms.setCodeSystemVersion(null);
               ms.setCodeSystemEntity(null);
               ms.setId(null);
-              
+
               entity.setCodeSystemVersionEntityMemberships(new HashSet<CodeSystemVersionEntityMembership>());
               entity.getCodeSystemVersionEntityMemberships().add(ms);
             }
-            else entity.setCodeSystemVersionEntityMemberships(null);
-
-            
+            else
+              entity.setCodeSystemVersionEntityMemberships(null);
 
             entityList.add(entity);
           }
@@ -222,7 +233,7 @@ public class ListConceptAssociationTypes
           // Status an den Aufrufer weitergeben
           response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
           response.getReturnInfos().setStatus(ReturnType.Status.OK);
-          response.getReturnInfos().setMessage("AssociationTypes erfolgreich gelesen, Anzahl: " + anzahl);
+          response.getReturnInfos().setMessage("AssociationTypes read successfully, count: " + anzahl);
           response.getReturnInfos().setCount(anzahl);
         }
       }
@@ -232,7 +243,7 @@ public class ListConceptAssociationTypes
         // Fehlermeldung an den Aufrufer weiterleiten
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-        response.getReturnInfos().setMessage("Fehler bei 'ListConceptAssociationTypes', Hibernate: " + e.getLocalizedMessage());
+        response.getReturnInfos().setMessage("Error at 'ListConceptAssociationTypes', Hibernate: " + e.getLocalizedMessage());
 
         LoggingOutput.outputException(e, this);
       }
@@ -242,15 +253,13 @@ public class ListConceptAssociationTypes
         hb_session.close();
       }
 
-
-
     }
     catch (Exception e)
     {
       // Fehlermeldung an den Aufrufer weiterleiten
       response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
       response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-      response.getReturnInfos().setMessage("Fehler bei 'ListConceptAssociationTypes': " + e.getLocalizedMessage());
+      response.getReturnInfos().setMessage("Error at 'ListConceptAssociationTypes': " + e.getLocalizedMessage());
 
       LoggingOutput.outputException(e, this);
     }
@@ -260,13 +269,13 @@ public class ListConceptAssociationTypes
 
   /**
    * Prüft die Parameter anhand der Cross-Reference
-   * 
+   *
    * @param Request
    * @param Response
    * @return false, wenn fehlerhafte Parameter enthalten sind
    */
   private boolean validateParameter(ListConceptAssociationTypesRequestType Request,
-                                    ListConceptAssociationTypesResponseType Response)
+          ListConceptAssociationTypesResponseType Response)
   {
     boolean erfolg = true;
 
@@ -274,11 +283,11 @@ public class ListConceptAssociationTypes
     if (codeSystem != null)
     {
       /*if (codeSystem.getId() == null || codeSystem.getId() == 0)
-      {
-        Response.getReturnInfos().setMessage(
-          "Es muss eine ID für das CodeSystem angegeben sein, wenn ein CodeSystem gegeben ist. Wenn Sie alle Assoziationen auflisten möchten, geben Sie kein CodeSystemType mit.");
-        erfolg = false;
-      }*/
+       {
+       Response.getReturnInfos().setMessage(
+       "Es muss eine ID für das CodeSystem angegeben sein, wenn ein CodeSystem gegeben ist. Wenn Sie alle Assoziationen auflisten möchten, geben Sie kein CodeSystemType mit.");
+       erfolg = false;
+       }*/
 
       if (codeSystem.getCodeSystemVersions() != null)
       {
@@ -288,7 +297,7 @@ public class ListConceptAssociationTypes
           if (csvSet.size() > 1)
           {
             Response.getReturnInfos().setMessage(
-              "Die CodeSystem-Version-Liste darf maximal einen Eintrag haben!");
+                    "Die CodeSystem-Version-Liste darf maximal einen Eintrag haben!");
             erfolg = false;
           }
           else if (csvSet.size() == 1)
@@ -298,7 +307,7 @@ public class ListConceptAssociationTypes
             if (csv.getVersionId() == null || csv.getVersionId() == 0)
             {
               Response.getReturnInfos().setMessage(
-                "Es muss eine ID für die CodeSystem-Version angegeben sein, wenn Sie ein Typ CodeSystemVersion mitgeben! Ansonsten setzen Sie die CodeSystemVersion auf NULL und es wird die aktuellste Version abgerufen.");
+                      "Es muss eine ID für die CodeSystem-Version angegeben sein, wenn Sie ein Typ CodeSystemVersion mitgeben! Ansonsten setzen Sie die CodeSystemVersion auf NULL und es wird die aktuellste Version abgerufen.");
               erfolg = false;
             }
           }
