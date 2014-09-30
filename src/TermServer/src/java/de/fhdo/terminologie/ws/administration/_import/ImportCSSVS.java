@@ -470,7 +470,7 @@ public class ImportCSSVS
         if (count == 0)
         {
 
-          resultStr = DeleteTermHelperWS.deleteCS_CSV(onlyCSV, csId, csvId);
+          resultStr = DeleteTermHelperWS.deleteCS_CSV(hb_session, onlyCSV, csId, csvId);
           hb_session.getTransaction().rollback();
           reponse.getReturnInfos().setMessage("Keine Konzepte importiert.");
         }
@@ -512,7 +512,7 @@ public class ImportCSSVS
           
           hb_session.getTransaction().rollback();
           
-          resultStr = DeleteTermHelperWS.deleteCS_CSV(onlyCSV, csId, csvId);
+          resultStr = DeleteTermHelperWS.deleteCS_CSV(hb_session, onlyCSV, csId, csvId);
           
           logger.info("[ImportSVS.java] Rollback durchgeführt!");
         }

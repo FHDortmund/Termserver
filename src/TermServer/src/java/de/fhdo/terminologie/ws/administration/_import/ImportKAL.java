@@ -311,7 +311,7 @@ public class ImportKAL
         {
           hb_session.getTransaction().rollback();
           
-          resultStr = DeleteTermHelperWS.deleteCS_CSV(onlyCSV, csId, csvId);
+          resultStr = DeleteTermHelperWS.deleteCS_CSV(hb_session, onlyCSV, csId, csvId);
           
           reponse.getReturnInfos().setMessage("Keine Konzepte importiert.");
         }
@@ -332,7 +332,7 @@ public class ImportKAL
         {
           hb_session.getTransaction().rollback();
           
-          resultStr = DeleteTermHelperWS.deleteCS_CSV(onlyCSV, csId, csvId);
+          resultStr = DeleteTermHelperWS.deleteCS_CSV(hb_session, onlyCSV, csId, csvId);
           
           logger.info("[ImportKAL.java] Rollback durchgeführt!");
         }

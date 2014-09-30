@@ -41,7 +41,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.*;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -870,7 +869,7 @@ public class ImportICDBMGAT
         {
           hb_session.getTransaction().rollback();
           
-          resultStr = DeleteTermHelperWS.deleteCS_CSV(onlyCSV, csId, csvId);
+          resultStr = DeleteTermHelperWS.deleteCS_CSV(hb_session, onlyCSV, csId, csvId);
           
           reponse.getReturnInfos().setMessage("Keine Konzepte importiert.");
         }
@@ -891,7 +890,7 @@ public class ImportICDBMGAT
         {
           hb_session.getTransaction().rollback();
           
-          resultStr = DeleteTermHelperWS.deleteCS_CSV(onlyCSV, csId, csvId);
+          resultStr = DeleteTermHelperWS.deleteCS_CSV(hb_session, onlyCSV, csId, csvId);
           
           logger.info("[ImportLeiKat.java] Rollback durchgeführt!");
         }

@@ -367,7 +367,7 @@ public class ImportLOINC_ELGA
         {
           hb_session.getTransaction().rollback();
           
-          resultStr = DeleteTermHelperWS.deleteCS_CSV(onlyCSV, csId, csvId);
+          resultStr = DeleteTermHelperWS.deleteCS_CSV(hb_session, onlyCSV, csId, csvId);
           
           response.getReturnInfos().setMessage("Keine Beziehungen importiert. Möglicherweise ist die Fehleranzahl zu hoch. Anzahl Fehler: " + countFehler);
         }
@@ -389,7 +389,7 @@ public class ImportLOINC_ELGA
         {
           hb_session.getTransaction().rollback();
           
-          resultStr = DeleteTermHelperWS.deleteCS_CSV(onlyCSV, csId, csvId);
+          resultStr = DeleteTermHelperWS.deleteCS_CSV(hb_session, onlyCSV, csId, csvId);
           
           logger.info("[ImportLOINC.java] Rollback durchgefuehrt!");
         }

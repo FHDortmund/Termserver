@@ -705,7 +705,7 @@ public class ImportLeiKatAt
         {
           hb_session.getTransaction().rollback();
           
-          resultStr = DeleteTermHelperWS.deleteCS_CSV(onlyCSV, csId, csvId);
+          resultStr = DeleteTermHelperWS.deleteCS_CSV(hb_session, onlyCSV, csId, csvId);
           
           reponse.getReturnInfos().setMessage("Keine Konzepte importiert.");
         }
@@ -726,7 +726,7 @@ public class ImportLeiKatAt
         {
           hb_session.getTransaction().rollback();
           
-          resultStr = DeleteTermHelperWS.deleteCS_CSV(onlyCSV, csId, csvId);
+          resultStr = DeleteTermHelperWS.deleteCS_CSV(hb_session, onlyCSV, csId, csvId);
           
           logger.info("[ImportLeiKat.java] Rollback durchgeführt!");
         }

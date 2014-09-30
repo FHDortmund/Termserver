@@ -16,7 +16,6 @@
  */
 package de.fhdo.terminologie.helper;
 
-import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.CodeSystem;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntity;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersion;
@@ -33,41 +32,47 @@ import org.hibernate.Session;
 /**
  *
  * @author Philipp Urbauer
- * info: hier stimmt einiges mit den Sessions nicht
- * diese Klasse benötigt eine Überarbeitung!
+ * edited 2014-09-30 by Robert Mützner <robert.muetzner@fh-dortmund.de>
  */
 public class DeleteTermHelperWS
 {
-
-  public static String deleteVS_VSV(Boolean onlyVSV, Long valueSetId, Long valueSetVersionId)
+  private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
+  
+  public static String deleteVS_VSV(Session hb_session, Boolean onlyVSV, Long valueSetId, Long valueSetVersionId)
   {
-
     //get Missing Id's for all CVSM
     String result = "\n";
-    List<ConceptValueSetMembership> cvsmList = null;
-    Session hb_session = HibernateUtil.getSessionFactory().openSession();
+    //List<ConceptValueSetMembership> cvsmList = null;
+    //Session hb_session = HibernateUtil.getSessionFactory().openSession();
     int rowCountVsmv = 0;
     int rowCountCvsm = 0;
     int rowCountVsv = 0;
     int rowCountMp = 0;
     int rowCountVs = 0;
 
-    try
-    {
+    //try
+    //{
       ValueSet vs = (ValueSet) hb_session.get(ValueSet.class, valueSetId);
+      
+      if(vs == null)
+        return "Value Set with given id '" + valueSetId + "' does not exist.";
+      
       if (valueSetVersionId == null)
       {
 
         for (ValueSetVersion vsv : vs.getValueSetVersions())
         {
           result += "Version: " + vsv.getName();
-          result += deleteVS_VSV(false, valueSetId, vsv.getVersionId());
+          result += deleteVS_VSV(hb_session, false, valueSetId, vsv.getVersionId());
         }
 
-        hb_session.getTransaction().begin();
-
-        //Check for VSMV Reste and delete
-        String hqlMpSearch = "from MetadataParameter where valueSetId=:vsId";
+        // Check for VSMV pieces and delete
+        //String sql = "DELETE FROM metadata_parameter WHERE valueSetId=" + valueSetId;
+        String sql = "UPDATE metadata_parameter SET valueSetId=null WHERE valueSetId=" + valueSetId;
+        logger.debug("SQL: " + sql);
+        rowCountVsmv += hb_session.createSQLQuery(sql).executeUpdate();
+        
+        /*String hqlMpSearch = "from MetadataParameter where valueSetId=:vsId";
         Query q_MpSearch = hb_session.createQuery(hqlMpSearch);
         q_MpSearch.setParameter("vsId", valueSetId);
         List<MetadataParameter> mpList = q_MpSearch.list();
@@ -78,21 +83,21 @@ public class DeleteTermHelperWS
           Query q_vsmv2 = hb_session.createQuery(hql_vsmv2);
           q_vsmv2.setParameter("mpId", mp.getId());
           rowCountVsmv += q_vsmv2.executeUpdate();
-        }
+        }*/
 
         //Mp
-        String hql_mp = "delete from MetadataParameter where valueSetId=:vsId";
+        /*String hql_mp = "delete from MetadataParameter where valueSetId=:vsId";
         Query q_mp = hb_session.createQuery(hql_mp);
         q_mp.setParameter("vsId", valueSetId);
-        rowCountMp += q_mp.executeUpdate();
+        rowCountMp += q_mp.executeUpdate();*/
 
-        //CS
+        // Value Set löschen
+        logger.debug("HQL: delete from ValueSet where id=:vsId");
         String hql_vs = "delete from ValueSet where id=:vsId";
         Query q_vs = hb_session.createQuery(hql_vs);
         q_vs.setParameter("vsId", valueSetId);
         rowCountVs += q_vs.executeUpdate();
 
-        hb_session.getTransaction().commit();
         result += "mp: " + rowCountMp + "\n";
         result += "vs: " + rowCountVs + "\n\n";
       }
@@ -101,13 +106,19 @@ public class DeleteTermHelperWS
 
         if (vs.getValueSetVersions().size() == 1 && onlyVSV)
           return "Ein Value Set MUSS eine Version haben! \nBitte legen sie eine neue an bevor sie diese löschen. \nSie können alternativ das gesamte Value Set löschen.";
+        
+        logger.debug("DELETE FROM value_set_metadata_value WHERE valueSetVersionId=" + valueSetVersionId);
+        rowCountVsmv += hb_session.createSQLQuery("DELETE FROM value_set_metadata_value WHERE valueSetVersionId=" + valueSetVersionId).executeUpdate();
+        
+        logger.debug("DELETE FROM concept_value_set_membership WHERE valueSetVersionId=" + valueSetVersionId);
+        rowCountCvsm += hb_session.createSQLQuery("DELETE FROM concept_value_set_membership WHERE valueSetVersionId=" + valueSetVersionId).executeUpdate();
+        
 
-        String hqlCvsm = "select distinct cvsm from ConceptValueSetMembership cvsm join cvsm.valueSetVersion vsv where vsv.versionId=:valueSetVersionId";
+        /*String hqlCvsm = "select distinct cvsm from ConceptValueSetMembership cvsm join cvsm.valueSetVersion vsv where vsv.versionId=:valueSetVersionId";
         Query q_Cvsm = hb_session.createQuery(hqlCvsm);
         q_Cvsm.setParameter("valueSetVersionId", valueSetVersionId);
         cvsmList = q_Cvsm.list();
         //Start deleting
-        hb_session.getTransaction().begin();
 
         for (ConceptValueSetMembership cvsm : cvsmList)
         {
@@ -133,43 +144,35 @@ public class DeleteTermHelperWS
           catch (Exception ex)
           {
           }
-        }
-        hb_session.getTransaction().commit();
+        }*/
 
-        hb_session.getTransaction().begin();
-
+        logger.debug("HQL: delete from ValueSetVersion where versionId=:vsvId");
         String hql_vsv = "delete from ValueSetVersion where versionId=:vsvId";
         Query q_vsv = hb_session.createQuery(hql_vsv);
         q_vsv.setParameter("vsvId", valueSetVersionId);
         rowCountVsv += q_vsv.executeUpdate();
-
-        hb_session.getTransaction().commit();
 
         result += "Value Set: " + vs.getName() + "\n";
         result += "vsmv: " + rowCountVsmv + "\n";
         result += "cvsm: " + rowCountCvsm + "\n";
         result += "vsv: " + rowCountVsv + "\n\n";
       }
-    }
+    /*}
     catch (Exception e)
     {
-      hb_session.getTransaction().rollback();
       result += "An Error occured: " + e.getMessage();
-    }
-    finally
-    {
-      hb_session.close();
-    }
+    }*/
+    
     return result;
   }
 
-  public static String deleteCS_CSV(Boolean onlyCSV, Long codeSystemId, Long codeSystemVersionId)
+  public static String deleteCS_CSV(Session hb_session, Boolean onlyCSV, Long codeSystemId, Long codeSystemVersionId)
   {
 
     //get Missing Id's for all CSEV
     String result = "\n";
     List csevIds = null;
-    Session hb_session = HibernateUtil.getSessionFactory().openSession();
+    
     //Delete Translations, CodeSystemConcept
     int rowCountCsct = 0;
     int rowCountCsc = 0;
@@ -187,19 +190,18 @@ public class DeleteTermHelperWS
     int rowCountDvhcs = 0;
     int rowCountCs = 0;
 
-    try
-    {
+    //try
+   // {
       CodeSystem cs = (CodeSystem) hb_session.get(CodeSystem.class, codeSystemId);
 
       if (codeSystemVersionId == null)
       {
-
         for (CodeSystemVersion csv : cs.getCodeSystemVersions())
         {
           result += "Version: " + csv.getName();
-          result += deleteCS_CSV(false, codeSystemId, csv.getVersionId());
+          result += deleteCS_CSV(hb_session, false, codeSystemId, csv.getVersionId());
         }
-        hb_session.getTransaction().begin();
+        
         //Check for VSMV Reste and delete
         String hqlMpSearch = "from MetadataParameter where codeSystemId=:csId";
         Query q_MpSearch = hb_session.createQuery(hqlMpSearch);
@@ -238,7 +240,7 @@ public class DeleteTermHelperWS
         result += "dvhcs: " + rowCountDvhcs + "\n";
         result += "cs: " + rowCountCs + "\n\n";
 
-        hb_session.getTransaction().commit();
+        //hb_session.getTransaction().commit();
       }
       else
       {
@@ -252,7 +254,7 @@ public class DeleteTermHelperWS
         q_CsevNumber.setParameter("versionId", codeSystemVersionId);
         csevIds = q_CsevNumber.list();
         //Start deleting
-        hb_session.getTransaction().begin();
+        //hb_session.getTransaction().begin();
 
         for (Object o : csevIds)
         {
@@ -342,34 +344,34 @@ public class DeleteTermHelperWS
         result += "lt: " + rowCountLt + "\n";
         result += "csv: " + rowCountCsv + "\n\n";
 
-        hb_session.getTransaction().commit();
+        //hb_session.getTransaction().commit();
       }
-    }
-    catch (Exception e)
-    {
-      hb_session.getTransaction().rollback();
-      result += "An Error occured: " + e.getMessage();
-    }
-    finally
-    {
-      hb_session.close();
-    }
+//    }
+//    catch (Exception e)
+//    {
+//      //hb_session.getTransaction().rollback();
+//      result += "An Error occured: " + e.getMessage();
+//    }
+//    finally
+//    {
+//      //hb_session.close();
+//    }
     return result;
   }
 
-  public static String deleteCSEV(Long csevId, Long csvId)
+  public static String deleteCSEV(Session hb_session, Long csevId, Long csvId)
   {
 
     //get Missing Id's for all CSEV
     String result = "\n";
     Boolean deleteCse = false;
-    Session hb_session = HibernateUtil.getSessionFactory().openSession();
+    //Session hb_session = HibernateUtil.getSessionFactory().openSession();
 
-    try
-    {
+    //try
+    //{
 
       //Start deleting
-      hb_session.getTransaction().begin();
+      //hb_session.getTransaction().begin();
       //Delete Translations, CodeSystemConcept
       int rowCountCsct = 0;
       int rowCountCsc = 0;
@@ -454,17 +456,14 @@ public class DeleteTermHelperWS
         result += "csvem: " + rowCountCsvem + "\n";
         result += "cse: " + rowCountCse + "\n";
       }
-      hb_session.getTransaction().commit();
-    }
-    catch (Exception e)
-    {
-      hb_session.getTransaction().rollback();
-      result += "An Error occured: " + e.getMessage();
-    }
-    finally
-    {
-      hb_session.close();
-    }
+      //hb_session.getTransaction().commit();
+//    }
+//    catch (Exception e)
+//    {
+//      //hb_session.getTransaction().rollback();
+//      result += "An Error occured: " + e.getMessage();
+//    }
+    
     return result;
   }
 }
