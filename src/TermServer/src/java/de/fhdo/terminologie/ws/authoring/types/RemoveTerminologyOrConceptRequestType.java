@@ -17,15 +17,21 @@
 package de.fhdo.terminologie.ws.authoring.types;
 
 import de.fhdo.terminologie.ws.types.DeleteInfo;
+import javax.xml.bind.annotation.XmlElement;
 
 
 /**
  *
  * @author Philipp Urbauer
+ * 
+ * edited 2014-09-30 by Robert Mützner <robert.muetzner@fh-dortmund.de>
  */
 public class RemoveTerminologyOrConceptRequestType
 {
+  //@XmlElement(required = true)
   private String loginToken;
+  
+  //@XmlElement(required = true)
   private DeleteInfo deleteInfo;
   
 

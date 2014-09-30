@@ -16,14 +16,16 @@
  */
 package de.fhdo.terminologie.ws.authoring;
 
+import de.fhdo.logging.LoggingOutput;
+import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.helper.DeleteTermHelperWS;
-import de.fhdo.terminologie.helper.LoginHelper;
 import de.fhdo.terminologie.ws.authoring.types.RemoveTerminologyOrConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.types.RemoveTerminologyOrConceptResponseType;
 import de.fhdo.terminologie.ws.authorization.Authorization;
 import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
 import de.fhdo.terminologie.ws.types.DeleteInfo.Type;
 import de.fhdo.terminologie.ws.types.ReturnType;
+import org.hibernate.Session;
 
 /**
  *
@@ -48,8 +50,8 @@ public class RemoveTerminologyOrConcept
   public RemoveTerminologyOrConceptResponseType RemoveTerminologyOrConcept(RemoveTerminologyOrConceptRequestType parameter, org.hibernate.Session session, String ipAddress)
   {
     if (logger.isInfoEnabled())
-      logger.info("====== RemoveEntity gestartet ======");
-    
+      logger.info("====== RemoveEntity started ======");
+
     // Return-Informationen anlegen
     RemoveTerminologyOrConceptResponseType response = new RemoveTerminologyOrConceptResponseType();
     response.setReturnInfos(new ReturnType());
@@ -79,41 +81,70 @@ public class RemoveTerminologyOrConcept
     String result = "";
     Type t = parameter.getDeleteInfo().getType();
 
-    switch (t) {
+    Session hb_session = HibernateUtil.getSessionFactory().openSession();
+    org.hibernate.Transaction tx = hb_session.beginTransaction();
+
+    try
+    {
+      
+      
+      switch (t)
+      {
         case CODE_SYSTEM:
-                 
-                 result = DeleteTermHelperWS.deleteCS_CSV(true, parameter.getDeleteInfo().getCodeSystem().getId(), null);
-                 break;
+          result = DeleteTermHelperWS.deleteCS_CSV(hb_session, true, parameter.getDeleteInfo().getCodeSystem().getId(), null);
+          break;
         case CODE_SYSTEM_VERSION:
-                 result = DeleteTermHelperWS.deleteCS_CSV(true, parameter.getDeleteInfo().getCodeSystem().getId(), parameter.getDeleteInfo().getCodeSystem().getCodeSystemVersions().iterator().next().getVersionId());
-                 break;
+          result = DeleteTermHelperWS.deleteCS_CSV(hb_session, true, parameter.getDeleteInfo().getCodeSystem().getId(), parameter.getDeleteInfo().getCodeSystem().getCodeSystemVersions().iterator().next().getVersionId());
+          break;
         case VALUE_SET:
-                 result = DeleteTermHelperWS.deleteVS_VSV(true, parameter.getDeleteInfo().getValueSet().getId(), null);
-                 break;
+          result = DeleteTermHelperWS.deleteVS_VSV(hb_session, true, parameter.getDeleteInfo().getValueSet().getId(), null);
+          break;
         case VALUE_SET_VERSION:
-                 result = DeleteTermHelperWS.deleteVS_VSV(true, parameter.getDeleteInfo().getValueSet().getId(), parameter.getDeleteInfo().getValueSet().getValueSetVersions().iterator().next().getVersionId());
-                 break;
+          result = DeleteTermHelperWS.deleteVS_VSV(hb_session, true, parameter.getDeleteInfo().getValueSet().getId(), parameter.getDeleteInfo().getValueSet().getValueSetVersions().iterator().next().getVersionId());
+          break;
         case CODE_SYSTEM_ENTITY_VERSION:
-                 result = DeleteTermHelperWS.deleteCSEV(parameter.getDeleteInfo().getCodeSystemEntityVersion().getVersionId(),parameter.getDeleteInfo().getCodeSystem().getCodeSystemVersions().iterator().next().getVersionId());
-                 break;
-        default: 
-                 result = "";
-                 break;
+          result = DeleteTermHelperWS.deleteCSEV(hb_session, parameter.getDeleteInfo().getCodeSystemEntityVersion().getVersionId(), parameter.getDeleteInfo().getCodeSystem().getCodeSystemVersions().iterator().next().getVersionId());
+          break;
+        default:
+          //result = "Please specify a valid type.";
+          result = "";
+          break;
+      }
+      
+      tx.commit();
     }
-    
-    if(result.equals("") || result.contains("An Error occured:")){ //Error
-    
-        response.getReturnInfos().setMessage(result);
-        response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
-        response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-    
-    }else{//Success
-    
-        response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
-        response.getReturnInfos().setStatus(ReturnType.Status.OK);
-        response.getReturnInfos().setMessage(result);
+    catch (Exception ex)
+    {
+      LoggingOutput.outputException(ex, this);
+      result = "An Error occured: " + ex.getLocalizedMessage();
+      
+      tx.rollback();
     }
-    
+    finally
+    {
+      hb_session.close();
+    }
+
+    if (result == null || result.equals("") || result.contains("An Error occured:"))
+    //if (result.length() > 0)
+    {
+      if(result == null)
+        result = "Error: null";
+      else if(result.equals(""))
+        result = "Please specify a valid type.";
+      // Error
+      response.getReturnInfos().setMessage(result);
+      response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
+      response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+    }
+    else
+    {
+      // Success
+      response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
+      response.getReturnInfos().setStatus(ReturnType.Status.OK);
+      response.getReturnInfos().setMessage(result);
+    }
+
     return response;
   }
 
@@ -131,28 +162,29 @@ public class RemoveTerminologyOrConcept
 
     if (Request == null)
     {
-      sErrorMessage = "Kein Requestparameter angegeben!";
+      sErrorMessage = "No parameters found!";
       erfolg = false;
     }
     else
     {
       if (erfolg)
       {
-        if (Request.getDeleteInfo() == null || Request.getLoginToken()== null)
+        if (Request.getDeleteInfo() == null || Request.getLoginToken() == null)
         {
-          sErrorMessage = "Weder DeleteInfo noch Login dürfen null sein!";
+          sErrorMessage = "Neither DeleteInfo nor Login may not be null!";
           erfolg = false;
         }
         else
         {
-          if(erfolg){
-              if(Request.getDeleteInfo().getCodeSystem() == null && 
-                 Request.getDeleteInfo().getValueSet() == null && 
-                 Request.getDeleteInfo().getCodeSystemEntityVersion() == null){
-                  
-                  sErrorMessage = "Entweder CodeSystem, ValueSet oder CodeSystemEntityVersion dürfen nicht null sein!";
-                  erfolg = false;
-              }
+          if (erfolg)
+          {
+            if (Request.getDeleteInfo().getCodeSystem() == null
+                    && Request.getDeleteInfo().getValueSet() == null
+                    && Request.getDeleteInfo().getCodeSystemEntityVersion() == null)
+            {
+              sErrorMessage = "Either CodeSystem, ValueSet or CodeSystemEntityVersion may not be null!";
+              erfolg = false;
+            }
           }
         }
       }
