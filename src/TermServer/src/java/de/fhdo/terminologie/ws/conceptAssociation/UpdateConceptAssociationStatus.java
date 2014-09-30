@@ -19,14 +19,13 @@ package de.fhdo.terminologie.ws.conceptAssociation;
 import de.fhdo.terminologie.Definitions;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersionAssociation;
-import de.fhdo.terminologie.helper.LoginHelper;
 import de.fhdo.terminologie.ws.authorization.Authorization;
 import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
 import de.fhdo.terminologie.ws.conceptAssociation.types.UpdateConceptAssociationStatusRequestType;
 import de.fhdo.terminologie.ws.conceptAssociation.types.UpdateConceptAssociationStatusResponseType;
-import de.fhdo.terminologie.ws.types.LoginInfoType;
 import de.fhdo.terminologie.ws.types.ReturnType;
 import java.util.Date;
+import org.hibernate.Query;
 
 /**
  *
@@ -48,6 +47,7 @@ public class UpdateConceptAssociationStatus
       logger.info("====== UpdateConceptAssociationStatus gestartet ======");
 
     boolean createHibernateSession = (session == null);
+    logger.debug("createHibernateSession: " + createHibernateSession);
 
     // Return-Informationen anlegen
     UpdateConceptAssociationStatusResponseType response = new UpdateConceptAssociationStatusResponseType();
@@ -88,12 +88,12 @@ public class UpdateConceptAssociationStatus
 
       // Hibernate-Block, Session öffnen
       org.hibernate.Session hb_session = null;
-      
+      org.hibernate.Transaction tx = null;
 
       if (createHibernateSession)
       {
         hb_session = HibernateUtil.getSessionFactory().openSession();
-        hb_session.getTransaction().begin();
+        tx = hb_session.beginTransaction();
       }
       else
       {
@@ -105,31 +105,36 @@ public class UpdateConceptAssociationStatus
       try // 2. try-catch-Block zum Abfangen von Hibernate-Fehlern
       {
         CodeSystemEntityVersionAssociation association_param = parameter.getCodeSystemEntityVersionAssociation();
-        long id = association_param.getId();
-
-        CodeSystemEntityVersionAssociation association = (CodeSystemEntityVersionAssociation) hb_session.get(CodeSystemEntityVersionAssociation.class, id);
-        association.setStatus(parameter.getCodeSystemEntityVersionAssociation().getStatus());
-        association.setStatusDate(new Date());
-
-        hb_session.update(association);
+        //long id = association_param.getId();
         
-        if(createHibernateSession)
-            hb_session.getTransaction().commit();
+        logger.debug("change status for codeSystemEntityVersionAssociation id " + association_param.getId());
+
+        CodeSystemEntityVersionAssociation association_db = (CodeSystemEntityVersionAssociation) hb_session.get(CodeSystemEntityVersionAssociation.class, association_param.getId());
+        association_db.setStatus(parameter.getCodeSystemEntityVersionAssociation().getStatus());
+        association_db.setStatusDate(new Date());
+        
+        logger.debug("ID: " + association_db.getId() +  ", left-id: " + association_db.getLeftId());
+
+        hb_session.merge(association_db);
+        
+        if(tx != null)
+          tx.commit();
         
         // Status an den Aufrufer weitergeben
         response.getReturnInfos().setCount(1);
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
         response.getReturnInfos().setStatus(ReturnType.Status.OK);
-        response.getReturnInfos().setMessage("Status der Beziehung aktualisiert.");
+        response.getReturnInfos().setMessage("Relation status changed successfully.");
       }
       catch (Exception e)
       {
-        if(createHibernateSession)
-          hb_session.getTransaction().rollback();
+        if(tx != null)
+          tx.rollback();
+        
         // Fehlermeldung an den Aufrufer weiterleiten
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-        response.getReturnInfos().setMessage("Fehler bei 'UpdateConceptAssociationStatus', Hibernate: " + e.getLocalizedMessage());
+        response.getReturnInfos().setMessage("Error at 'UpdateConceptAssociationStatus', Hibernate: " + e.getLocalizedMessage());
 
         logger.error("Fehler bei 'UpdateConceptAssociationStatus', Hibernate: " + e.getLocalizedMessage());
         e.printStackTrace();
@@ -148,9 +153,9 @@ public class UpdateConceptAssociationStatus
       // Fehlermeldung an den Aufrufer weiterleiten
       response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
       response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-      response.getReturnInfos().setMessage("Fehler bei 'UpdateConceptAssociationStatus': " + e.getLocalizedMessage());
+      response.getReturnInfos().setMessage("Error at 'UpdateConceptAssociationStatus': " + e.getLocalizedMessage());
 
-      logger.error("Fehler bei 'UpdateConceptAssociationStatus': " + e.getLocalizedMessage());
+      logger.error("Error at 'UpdateConceptAssociationStatus': " + e.getLocalizedMessage());
     }
 
     return response;
