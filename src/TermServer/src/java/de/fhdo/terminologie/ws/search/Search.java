@@ -57,6 +57,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.ws.WebServiceContext;
+import com.sun.xml.ws.developer.SchemaValidation;
 
 /**
  * Search umfasst das Retrieval von Codesystemen, Konzepten sowie ValueSets.
@@ -65,6 +66,7 @@ import javax.xml.ws.WebServiceContext;
  * @version 1.0
  */
 @WebService(serviceName = "Search")
+@SchemaValidation
 public class Search
 {
 

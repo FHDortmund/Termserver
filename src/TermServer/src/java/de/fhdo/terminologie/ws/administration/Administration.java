@@ -16,6 +16,7 @@
  */
 package de.fhdo.terminologie.ws.administration;
 
+import com.sun.xml.ws.developer.SchemaValidation;
 import de.fhdo.terminologie.helper.SecurityHelper;
 import de.fhdo.terminologie.ws.administration.types.ActualProceedingsRequestType;
 import de.fhdo.terminologie.ws.administration.types.ActualProceedingsResponseType;
@@ -46,6 +47,7 @@ import javax.xml.ws.WebServiceContext;
  * @author Bernhard Rimatzki
  */
 @WebService(serviceName = "Administration")
+@SchemaValidation
 public class Administration
 {
 

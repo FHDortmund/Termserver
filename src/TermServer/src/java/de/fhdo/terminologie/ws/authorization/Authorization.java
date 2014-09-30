@@ -16,6 +16,7 @@
  */
 package de.fhdo.terminologie.ws.authorization;
 
+import com.sun.xml.ws.developer.SchemaValidation;
 import de.fhdo.terminologie.helper.PropertiesHelper;
 import de.fhdo.terminologie.helper.SecurityHelper;
 import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
@@ -34,6 +35,7 @@ import javax.xml.ws.WebServiceContext;
  * @author Robert Mützner (robert.muetzner@fh-dortmund.de)
  */
 @WebService(serviceName = "Authorization")
+@SchemaValidation
 public class Authorization
 {
 

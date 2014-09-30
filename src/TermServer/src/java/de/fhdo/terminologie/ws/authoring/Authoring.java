@@ -16,6 +16,7 @@
  */
 package de.fhdo.terminologie.ws.authoring;
 
+import com.sun.xml.ws.developer.SchemaValidation;
 import de.fhdo.terminologie.helper.SecurityHelper;
 import de.fhdo.terminologie.ws.authoring.types.CreateCodeSystemRequestType;
 import de.fhdo.terminologie.ws.authoring.types.CreateCodeSystemResponseType;
@@ -68,6 +69,7 @@ import javax.xml.ws.WebServiceContext;
  * @author Robert Mützner (robert.muetzner@fh-dortmund.de)
  */
 @WebService(serviceName = "Authoring")
+@SchemaValidation
 public class Authoring
 {
   // Mit Hilfe des WebServiceContext lässt sich die ClientIP bekommen.

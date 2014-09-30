@@ -16,6 +16,7 @@
  */
 package de.fhdo.terminologie.ws.conceptAssociation;
 
+import com.sun.xml.ws.developer.SchemaValidation;
 import de.fhdo.terminologie.helper.SecurityHelper;
 import de.fhdo.terminologie.ws.conceptAssociation.types.CreateConceptAssociationRequestType;
 import de.fhdo.terminologie.ws.conceptAssociation.types.CreateConceptAssociationResponseType;
@@ -40,6 +41,7 @@ import javax.xml.ws.WebServiceContext;
  * @author Robert Mützner (robert.muetzner@fh-dortmund.de)
  */
 @WebService(serviceName = "ConceptAssociations")
+@SchemaValidation
 public class ConceptAssociations
 {
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
