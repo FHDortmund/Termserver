@@ -35,13 +35,38 @@ public class HibernateUtil
   {
     try
     {
-      /**
-       * Configuration*********************************************************************************************************
-       */
       String path = System.getProperty("catalina.base") + "/conf/termserver.hibernate.cfg.xml";
 
       File file = new File(path);
-      SessionFactory sf = new AnnotationConfiguration().configure(file).buildSessionFactory();
+      //SessionFactory sf = new AnnotationConfiguration().configure(file).buildSessionFactory();
+      
+      SessionFactory sf = new AnnotationConfiguration().configure(file)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.LicencedUserId.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.CodeSystemConceptTranslation.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.Domain.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.LicencedUser.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.CodeSystemConcept.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.AssociationType.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.ConceptValueSetMembershipId.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.ConceptValueSetMembership.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.CodeSystem.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.SysParam.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersion.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.CodeSystemEntity.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.CodeSystemVersionEntityMembership.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.DomainValue.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.TermUser.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.MetadataParameter.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.Session.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.ValueSet.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.CodeSystemVersionEntityMembershipId.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.CodeSystemVersion.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.ValueSetVersion.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.CodeSystemMetadataValue.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.LicenceType.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersionAssociation.class)
+              .addAnnotatedClass(de.fhdo.terminologie.db.hibernate.ValueSetMetadataValue.class)
+              .buildSessionFactory();
 
       return sf;
     }
