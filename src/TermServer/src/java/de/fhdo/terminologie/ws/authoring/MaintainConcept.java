@@ -112,6 +112,10 @@ public class MaintainConcept
           csev_New.setCodeSystemEntity(cse_db);
           csev_New.setStatusVisibility(Definitions.STATUS_CODES.ACTIVE.getCode());
           csev_New.setStatusVisibilityDate(new java.util.Date());
+          csev_New.setStatusDeactivated(0);
+          csev_New.setStatusDeactivatedDate(new java.util.Date());
+          csev_New.setStatusWorkflow(0);
+          csev_New.setStatusWorkflowDate(new java.util.Date());
           csev_New.setInsertTimestamp(new java.util.Date());
 
           csev_New.setPreviousVersionId(cse_db.getCurrentVersionId());

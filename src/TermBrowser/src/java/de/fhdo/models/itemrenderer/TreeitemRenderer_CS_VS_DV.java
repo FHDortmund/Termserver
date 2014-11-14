@@ -20,7 +20,8 @@ import de.fhdo.collaboration.helper.AssignTermHelper;
 import de.fhdo.collaboration.helper.CODES;
 import de.fhdo.gui.main.ContentCSVSAssociationEditor;
 import de.fhdo.gui.main.ContentCSVSDefault;
-import de.fhdo.gui.main.modules.PopupWindow;
+import de.fhdo.gui.main.modules.PopupCodeSystem;
+import de.fhdo.gui.main.modules.PopupValueSet;
 import de.fhdo.helper.SendBackHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.UtilHelper;
@@ -132,7 +133,7 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
       {
         logger.debug("ON TREE DOUBLE CLICK - renderCSMouseEvents");
         window.onSelect(ti);
-        window.popupDetails(PopupWindow.EDITMODE_DETAILSONLY);
+        window.popupCodeSystem(PopupCodeSystem.EDITMODES.DETAILSONLY, true);
       }
     });
 
@@ -141,6 +142,7 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
       public void onEvent(Event event) throws Exception
       {
         logger.debug("ON TREE CLICK - renderCSMouseEvents");
+        // TODO hier doppelte Klicke abfangen
 
         window.onSelect(ti);
 
@@ -167,17 +169,18 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
   {
     // Menu Items
     Menuitem miDetails = new Menuitem(Labels.getLabel("common.details"));
+    Menuitem miDeepLink = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miCreateDeepLink"));
+
     Menuitem miNewCSV = new Menuitem(Labels.getLabel("treeitemRenderer_CS_VS_DV.createNewVersion"));
     Menuitem miEdit = new Menuitem(Labels.getLabel("common.edit"));
-    Menuitem miDeepLink = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miCreateDeepLink"));
     Menuitem miRemoveCS = new Menuitem(Labels.getLabel("common.deleteSystem"));
-    
+
     // Event Listener
     miDetails.addEventListener(Events.ON_CLICK, new EventListener()
     {
       public void onEvent(Event event) throws Exception
       {
-        window.popupDetails(PopupWindow.EDITMODE_DETAILSONLY);
+        window.popupCodeSystem(PopupCodeSystem.EDITMODES.DETAILSONLY, false);
       }
     });
 
@@ -185,7 +188,7 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-        window.popupDetails(PopupWindow.EDITMODE_MAINTAIN_VERSION_NEW);
+        window.popupCodeSystem(PopupCodeSystem.EDITMODES.CREATE_NEW_VERSION, true);
       }
     });
 
@@ -193,22 +196,25 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-            Messagebox.show("Hiermit löschen sie das Code System!", 
-                            "Code System löschen", Messagebox.YES | Messagebox.NO, Messagebox.INFORMATION, new org.zkoss.zk.ui.event.EventListener() {
-              public void onEvent(Event evt) throws InterruptedException {
-                  if (evt.getName().equals("onYes")) {
-                    window.removeEntity();
+        Messagebox.show("Hiermit löschen sie das Code System!",
+                "Code System löschen", Messagebox.YES | Messagebox.NO, Messagebox.INFORMATION, new org.zkoss.zk.ui.event.EventListener()
+                {
+                  public void onEvent(Event evt) throws InterruptedException
+                  {
+                    if (evt.getName().equals("onYes"))
+                    {
+                      window.removeEntity();
+                    }
                   }
-              }
-            });
+                });
       }
     });
-    
+
     miEdit.addEventListener(Events.ON_CLICK, new EventListener()
     {
       public void onEvent(Event event) throws Exception
       {
-        window.popupDetails(PopupWindow.EDITMODE_MAINTAIN);
+        window.popupCodeSystem(PopupCodeSystem.EDITMODES.MAINTAIN, false);
       }
     });
 
@@ -221,45 +227,47 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
         tNode.showDeepLinkInMessagebox();
       }
     });
-    
+
     // Einfügen ins Menü je nach LoginStatus
     miDetails.setParent(contextMenu);
     miDeepLink.setParent(contextMenu);
     if (SessionHelper.isUserLoggedIn())
     {
-      
-        TreeNode tn = (TreeNode) ti.getValue();
-        Object data = tn.getData();               
-        boolean allowed = true;
-        if (data instanceof CodeSystem)
-        {
-            allowed = AssignTermHelper.isUserAllowed(data);
-        }
-        else if (data instanceof CodeSystemVersion)
-        {
-            allowed = AssignTermHelper.isUserAllowed(((CodeSystemVersion)data).getCodeSystem());
-        }
-        else if (data instanceof ValueSet)
-        {
-            allowed = AssignTermHelper.isUserAllowed(data);
-        }
-        else if (data instanceof ValueSetVersion)
-        {
-            allowed = AssignTermHelper.isUserAllowed(((ValueSetVersion)data).getValueSet());
-        }  
-      
-      if(allowed){
+      /*TreeNode tn = (TreeNode) ti.getValue();
+       Object data = tn.getData();
+       boolean allowed = true;
+       if (data instanceof CodeSystem)
+       {
+       allowed = AssignTermHelper.isUserAllowed(data);
+       }
+       else if (data instanceof CodeSystemVersion)
+       {
+       allowed = AssignTermHelper.isUserAllowed(((CodeSystemVersion) data).getCodeSystem());
+       }
+       else if (data instanceof ValueSet)
+       {
+       allowed = AssignTermHelper.isUserAllowed(data);
+       }
+       else if (data instanceof ValueSetVersion)
+       {
+       allowed = AssignTermHelper.isUserAllowed(((ValueSetVersion) data).getValueSet());
+       }
+
+       if (allowed)*/
+      {
         new Menuseparator().setParent(contextMenu);
         miEdit.setParent(contextMenu);
         new Menuseparator().setParent(contextMenu);
         miNewCSV.setParent(contextMenu);
-        if(SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN)){
-            new Menuseparator().setParent(contextMenu);
-            miRemoveCS.setParent(contextMenu);
+
+        //if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN))
+        {
+          new Menuseparator().setParent(contextMenu);
+          miRemoveCS.setParent(contextMenu);
         }
       }
     }
-    
+
     createMenuitems(window, ti, contextMenu);
   }
 
@@ -274,13 +282,14 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
 
     Label lName = new Label(cs.getName());
     lName.setStyle("");
-    if(cs.getCodeSystemVersions() != null &&
-       cs.getCodeSystemVersions().size() == 1 && 
-       cs.getCodeSystemVersions().get(0).getStatus() != null && 
-       cs.getCodeSystemVersions().get(0).getStatus() != 1){
-        changeStyleByStatus(lName, cs.getCodeSystemVersions().get(0).getStatus());
+    if (cs.getCodeSystemVersions() != null
+            && cs.getCodeSystemVersions().size() == 1
+            && cs.getCodeSystemVersions().get(0).getStatus() != null
+            && cs.getCodeSystemVersions().get(0).getStatus() != 1)
+    {
+      changeStyleByStatus(lName, cs.getCodeSystemVersions().get(0).getStatus());
     }
-    
+
     String text = lName.getStyle();
     treeCell.appendChild(lName);
 
@@ -332,28 +341,31 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
 //        Menupopup mpExport      = new Menupopup();    
     Menuitem miStatus = new Menuitem(Labels.getLabel("treeitemRendererCSEV.editStatus"));
     Menuitem miRemoveCSV = new Menuitem(Labels.getLabel("common.deleteVersion"));
-    
+
     miRemoveCSV.addEventListener(Events.ON_CLICK, new EventListener()
     {
       public void onEvent(Event event) throws Exception
       {
-            Messagebox.show("Hiermit löschen sie die Code System Version!", 
-                            "Code System Version löschen", Messagebox.YES | Messagebox.NO, Messagebox.INFORMATION, new org.zkoss.zk.ui.event.EventListener() {
-              public void onEvent(Event evt) throws InterruptedException {
-                  if (evt.getName().equals("onYes")) {
-                    window.removeEntity();
+        Messagebox.show("Hiermit löschen sie die Code System Version!",
+                "Code System Version löschen", Messagebox.YES | Messagebox.NO, Messagebox.INFORMATION, new org.zkoss.zk.ui.event.EventListener()
+                {
+                  public void onEvent(Event evt) throws InterruptedException
+                  {
+                    if (evt.getName().equals("onYes"))
+                    {
+                      window.removeEntity();
+                    }
                   }
-              }
-            });
+                });
       }
     });
-    
+
     // Event Listener        
     miDetails.addEventListener(Events.ON_CLICK, new EventListener()
     {
       public void onEvent(Event event) throws Exception
       {
-        window.popupDetails(PopupWindow.EDITMODE_DETAILSONLY);
+        window.popupCodeSystem(PopupCodeSystem.EDITMODES.DETAILSONLY, true);
       }
     });
 
@@ -361,7 +373,7 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-        window.popupDetails(PopupWindow.EDITMODE_MAINTAIN_VERSION_NEW);
+        window.popupCodeSystem(PopupCodeSystem.EDITMODES.CREATE_NEW_VERSION, true);
       }
     });
 
@@ -369,7 +381,7 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-        window.popupDetails(PopupWindow.EDITMODE_MAINTAIN_VERSION_EDIT);
+        window.popupCodeSystem(PopupCodeSystem.EDITMODES.MAINTAIN, true);
       }
     });
 
@@ -386,7 +398,6 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
 //                window.export(2);
 //            }
 //        });
-
     miDeepLink.addEventListener(Events.ON_CLICK, new EventListener()
     {
       public void onEvent(Event event) throws Exception
@@ -401,91 +412,93 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-        window.popupDetails(PopupWindow.EDITMODE_UPDATESTATUS_VERSION);
+        // TODO window.popupDetails(PopupWindow.EDITMODE_UPDATESTATUS_VERSION);
       }
     });
 
 //        mpExport.setParent(export);
-
 //        exportCSVCvs.setParent(mpExport);        
-
     miDetails.setParent(contextMenu);
     miDeepLink.setParent(contextMenu);
     if (SessionHelper.isUserLoggedIn())
     {
-        TreeNode tn = (TreeNode) ti.getValue();
-        Object data = tn.getData();               
-        boolean allowed = true;
-        if (data instanceof CodeSystem)
+      // TODO COLLAB
+      /*TreeNode tn = (TreeNode) ti.getValue();
+      Object data = tn.getData();
+      boolean allowed = true;
+      if (data instanceof CodeSystem)
+      {
+        allowed = AssignTermHelper.isUserAllowed(data);
+      }
+      else if (data instanceof CodeSystemVersion)
+      {
+        allowed = AssignTermHelper.isUserAllowed(((CodeSystemVersion) data).getCodeSystem());
+      }
+      else if (data instanceof ValueSet)
+      {
+        allowed = AssignTermHelper.isUserAllowed(data);
+      }
+      else if (data instanceof ValueSetVersion)
+      {
+        allowed = AssignTermHelper.isUserAllowed(((ValueSetVersion) data).getValueSet());
+      }
+
+      if (allowed)*/
+      {
+        new Menuseparator().setParent(contextMenu);
+        miEditCSV.setParent(contextMenu);
+        miStatus.setParent(contextMenu);
+        new Menuseparator().setParent(contextMenu);
+        miNewCSV.setParent(contextMenu);
+        //if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN))
         {
-            allowed = AssignTermHelper.isUserAllowed(data);
+          new Menuseparator().setParent(contextMenu);
+          miRemoveCSV.setParent(contextMenu);
         }
-        else if (data instanceof CodeSystemVersion)
-        {
-            allowed = AssignTermHelper.isUserAllowed(((CodeSystemVersion)data).getCodeSystem());
-        }
-        else if (data instanceof ValueSet)
-        {
-            allowed = AssignTermHelper.isUserAllowed(data);
-        }
-        else if (data instanceof ValueSetVersion)
-        {
-            allowed = AssignTermHelper.isUserAllowed(((ValueSetVersion)data).getValueSet());
-        }  
-      
-        if(allowed){  
-            new Menuseparator().setParent(contextMenu);
-            miEditCSV.setParent(contextMenu);
-            miStatus.setParent(contextMenu);
-            new Menuseparator().setParent(contextMenu);
-            miNewCSV.setParent(contextMenu);
-            if(SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN)){
-                new Menuseparator().setParent(contextMenu);
-                miRemoveCSV.setParent(contextMenu);
-            }
-        }
+      }
     }
 
     new Menuseparator().setParent(contextMenu);
     export.setParent(contextMenu);
 
 //        export.setParent(contextMenu);
+    if (SessionHelper.isCollaborationActive())
+    {
 
-    if(SessionHelper.isCollaborationActive()){
-        
-        TreeNode tn = (TreeNode) ti.getValue();
-        Object data = tn.getData();               
-        boolean allowed = true;
-        if (data instanceof CodeSystem)
+      TreeNode tn = (TreeNode) ti.getValue();
+      Object data = tn.getData();
+      boolean allowed = true;
+      if (data instanceof CodeSystem)
+      {
+        allowed = AssignTermHelper.isAnyUserAssigned(((CodeSystem) data).getId(), "CodeSystem");
+      }
+      else if (data instanceof CodeSystemVersion)
+      {
+        allowed = AssignTermHelper.isAnyUserAssigned(((CodeSystemVersion) data).getCodeSystem().getId(), "CodeSystem");
+      }
+      else if (data instanceof ValueSet)
+      {
+        allowed = AssignTermHelper.isAnyUserAssigned(((ValueSet) data).getId(), "ValueSet");
+      }
+      else if (data instanceof ValueSetVersion)
+      {
+        allowed = AssignTermHelper.isAnyUserAssigned(((ValueSetVersion) data).getValueSet().getId(), "ValueSet");
+      }
+      if (allowed)
+      {//Kein IV, kein Vorschlag
+        new Menuseparator().setParent(contextMenu);
+        Menuitem miProposal = new Menuitem(Labels.getLabel("collab.proposeToExistingEntry"));
+        miProposal.addEventListener(Events.ON_CLICK, new EventListener()
         {
-            allowed = AssignTermHelper.isAnyUserAssigned(((CodeSystem)data).getId(), "CodeSystem");
-        }
-        else if (data instanceof CodeSystemVersion)
-        {
-            allowed = AssignTermHelper.isAnyUserAssigned(((CodeSystemVersion)data).getCodeSystem().getId(), "CodeSystem");
-        }
-        else if (data instanceof ValueSet)
-        {
-            allowed = AssignTermHelper.isAnyUserAssigned(((ValueSet)data).getId(), "ValueSet");
-        }
-        else if (data instanceof ValueSetVersion)
-        {
-            allowed = AssignTermHelper.isAnyUserAssigned(((ValueSetVersion)data).getValueSet().getId(), "ValueSet");
-        }
-        if(allowed){//Kein IV, kein Vorschlag
-            new Menuseparator().setParent(contextMenu);
-            Menuitem miProposal = new Menuitem(Labels.getLabel("collab.proposeToExistingEntry"));
-            miProposal.addEventListener(Events.ON_CLICK, new EventListener()
-            {
-              public void onEvent(Event event) throws Exception
-              {
-                window.openPopupProposalExistingCSVS(true);
-              }
-            });
-            miProposal.setParent(contextMenu);
-        }
+          public void onEvent(Event event) throws Exception
+          {
+            window.openPopupProposalExistingCSVS(true);
+          }
+        });
+        miProposal.setParent(contextMenu);
+      }
     }
-    
+
     createMenuitems(window, ti, contextMenu);
   }
 
@@ -507,7 +520,7 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
     String vrangeStr = ValidityRangeHelper.getValidityRangeNameById(csv.getValidityRange());
     if (vrangeStr != null && vrangeStr.length() > 0)
       vrangeStr = " (" + vrangeStr + ")";
-      
+
     // Zeige den Typ an fuer die Liste aller CSV und VSV im Suchen-Reiter
     if (showType)
     {
@@ -520,7 +533,7 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
       lName.setValue(UtilHelper.getDisplayNameLong(csv) + vrangeStr);
     }
     else
-    {     
+    {
       lName.setValue(csv.getName() + vrangeStr);
     }
 
@@ -564,41 +577,44 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
     Menuitem miDeepLink = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miCreateDeepLink"));
     Menuitem miStatus = new Menuitem(Labels.getLabel("treeitemRendererCSEV.editStatus"));
     Menuitem miRemoveVS = new Menuitem(Labels.getLabel("common.deleteSystem"));
-    
+
     miRemoveVS.addEventListener(Events.ON_CLICK, new EventListener()
     {
       public void onEvent(Event event) throws Exception
       {
-            Messagebox.show("Hiermit löschen sie das Value Set!", 
-                            "Value Set löschen", Messagebox.YES | Messagebox.NO, Messagebox.INFORMATION, new org.zkoss.zk.ui.event.EventListener() {
-              public void onEvent(Event evt) throws InterruptedException {
-                  if (evt.getName().equals("onYes")) {
-                    window.removeEntity();
+        Messagebox.show("Hiermit löschen sie das Value Set!",
+                "Value Set löschen", Messagebox.YES | Messagebox.NO, Messagebox.INFORMATION, new org.zkoss.zk.ui.event.EventListener()
+                {
+                  public void onEvent(Event evt) throws InterruptedException
+                  {
+                    if (evt.getName().equals("onYes"))
+                    {
+                      window.removeEntity();
+                    }
                   }
-              }
-            });
+                });
       }
     });
-    
+
     miDetails.addEventListener(Events.ON_CLICK, new EventListener()
     {
       public void onEvent(Event event) throws Exception
       {
-        window.popupDetails(PopupWindow.EDITMODE_DETAILSONLY);
+        window.popupValueSet(PopupValueSet.EDITMODES.DETAILSONLY, false);
       }
     });
     miNewVSV.addEventListener(Events.ON_CLICK, new EventListener()
     {
       public void onEvent(Event event) throws Exception
       {
-        window.popupDetails(PopupWindow.EDITMODE_MAINTAIN_VERSION_NEW);
+        window.popupValueSet(PopupValueSet.EDITMODES.CREATE_NEW_VERSION, true);
       }
     });
     miEdit.addEventListener(Events.ON_CLICK, new EventListener()
     {
       public void onEvent(Event event) throws Exception
       {
-        window.popupDetails(PopupWindow.EDITMODE_MAINTAIN);
+        window.popupValueSet(PopupValueSet.EDITMODES.MAINTAIN, false);
       }
     });
     miDeepLink.addEventListener(Events.ON_CLICK, new EventListener()
@@ -614,7 +630,9 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-        window.popupDetails(PopupWindow.EDITMODE_UPDATESTATUS);
+        // TODO
+        //window.popupValueSet(PopupValueSet.EDITMODES.MAINTAIN, false);
+//        window.popupDetails(PopupWindow.EDITMODE_UPDATESTATUS);
       }
     });
 
@@ -623,38 +641,40 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
     miDeepLink.setParent(contextMenu);
     if (SessionHelper.isUserLoggedIn())
     {
-      
-        TreeNode tn = (TreeNode) ti.getValue();
-        Object data = tn.getData();               
-        boolean allowed = true;
-        if (data instanceof CodeSystem)
+
+      TreeNode tn = (TreeNode) ti.getValue();
+      Object data = tn.getData();
+      boolean allowed = true;
+      if (data instanceof CodeSystem)
+      {
+        allowed = AssignTermHelper.isUserAllowed(data);
+      }
+      else if (data instanceof CodeSystemVersion)
+      {
+        allowed = AssignTermHelper.isUserAllowed(((CodeSystemVersion) data).getCodeSystem());
+      }
+      else if (data instanceof ValueSet)
+      {
+        allowed = AssignTermHelper.isUserAllowed(data);
+      }
+      else if (data instanceof ValueSetVersion)
+      {
+        allowed = AssignTermHelper.isUserAllowed(((ValueSetVersion) data).getValueSet());
+      }
+
+      if (allowed)
+      {
+        new Menuseparator().setParent(contextMenu);
+        miEdit.setParent(contextMenu);
+        miStatus.setParent(contextMenu);
+        new Menuseparator().setParent(contextMenu);
+        miNewVSV.setParent(contextMenu);
+        if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN))
         {
-            allowed = AssignTermHelper.isUserAllowed(data);
+          new Menuseparator().setParent(contextMenu);
+          miRemoveVS.setParent(contextMenu);
         }
-        else if (data instanceof CodeSystemVersion)
-        {
-            allowed = AssignTermHelper.isUserAllowed(((CodeSystemVersion)data).getCodeSystem());
-        }
-        else if (data instanceof ValueSet)
-        {
-            allowed = AssignTermHelper.isUserAllowed(data);
-        }
-        else if (data instanceof ValueSetVersion)
-        {
-            allowed = AssignTermHelper.isUserAllowed(((ValueSetVersion)data).getValueSet());
-        }  
-      
-        if(allowed){
-            new Menuseparator().setParent(contextMenu);
-            miEdit.setParent(contextMenu);
-            miStatus.setParent(contextMenu);
-            new Menuseparator().setParent(contextMenu);
-            miNewVSV.setParent(contextMenu);
-            if(SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN)){
-                new Menuseparator().setParent(contextMenu);
-                miRemoveVS.setParent(contextMenu);
-            }
-        }
+      }
     }
     createMenuitems(window, ti, contextMenu);
   }
@@ -670,11 +690,12 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
 
     Label lName = new Label(vs.getName());
     lName.setStyle("");
-    if(vs.getValueSetVersions() != null &&
-       vs.getValueSetVersions().size() == 1 && 
-       vs.getValueSetVersions().get(0).getStatus() != null && 
-       vs.getValueSetVersions().get(0).getStatus() != 1){
-        changeStyleByStatus(lName, vs.getValueSetVersions().get(0).getStatus());
+    if (vs.getValueSetVersions() != null
+            && vs.getValueSetVersions().size() == 1
+            && vs.getValueSetVersions().get(0).getStatus() != null
+            && vs.getValueSetVersions().get(0).getStatus() != 1)
+    {
+      changeStyleByStatus(lName, vs.getValueSetVersions().get(0).getStatus());
     }
     treeCell.appendChild(lName);
 
@@ -718,28 +739,31 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
     Menuitem miStatus = new Menuitem(Labels.getLabel("treeitemRendererCSEV.editStatus"));
     Menuitem export = new Menuitem(Labels.getLabel("treeitemRenderer_CS_VS_DV.exportCodeSystemVersion"));
     Menuitem miRemoveVSV = new Menuitem(Labels.getLabel("common.deleteVersion"));
-    
+
     miRemoveVSV.addEventListener(Events.ON_CLICK, new EventListener()
     {
       public void onEvent(Event event) throws Exception
       {
-            Messagebox.show("Hiermit löschen sie die Value Set Version!", 
-                            "Value Set Version löschen", Messagebox.YES | Messagebox.NO, Messagebox.INFORMATION, new org.zkoss.zk.ui.event.EventListener() {
-              public void onEvent(Event evt) throws InterruptedException {
-                  if (evt.getName().equals("onYes")) {
-                    window.removeEntity();
+        Messagebox.show("Hiermit löschen sie die Value Set Version!",
+                "Value Set Version löschen", Messagebox.YES | Messagebox.NO, Messagebox.INFORMATION, new org.zkoss.zk.ui.event.EventListener()
+                {
+                  public void onEvent(Event evt) throws InterruptedException
+                  {
+                    if (evt.getName().equals("onYes"))
+                    {
+                      window.removeEntity();
+                    }
                   }
-              }
-            });
+                });
       }
     });
-    
+
     // Eventlistener
     miDetails.addEventListener(Events.ON_CLICK, new EventListener()
     {
       public void onEvent(Event event) throws Exception
       {
-        window.popupDetails(PopupWindow.EDITMODE_DETAILSONLY);
+        window.popupValueSet(PopupValueSet.EDITMODES.DETAILSONLY, true);
       }
     });
 
@@ -747,7 +771,7 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-        window.popupDetails(PopupWindow.EDITMODE_MAINTAIN_VERSION_NEW);
+        window.popupValueSet(PopupValueSet.EDITMODES.CREATE_NEW_VERSION, true);
       }
     });
 
@@ -755,7 +779,7 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-        window.popupDetails(PopupWindow.EDITMODE_MAINTAIN_VERSION_EDIT);
+        window.popupValueSet(PopupValueSet.EDITMODES.MAINTAIN, true);
       }
     });
 
@@ -773,7 +797,8 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-        window.popupDetails(PopupWindow.EDITMODE_UPDATESTATUS_VERSION);
+        // TODO
+        // TODO    window.popupDetails(PopupWindow.EDITMODE_UPDATESTATUS_VERSION);
       }
     });
 
@@ -789,76 +814,80 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
     miDeepLink.setParent(contextMenu);
     if (SessionHelper.isUserLoggedIn())
     {
-      
-        TreeNode tn = (TreeNode) ti.getValue();
-        Object data = tn.getData();               
-        boolean allowed = true;
-        if (data instanceof CodeSystem)
+      // TODO Rechte
+      /*TreeNode tn = (TreeNode) ti.getValue();
+      Object data = tn.getData();
+      boolean allowed = true;
+      if (data instanceof CodeSystem)
+      {
+        allowed = AssignTermHelper.isUserAllowed(data);
+      }
+      else if (data instanceof CodeSystemVersion)
+      {
+        allowed = AssignTermHelper.isUserAllowed(((CodeSystemVersion) data).getCodeSystem());
+      }
+      else if (data instanceof ValueSet)
+      {
+        allowed = AssignTermHelper.isUserAllowed(data);
+      }
+      else if (data instanceof ValueSetVersion)
+      {
+        allowed = AssignTermHelper.isUserAllowed(((ValueSetVersion) data).getValueSet());
+      }
+
+      if (allowed)*/
+      {
+        new Menuseparator().setParent(contextMenu);
+        miEditVSV.setParent(contextMenu);
+        miStatus.setParent(contextMenu);
+        new Menuseparator().setParent(contextMenu);
+        miNewVSV.setParent(contextMenu);
+        if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN))
         {
-            allowed = AssignTermHelper.isUserAllowed(data);
+          new Menuseparator().setParent(contextMenu);
+          miRemoveVSV.setParent(contextMenu);
         }
-        else if (data instanceof CodeSystemVersion)
-        {
-            allowed = AssignTermHelper.isUserAllowed(((CodeSystemVersion)data).getCodeSystem());
-        }
-        else if (data instanceof ValueSet)
-        {
-            allowed = AssignTermHelper.isUserAllowed(data);
-        }
-        else if (data instanceof ValueSetVersion)
-        {
-            allowed = AssignTermHelper.isUserAllowed(((ValueSetVersion)data).getValueSet());
-        }  
-      
-        if(allowed){  
-            new Menuseparator().setParent(contextMenu);
-            miEditVSV.setParent(contextMenu);
-            miStatus.setParent(contextMenu);
-            new Menuseparator().setParent(contextMenu);
-            miNewVSV.setParent(contextMenu);
-            if(SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN)){
-                new Menuseparator().setParent(contextMenu);
-                miRemoveVSV.setParent(contextMenu);
-            }
-        }
+      }
     }
-    
+
     new Menuseparator().setParent(contextMenu);
     export.setParent(contextMenu);
-    
-    if(SessionHelper.isCollaborationActive()){
-        
-        TreeNode tn = (TreeNode) ti.getValue();
-        Object data = tn.getData();               
-        boolean allowed = true;
-        if (data instanceof CodeSystem)
+
+    if (SessionHelper.isCollaborationActive())
+    {
+
+      TreeNode tn = (TreeNode) ti.getValue();
+      Object data = tn.getData();
+      boolean allowed = true;
+      if (data instanceof CodeSystem)
+      {
+        allowed = AssignTermHelper.isAnyUserAssigned(((CodeSystem) data).getId(), "CodeSystem");
+      }
+      else if (data instanceof CodeSystemVersion)
+      {
+        allowed = AssignTermHelper.isAnyUserAssigned(((CodeSystemVersion) data).getCodeSystem().getId(), "CodeSystem");
+      }
+      else if (data instanceof ValueSet)
+      {
+        allowed = AssignTermHelper.isAnyUserAssigned(((ValueSet) data).getId(), "ValueSet");
+      }
+      else if (data instanceof ValueSetVersion)
+      {
+        allowed = AssignTermHelper.isAnyUserAssigned(((ValueSetVersion) data).getValueSet().getId(), "ValueSet");
+      }
+      if (allowed)
+      {//Kein IV, kein Vorschlag
+        new Menuseparator().setParent(contextMenu);
+        Menuitem miProposal = new Menuitem(Labels.getLabel("collab.proposeToExistingEntry"));
+        miProposal.addEventListener(Events.ON_CLICK, new EventListener()
         {
-            allowed = AssignTermHelper.isAnyUserAssigned(((CodeSystem)data).getId(), "CodeSystem");
-        }
-        else if (data instanceof CodeSystemVersion)
-        {
-            allowed = AssignTermHelper.isAnyUserAssigned(((CodeSystemVersion)data).getCodeSystem().getId(), "CodeSystem");
-        }
-        else if (data instanceof ValueSet)
-        {
-            allowed = AssignTermHelper.isAnyUserAssigned(((ValueSet)data).getId(), "ValueSet");
-        }
-        else if (data instanceof ValueSetVersion)
-        {
-            allowed = AssignTermHelper.isAnyUserAssigned(((ValueSetVersion)data).getValueSet().getId(), "ValueSet");
-        }
-        if(allowed){//Kein IV, kein Vorschlag
-            new Menuseparator().setParent(contextMenu);
-            Menuitem miProposal = new Menuitem(Labels.getLabel("collab.proposeToExistingEntry"));
-            miProposal.addEventListener(Events.ON_CLICK, new EventListener()
-            {
-              public void onEvent(Event event) throws Exception
-              {
-                window.openPopupProposalExistingCSVS(false);
-              }
-            });
-            miProposal.setParent(contextMenu);
-        }
+          public void onEvent(Event event) throws Exception
+          {
+            window.openPopupProposalExistingCSVS(false);
+          }
+        });
+        miProposal.setParent(contextMenu);
+      }
     }
   }
 
@@ -1105,9 +1134,9 @@ public class TreeitemRenderer_CS_VS_DV implements TreeitemRenderer
   {
     // Style ändern
     String style = "";
-    if(l.getStyle() != null)
+    if (l.getStyle() != null)
       style = l.getStyle();
-    
+
     switch (status)
     {
       case 0: // Deaktiviert

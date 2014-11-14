@@ -1,18 +1,6 @@
-/* 
- * CTS2 based Terminology Server and Terminology Browser
- * Copyright (C) 2014 FH Dortmund: Peter Haas, Robert Muetzner
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
 package de.fhdo.tree;
 
@@ -254,40 +242,6 @@ public class GenericTreeItemRenderer implements TreeitemRenderer
   {
     Treecell cell = null;
 
-    /*if (data.getData() != null && data.getData() instanceof Treecell)
-     {
-     cell = (Treecell) data.getData();
-     }
-     else if (header.isComponent())
-     {
-     if (data.getData() instanceof Boolean)
-     {
-     // Checkbox
-     cell = new Treecell();
-     cell.appendChild(addCheckbox((Boolean) data.getData(), "", "", data, header, rowData));
-     }
-     else if (data.getData() instanceof Component)
-     {
-     cell = new Treecell();
-     cell.appendChild((Component) data.getData());
-     }
-     }
-     else if (data.getData() != null)
-     {
-     if (data.getData() instanceof Date)
-     {
-     cell = new Treecell();
-     cell.appendChild(formatDate((Date) data.getData(), header.getDatatype()));
-     }
-     }
-
-     if (cell == null)
-     {
-     cell = new Treecell();
-     if (data.getData() != null)
-     cell.setLabel(data.getData().toString());
-     }*/
-
     if (data.getData() != null && data.getData() instanceof Treecell)
     {
       cell = (Treecell) data.getData();
@@ -303,8 +257,10 @@ public class GenericTreeItemRenderer implements TreeitemRenderer
     if (cell != null)
     {
       if (data.getStyle() != null)
+      {
         cell.setStyle(data.getStyle());
-
+      }
+      
       // Zelle editierbar machen
       cell.addEventListener(Events.ON_CLICK, new EventListener<Event>()
       {
@@ -401,9 +357,12 @@ public class GenericTreeItemRenderer implements TreeitemRenderer
         //cell.setLabel(getString(data.getData()));
         //logger.debug("setLabel (0): " + getString(data.getData()));
       }
-
+      
       Label l = new Label(label);
       cell.appendChild(l);
+      
+      if(data.getStyle() != null)
+        l.setStyle(data.getStyle());
 
       cell.disableClientUpdate(false);
       cell.invalidate();

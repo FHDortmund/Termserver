@@ -12,7 +12,7 @@
   <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./win"?>
   
   <window id="win" use="de.fhdo.gui.header.Menu">
-    <menubar autodrop="false" id="menubar">
+    <menubar autodrop="true" id="menubar">
        
       <menu label="${labels.common.terminologyBrowser}">
         <menupopup>
@@ -67,8 +67,8 @@
     </menubar>    
     <grid height="60px" sclass="GridLayoutNoBorder">
       <columns height="60px">
-        <column height="60px" width="325px" align="center" valign="middle">
-          <toolbar height="60px" style="margin-top:-4px;">
+        <column height="60px" hflex="min" align="center" valign="middle">
+          <toolbar height="60px" style="margin-top:-4px;" >
             <toolbarbutton id="tbb_GlobalSearch" 
                            label="${labels.common.searchGlob}"
                            image="/rsc/img/symbols/Search2_32x32.png" orient="vertical"

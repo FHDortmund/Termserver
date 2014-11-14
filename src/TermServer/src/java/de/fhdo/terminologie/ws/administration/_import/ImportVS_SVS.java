@@ -942,7 +942,7 @@ public class ImportVS_SVS
         ValueSet vs_db = (ValueSet) hb_session.get(ValueSet.class, parameter.getValueSet().getId());
 
         ValueSetVersion vsvNew = new ValueSetVersion();
-        vsvNew.setValidityRange(238l); // optional
+        vsvNew.setValidityRange(4l); // optional
         vsvNew.setName(codeListInfoMap.get("version"));
         vsvNew.setInsertTimestamp(date);
         vsvNew.setOid(codeListInfoMap.get("id"));
@@ -1032,7 +1032,7 @@ public class ImportVS_SVS
 
         //New Version
         ValueSetVersion vsvNew = new ValueSetVersion();
-        vsvNew.setValidityRange(238l); // empfohlen
+        vsvNew.setValidityRange(4l); // empfohlen
         vsvNew.setName(codeListInfoMap.get("version"));
         vsvNew.setInsertTimestamp(date);
         vsvNew.setOid(codeListInfoMap.get("id"));

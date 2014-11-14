@@ -93,7 +93,6 @@ public class ContentConcepts extends Window implements AfterCompose
   protected boolean draggable = false;
   protected boolean droppable = false;
   protected boolean showLinkedConcepts = true;
-//  private LinkedList<TreeNode> openPaths = new LinkedList<TreeNode>();
   protected ContentCSVSDefault parent;
   protected Radiogroup rgAssociationMode;
   private boolean isCollaboration;
@@ -530,18 +529,18 @@ public class ContentConcepts extends Window implements AfterCompose
 
   protected void intiDataContextMenuCS(Menupopup contextMenu)
   {
-    Menuitem miNewC1 = new Menuitem(Labels.getLabel("contentConcepts.newRootConcept"));
-    miNewC1.addEventListener(Events.ON_CLICK, new EventListener()
+    Menuitem miNewRootConcept = new Menuitem(Labels.getLabel("contentConcepts.newRootConcept"));
+    miNewRootConcept.addEventListener(Events.ON_CLICK, new EventListener()
     {
       public void onEvent(Event event) throws Exception
       {
-        showPopupConcept(PopupWindow.EDITMODE_CREATE, 3);
+        showPopupConcept(PopupConcept.EDITMODES.CREATE, PopupConcept.HIERARCHYMODE.ROOT);
       }
     });
 
     if (SessionHelper.isUserLoggedIn())
     {
-      miNewC1.setParent(contextMenu);
+      miNewRootConcept.setParent(contextMenu);
     }
   }
 
@@ -589,15 +588,28 @@ public class ContentConcepts extends Window implements AfterCompose
     }
   }
 
-  public void showPopupConcept(int mode)
+  public void onClickedNewRootConcept()
+  {
+    showPopupConcept(PopupConcept.EDITMODES.CREATE, PopupConcept.HIERARCHYMODE.ROOT);
+  }
+  public void onClickedEditConcept()
+  {
+    showPopupConcept(PopupConcept.EDITMODES.MAINTAIN, null);
+  }
+  public void onClickedShowConcept()
+  {
+    showPopupConcept(PopupConcept.EDITMODES.DETAILSONLY, null);
+  }
+  
+  /*public void showPopupConcept(int mode)
   {
     showPopupConcept(mode, 0);
-  }
+  }*/
 
-  public void showPopupConcept(int editMode, int hierarchyMode)
+  public void showPopupConcept(PopupConcept.EDITMODES editMode, PopupConcept.HIERARCHYMODE hierarchyMode)
   {
     // kein Element ausgewählt, also nichts machen
-    if (tnSelected == null && editMode != PopupWindow.EDITMODE_CREATE)
+    if (tnSelected == null && editMode != PopupConcept.EDITMODES.CREATE)
     {
       try
       {
@@ -621,12 +633,13 @@ public class ContentConcepts extends Window implements AfterCompose
     data.put("VersionId", versionId);
     data.put("TreeNode", tnSelected);
 
-    if (editMode == PopupWindow.EDITMODE_CREATE)
+    if (editMode == PopupConcept.EDITMODES.CREATE)
     {
       data.put("Association", hierarchyMode);  /* mode 1 = gleiche ebene, 2 = subebene, 3 = oberste ebene */
       if (csevSelected != null)
       {
-        data.put("CSEVAssociated", csevSelected); // für assoziationen 
+        data.put("CSEVAssociated", csevSelected); // für assoziationen
+        logger.debug("CSEVAssociated: " + csevSelected.getVersionId());
       }
     }
     else
@@ -636,7 +649,8 @@ public class ContentConcepts extends Window implements AfterCompose
     try
     {
       final Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupConcept.zul", this, data);
-      w.doOverlapped();
+      //w.doOverlapped();
+      w.doModal();
     }
     catch (Exception e)
     {

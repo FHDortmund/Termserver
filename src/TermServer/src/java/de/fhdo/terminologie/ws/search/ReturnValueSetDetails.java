@@ -122,8 +122,8 @@ public class ReturnValueSetDetails
 
         if (valueSet != null)
         {
-          valueSet.setStatus(null);
-          valueSet.setStatusDate(null);
+          //valueSet.setStatus(null);
+          //valueSet.setStatusDate(null);
           //valueSet.setMetadataParameters(null);
           
           for(MetadataParameter mp : valueSet.getMetadataParameters())

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="winConcepts" border="none" height="100%" width="100%" use="de.fhdo.gui.main.content.ContentConcepts">
+    <borderlayout>
+      <!-- specifies information about the cs/vs, defines filter, ... -->
+      <north border="0">
+        <hbox style="margin-left: 8px; margin-top:8px; margin-bottom:8px;">
+          <div>
+            <label value="${labels.common.version}: "/>
+            <combobox id="cbVersion" readonly="true" width="300px" onSelect="winConcepts.onVersionChanged()"/>
+          </div>
+        </hbox>
+      </north>
+      <center border="0">
+        <div width="100%" height="100%">
+          
+          <paging id="paging" visible="false" onPaging="winConcepts.onPaging(event)" />
+          <tree id="treeConcepts" vflex="true" width="100%" height="100%" zclass="z-tree" span="0" visible="true"
+                onSelect="winConcepts.onConceptSelect()"
+                onPaging="winConcepts.onPaging(event)">
+            <treecols sizable="true">
+              <treecol label="${labels.common.name}" sort="auto" id="tcTerm" hflex="min" />
+              <treecol label="${labels.common.code}" sort="auto" id="tcCode" width="180px" />
+              <treecol label="${labels.common.source}" sort="auto" id="treecolSource" hflex="min" visible="false" 
+              />
+            </treecols>
+          </tree>
+          
+          
+          <hbox id="message" visible="false" style="margin-left: 8px; margin-top:8px; margin-bottom:8px;">
+            <image src="/rsc/img/symbols/warning_32x32.png"/>
+            <div style="margin-left: 8px; margin-top:8px;">
+              <label id="labelMessage" value="" />
+            </div>
+          </hbox>
+          
+        </div>
+      </center>
+      <south border="0">
+        <div style="padding-top:5px; padding-left: 0px; ">
+          <div align="left" style="float:left; margin-bottom: 4px;">
+            <!--            <button id="bAssume" label="${labels.common.assumeConcept}" onClick="windowConcepts.assumeConcept()" 
+            visible="false" />-->
+                      
+            <!-- Kollaboration -->
+            <!--            <button id="bProposeNewConcept" label="${labels.collab.proposeNewConcept}" onClick="windowConcepts.proposeNewConcept()" 
+            visible="{windowConcepts.isCollaboration}" />-->
+            <!-- Kollaboration Ende -->
+            <button id="buttonNew" 
+                    label="${labels.contentConcepts.newRootConcept}"
+                    onClick="winConcepts.onNewClicked()" 
+                    image="/rsc/img/list/add.png"    
+                    visible="false" />
+            <button id="buttonNewSub" 
+                    label="${labels.popupConcept.createSubconcept}"
+                    onClick="winConcepts.onNewSubClicked()" 
+                    image="/rsc/img/list/add.png"    
+                    visible="false" />
+            <button id="buttonEdit" 
+                    label="${labels.common.edit}"
+                    onClick="winConcepts.onEditClicked()" 
+                    image="/rsc/img/list/pencil.png" 
+                    visible="false" 
+                    disabled="true"/>
+            <!--            <button id="bSearch" 
+            label="${labels.common.search}" 
+            onClick="winConcepts.showPopupConceptSearch()"
+            image="/rsc/img/list/folder_magnify.png"/>-->
+            <button id="buttonDetails"
+                    label="${labels.common.details}" 
+                    onClick="winConcepts.onDetailsClicked()" 
+                    image="/rsc/img/list/magnifier.png"
+                    disabled="true"/>
+          </div>
+          <div align="right">
+            <button id="buttonDeleteVersion"
+                    label="${labels.common.deleteVersion}" 
+                    onClick="winConcepts.onDeleteClicked()" 
+                    image="/rsc/img/symbols/delete_12x12.png"
+                    disabled="false"/>
+            <!--            <label value="${labels.contentConcepts.moreFunctions}" style="color:gray"/>
+            <button id="bNew" label="${labels.contentConcepts.newConcept}" onClick="windowConcepts.onClickedNewRootConcept()" image="/rsc/img/list/add.png"    visible="false" />
+            <button id="bEdit" label="${labels.common.edit}" onClick="windowConcepts.onClickedEditConcept()" image="/rsc/img/list/pencil.png" visible="false" disabled="true"/>
+            <button id="bSearch" label="${labels.common.search}" onClick="windowConcepts.showPopupConceptSearch()" image="/rsc/img/list/folder_magnify.png"/>
+            <button id="bDetails" label="${labels.common.details}" onClick="windowConcepts.onClickedShowConcept()" image="/rsc/img/list/magnifier.png"              disabled="true"/>             -->
+          </div>
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

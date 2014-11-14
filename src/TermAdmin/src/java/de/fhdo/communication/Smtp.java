@@ -102,7 +102,7 @@ public class Smtp
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+      LoggingOutput.outputException(e, this);
       return e.getLocalizedMessage();
     }
     return "";

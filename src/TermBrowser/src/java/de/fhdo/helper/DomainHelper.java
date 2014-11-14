@@ -392,10 +392,29 @@ public class DomainHelper
   {
     fillCombobox(cb, DomainId, SelectedDomainValueCd, false);
   }
+  
+  public void fillCombobox(final Combobox cb, long DomainId, final long SelectedDomainValueId)
+  {
+    logger.debug("fillCombobox mit selected dv-id: " + SelectedDomainValueId);
+    List<DomainValue> list = DomainHelper.getInstance().getDomainList(DomainId); 
+    String selectedCd = "";
+    for(DomainValue dv : list)
+    {
+      if(dv.getDomainValueId() != null && dv.getDomainValueId().longValue() == SelectedDomainValueId)
+      {
+        selectedCd = dv.getDomainCode();
+        break;
+      }
+    }
+    
+    logger.debug("selectedCd: " + selectedCd);
+    
+    fillCombobox(cb, DomainId, selectedCd, false);
+  }
 
   public void fillCombobox(final Combobox cb, long DomainId, final String SelectedDomainValueCd, final boolean disabled)
   {
-    logger.debug("fillCombobox mit DomainID: " + DomainId);
+    logger.debug("fillCombobox mit DomainID: " + DomainId + " und selectedCd: " + SelectedDomainValueCd);
 
     List<DomainValue> list = DomainHelper.getInstance().getDomainList(DomainId);
 

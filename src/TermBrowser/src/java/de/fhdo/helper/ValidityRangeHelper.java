@@ -16,6 +16,7 @@
  */
 package de.fhdo.helper;
 
+import de.fhdo.Definitions;
 import de.fhdo.models.comparators.ComparatorStrings;
 import de.fhdo.terminologie.ws.search.ListDomainValuesRequestType;
 import de.fhdo.terminologie.ws.search.ListDomainValuesResponse;
@@ -95,7 +96,7 @@ public class ValidityRangeHelper {
         ListDomainValuesRequestType parameter   = new ListDomainValuesRequestType();
 
         parameter.setDomain(new Domain());
-        parameter.getDomain().setDomainId((long)9); // 9 = Validity Frage: Range Extern konfigurierbar oder hardcoded...
+        parameter.getDomain().setDomainId(Definitions.DOMAINID_CODESYSTEMVERSION_VALIDITYRANGE);
 
         ListDomainValuesResponse.Return response = WebServiceHelper.listDomainValues(parameter);
 

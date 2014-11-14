@@ -1,4 +1,4 @@
-/* 
+/*
  * CTS2 based Terminology Server and Terminology Browser
  * Copyright (C) 2014 FH Dortmund: Peter Haas, Robert Muetzner
  *
@@ -16,55 +16,43 @@
  */
 package de.fhdo.gui.main.modules;
 
-import de.fhdo.collaboration.db.CollaborationSession;
+import de.fhdo.Definitions;
 import de.fhdo.collaboration.helper.AssignTermHelper;
 import de.fhdo.gui.main.ContentCSVSDefault;
+import de.fhdo.helper.ArgumentHelper;
+import de.fhdo.helper.ComponentHelper;
+import de.fhdo.helper.DateTimeHelper;
 import de.fhdo.helper.DomainHelper;
-import de.fhdo.helper.LanguageHelper;
+import de.fhdo.helper.PropertiesHelper;
 import de.fhdo.helper.SessionHelper;
-import de.fhdo.helper.ValidityRangeHelper;
 import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.interfaces.IUpdateModal;
-import de.fhdo.models.comparators.ComparatorMetadataParameter;
-import de.fhdo.models.itemrenderer.ListitemRendererMetadataParameter;
-import de.fhdo.terminologie.ws.authoring.Authoring;
-import de.fhdo.terminologie.ws.authoring.Authoring_Service;
+import de.fhdo.list.GenericList;
+import de.fhdo.list.GenericListCellType;
+import de.fhdo.list.GenericListHeaderType;
+import de.fhdo.list.GenericListRowType;
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.ws.authoring.CreateCodeSystemRequestType;
 import de.fhdo.terminologie.ws.authoring.CreateCodeSystemResponse;
 import de.fhdo.terminologie.ws.authoring.MaintainCodeSystemVersionRequestType;
 import de.fhdo.terminologie.ws.authoring.MaintainCodeSystemVersionResponse;
-import de.fhdo.terminologie.ws.authoring.UpdateCodeSystemVersionStatusRequestType;
-import de.fhdo.terminologie.ws.authoring.UpdateCodeSystemVersionStatusResponse;
 import de.fhdo.terminologie.ws.authoring.VersioningType;
-import de.fhdo.terminologie.ws.search.ListCodeSystemsInTaxonomyRequestType;
+import de.fhdo.terminologie.ws.search.ListCodeSystemsRequestType;
+import de.fhdo.terminologie.ws.search.ListCodeSystemsResponse;
 import de.fhdo.terminologie.ws.search.ReturnCodeSystemDetailsRequestType;
 import de.fhdo.terminologie.ws.search.ReturnCodeSystemDetailsResponse;
-import java.util.ArrayList;
+import de.fhdo.terminologie.ws.search.Status;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zkplus.databind.AnnotateDataBinder;
+import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
-import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Datebox;
-import org.zkoss.zul.Label;
-import org.zkoss.zul.Listbox;
-import org.zkoss.zul.Listheader;
+import org.zkoss.zul.Include;
 import org.zkoss.zul.Messagebox;
-import org.zkoss.zul.SimpleListModel;
-import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 import types.termserver.fhdo.de.CodeSystem;
 import types.termserver.fhdo.de.CodeSystemVersion;
@@ -73,61 +61,367 @@ import types.termserver.fhdo.de.MetadataParameter;
 
 /**
  *
- * @author Sven Becker
- * edited 2014-08-27 by Robert Mützner <robert.muetzner@fh-dortmund.de>
+ * @author Robert Mützner <robert.muetzner@fh-dortmund.de>
  */
-public class PopupCodeSystem extends PopupWindow implements IUpdateModal
+public class PopupCodeSystem extends Window implements AfterCompose
 {
 
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
-  private CodeSystem cs = null;
-  private CodeSystemVersion csv = null;
-  private Datebox dateBoxED,
-          dateBoxRD,
-          dateBoxSD;
-  private Checkbox cbNewVersion, cbCSVLicenced;
-  private Button bCreate, bOidBeantragen;
-  private Label lReq, lName, lNameVersion, lLic;
-  private Textbox tbCSName, tbCSDescription, tbCSVName, tbCSVDescription, tbCSVLicenceHolder, tbCSVSource, tbCSVOId, tbCSVStatus, tbCSDescriptionEng, tbWebsite;
-  private Listbox listMetadataParameter;
-  private Combobox cboxPreferredLanguage, cboxCSVValidityRange;
-  //private Combobox cboxCSVValidityRange;
-  private boolean toEdit = false;
 
-  @Override
-  public void doAfterComposeCustom()
+  public static enum EDITMODES
   {
-    //cboxPreferredLanguage.setModel(LanguageHelper.getListModelList());
-    cboxCSVValidityRange.setModel(ValidityRangeHelper.getListModelList());
-    
-    
+    NONE, DETAILSONLY, CREATE, MAINTAIN, CREATE_NEW_VERSION
   }
 
-  public void onClick$bOidBeantragen()
+  private CodeSystem codeSystem = null;
+  private CodeSystemVersion codeSystemVersion = null;
+
+  private EDITMODES editMode;
+
+  private boolean guiCodesystemMinimalVisible;
+  private boolean guiCodesystemVersionMinimalVisible;
+  private boolean guiCodesystemExpandableVisible;
+  private boolean guiCodesystemVersionExpandableVisible;
+
+  private boolean showVersion;
+  
+  private IUpdateModal updateListener;
+
+  GenericList genericList;
+
+  public PopupCodeSystem()
   {
+    logger.debug("PopupCodeSystem()");
+
+    // load from arguments
+    codeSystem = (CodeSystem) ArgumentHelper.getWindowArgument("CS");
+    codeSystemVersion = (CodeSystemVersion) ArgumentHelper.getWindowArgument("CSV");
+
+    showVersion = (codeSystemVersion != null);
+
+    editMode = EDITMODES.NONE;
+    Object o = ArgumentHelper.getWindowArgument("EditMode");
+    if (o != null)
+    {
+      try
+      {
+        editMode = (PopupCodeSystem.EDITMODES) o;
+//        int em = Integer.parseInt(o.toString());
+//        logger.debug("Edit Mode: " + em);
+//        editMode = EDITMODES.values()[em];
+      }
+      catch (NumberFormatException ex)
+      {
+        LoggingOutput.outputException(ex, PopupCodeSystem.class);
+      }
+    }
+    logger.debug("Edit Mode: " + editMode.name());
+
+    /*if(arg.get("EditMode") != null)
+     editMode = (Integer)arg.get("EditMode");
+     window       = (Window)comp;
+     windowParent = (Window)comp.getParent();
+
+     doAfterComposeCustom();
+     editMode(editMode);*/
+    initData();
+  }
+
+  public void afterCompose()
+  {
+    logger.debug("afterCompose()");
+
+    if (codeSystemVersion == null)
+    {
+      ComponentHelper.setVisible("gbVersion", false, this);
+      codeSystemVersion = new CodeSystemVersion();
+    }
+
+    setWindowTitle();
+    showDetailsVisibilty();
+
+    // fill domain values with selected codes
+    logger.debug("showVersion: " + showVersion);
+    if (showVersion)
+    {
+      DomainHelper.getInstance().fillCombobox((Combobox) getFellow("cboxCSVValidityRange"), de.fhdo.Definitions.DOMAINID_CODESYSTEMVERSION_VALIDITYRANGE,
+              codeSystemVersion == null ? "" : "" + codeSystemVersion.getValidityRange());
+
+      DomainHelper.getInstance().fillCombobox((Combobox) getFellow("cboxStatus"), de.fhdo.Definitions.DOMAINID_STATUS,
+              codeSystemVersion == null ? "" : "" + codeSystemVersion.getStatus());
+
+      DomainHelper.getInstance().fillCombobox((Combobox) getFellow("cboxPreferredLanguage"), de.fhdo.Definitions.DOMAINID_LANGUAGECODES,
+              codeSystemVersion == null ? "" : codeSystemVersion.getPreferredLanguageCd());
+
+      // load data without bindings (dates, ...)
+      if (codeSystemVersion.getExpirationDate() != null)
+        ((Datebox) getFellow("dateBoxED")).setValue(new Date(codeSystemVersion.getExpirationDate().toGregorianCalendar().getTimeInMillis()));
+      if (codeSystemVersion.getReleaseDate() != null)
+        ((Datebox) getFellow("dateBoxRD")).setValue(new Date(codeSystemVersion.getReleaseDate().toGregorianCalendar().getTimeInMillis()));
+      if (codeSystemVersion.getStatusDate() != null)
+        ((Datebox) getFellow("dateBoxSD")).setValue(new Date(codeSystemVersion.getStatusDate().toGregorianCalendar().getTimeInMillis()));
+    }
+
+    initListMetadata();
+
+    showComponents();
+  }
+
+  private void showComponents()
+  {
+    logger.debug("showComponents()");
+
+    List<String> ignoreList = new LinkedList<String>();
+    ignoreList.add("tabpanelMetaparameter");
+    ignoreList.add("buttonExpandCS");
+    ignoreList.add("buttonExpandCSV");
+     
+    boolean readOnly = (editMode == EDITMODES.DETAILSONLY || editMode == EDITMODES.NONE);
+    ComponentHelper.doDisableAll(getFellow("tabboxFilter"), readOnly, ignoreList);
+
+    logger.debug("version checked: " + (editMode == EDITMODES.CREATE_NEW_VERSION || editMode == EDITMODES.CREATE ? "true" : "false"));
+
+    ((Checkbox) getFellow("cbNewVersion")).setVisible(editMode == EDITMODES.CREATE || editMode == EDITMODES.CREATE_NEW_VERSION || editMode == EDITMODES.MAINTAIN);
+    ((Checkbox) getFellow("cbNewVersion")).setChecked(editMode == EDITMODES.CREATE_NEW_VERSION || editMode == EDITMODES.CREATE);
+    ((Checkbox) getFellow("cbNewVersion")).setDisabled(editMode != EDITMODES.MAINTAIN);
+
+    ComponentHelper.setVisible("bCreate", editMode == EDITMODES.CREATE || editMode == EDITMODES.CREATE_NEW_VERSION || editMode == EDITMODES.MAINTAIN, this);
+
+    //((Button)getFellow("bCreate")).setLabel(Labels.getLabel("common.save"));
+  }
+
+  public void onOkClicked()
+  {
+    logger.debug("onOkClicked() - save data...");
+
+    if (showVersion)
+    {
+      // save data without bindings (dates, ...)
+      Date date = ((Datebox) getFellow("dateBoxED")).getValue();
+      if (date != null)
+        codeSystemVersion.setExpirationDate(DateTimeHelper.dateToXMLGregorianCalendar(date));
+      else
+        codeSystemVersion.setExpirationDate(null);
+
+      date = ((Datebox) getFellow("dateBoxRD")).getValue();
+      if (date != null)
+        codeSystemVersion.setReleaseDate(DateTimeHelper.dateToXMLGregorianCalendar(date));
+      else
+        codeSystemVersion.setReleaseDate(null);
+
+      codeSystemVersion.setPreferredLanguageCd(DomainHelper.getInstance().getComboboxCd((Combobox) getFellow("cboxPreferredLanguage")));
+      logger.debug("getPreferredLanguageCd: " + codeSystemVersion.getPreferredLanguageCd());
+
+      // Range of Validity
+      try
+      {
+        codeSystemVersion.setValidityRange(Long.parseLong(DomainHelper.getInstance().getComboboxCd((Combobox) getFellow("cboxCSVValidityRange"))));
+        logger.debug("getValidityRange: " + codeSystemVersion.getValidityRange());
+      }
+      catch (Exception ex)
+      {
+      }
+
+      // check mandatory fields
+      if (codeSystemVersion.getValidityRange() <= 0)
+        Messagebox.show(Labels.getLabel("popupCodeSystem.editCodeSystemValidityRangeFailed"), "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+    }
+
+    boolean success = false;
+
+    logger.debug("editMode: " + editMode.name());
 
     try
     {
-      logger.debug("Öffnen des OID Antragsformulars");
-
-      Map map = new HashMap();
-      map.put("version", csv);
-
-      Window win = (Window) Executions.createComponents(
-              "/gui/main/modules/oidEnquiry.zul", null, map);
-      ((OidEnquiry) win).setUpdateInterface(this);
-
-      win.doModal();
+      // -> status date can't be updated manually
+      switch (editMode)
+      {
+        case CREATE:
+          success = save_Create();
+          break;
+        case MAINTAIN:
+          success = save_MaintainVersion();
+          break;
+        case CREATE_NEW_VERSION:
+          success = save_MaintainVersion();
+          break;
+      }
     }
     catch (Exception ex)
     {
-      logger.debug("Fehler beim Öffnen der UserDetails: " + ex.getLocalizedMessage());
-      ex.printStackTrace();
+      Messagebox.show(ex.getLocalizedMessage());
+      LoggingOutput.outputException(ex, this);
+
+      success = false;
     }
+
+    if (success)
+    {
+      if(updateListener != null)
+      {
+        if(editMode == EDITMODES.MAINTAIN || editMode == EDITMODES.CREATE_NEW_VERSION)
+        {
+          updateListener.update(codeSystem, true);
+        }
+        else if(editMode == EDITMODES.CREATE)
+        {
+          updateListener.update(codeSystem, false);
+        }
+      }
+      this.detach();
+    }
+
   }
 
-  private void loadDetails()
+  public boolean save_Create()
   {
+    logger.debug("save_Create()");
+
+    if (checkIfCodeSystemExists(codeSystem.getName()))
+      return false;
+
+    // Liste leeren, da hier so viele CSVs drin stehen wie es Versionen gibt. Als Parameter darf aber nur genau EINE CSV drin stehen.
+    codeSystem.getCodeSystemVersions().clear();
+    codeSystem.getCodeSystemVersions().add(codeSystemVersion);
+
+    CreateCodeSystemRequestType parameter = new CreateCodeSystemRequestType();
+
+    // Login, cs
+    parameter.setLoginToken(de.fhdo.helper.SessionHelper.getSessionId());
+    parameter.setCodeSystem(codeSystem);
+
+    // WS aufruf
+    codeSystemVersion.setCodeSystem(null); // XML Zirkel verhindern
+    CreateCodeSystemResponse.Return response = WebServiceHelper.createCodeSystem(parameter);
+    codeSystemVersion.setCodeSystem(codeSystem);  // Nach WS zirkel wiederherstellen
+
+    // Message über Erfolg/Misserfolg                
+    if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
+    {
+      AssignTermHelper.assignTermToUser(response.getCodeSystem());
+      Messagebox.show(Labels.getLabel("popupCodeSystem.newCodeSystemsuccessfullyCreated"));
+      //((ContentCSVSDefault) this.getParent()).refreshCS();  // TODO nicht schön
+      //this.detach();
+    }
+    else
+      Messagebox.show(Labels.getLabel("common.error") + "\n" + response.getReturnInfos().getMessage() + "\n" + Labels.getLabel("popupCodeSystem.codeSystemWasNotCreated"));
+
+    return true;
+  }
+
+  /**
+   * Edit a code system with version
+   *
+   * @param createNewVersion
+   * @return
+   */
+  public boolean save_MaintainVersion()
+  {
+    logger.debug("save_MaintainVersion()");
+    boolean createNewVersion = ((Checkbox) getFellow("cbNewVersion")).isChecked();
+    VersioningType versioning = new VersioningType();
+    versioning.setCreateNewVersion(createNewVersion);
+
+    logger.debug("createNewVersion: " + createNewVersion);
+    if (codeSystemVersion == null)
+      logger.debug("codeSystemVersion ist null");
+
+    if (showVersion)
+    {
+      // Liste leeren, da hier so viele CSVs drin stehen wie es Versionen gibt. Als Parameter darf aber nur genau EINE CSV drin stehen.
+      codeSystem.getCodeSystemVersions().clear();
+      codeSystem.getCodeSystemVersions().add(codeSystemVersion);
+    }
+    else
+    {
+      // beliebige Version nehmen, ohne Bedeutung
+      CodeSystemVersion csvTemp = codeSystem.getCodeSystemVersions().get(0);
+      codeSystem.getCodeSystemVersions().clear();
+      codeSystem.getCodeSystemVersions().add(csvTemp);
+    }
+
+    if (createNewVersion && (codeSystemVersion.getVersionId() == null || codeSystemVersion.getVersionId() <= 0))
+    {
+      codeSystemVersion.setVersionId(codeSystem.getCurrentVersionId());
+    }
+    logger.debug("cs-versionId: " + codeSystemVersion.getVersionId());
+
+    MaintainCodeSystemVersionRequestType parameter = new MaintainCodeSystemVersionRequestType();
+
+    // Login, CS, Versioning                       
+    parameter.setLoginToken(de.fhdo.helper.SessionHelper.getSessionId());
+    parameter.setCodeSystem(codeSystem);
+    parameter.setVersioning(versioning);
+
+    // WS aufruf
+    codeSystemVersion.setCodeSystem(null);    // Zirkel entfernen
+    MaintainCodeSystemVersionResponse.Return response = WebServiceHelper.maintainCodeSystemVersion(parameter);
+    codeSystemVersion.setCodeSystem(codeSystem);      // CS wieder einfügen (falls das mal später gebraucht wird)
+
+    // Message über Erfolg/Misserfolg
+    if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
+    {
+      if (parameter.getVersioning().isCreateNewVersion())
+        Messagebox.show(Labels.getLabel("popupCodeSystem.newVersionSuccessfullyCreated"));
+      else
+        Messagebox.show(Labels.getLabel("popupCodeSystem.editVersionChangedSuccessfully"));
+
+      //((ContentCSVSDefault) this.getParent()).refreshCS();
+    }
+    else
+      Messagebox.show(Labels.getLabel("common.error") + "\n" + response.getReturnInfos().getMessage() + "\n" + Labels.getLabel("popupCodeSystem.versionNotCreated"));
+
+    return true;
+  }
+
+  public void onCancelClicked()
+  {
+    this.detach();
+  }
+
+  private boolean checkIfCodeSystemExists(String name)
+  {
+    logger.debug("checkIfCodeSystemExists with name: " + name);
+
+    ListCodeSystemsRequestType request = new ListCodeSystemsRequestType();
+    request.setCodeSystem(new CodeSystem());
+    request.getCodeSystem().setName(name);
+
+    ListCodeSystemsResponse.Return response = WebServiceHelper.listCodeSystems(request);
+    if (response.getReturnInfos().getStatus() == Status.OK)
+    {
+      for (CodeSystem cs : response.getCodeSystem())
+      {
+        if (cs.getName() == null)
+          continue;
+
+        if (cs.getName().equalsIgnoreCase(name))
+          return true;
+      }
+    }
+    else
+    {
+      Messagebox.show(response.getReturnInfos().getMessage());
+      return true;
+    }
+
+    return false;
+  }
+
+  private void initData()
+  {
+    // Properties
+    guiCodesystemMinimalVisible = !PropertiesHelper.getInstance().isGuiCodesystemMinimal();
+    guiCodesystemVersionMinimalVisible = !PropertiesHelper.getInstance().isGuiCodesystemVersionMinimal();
+    guiCodesystemExpandableVisible = PropertiesHelper.getInstance().isGuiCodesystemExpandable();
+    guiCodesystemVersionExpandableVisible = PropertiesHelper.getInstance().isGuiCodesystemVersionExpandable();
+
+    logger.debug("guiCodesystemMinimalVisible: " + guiCodesystemMinimalVisible);
+    logger.debug("guiCodesystemVersionMinimalVisible: " + guiCodesystemVersionMinimalVisible);
+    logger.debug("guiCodesystemExpandableVisible: " + guiCodesystemExpandableVisible);
+    logger.debug("guiCodesystemVersionExpandableVisible: " + guiCodesystemVersionExpandableVisible);
+
+    // load data
     ReturnCodeSystemDetailsRequestType parameter = new ReturnCodeSystemDetailsRequestType();
 
     // Login
@@ -136,804 +430,261 @@ public class PopupCodeSystem extends PopupWindow implements IUpdateModal
       parameter.setLoginToken(SessionHelper.getSessionId());
     }
 
-    // CS und CSV
-    CodeSystem csTemp = new CodeSystem();
-    csTemp.setId(cs.getId());
-    if (csv != null)
+    //window.setTitle(Labels.getLabel("common.codeSystem") + " " + Labels.getLabel("common.details"));
+    if (codeSystem == null || editMode == EDITMODES.CREATE)
     {
-      CodeSystemVersion csvTemp = new CodeSystemVersion();
-      csTemp.getCodeSystemVersions().add(csvTemp);
-      csvTemp.setVersionId(csv.getVersionId());
-    }
-    parameter.setCodeSystem(csTemp);
-
-    ReturnCodeSystemDetailsResponse.Return response = WebServiceHelper.returnCodeSystemDetails(parameter);
-
-    // Meldung falls CreateConcept fehlgeschlagen
-    if (response.getReturnInfos().getStatus() != de.fhdo.terminologie.ws.search.Status.OK)
-    {
-      try
-      {
-        Messagebox.show(Labels.getLabel("common.error") + "\n" + Labels.getLabel("popupCodeSystem.loadCSDetailsFailed") + "\n\n" + response.getReturnInfos().getMessage());
-        return;
-      }
-      catch (Exception ex)
-      {
-        Logger.getLogger(PopupCodeSystem.class.getName()).log(Level.SEVERE, null, ex);
-      }
-    }
-    cs = response.getCodeSystem();
-
-    // Verison laden, falls angegeben       
-    if (csv != null)
-    {
-      Iterator<CodeSystemVersion> itCSV = cs.getCodeSystemVersions().iterator();
-      while (itCSV.hasNext())
-      {
-        CodeSystemVersion csvTemp2 = itCSV.next();
-        if (csvTemp2.getVersionId().equals(csv.getVersionId()))
-        {
-          csv = csvTemp2;
-          break;
-        }
-      }
-    }
-
-    loadMetaParameter();
-  }
-
-  @Override
-  protected void initializeDatabinder()
-  {
-    loadDatesIntoGUI();
-    binder = new AnnotateDataBinder(window);
-    binder.bindBean("cs", cs);
-    binder.bindBean("csv", csv);
-    binder.bindBean("versioning", versioning);
-    binder.loadAll();
-  }
-
-  private void createNewCodeSystemVersion()
-  {
-    csv = new CodeSystemVersion();
-    csv.setUnderLicence(Boolean.FALSE);             // sonst ist das hier null und das kann zu Problemen führen
-    csv.setVersionId(Long.MAX_VALUE);               // MaintainCodeSystemVersion fordert eine versionID > 0. Hat aber keine Auswirkung        
-    csv.setStatus(1);
-    versioning = new VersioningType();
-    versioning.setCreateNewVersion(Boolean.TRUE);   // sonst ist das hier null und das kann zu Problemen führen                
-    dateBoxED.setValue(null);
-    dateBoxRD.setValue(null);
-  }
-
-  private void loadMetaParameter()
-  {
-    // ItemRenderer
-    listMetadataParameter.setItemRenderer(new ListitemRendererMetadataParameter());
-
-    // Listhead und Listheader
-    Listheader lh1 = new Listheader("Parameter"),
-            lh2 = new Listheader("Datatype"),
-            lh3 = new Listheader("Parametertype");
-    listMetadataParameter.getListhead().getChildren().add(lh1);
-    listMetadataParameter.getListhead().getChildren().add(lh2);
-    listMetadataParameter.getListhead().getChildren().add(lh3);
-
-    // Metadaten laden    
-    List metadata = new ArrayList();
-    for (MetadataParameter mpd : cs.getMetadataParameters())
-    {
-      metadata.add(mpd);
-    }
-    listMetadataParameter.setModel(new SimpleListModel(metadata));
-
-    // sortieren
-    lh1.setSortAscending(new ComparatorMetadataParameter(true));
-    lh1.setSortDescending(new ComparatorMetadataParameter(false));
-    lh1.setSortDirection("descending");
-    lh1.sort(true);
-  }
-
-//  public void onInitRenderLater$cboxPreferredLanguage(Event e)
-//  {
-//    if (csv == null || csv.getPreferredLanguageCd() == null || csv.getPreferredLanguageCd().length() == 0)
-//      return;
-//
-//    Iterator<Comboitem> it = cboxPreferredLanguage.getItems().iterator();
-//    while (it.hasNext())
-//    {
-//      Comboitem ci = it.next();
-//      /*TODOif (csv.getPreferredLanguageId().compareTo(LanguageHelper.getLanguageIdByName(ci.getLabel())) == 0)
-//      {
-//        cboxPreferredLanguage.setSelectedItem(ci);
-//      }*/
-//      
-//      /*if (csv.getPreferredLanguageCd().compareTo(LanguageHelper.getLanguageIdByName(ci.getLabel())) == 0)
-//      {
-//        cboxPreferredLanguage.setSelectedItem(ci);
-//      }*/
-//    }
-//  }
-
-  public void onInitRenderLater$cboxCSVValidityRange(Event e)
-  {
-    if (csv == null || csv.getValidityRange() == null || csv.getValidityRange() < 1)
-      return;
-
-    Iterator<Comboitem> it = cboxCSVValidityRange.getItems().iterator();
-    while (it.hasNext())
-    {
-      Comboitem ci = it.next();
-      if (csv.getValidityRange().compareTo(ValidityRangeHelper.getValidityRangeIdByName(ci.getLabel())) == 0)
-      {
-        cboxCSVValidityRange.setSelectedItem(ci);
-      }
-    }
-  }
-
-  @Override
-  protected void loadDatesIntoGUI()
-  {
-    String preferredLanguageCd = "";
-    
-    if (csv != null)
-    {
-      if (csv.getExpirationDate() != null)
-        dateBoxED.setValue(new Date(csv.getExpirationDate().toGregorianCalendar().getTimeInMillis()));
-      if (csv.getReleaseDate() != null)
-        dateBoxRD.setValue(new Date(csv.getReleaseDate().toGregorianCalendar().getTimeInMillis()));
-      if (csv.getStatusDate() != null)
-        dateBoxSD.setValue(new Date(csv.getStatusDate().toGregorianCalendar().getTimeInMillis()));
-      
-      preferredLanguageCd = csv.getPreferredLanguageCd();
-    }
-    
-    DomainHelper.getInstance().fillCombobox(cboxPreferredLanguage, de.fhdo.Definitions.DOMAINID_LANGUAGECODES, preferredLanguageCd);
-  }
-
-  @Override
-  protected void editmodeDetails()
-  {
-    window.setTitle(Labels.getLabel("common.codeSystem") + " " + Labels.getLabel("common.details"));
-    cs = (CodeSystem) arg.get("CS");
-    csv = (CodeSystemVersion) arg.get("CSV");
-
-    loadDetails();
-
-    cbNewVersion.setVisible(false);
-    cbCSVLicenced.setDisabled(true);
-    dateBoxED.setDisabled(true);
-    dateBoxRD.setDisabled(true);
-    tbCSName.setReadonly(true);
-    tbCSDescription.setReadonly(true);
-    tbCSDescriptionEng.setReadonly(true);
-    tbWebsite.setReadonly(true);
-    tbCSVName.setReadonly(true);
-    tbCSVDescription.setReadonly(true);
-    //cboxCSVValidityRange.setReadonly(true);
-    cboxCSVValidityRange.setDisabled(true);
-    tbCSVLicenceHolder.setReadonly(true);
-    tbCSVSource.setReadonly(true);
-    tbCSVStatus.setReadonly(true);
-        //bOidBeantragen.setVisible(true);
-    //bOidBeantragen.setDisabled(true);
-    tbCSVOId.setVisible(true);
-    tbCSVOId.setReadonly(true);
-    //cboxPreferredLanguage.setReadonly(true);
-    cboxPreferredLanguage.setDisabled(true);
-    lReq.setVisible(false);
-    lName.setValue(Labels.getLabel("common.name"));
-    lNameVersion.setValue(Labels.getLabel("common.name"));
-    lLic.setValue(Labels.getLabel("common.licenced"));
-    bCreate.setVisible(false);
-  }
-
-  @Override
-  protected void editmodeCreate()
-  {
-    window.setTitle(Labels.getLabel("popupCodeSystem.createCodeSystem"));
-    cs = new CodeSystem();
-    createNewCodeSystemVersion();
-
-    cbNewVersion.setVisible(true);
-    cbNewVersion.setDisabled(true);
-    cbCSVLicenced.setDisabled(false);
-    dateBoxED.setDisabled(false);
-    dateBoxRD.setDisabled(false);
-    tbCSName.setReadonly(false);
-    tbCSDescription.setReadonly(false);
-    tbCSDescriptionEng.setReadonly(false);
-    tbWebsite.setReadonly(false);
-    tbCSVName.setReadonly(false);
-    tbCSVDescription.setReadonly(false);
-    //cboxCSVValidityRange.setReadonly(false);
-    cboxCSVValidityRange.setDisabled(false);
-    tbCSVLicenceHolder.setReadonly(true);
-    tbCSVSource.setReadonly(false);
-    tbCSVStatus.setReadonly(true);
-        //bOidBeantragen.setVisible(true);
-    //bOidBeantragen.setDisabled(false);
-    tbCSVOId.setVisible(true);
-    tbCSVOId.setReadonly(false);
-    //cboxPreferredLanguage.setReadonly(false);
-    cboxPreferredLanguage.setDisabled(false);
-    lReq.setVisible(true);
-    lName.setValue(Labels.getLabel("common.name") + "*");
-    lNameVersion.setValue(Labels.getLabel("common.name") + "*");
-    lLic.setValue(Labels.getLabel("common.licenced") + "*");
-    bCreate.setVisible(true);
-    bCreate.setLabel(Labels.getLabel("common.create"));
-  }
-
-  @Override
-  protected void editmodeMaintainVersionNew()
-  {
-    window.setTitle(Labels.getLabel("popupCodeSystem.createCodeSystemVersion"));
-    cs = (CodeSystem) arg.get("CS");
-    loadDetails();
-    createNewCodeSystemVersion();
-
-    cbNewVersion.setVisible(true);
-    cbNewVersion.setDisabled(false);
-    cbCSVLicenced.setDisabled(false);
-    dateBoxED.setDisabled(false);
-    dateBoxRD.setDisabled(false);
-    tbCSName.setReadonly(true);
-    tbCSDescription.setReadonly(true);
-    tbCSDescriptionEng.setReadonly(true);
-    tbWebsite.setReadonly(true);
-    tbCSVName.setReadonly(false);
-    tbCSVDescription.setReadonly(false);
-    //cboxCSVValidityRange.setReadonly(false);
-    cboxCSVValidityRange.setDisabled(false);
-    tbCSVLicenceHolder.setReadonly(true);
-    tbCSVSource.setReadonly(false);
-    tbCSVStatus.setReadonly(true);
-        //Beim neuanlegen existiert noch keine csv, daher kann man eine OID,
-    //erst anlegen wenn das CSV angelegt wurde...
-    tbCSVOId.setTooltiptext("Beantragen einer OID ist nach dem Anlegen möglich! "
-            + "Bitte rufen sie dazu \"Version bearbeiten\" über das Context-Menü auf! "
-            + "Haben sie bereits eine OID können Sie diese hier eintragen.");
-    //bOidBeantragen.setVisible(false);
-    tbCSVOId.setVisible(true);
-    tbCSVOId.setReadonly(false);
-    /*
-     if(csv != null){
-     if(csv.getOid() == null || csv.getOid().length() <= 0){
-     bOidBeantragen.setVisible(true);
-     bOidBeantragen.setDisabled(false);
-     tbCSVOId.setVisible(false);
-     }else{
-     bOidBeantragen.setVisible(false);
-     tbCSVOId.setVisible(true);
-     tbCSVOId.setReadonly(false);
-     }
-     }*/
-    //cboxPreferredLanguage.setReadonly(false);
-    cboxPreferredLanguage.setDisabled(false);
-    lReq.setVisible(true);
-    lName.setValue(Labels.getLabel("common.name"));
-    lNameVersion.setValue(Labels.getLabel("common.name") + "*");
-    lLic.setValue(Labels.getLabel("common.licenced") + "*");
-    bCreate.setVisible(true);
-    bCreate.setLabel(Labels.getLabel("common.create"));
-  }
-
-  @Override
-  protected void editmodeMaintain()
-  {
-    window.setTitle(Labels.getLabel("popupCodeSystem.editCodeSystem"));
-    cs = (CodeSystem) arg.get("CS");
-    csv = (CodeSystemVersion) arg.get("CSV");   // es muss eine Version angegeben werden
-    versioning = new VersioningType();
-    versioning.setCreateNewVersion(Boolean.FALSE);
-
-    loadDetails();
-
-    cbNewVersion.setVisible(false);
-    cbNewVersion.setDisabled(true);
-    cbCSVLicenced.setDisabled(false);
-    cbCSVLicenced.setChecked(false);
-    dateBoxED.setDisabled(true);
-    dateBoxRD.setDisabled(true);
-    tbCSName.setReadonly(false);
-    tbCSDescription.setReadonly(false);
-    tbCSDescriptionEng.setReadonly(false);
-    tbWebsite.setReadonly(false);
-    tbCSVName.setReadonly(true);
-    tbCSVDescription.setReadonly(true);
-    //cboxCSVValidityRange.setReadonly(true);
-    cboxCSVValidityRange.setDisabled(true);
-    tbCSVLicenceHolder.setReadonly(true);
-    tbCSVSource.setReadonly(false);
-    tbCSVStatus.setReadonly(true);
-        //bOidBeantragen.setVisible(true);
-    //bOidBeantragen.setDisabled(false);
-    tbCSVOId.setVisible(true);
-    tbCSVOId.setReadonly(false);
-    //cboxPreferredLanguage.setReadonly(true);
-    cboxPreferredLanguage.setDisabled(true);
-    lReq.setVisible(false);
-    lName.setValue(Labels.getLabel("common.name"));
-    lNameVersion.setValue(Labels.getLabel("common.name"));
-    lLic.setValue(Labels.getLabel("common.licenced"));
-    bCreate.setVisible(true);
-    bCreate.setLabel(Labels.getLabel("common.change"));
-  }
-
-  @Override
-  protected void editmodeMaintainVersionEdit()
-  {
-    window.setTitle(Labels.getLabel("popupCodeSystem.editCodeSystemVersion"));
-    cs = (CodeSystem) arg.get("CS");
-    csv = (CodeSystemVersion) arg.get("CSV");
-    versioning = new VersioningType();
-    versioning.setCreateNewVersion(Boolean.FALSE);
-
-    loadDetails();
-
-    cbNewVersion.setVisible(true);
-    cbNewVersion.setDisabled(false);
-    cbCSVLicenced.setDisabled(false);
-    cbCSVLicenced.setChecked(false);
-    dateBoxED.setDisabled(false);
-    dateBoxRD.setDisabled(false);
-    tbCSName.setReadonly(true);
-    tbCSDescription.setReadonly(true);
-    tbCSDescriptionEng.setReadonly(true);
-    tbWebsite.setReadonly(true);
-    tbCSVName.setReadonly(false);
-    tbCSVDescription.setReadonly(false);
-    //cboxCSVValidityRange.setReadonly(false);
-    cboxCSVValidityRange.setDisabled(false);
-    tbCSVLicenceHolder.setReadonly(true);
-    tbCSVSource.setReadonly(false);
-    tbCSVStatus.setReadonly(true);
-        //bOidBeantragen.setVisible(true);
-    //bOidBeantragen.setDisabled(false);
-    tbCSVOId.setVisible(true);
-    tbCSVOId.setReadonly(false);
-    //cboxPreferredLanguage.setReadonly(false);
-    cboxPreferredLanguage.setDisabled(false);
-    lReq.setVisible(false);
-    lName.setValue(Labels.getLabel("common.name"));
-    lNameVersion.setValue(Labels.getLabel("common.name"));
-    lLic.setValue(Labels.getLabel("common.licenced"));
-    bCreate.setVisible(true);
-    bCreate.setLabel(Labels.getLabel("common.change"));
-  }
-
-  @Override
-  protected void editmodeUpdateStatus()
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  @Override
-  protected void editmodeUpdateStatusVersion()
-  {
-    window.setTitle(Labels.getLabel("popupCodeSystem.editCodeSystemVersion"));
-    cs = (CodeSystem) arg.get("CS");
-    csv = (CodeSystemVersion) arg.get("CSV");
-    versioning = new VersioningType();
-    versioning.setCreateNewVersion(Boolean.FALSE);
-
-    loadDetails();
-
-    cbNewVersion.setVisible(false);
-    cbNewVersion.setDisabled(false);
-    cbCSVLicenced.setDisabled(false);
-    cbCSVLicenced.setChecked(false);
-    dateBoxED.setDisabled(false);
-    dateBoxRD.setDisabled(false);
-    tbCSName.setReadonly(true);
-    tbCSDescription.setReadonly(true);
-    tbCSDescriptionEng.setReadonly(true);
-    tbWebsite.setReadonly(true);
-    tbCSVName.setReadonly(true);
-    tbCSVDescription.setReadonly(true);
-    //cboxCSVValidityRange.setReadonly(true);
-    cboxCSVValidityRange.setDisabled(true);
-    tbCSVLicenceHolder.setReadonly(true);
-    tbCSVSource.setReadonly(true);
-    tbCSVStatus.setReadonly(false);
-        //bOidBeantragen.setVisible(true);
-    //bOidBeantragen.setDisabled(true);
-    tbCSVOId.setVisible(true);
-    tbCSVOId.setReadonly(true);
-    //cboxPreferredLanguage.setReadonly(true);
-    cboxPreferredLanguage.setDisabled(true);
-    lReq.setVisible(false);
-    lName.setValue(Labels.getLabel("common.name"));
-    lNameVersion.setValue(Labels.getLabel("common.name"));
-    lLic.setValue(Labels.getLabel("common.licenced"));
-    bCreate.setVisible(true);
-    bCreate.setLabel(Labels.getLabel("common.changeStatus"));
-  }
-
-  @Override
-  protected void create()
-  {
-
-    ListCodeSystemsInTaxonomyRequestType para = new ListCodeSystemsInTaxonomyRequestType();
-
-    if (SessionHelper.isCollaborationActive())
-    {
-      // Kollaborationslogin verwenden (damit auch nicht-aktive Begriffe angezeigt werden können)
-      para.setLoginToken(CollaborationSession.getInstance().getSessionID());
-    }
-    else if (SessionHelper.isUserLoggedIn())
-    {
-      para.setLoginToken(SessionHelper.getSessionId());
-    }
-
-    //Search_Service service = new Search_Service();
-    //Search port = service.getSearchPort();
-    boolean parameterCorrect = true;
-
-    de.fhdo.terminologie.ws.search.ListCodeSystemsInTaxonomyResponse.Return resp = WebServiceHelper.listCodeSystemsInTaxonomy(para);
-
-    for (DomainValue dv : resp.getDomainValue())
-    {
-
-      for (CodeSystem csL : dv.getCodeSystems())
-      {
-        if (cs.getName().equals(csL.getName()))
-        {
-          parameterCorrect = false;
-        }
-      }
-    }
-
-    if (parameterCorrect)
-    {
-      if (cboxCSVValidityRange.getSelectedItem() != null)
-      {
-        // Liste leeren, da hier so viele CSVs drin stehen wie es Versionen gibt. Als Parameter darf aber nur genau EINE CSV drin stehen.
-        cs.getCodeSystemVersions().clear();
-        cs.getCodeSystemVersions().add(csv);
-
-        // preferredLanguage
-        csv.setPreferredLanguageCd(DomainHelper.getInstance().getComboboxCd(cboxPreferredLanguage));
-        logger.debug("getPreferredLanguageCd: " + csv.getPreferredLanguageCd());
-        /*TODO if (cboxPreferredLanguage.getSelectedItem() != null)
-          csv.setPreferredLanguageId(LanguageHelper.getLanguageIdByName(cboxPreferredLanguage.getSelectedItem().getLabel()));*/
-
-        // Range of Validity
-        if (cboxCSVValidityRange.getSelectedItem() != null)
-          csv.setValidityRange(ValidityRangeHelper.getValidityRangeIdByName(cboxCSVValidityRange.getSelectedItem().getLabel()));
-
-        // Daten setzen mit Convertierung von Date -> XMLGregorianCalendar
-        try
-        {
-          GregorianCalendar c;
-
-          if (dateBoxRD != null && dateBoxRD.getValue() != null)
-          {
-            c = new GregorianCalendar();
-            c.setTimeInMillis(dateBoxRD.getValue().getTime());
-            csv.setReleaseDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(c));
-          }
-
-          if (dateBoxED != null && dateBoxED.getValue() != null)
-          {
-            c = new GregorianCalendar();
-            c.setTimeInMillis(dateBoxED.getValue().getTime());
-            csv.setExpirationDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(c));
-          }
-        }
-        catch (DatatypeConfigurationException ex)
-        {
-          Logger.getLogger(PopupCodeSystem.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try
-        {
-          CreateCodeSystemRequestType parameter = new CreateCodeSystemRequestType();
-
-          // Login, cs
-          parameter.setLoginToken(de.fhdo.helper.SessionHelper.getSessionId());
-          parameter.setCodeSystem(cs);
-
-          // WS aufruf
-          csv.setCodeSystem(null); // XML Zirkel verhindern
-          CreateCodeSystemResponse.Return response = WebServiceHelper.createCodeSystem(parameter);
-          csv.setCodeSystem(cs);  // Nach WS zirkel wiederherstellen
-
-          // Message über Erfolg/Misserfolg                
-          if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
-          {
-            AssignTermHelper.assignTermToUser(response.getCodeSystem());
-            Messagebox.show(Labels.getLabel("popupCodeSystem.newCodeSystemsuccessfullyCreated"));
-            ((ContentCSVSDefault) windowParent).refreshCS();
-            window.detach();
-          }
-          else
-            Messagebox.show(Labels.getLabel("common.error") + "\n" + response.getReturnInfos().getMessage() + "\n" + Labels.getLabel("popupCodeSystem.codeSystemWasNotCreated"));
-        }
-        catch (Exception e)
-        {
-          e.printStackTrace();
-        }
-
-      }
-      else
-      {
-        Messagebox.show(Labels.getLabel("popupCodeSystem.editCodeSystemValidityRangeFailed"), "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
-      }
+      // new codesystem
+      codeSystem = new CodeSystem();
+      createNewCodesystemVersion();
     }
     else
     {
-      Messagebox.show("Ein CodeSystem mit dem selben Namen existiert bereits!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
-    }
-  }
+      // load data from webservice
+      logger.debug("CS-ID: " + codeSystem.getId());
 
-  @Override
-  protected void maintainVersionNew()
-  {
-
-    boolean runS = true;
-
-    if (toEdit == false)
-    {
-      for (CodeSystemVersion csvL : cs.getCodeSystemVersions())
+      // load or init CS und CSV
+      CodeSystem csTemp = new CodeSystem();
+      csTemp.setId(codeSystem.getId());
+      if (codeSystemVersion != null)
       {
+        CodeSystemVersion csvTemp = new CodeSystemVersion();
+        csTemp.getCodeSystemVersions().add(csvTemp);
+        csvTemp.setVersionId(codeSystemVersion.getVersionId());
 
-        if (csvL.getName().equals(csv.getName()))
-        {
-
-          runS = false;
-          break;
-        }
+        logger.debug("CSV-ID: " + codeSystemVersion.getVersionId());
       }
-    }
+      parameter.setCodeSystem(csTemp);
 
-    if (runS)
-    {
-      Authoring authoring = new Authoring_Service().getAuthoringPort();
+      ReturnCodeSystemDetailsResponse.Return response = WebServiceHelper.returnCodeSystemDetails(parameter);
 
+      logger.debug("response: " + response.getReturnInfos().getMessage());
 
-      // Liste leeren, da hier so viele CSVs drin stehen wie es Versionen gibt. Als Parameter darf aber nur genau EINE CSV drin stehen.
-      cs.getCodeSystemVersions().clear();
-      cs.getCodeSystemVersions().add(csv);
-
-      // preferredLanguage
-      /*TODO if (csv.getPreferredLanguageCd() == null || csv.getPreferredLanguageCd().length() == 0)
+      // Meldung falls CreateConcept fehlgeschlagen
+      if (response.getReturnInfos().getStatus() != de.fhdo.terminologie.ws.search.Status.OK)
       {
-        if (cboxPreferredLanguage.getSelectedItem() != null)
-          csv.setPreferredLanguageId(LanguageHelper.getLanguageIdByName(cboxPreferredLanguage.getSelectedItem().getLabel()));
-      }
-      else
-      {
-        if (cboxPreferredLanguage.getSelectedItem() != null)
-          csv.setPreferredLanguageId(LanguageHelper.getLanguageIdByName(cboxPreferredLanguage.getSelectedItem().getLabel()));
-        else
-          csv.setPreferredLanguageId(null);
-      }*/
-
-      boolean run = true;
-      // Range of Validity
-      if (csv.getValidityRange() == null)
-      {
-        if (cboxCSVValidityRange.getSelectedItem() != null)
-        {
-          csv.setValidityRange(ValidityRangeHelper.getValidityRangeIdByName(cboxCSVValidityRange.getSelectedItem().getLabel()));
-        }
-        else
-        {
-          run = false;
-        }
-      }
-      else
-      {
-        if (cboxCSVValidityRange.getSelectedItem() != null)
-        {
-          csv.setValidityRange(ValidityRangeHelper.getValidityRangeIdByName(cboxCSVValidityRange.getSelectedItem().getLabel()));
-        }
-        else
-        {
-          csv.setValidityRange(null);
-          run = false;
-        }
-      }
-
-      if (run)
-      {
-
-        // Daten setzen mit Convertierung von Date -> XMLGregorianCalendar
         try
         {
-          GregorianCalendar c;
-
-          if (dateBoxRD != null && dateBoxRD.getValue() != null)
-          {
-            c = new GregorianCalendar();
-            c.setTimeInMillis(dateBoxRD.getValue().getTime());
-            csv.setReleaseDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(c));
-          }
-
-          if (dateBoxED != null && dateBoxED.getValue() != null)
-          {
-            c = new GregorianCalendar();
-            c.setTimeInMillis(dateBoxED.getValue().getTime());
-            csv.setExpirationDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(c));
-          }
-        }
-        catch (DatatypeConfigurationException ex)
-        {
-          Logger.getLogger(PopupCodeSystem.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        try
-        {
-          MaintainCodeSystemVersionRequestType parameter = new MaintainCodeSystemVersionRequestType();
-
-          // Login, CS, Versioning                       
-          parameter.setLoginToken(de.fhdo.helper.SessionHelper.getSessionId());
-          parameter.setCodeSystem(cs);
-          parameter.setVersioning(versioning);
-
-          // WS aufruf
-          csv.setCodeSystem(null);    // Zirkel entfernen
-          MaintainCodeSystemVersionResponse.Return response = WebServiceHelper.maintainCodeSystemVersion(parameter);
-          csv.setCodeSystem(cs);      // CS wieder einfügen (falls das mal später gebracht wird)
-
-          // Message über Erfolg/Misserfolg
-          if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
-          {
-            if (parameter.getVersioning().isCreateNewVersion())
-              Messagebox.show(Labels.getLabel("popupCodeSystem.newVersionSuccessfullyCreated"));
-            else
-              Messagebox.show(Labels.getLabel("popupCodeSystem.editVersionChangedSuccessfully"));
-            ((ContentCSVSDefault) windowParent).refreshCS();
-            window.detach();
-          }
-          else
-            Messagebox.show(Labels.getLabel("common.error") + "\n" + response.getReturnInfos().getMessage() + "\n" + Labels.getLabel("popupCodeSystem.versionNotCreated"));
-        }
-        catch (Exception e)
-        {
-          e.printStackTrace();
-        }
-      }
-      else
-      {
-        Messagebox.show(Labels.getLabel("popupCodeSystem.editCodeSystemValidityRangeFailed"), "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
-      }
-    }
-    else
-    {
-
-      Messagebox.show("Eine CodeSystemVersion mit dem gleichen Namen existiert bereits!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
-    }
-  }
-
-  @Override
-  protected void maintain()
-  {
-    // eine CSV aussuchen und behalten: Wird allerdings nicht geändert, es muss aber eine CSV für den WS-Aufruf angegeben werden
-    CodeSystemVersion csvTemp = cs.getCodeSystemVersions().get(0);
-    cs.getCodeSystemVersions().clear();
-    cs.getCodeSystemVersions().add(csvTemp);
-
-    try
-    {
-      MaintainCodeSystemVersionRequestType parameter = new MaintainCodeSystemVersionRequestType();
-
-      // Login, CS, Versioning                       
-      parameter.setLoginToken(de.fhdo.helper.SessionHelper.getSessionId());
-      parameter.setCodeSystem(cs);
-      parameter.setVersioning(versioning);
-
-      // WS aufruf
-      csvTemp.setCodeSystem(null);    // Zirkel entfernen
-      MaintainCodeSystemVersionResponse.Return response = WebServiceHelper.maintainCodeSystemVersion(parameter);
-      csvTemp.setCodeSystem(cs);      // CS wieder einfügen (falls das mal später gebracht wird)
-
-      // Message über Erfolg/Misserfolg
-      if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
-      {
-        if (parameter.getVersioning().isCreateNewVersion())
-          Messagebox.show(Labels.getLabel("popupCodeSystem.newVersionSuccessfullyCreated"));
-        else
-          Messagebox.show(Labels.getLabel("popupCodeSystem.editVersionChangedSuccessfully"));
-        ((ContentCSVSDefault) windowParent).refreshCS();
-        window.detach();
-      }
-      else
-        Messagebox.show(Labels.getLabel("common.error") + "\n" + response.getReturnInfos().getMessage() + "\n" + Labels.getLabel("popupCodeSystem.versionNotCreated"));
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
-  }
-
-  @Override
-  protected void maintainVersionEdit()
-  {
-    toEdit = true;
-    maintainVersionNew();
-  }
-
-  @Override
-  protected void updateStatus()
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  @Override
-  protected void updateStatusVersion()
-  {
-    UpdateCodeSystemVersionStatusRequestType parameter = new UpdateCodeSystemVersionStatusRequestType();
-
-    // Liste leeren, da hier so viele CSVs drin stehen wie es Versionen gibt. Als Parameter darf aber nur genau EINE CSV drin stehen.
-    cs.getCodeSystemVersions().clear();
-    cs.getCodeSystemVersions().add(csv);
-    parameter.setCodeSystem(cs);
-
-    // WS aufruf
-    csv.setCodeSystem(null); // Zirkel entfernen
-    UpdateCodeSystemVersionStatusResponse.Return response = WebServiceHelper.updateCodeSystemVersionStatus(parameter);
-    csv.setCodeSystem(cs); // VS wieder einfügen (falls das mal später gebracht wird)
-
-    // Medlung über Erfolg/Misserfolg
-    try
-    {
-      if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
-      {
-        Messagebox.show(Labels.getLabel("popupCodeSystem.editCodeSystemVersionStatusSuccessfully"));
-        ((ContentCSVSDefault) windowParent).refreshCS();
-        window.detach();
-      }
-      else
-        Messagebox.show(Labels.getLabel("common.error") + "\n\n" + response.getReturnInfos().getMessage() + "\n\n" + Labels.getLabel("popupCodeSystem.editCodeSystemVersionStatusFailed"));
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
-  }
-
-  public void onCheck$cbCSVLicenced()
-  {
-    tbCSVLicenceHolder.setDisabled(!cbCSVLicenced.isChecked());
-  }
-
-  public void onCheck$cbNewVersion()
-  {
-    if (cbNewVersion.isChecked())
-    {
-      editMode = PopupWindow.EDITMODE_MAINTAIN_VERSION_NEW;
-    }
-    else
-    {
-      if (arg.get("CSV") == null)
-      {
-        editMode = PopupWindow.EDITMODE_MAINTAIN_VERSION_NEW;
-        try
-        {
-          Messagebox.show(Labels.getLabel("popupCodeSystem.editVersionNotAllowedNoVersionSelected"));
+          Messagebox.show(Labels.getLabel("common.error") + "\n" + Labels.getLabel("popupCodeSystem.loadCSDetailsFailed") + "\n\n" + response.getReturnInfos().getMessage());
+          return;
         }
         catch (Exception ex)
         {
-          Logger.getLogger(PopupCodeSystem.class.getName()).log(Level.SEVERE, null, ex);
+          LoggingOutput.outputException(ex, this);
         }
+      }
+      codeSystem = response.getCodeSystem();
+      logger.debug("Codesystem geladen, Name: " + codeSystem.getName());
+
+      if (editMode == EDITMODES.CREATE_NEW_VERSION)
+      {
+        createNewCodesystemVersion();  // hier Felder leer lassen
       }
       else
       {
-        editMode = PopupWindow.EDITMODE_MAINTAIN_VERSION_EDIT;
+        // Version laden, falls angegeben       
+        if (codeSystemVersion != null)
+        {
+          for (CodeSystemVersion csv : codeSystem.getCodeSystemVersions())
+          {
+            if (csv.getVersionId().equals(codeSystemVersion.getVersionId()))
+            {
+              codeSystemVersion = csv;
+              break;
+            }
+          }
+        }
       }
     }
-    editMode(editMode);
+
   }
 
-  public void onClick$bCreate()
+  private void createNewCodesystemVersion()
   {
-    buttonAction();
+    logger.debug("createNewCodesystemVersion()");
+
+    codeSystemVersion = new CodeSystemVersion();
+    codeSystemVersion.setUnderLicence(Boolean.FALSE);
+    //codeSystemVersion.setVersionId(Long.MAX_VALUE);
+    codeSystemVersion.setStatus(1);
+
+    DomainValue dvValidity = DomainHelper.getInstance().getDefaultValue(Definitions.DOMAINID_CODESYSTEMVERSION_VALIDITYRANGE);
+    codeSystemVersion.setValidityRange(dvValidity == null ? 4l : Long.parseLong(dvValidity.getDomainCode()));
   }
 
-  public void update(Object o, boolean edited)
+  private void setWindowTitle()
   {
+    String title;
 
+    switch (editMode)
+    {
+      case CREATE:
+        title = Labels.getLabel("popupCodeSystem.createCodeSystem");
+        break;
+      case DETAILSONLY:
+        title = Labels.getLabel("common.codeSystem") + " " + Labels.getLabel("common.details");
+        break;
+      case MAINTAIN:
+        title = Labels.getLabel("popupCodeSystem.editCodeSystem");
+        break;
+//      case MAINTAIN_VERSION_EDIT:
+//        title = Labels.getLabel("popupCodeSystem.editCodeSystemVersion");
+//        break;
+      case CREATE_NEW_VERSION:
+        title = Labels.getLabel("popupCodeSystem.createCodeSystemVersion");
+        break;
+
+      default:
+        //title = Labels.getLabel("common.details");
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    this.setTitle(title);
+  }
+
+  /**
+   * You can customize how much details in the window should be shown. See
+   * http://www.wiki.mi.fh-dortmund.de/cts2/index.php?title=Termbrowser.properties
+   * for more infos.
+   */
+  private void showDetailsVisibilty()
+  {
+    logger.debug("showDetailsVisibilty()");
+
+    // code system
+    ComponentHelper.setVisible("rowDescriptionEng", guiCodesystemMinimalVisible, this);
+    ComponentHelper.setVisible("buttonExpandCS", guiCodesystemExpandableVisible, this);
+
+    // code system version
+    ComponentHelper.setVisible("rowValidityRange", guiCodesystemVersionMinimalVisible, this);
+    ComponentHelper.setVisible("rowDateFrom", guiCodesystemVersionMinimalVisible, this);
+    ComponentHelper.setVisible("rowDateTo", guiCodesystemVersionMinimalVisible, this);
+    ComponentHelper.setVisible("rowCSVStatus", guiCodesystemVersionMinimalVisible, this);
+    ComponentHelper.setVisible("rowCSVPrefLang", guiCodesystemVersionMinimalVisible, this);
+    ComponentHelper.setVisible("rowCSVLicence", guiCodesystemVersionMinimalVisible, this);
+
+    ComponentHelper.setVisible("buttonExpandCSV", guiCodesystemVersionExpandableVisible, this);
+
+    Button buttonExpandCS = (Button) getFellow("buttonExpandCS");
+    Button buttonExpandCSV = (Button) getFellow("buttonExpandCSV");
+
+    // Buttons
+    if (guiCodesystemMinimalVisible)
+      buttonExpandCS.setImage("/rsc/img/symbols/collapse_16x16.png");
+    else
+      buttonExpandCS.setImage("/rsc/img/symbols/expand_16x16.png");
+
+    if (guiCodesystemVersionMinimalVisible)
+      buttonExpandCSV.setImage("/rsc/img/symbols/collapse_16x16.png");
+    else
+      buttonExpandCSV.setImage("/rsc/img/symbols/expand_16x16.png");
+  }
+
+  public void onClickExpandCS()
+  {
+    logger.debug("Expand CS...");
+
+    guiCodesystemMinimalVisible = !guiCodesystemMinimalVisible;
+
+    showDetailsVisibilty();
+    this.invalidate();
+  }
+
+  public void onClickExpandCSV()
+  {
+    logger.debug("Expand CSV...");
+
+    guiCodesystemVersionMinimalVisible = !guiCodesystemVersionMinimalVisible;
+    logger.debug("guiCodesystemVersionMinimalVisible: " + guiCodesystemVersionMinimalVisible);
+
+    showDetailsVisibilty();
+    this.invalidate();
+  }
+
+  private void initListMetadata()
+  {
+    // Header
+    List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
+    header.add(new GenericListHeaderType(Labels.getLabel("common.metadata"), 0, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("common.parameterType"), 130, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("common.language"), 100, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("common.datatype"), 100, "", true, "String", true, true, false, false));
+
+    List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
+
+    for (MetadataParameter meta : codeSystem.getMetadataParameters())
+    {
+      GenericListRowType row = createRowFromMetadataParameter(meta);
+      dataList.add(row);
+    }
+
+    // Liste initialisieren
+    Include inc = (Include) getFellow("incList");
+    Window winGenericList = (Window) inc.getFellow("winGenericList");
+    genericList = (GenericList) winGenericList;
+
+    //genericList.setUserDefinedId("1");
+    //genericList.setListActions(this);
+    genericList.setButton_new(false);
+    genericList.setButton_edit(false);
+    genericList.setButton_delete(false);
+    genericList.setListHeader(header);
+    genericList.setDataList(dataList);
+
+  }
+
+  private GenericListRowType createRowFromMetadataParameter(MetadataParameter meta)
+  {
+    GenericListRowType row = new GenericListRowType();
+
+    GenericListCellType[] cells = new GenericListCellType[4];
+    cells[0] = new GenericListCellType(meta.getParamName(), false, "");
+    cells[1] = new GenericListCellType(DomainHelper.getInstance().getDomainValueDisplayText(Definitions.DOMAINID_METADATA_PARAMETER_TYPE, meta.getMetadataParameterType()), false, "");
+    cells[2] = new GenericListCellType(DomainHelper.getInstance().getDomainValueDisplayText(Definitions.DOMAINID_LANGUAGECODES, meta.getLanguageCd()), false, "");
+    cells[3] = new GenericListCellType(meta.getParamDatatype(), false, "");
+
+    row.setData(meta);
+    row.setCells(cells);
+
+    return row;
+  }
+
+  /**
+   * @return the codeSystem
+   */
+  public CodeSystem getCodeSystem()
+  {
+    return codeSystem;
+  }
+
+  /**
+   * @param codeSystem the codeSystem to set
+   */
+  public void setCodeSystem(CodeSystem codeSystem)
+  {
+    this.codeSystem = codeSystem;
+  }
+
+  /**
+   * @return the codeSystemVersion
+   */
+  public CodeSystemVersion getCodeSystemVersion()
+  {
+    return codeSystemVersion;
+  }
+
+  /**
+   * @param codeSystemVersion the codeSystemVersion to set
+   */
+  public void setCodeSystemVersion(CodeSystemVersion codeSystemVersion)
+  {
+    this.codeSystemVersion = codeSystemVersion;
+  }
+
+  /**
+   * @param updateListener the updateListener to set
+   */
+  public void setUpdateListener(IUpdateModal updateListener)
+  {
+    this.updateListener = updateListener;
   }
 }

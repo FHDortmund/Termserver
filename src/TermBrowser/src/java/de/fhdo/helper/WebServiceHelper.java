@@ -43,6 +43,8 @@ import de.fhdo.terminologie.ws.authoring.MaintainConceptValueSetMembershipReques
 import de.fhdo.terminologie.ws.authoring.MaintainConceptValueSetMembershipResponse;
 import de.fhdo.terminologie.ws.authoring.MaintainValueSetRequestType;
 import de.fhdo.terminologie.ws.authoring.MaintainValueSetResponse;
+import de.fhdo.terminologie.ws.authoring.RemoveTerminologyOrConceptRequestType;
+import de.fhdo.terminologie.ws.authoring.RemoveTerminologyOrConceptResponseType;
 import de.fhdo.terminologie.ws.authoring.RemoveValueSetContentRequestType;
 import de.fhdo.terminologie.ws.authoring.RemoveValueSetContentResponseType;
 import de.fhdo.terminologie.ws.authoring.UpdateCodeSystemVersionStatusRequestType;
@@ -68,6 +70,8 @@ import de.fhdo.terminologie.ws.search.ListCodeSystemConceptsRequestType;
 import de.fhdo.terminologie.ws.search.ListCodeSystemConceptsResponse;
 import de.fhdo.terminologie.ws.search.ListCodeSystemsInTaxonomyRequestType;
 import de.fhdo.terminologie.ws.search.ListCodeSystemsInTaxonomyResponse;
+import de.fhdo.terminologie.ws.search.ListCodeSystemsRequestType;
+import de.fhdo.terminologie.ws.search.ListCodeSystemsResponse;
 import de.fhdo.terminologie.ws.search.ListDomainValuesRequestType;
 import de.fhdo.terminologie.ws.search.ListDomainValuesResponse;
 import de.fhdo.terminologie.ws.search.ListGloballySearchedConceptsRequestType;
@@ -87,9 +91,9 @@ import de.fhdo.terminologie.ws.search.ReturnConceptDetailsResponse;
 import de.fhdo.terminologie.ws.search.ReturnConceptValueSetMembershipRequestType;
 import de.fhdo.terminologie.ws.search.ReturnConceptValueSetMembershipResponse;
 import de.fhdo.terminologie.ws.search.ReturnValueSetConceptMetadataRequestType;
+import de.fhdo.terminologie.ws.search.ReturnValueSetConceptMetadataResponse;
 import de.fhdo.terminologie.ws.search.ReturnValueSetDetailsRequestType;
 import de.fhdo.terminologie.ws.search.ReturnValueSetDetailsResponse;
-import de.fhdo.terminologie.ws.search.ReturnValueSetConceptMetadataResponse;
 import de.fhdo.terminologie.ws.search.Search;
 import de.fhdo.terminologie.ws.search.Search_Service;
 import java.net.URL;
@@ -898,6 +902,39 @@ public class WebServiceHelper
     return port.listCodeSystemConcepts(parameter);
   }
 
+  
+  public static ListCodeSystemsResponse.Return listCodeSystems(ListCodeSystemsRequestType parameter)
+  {
+    return listCodeSystems(parameter, PropertiesHelper.getInstance().getTermserverUrl());
+  }
+
+  public static ListCodeSystemsResponse.Return listCodeSystems(ListCodeSystemsRequestType parameter, String urlHost)
+  {
+    return listCodeSystems(parameter, urlHost, PropertiesHelper.getInstance().getTermserverServiceName());
+  }
+
+  public static ListCodeSystemsResponse.Return listCodeSystems(ListCodeSystemsRequestType parameter, String urlHost, String urlService)
+  {
+    Search_Service service;
+    Search port;
+    try
+    {
+      // Service mit bestimmter URL ?ffnen
+      service = new Search_Service(new URL(optimizeUrl(urlHost) + urlService + "Search?wsdl"),
+              new QName("http://search.ws.terminologie.fhdo.de/", "Search"));
+    }
+    catch (Exception ex)
+    {
+      Logger.getLogger(WebServiceHelper.class.getName()).log(Level.SEVERE, null, ex);
+
+      // Standard Service ?ffnen
+      service = new Search_Service();
+    }
+    port = service.getSearchPort();
+    return port.listCodeSystems(parameter);
+  }
+  
+  
   public static ListGloballySearchedConceptsResponse.Return listGloballySearchedConcepts(ListGloballySearchedConceptsRequestType parameter)
   {
     return listGloballySearchedConcepts(parameter, PropertiesHelper.getInstance().getTermserverUrl());
@@ -1167,6 +1204,38 @@ public class WebServiceHelper
     }
     port = service.getSearchPort();
     return port.getTermserverVersion();
+  }
+  
+  
+  public static RemoveTerminologyOrConceptResponseType removeTerminologyOrConcept(RemoveTerminologyOrConceptRequestType parameter)
+  {
+    return removeTerminologyOrConcept(parameter, PropertiesHelper.getInstance().getTermserverUrl());
+  }
+
+  public static RemoveTerminologyOrConceptResponseType removeTerminologyOrConcept(RemoveTerminologyOrConceptRequestType parameter, String urlHost)
+  {
+    return removeTerminologyOrConcept(parameter, urlHost, PropertiesHelper.getInstance().getTermserverServiceName());
+  }
+
+  public static RemoveTerminologyOrConceptResponseType removeTerminologyOrConcept(RemoveTerminologyOrConceptRequestType parameter, String urlHost, String urlService)
+  {
+    Authoring_Service service;
+    Authoring port;
+    try
+    {
+      // Service mit bestimmter URL ?ffnen
+      service = new Authoring_Service(new URL(optimizeUrl(urlHost) + urlService + "Authoring?wsdl"),
+              new QName("http://authoring.ws.terminologie.fhdo.de/", "Authoring"));
+    }
+    catch (Exception ex)
+    {
+      Logger.getLogger(WebServiceHelper.class.getName()).log(Level.SEVERE, null, ex);
+
+      // Standard Service ?ffnen
+      service = new Authoring_Service();
+    }
+    port = service.getAuthoringPort();
+    return port.removeTerminologyOrConcept(parameter);
   }
   
 

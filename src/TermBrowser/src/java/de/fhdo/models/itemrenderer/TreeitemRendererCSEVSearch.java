@@ -18,6 +18,7 @@ package de.fhdo.models.itemrenderer;
 
 import de.fhdo.collaboration.helper.AssignTermHelper;
 import de.fhdo.gui.main.modules.ContentConcepts;
+import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.gui.main.modules.PopupSearch;
 import de.fhdo.gui.main.modules.PopupWindow;
 import de.fhdo.helper.SessionHelper;
@@ -154,7 +155,7 @@ public class TreeitemRendererCSEVSearch extends TreeitemRendererCSEV{
     protected void renderCSEVMouseEvents(Treerow dataRow, Treeitem treeItem, final TreeNode treeNode){
         dataRow.addEventListener(Events.ON_DOUBLE_CLICK,  new EventListener() {					
             public void onEvent(Event event) throws Exception {                  
-                popupSearch.showPopupConcept(PopupWindow.EDITMODE_DETAILSONLY);
+                popupSearch.showPopupConcept(PopupConcept.EDITMODES.DETAILSONLY);
             }
         });
         
@@ -180,7 +181,7 @@ public class TreeitemRendererCSEVSearch extends TreeitemRendererCSEV{
         Menuitem miStatus = new Menuitem(Labels.getLabel("treeitemRendererCSEV.editStatus"));
         miDetails.addEventListener("onClick", new EventListener(){
             public void onEvent(Event event) throws Exception {
-                popupSearch.showPopupConcept(PopupWindow.EDITMODE_DETAILSONLY);
+                popupSearch.showPopupConcept(PopupConcept.EDITMODES.DETAILSONLY);
             }            
         });
         
@@ -188,7 +189,7 @@ public class TreeitemRendererCSEVSearch extends TreeitemRendererCSEV{
         {
           public void onEvent(Event event) throws Exception
           {
-            popupSearch.showPopupConcept(PopupWindow.EDITMODE_MAINTAIN_VERSION_EDIT);
+            popupSearch.showPopupConcept(PopupConcept.EDITMODES.MAINTAIN);
           }
         });
 
@@ -196,14 +197,14 @@ public class TreeitemRendererCSEVSearch extends TreeitemRendererCSEV{
         {
           public void onEvent(Event event) throws Exception
           {
-            popupSearch.showPopupConcept(PopupWindow.EDITMODE_UPDATESTATUS);
+            // TODO popupSearch.showPopupConcept(PopupWindow.EDITMODE_UPDATESTATUS);
           }
         });
         miDetails.setParent(contextMenu);
         
         if (SessionHelper.isUserLoggedIn())
         {
-            boolean allowed = true;
+            /*boolean allowed = true;
             if (contMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
             {
                 allowed = AssignTermHelper.isUserAllowed(((CodeSystemVersion)source).getCodeSystem());
@@ -212,11 +213,11 @@ public class TreeitemRendererCSEVSearch extends TreeitemRendererCSEV{
                 allowed = AssignTermHelper.isUserAllowed(((ValueSetVersion)source).getValueSet());
             }
 
-            if(allowed){
+            if(allowed)*/{
             
                 new Menuseparator().setParent(contextMenu);
                 miEdit.setParent(contextMenu);
-                miStatus.setParent(contextMenu);
+                //miStatus.setParent(contextMenu);
             }
         }
         sendbackMenuitem(parentWindow, ti, contextMenu);

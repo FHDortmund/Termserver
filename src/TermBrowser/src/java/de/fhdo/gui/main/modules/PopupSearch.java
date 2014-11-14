@@ -225,7 +225,7 @@ public class PopupSearch extends GenericForwardComposer
     tree.setModel(treeModel.getTreeModel());
   }
 
-  public void showPopupConcept(int editMode)
+  public void showPopupConcept(PopupConcept.EDITMODES editMode)
   {
     // kein Element ausgewГ¤hlt, also nichts machen                        
     if (tree == null || tree.getSelectedItem() == null || (CodeSystemEntityVersion) ((TreeNode) tree.getSelectedItem().getValue()).getData() == null)
@@ -291,6 +291,6 @@ public class PopupSearch extends GenericForwardComposer
 
   public void onClick$bDetails()
   {
-    showPopupConcept(PopupWindow.EDITMODE_DETAILSONLY);
+    //TODO showPopupConcept(PopupCodeSystem.EDITMODES.DETAILSONLY);
   }
 }

@@ -45,7 +45,7 @@ public class RUDIHelper {
         ArrayList<Integer> listRights  = new ArrayList<Integer>();
 
         // Durchlaufe alle CS,VS,... und schaue nach den Rechten
-        Iterator<CodeSystemVersion> itCSV = TreeModelCS.getCsvList().iterator();
+        Iterator<CodeSystemVersion> itCSV = TreeModelCS.getInstance().getCsvList().iterator();
         while(itCSV.hasNext()){         
             CodeSystemVersion csv = itCSV.next();
             listRights.clear();

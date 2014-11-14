@@ -19,7 +19,9 @@ package de.fhdo.gui.main;
 import de.fhdo.Definitions;
 import de.fhdo.collaboration.helper.AssignTermHelper;
 import de.fhdo.gui.main.modules.ContentConcepts;
+import de.fhdo.gui.main.modules.PopupCodeSystem;
 import de.fhdo.gui.main.modules.PopupConcept;
+import de.fhdo.gui.main.modules.PopupValueSet;
 import de.fhdo.gui.main.modules.PopupWindow;
 import de.fhdo.helper.DeepLinkHelper;
 import de.fhdo.helper.DomainHelper;
@@ -177,6 +179,8 @@ public class ContentCSVSDefault extends Window implements AfterCompose
 
   private void processURLParameter()
   {
+    logger.debug("processURLParameter()");
+    
     // sendBackValues
     SendBackHelper.getInstance().initialize();
 
@@ -208,7 +212,8 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     {
       Clients.showBusy(Labels.getLabel("common.loading"));
 
-      treeCS.setModel(TreeModelCS.getTreeModel(getDesktop()));
+      //treeCS.setModel(TreeModelCS.getTreeModel(getDesktop()));
+      treeCS.setModel(TreeModelCS.getInstance().getTreeModel());
       treeCS.setItemRenderer(new TreeitemRenderer_CS_VS_DV(this));
 
       createCSTreeContextMenu();
@@ -238,7 +243,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     {
       public void onEvent(Event event) throws Exception
       {
-        popupCodeSystem(PopupWindow.EDITMODE_CREATE, true);
+        popupCodeSystem(PopupCodeSystem.EDITMODES.CREATE, true);
       }
     });
     if (SessionHelper.isUserLoggedIn())
@@ -400,7 +405,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     {
       public void onEvent(Event event) throws Exception
       {
-        popupValueSet(PopupWindow.EDITMODE_CREATE);
+        popupValueSet(PopupValueSet.EDITMODES.CREATE, true);
       }
     });
     if (SessionHelper.isUserLoggedIn())
@@ -447,8 +452,9 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     List<TreeNode> list = new LinkedList<TreeNode>();
 
     //logger.debug("CSV-Liste-size: " + TreeModelCS.getCsvList().size());
-    // alle CSV und VSV der Liste hinzufügen    
-    for (CodeSystemVersion csv : TreeModelCS.getCsvList())
+    
+    // alle CSV und VSV der Liste hinzufügen
+    for (CodeSystemVersion csv : TreeModelCS.getInstance().getCsvList())
     {
       //logger.debug("Add to search: " + csv.getName());
       list.add(new TreeNode(csv));
@@ -1091,11 +1097,61 @@ public class ContentCSVSDefault extends Window implements AfterCompose
       setActiveButtons(false, false, true, false);
     }
   }
-
-  public void popupDetails(int mode)
+  
+  public void onClickedNewCS()
   {
-    logger.debug("popupDetails: " + mode);
+    popupCodeSystem(PopupCodeSystem.EDITMODES.CREATE, true);
+  }
+  public void onClickedNewVersionCS()
+  {
+    popupCodeSystem(PopupCodeSystem.EDITMODES.CREATE_NEW_VERSION, true);
+  }
+  public void onClickedEditCS()
+  {
+    Object selectedItem = getSelectedItem();
 
+    if (selectedItem instanceof CodeSystem || selectedItem instanceof DomainValue)
+    {
+      popupCodeSystem(PopupCodeSystem.EDITMODES.MAINTAIN, false);
+    }
+    else
+    {
+      popupCodeSystem(PopupCodeSystem.EDITMODES.MAINTAIN, true);
+    }
+  }
+  public void onClickedDetailsCS()
+  {
+    popupCodeSystem(PopupCodeSystem.EDITMODES.DETAILSONLY, true);
+  }
+  
+  public void onClickedNewVS()
+  {
+    popupValueSet(PopupValueSet.EDITMODES.CREATE, true);
+  }
+  public void onClickedNewVersionVS()
+  {
+    popupValueSet(PopupValueSet.EDITMODES.CREATE_NEW_VERSION, true);
+  }
+  public void onClickedEditVS()
+  {
+    Object selectedItem = getSelectedItem();
+
+    if (selectedItem instanceof CodeSystem || selectedItem instanceof DomainValue)
+    {
+      popupValueSet(PopupValueSet.EDITMODES.MAINTAIN, false);
+    }
+    else
+    {
+      popupValueSet(PopupValueSet.EDITMODES.MAINTAIN, true);
+    }
+  }
+  public void onClickedDetailsVS()
+  {
+    popupValueSet(PopupValueSet.EDITMODES.DETAILSONLY, true);
+  }
+  
+  private Object getSelectedItem()
+  {
     Object selectedItem = null;
     Tree treeActive = getTreeActive();
 
@@ -1115,10 +1171,19 @@ public class ContentCSVSDefault extends Window implements AfterCompose
         }
         catch (Exception ex)
         {
-          Logger.getLogger(ContentCSVSDefault.class.getName()).log(Level.SEVERE, null, ex);
+          LoggingOutput.outputException(ex, this);
         }
       }
     }
+    
+    return selectedItem;
+  }
+
+  /*public void popupDetailsCS(PopupCodeSystem.EDITMODES mode)
+  {
+    logger.debug("popupDetailsCS: " + mode);
+
+    Object selectedItem = getSelectedItem();
 
     if (selectedItem instanceof CodeSystem || selectedItem instanceof DomainValue)
     {
@@ -1133,25 +1198,21 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     else if (selectedItem instanceof ValueSet)
     {
       logger.debug("popupValueSet");
-      popupValueSet(mode);
+      // TODO popupValueSet(mode);
     }
     else if (selectedItem instanceof ValueSetVersion)
     {
       logger.debug("popupValueSet");
-      popupValueSet(mode);
+      // TODO popupValueSet(mode);
     }
-     //else if (selectedItem instanceof DomainValue)
-
-     //logger.debug("selectedItem type not found: " + selectedItem.getClass().getCanonicalName());
-    //popupDomainValue(mode);
     else
     {
       if (selectedItem != null)
         logger.debug("selectedItem type not found: " + selectedItem.getClass().getCanonicalName());
     }
-  }
+  }*/
 
-  private void popupCodeSystem(int mode, boolean showVersion)
+  public void popupCodeSystem(PopupCodeSystem.EDITMODES mode, boolean showVersion)
   {
     logger.debug("popupValueSet, mode: " + mode + ", showVersion: " + showVersion);
     try
@@ -1161,6 +1222,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
       if (showVersion)
         data.put("CSV", selectedCSV);
       data.put("EditMode", mode);
+      //Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupCodeSystem.zul", this, data);
       Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupCodeSystem.zul", this, data);
       w.doModal();
     }
@@ -1170,13 +1232,14 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     }
   }
 
-  private void popupValueSet(int mode)
+  public void popupValueSet(PopupValueSet.EDITMODES mode, boolean showVersion)
   {
     try
     {
       Map<String, Object> data = new HashMap<String, Object>();
       data.put("VS", selectedVS);
-      data.put("VSV", selectedVSV);
+      if(showVersion)
+        data.put("VSV", selectedVSV);
       data.put("EditMode", mode);
       Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupValueSet.zul", this, data);
       w.doModal();
@@ -1332,8 +1395,8 @@ public class ContentCSVSDefault extends Window implements AfterCompose
 
   public void refreshCS()
   {
-    TreeModelCS.reloadData(getDesktop());
-    treeCS.setModel(TreeModelCS.getTreeModel(getDesktop()));
+    TreeModelCS.getInstance().reloadData();
+    treeCS.setModel(TreeModelCS.getInstance().getTreeModel());
 
     sortTreeByName(treeCS);
   }

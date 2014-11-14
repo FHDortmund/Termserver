@@ -483,7 +483,8 @@ public class ProposalDetails extends Window implements AfterCompose
                 csv.setName(((Textbox) getFellow("tbVocVersionName")).getText());
                 csv.setDescription(((Textbox) getFellow("tbVocVersionDescription")).getText());
                 csv.setStatus(0);
-                csv.setValidityRange(236l); //optional
+                //csv.setValidityRange(236l); //optional
+                csv.setValidityRange(4l); //optional
 
                 cs.getCodeSystemVersions().add(csv);
 

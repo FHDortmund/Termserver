@@ -65,6 +65,9 @@ public class ListCodeSystemsInTaxonomy
     ListCodeSystems lcs = new ListCodeSystems();
     ListCodeSystemsResponseType lcsResponse = lcs.ListCodeSystems(lcsRequest, ipAddress);
     allCodesystemList = lcsResponse.getCodeSystem();
+    
+    if(allCodesystemList == null)
+      allCodesystemList = new LinkedList<CodeSystem>();
 
     // Return-Informationen anlegen
     ListCodeSystemsInTaxonomyResponseType response = new ListCodeSystemsInTaxonomyResponseType();
@@ -182,7 +185,7 @@ public class ListCodeSystemsInTaxonomy
           // Liste bereinigen
           cleanUpList(response.getDomainValue());
 
-          if (allCodesystemList.size() > 0)
+          if (allCodesystemList != null && allCodesystemList.size() > 0)
           {
             // Alle übrigens Codesysteme hinzufügen
             DomainValue otherDV = new DomainValue();

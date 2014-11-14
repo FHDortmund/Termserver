@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <zk xmlns="http://www.zkoss.org/2005/zul">
-  <window apply="de.fhdo.gui.main.modules.PopupValueSet" width="750px" vflex="min" closable="true" border="normal" position="center,center">                          
+  <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winVSDetails"?>
+  <window id="winVSDetails" use="de.fhdo.gui.main.modules.PopupValueSet" width="900px"
+          closable="true" border="normal" sizable="true" title="-">
+  
     <borderlayout vflex="min">
       <center border="none" vflex="min">
-        <tabbox id="tabboxFilter" onSelect="windowCSVS.setActiveTab()" vflex="min">  
+        <tabbox id="tabboxFilter" vflex="min">  
           <tabs>
             <tab id="tabDetails" label="${labels.common.details}" />
             <tab id="tabMetaParameter" label="${labels.common.metaParameter}"/>
@@ -13,107 +16,132 @@
             <tabpanel id="tabpanelDetails">
               <groupbox mold="3d" width="100%" title="${labels.common.valueSet}"
                         closable="false">
+                <caption>
+                  <toolbar hflex="min">
+                    <hbox >
+                      <toolbarbutton id="buttonExpandCS" image="/rsc/img/symbols/expand_16x16.png"
+                                     onClick="winVSDetails.onClickExpandCS()"/>
+                    </hbox>
+                  </toolbar>
+                </caption>
                 <grid hflex="true"  height="100%" >
                   <columns sizable="true">
-                    <column width="270px"/>
+                    <column width="220px"/>
                     <column/>
                   </columns>
                   <rows> 
                     <row>
-                      <label id="lName" value="${labels.common.name}"/>      
-                      <textbox id="tbVSName"        value="@{vs.name, save-when='bCreate.onClick'}" hflex="true"/>
+                      <label id="lName" value="${labels.common.name}:"/>      
+                      <textbox id="tbVSName" value="@{winVSDetails.valueSet.name}" hflex="true" sclass="mandatory"/>
                     </row>
                     <row>
-                      <label value="${labels.common.description}"/>          
-                      <textbox id="tbVSDescription" value="@{vs.description, save-when='bCreate.onClick'}" multiline="true" hflex="true"/>
+                      <label value="${labels.common.description}:"/>          
+                      <textbox id="tbVSDescription" value="@{winVSDetails.valueSet.description}" multiline="true" hflex="true" rows="3"/>
                     </row>
-                    <row>
-                      <label value="${labels.common.descriptionEng}"/>       
-                      <textbox id="tbVSDescriptionEng"  value="@{vs.descriptionEng, save-when='bCreate.onClick'}" multiline="true" hflex="true"/>
+                    <row id="rowDescriptionEng">
+                      <label value="${labels.common.descriptionEng}:"/>       
+                      <textbox id="tbVSDescriptionEng"  value="@{winVSDetails.valueSet.descriptionEng}" multiline="true" hflex="true"/>
                     </row>
-                    <row>
-                      <label value="${labels.common.website}"/>              
-                      <textbox id="tbWebsite"          value="@{vs.website, save-when='bCreate.onClick'}" hflex="true"/>
+                    <row id="rowWebsite">
+                      <label value="${labels.common.website}:"/>              
+                      <textbox id="tbWebsite"          value="@{winVSDetails.valueSet.website}" hflex="true"/>
                     </row>
-                    <row>
+<!--                    <row>
                       <label value="${labels.common.status}"/>               
-                      <textbox id="tbVSStatus"      value="@{vs.status, save-when='bCreate.onClick'}" hflex="true"/>
+                      <textbox id="tbVSStatus"      value="@{winVSDetails.valueSet.status}" hflex="true"/>
                     </row>
                     <row>
                       <label value="${labels.common.statusLastEdited}"/>     
                       <datebox id="dateBoxSD1" format="medium+medium" width="150px" disabled="true"/>
+                    </row>-->
+                    <row id="rowVSStatus">
+                      <label value="${labels.common.status}:"/>               
+                      <hbox hflex="true">
+                        <combobox id="cboxStatusVS" readonly="true" width="170px" disabled="true"/>
+                        <datebox id="dateBoxStatusVS" format="medium+medium" width="150px" disabled="true"/>
+                      </hbox>
                     </row>
                     
                   </rows>
                 </grid> 
               </groupbox>
               <separator/>
-              <groupbox mold="3d" width="100%" title="${labels.common.version}"
+              <groupbox id="gbVersion" mold="3d" width="100%" title="${labels.common.version}"
                         closable="false">
+                
+                <caption>
+                  <toolbar hflex="min">
+                    <hbox>
+                      <toolbarbutton id="buttonExpandCSV" image="/rsc/img/symbols/expand_16x16.png"
+                                     onClick="winVSDetails.onClickExpandCSV()"/>
+                    </hbox>
+                  </toolbar>
+                </caption>
+                
                 <grid hflex="true" height="100%" >
                   <columns sizable="true">
-                    <column width="270px"/>
+                    <column width="220px"/>
                     <column/>
                   </columns>
                   <rows> 
                     <row>
-                      <label value="${labels.common.name}*"/>                 
-                      <textbox id="tbVSVName" value="@{vsv.name, save-when='bCreate.onClick'}" hflex="true"/>
+                      <label value="${labels.common.name}:"/>                 
+                      <textbox id="tbVSVName" value="@{winVSDetails.valueSetVersion.name}" hflex="true" sclass="mandatory"/>
                     </row>
                     <row>
-                      <label value="${labels.common.oid}"/> 
+                      <label value="${labels.common.oid}:"/> 
                       <cell colspan="2">
                         <button id="bOidBeantragen" label="${labels.common.oidBEnquiry}" visible="false"/> 
-                        <textbox id="tbVSVOid" value="@{vsv.oid, save-when='bCreate.onClick'}" hflex="true"/>
+                        <textbox id="tbVSVOid" value="@{winVSDetails.valueSetVersion.oid}" hflex="true"/>
                       </cell>
                     </row>
-                    <row>
-                      <label value="${labels.common.validityRange}*"/>        
-                      <combobox id="cboxCSVValidityRange" hflex="true" readonly="true"/>
+                    <row id="rowValidityRange">
+                      <label value="${labels.common.validityRange}:"/>        
+                      <combobox id="cboxCSVValidityRange" hflex="true" readonly="true" sclass="mandatory"/>
                     </row>
-                    <row>
-                      <label value="${labels.common.releasedAt}"/>           
+                    <row id="rowReleasedAt">
+                      <label value="${labels.common.releasedAt}:"/>           
                       <datebox  id="dateBoxRD"  format="medium+medium" width="150px"/>
                     </row>
-                    <row>
+                    <row id="rowVSVStatus">
+                      <label value="${labels.common.status}:"/>               
+                      <hbox hflex="true">
+                        <combobox id="cboxStatusVSV" readonly="true" width="170px" disabled="true"/>
+                        <datebox id="dateBoxStatusVSV" format="medium+medium" width="150px" disabled="true"/>
+                      </hbox>
+                    </row>
+                    <!--<row>
                       <label id="lStatus" value="${labels.common.status}"/>  
-                      <textbox  id="tbVSVStatus" value="@{vsv.status, save-when='bCreate.onClick'}" hflex="true"/>
+                      <textbox  id="tbVSVStatus" value="@{winVSDetails.valueSetVersion.status}" hflex="true"/>
                     </row>
                     <row>
                       <label value="${labels.common.statusLastEdited}"/>     
                       <datebox  id="dateBoxSD2" format="medium+medium" width="150px" disabled="true"/>
-                    </row>
-                    <row>
-                      <label value="${labels.common.insertedAt}"/>
+                    </row>-->
+                    <row id="rowInsertedAt">
+                      <label value="${labels.common.insertedAt}:"/>
                       <datebox  id="dateBoxID"  format="medium+medium" width="150px" disabled="true"/>
                     </row>
-                    <row>
-                      <label value="${labels.common.preferredLanguage}"/>    
+                    <row id="rowPrefLanguage">
+                      <label value="${labels.common.preferredLanguage}:"/>    
                       <combobox id="cboxPreferredLanguage" hflex="true" readonly="true"/>
-                    </row>
-                    <row>
-                      <cell colspan="2">
-                        <label id="lReq" value="* ${labels.common.requiredField}" style="font-style:italic;font-size:0.6em"/>
-                      </cell>    
                     </row>
                   </rows>
                 </grid> 
               </groupbox>
             </tabpanel>
             <tabpanel id="tabpanelMetaparameter" >
-              <listbox id="listMetadataParameter" vflex="true" height="99%" hflex="true" >
-                <listhead></listhead>
-              </listbox>
+              <include id="incList" src="/gui/templates/GenericList.zul"/>
             </tabpanel>
           </tabpanels>
         </tabbox>
       </center>
       <south border="none" vflex="min" style="text-align:right">
-        <div style="padding-top:5px;">
-          <checkbox id="cbNewVersion" label="${labels.common.createNewVersion}" value="@{versioning.createNewVersion, save-when='bCreate.onClick'}" checked="@{versioning.createNewVersion}"/> 
+        <div style="padding-top:5px; margin-right:4px; margin-bottom:4px;">
+          <checkbox id="cbNewVersion" label="${labels.common.createNewVersion}" />
           <separator orient="vertical"/>
-          <button   id="bCreate"      label="${labels.common.create}" />
-          <button   id="bClose"       label="${labels.common.close}" />
+          <button id="bCreate" label="${labels.common.save}" onClick="winVSDetails.onOkClicked()" autodisable="self"/>
+          <button id="bClose" label="${labels.common.close}" onClick="winVSDetails.onCancelClicked()"/>
         </div>         
       </south>
     </borderlayout>    

@@ -45,10 +45,15 @@
                     </div>
                     <div align="right">  
                       <label value="${labels.contentConcepts.moreFunctions}" style="color:gray"/>
-                      <button id="bNew"     label="${labels.contentConcepts.newConcept}" onClick="windowConcepts.showPopupConcept(2,3)"    image="/rsc/img/list/add.png"    visible="false" />
+<!--                      <button id="bNew"     label="${labels.contentConcepts.newConcept}" onClick="windowConcepts.showPopupConcept(2,3)"    image="/rsc/img/list/add.png"    visible="false" />
                       <button id="bEdit"    label="${labels.common.edit}"       onClick="windowConcepts.showPopupConcept(5)"      image="/rsc/img/list/pencil.png" visible="false" disabled="true"/>
                       <button id="bSearch"  label="${labels.common.search}"     onClick="windowConcepts.showPopupConceptSearch()" image="/rsc/img/list/folder_magnify.png"/> 
-                      <button id="bDetails" label="${labels.common.details}"    onClick="windowConcepts.showPopupConcept(1)"      image="/rsc/img/list/magnifier.png"              disabled="true"/>           
+                      <button id="bDetails" label="${labels.common.details}"    onClick="windowConcepts.showPopupConcept(1)"      image="/rsc/img/list/magnifier.png"              disabled="true"/>           -->
+                      
+                      <button id="bNew" label="${labels.contentConcepts.newConcept}" onClick="windowConcepts.onClickedNewRootConcept()" image="/rsc/img/list/add.png"    visible="false" />
+                      <button id="bEdit" label="${labels.common.edit}" onClick="windowConcepts.onClickedEditConcept()" image="/rsc/img/list/pencil.png" visible="false" disabled="true"/>
+                      <button id="bSearch" label="${labels.common.search}" onClick="windowConcepts.showPopupConceptSearch()" image="/rsc/img/list/folder_magnify.png"/>
+                      <button id="bDetails" label="${labels.common.details}" onClick="windowConcepts.onClickedShowConcept()" image="/rsc/img/list/magnifier.png"              disabled="true"/>             
                     </div>
                   </div>
                 </south>

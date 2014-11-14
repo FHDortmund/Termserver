@@ -1,4 +1,4 @@
-/* 
+/*
  * CTS2 based Terminology Server and Terminology Browser
  * Copyright (C) 2014 FH Dortmund: Peter Haas, Robert Muetzner
  *
@@ -17,68 +17,50 @@
 package de.fhdo.gui.main.modules;
 
 import de.fhdo.Definitions;
-import de.fhdo.helper.DateTimeHelper;
+import de.fhdo.helper.ArgumentHelper;
+import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.DomainHelper;
+import de.fhdo.helper.PropertiesHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
+import de.fhdo.interfaces.IUpdateModal;
+import de.fhdo.list.GenericList;
+import de.fhdo.list.GenericListCellType;
+import de.fhdo.list.GenericListHeaderType;
+import de.fhdo.list.GenericListRowType;
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.models.TreeModel;
 import de.fhdo.models.TreeNode;
-import de.fhdo.models.comparators.ComparatorCsMetadata;
-import de.fhdo.models.comparators.ComparatorTranslations;
-import de.fhdo.models.comparators.ComparatorVsMetadata;
-import de.fhdo.models.itemrenderer.ListitemRendererCrossmapping;
-import de.fhdo.models.itemrenderer.ListitemRendererCsMetadataList;
-import de.fhdo.models.itemrenderer.ListitemRendererLinkedConcepts;
-import de.fhdo.models.itemrenderer.ListitemRendererOntologies;
-import de.fhdo.models.itemrenderer.ListitemRendererTranslations;
-import de.fhdo.models.itemrenderer.ListitemRendererVsMetadataList;
 import de.fhdo.terminologie.ws.authoring.CreateConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.CreateConceptResponse;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptResponseType;
-import de.fhdo.terminologie.ws.authoring.MaintainConceptValueSetMembershipRequestType;
-import de.fhdo.terminologie.ws.authoring.MaintainConceptValueSetMembershipResponse;
-import de.fhdo.terminologie.ws.authoring.UpdateConceptStatusRequestType;
-import de.fhdo.terminologie.ws.authoring.UpdateConceptStatusResponse;
-import de.fhdo.terminologie.ws.authoring.UpdateConceptValueSetMembershipStatusRequestType;
-import de.fhdo.terminologie.ws.authoring.UpdateConceptValueSetMembershipStatusResponse;
 import de.fhdo.terminologie.ws.authoring.VersioningType;
 import de.fhdo.terminologie.ws.conceptassociation.CreateConceptAssociationRequestType;
 import de.fhdo.terminologie.ws.conceptassociation.CreateConceptAssociationResponse;
-import de.fhdo.terminologie.ws.conceptassociation.ListConceptAssociationsRequestType;
-import de.fhdo.terminologie.ws.conceptassociation.ListConceptAssociationsResponse;
+import de.fhdo.terminologie.ws.search.ListCodeSystemConceptsRequestType;
+import de.fhdo.terminologie.ws.search.ListCodeSystemConceptsResponse;
 import de.fhdo.terminologie.ws.search.ReturnConceptDetailsRequestType;
-import de.fhdo.terminologie.ws.search.ReturnConceptDetailsResponse.Return;
+import de.fhdo.terminologie.ws.search.ReturnConceptDetailsResponse;
 import de.fhdo.terminologie.ws.search.ReturnValueSetConceptMetadataRequestType;
 import de.fhdo.terminologie.ws.search.ReturnValueSetConceptMetadataResponse;
-import java.util.ArrayList;
+import de.fhdo.terminologie.ws.search.Status;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zkplus.databind.AnnotateDataBinder;
-import org.zkoss.zul.Button;
+import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Datebox;
-import org.zkoss.zul.Div;
-import org.zkoss.zul.Grid;
-import org.zkoss.zul.Label;
-import org.zkoss.zul.ListModelList;
-import org.zkoss.zul.Listbox;
-import org.zkoss.zul.Listheader;
+import org.zkoss.zul.Include;
 import org.zkoss.zul.Messagebox;
-import org.zkoss.zul.Row;
-import org.zkoss.zul.SimpleListModel;
-import org.zkoss.zul.Tab;
-import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Tabbox;
+import org.zkoss.zul.Tabpanel;
 import org.zkoss.zul.Tree;
+import org.zkoss.zul.Window;
 import types.termserver.fhdo.de.AssociationType;
 import types.termserver.fhdo.de.CodeSystem;
 import types.termserver.fhdo.de.CodeSystemConcept;
@@ -89,906 +71,580 @@ import types.termserver.fhdo.de.CodeSystemEntityVersionAssociation;
 import types.termserver.fhdo.de.CodeSystemMetadataValue;
 import types.termserver.fhdo.de.CodeSystemVersion;
 import types.termserver.fhdo.de.CodeSystemVersionEntityMembership;
-import types.termserver.fhdo.de.ConceptValueSetMembership;
+import types.termserver.fhdo.de.MetadataParameter;
 import types.termserver.fhdo.de.ValueSetMetadataValue;
-import types.termserver.fhdo.de.ValueSetVersion;
 
 /**
  *
- * @author Becker
+ * @author Robert Mützner <robert.muetzner@fh-dortmund.de>
  */
-public class PopupConcept extends PopupWindow
+public class PopupConcept extends Window implements AfterCompose
 {
 
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
+
+  public static enum EDITMODES
+  {
+    NONE, DETAILSONLY, CREATE, MAINTAIN, CREATE_NEW_VERSION
+  }
+
+  public static enum HIERARCHYMODE
+  {
+    NONE, SAME, SUB, ROOT
+  }
+  
+  public static enum CONTENTMODE
+  {
+    CODESYSTEM, VALUESET
+  }
+
+  private EDITMODES editMode;
+  private HIERARCHYMODE hierarchyMode;
+  private CONTENTMODE contentMode;
+
+  private boolean guiConceptMinimalVisible;
+  private boolean guiConceptExpandableVisible;
+
   private CodeSystemEntityVersion csev;
   private CodeSystemConcept csc;
   private CodeSystemEntity cse;
   private CodeSystemVersionEntityMembership csvem;
 
-  private long id, versionId;
-  private int hierarchyMode, contentMode;
-  private List metadata = new ArrayList();
-  private List translations = new ArrayList();
-  private Listbox listTranslations, listMetadata, listCrossmappings, listLinkedConcepts, listOntologies;
-  private Button bCreate, bMetaParaChange, bTranslationNew;
-  private Checkbox cbNewVersion, cbPreferred, cbAxis, cbMainClass, cbStructureEntry, cbIsLeaf;
-  private Datebox dateBoxED, dateBoxID, dateBoxSD;
-  private Textbox tbTerm, tbAbbrevation, tbDescription, tbCode, tbNamePL, tbOrderNr, tbBedeutung, tbAwbeschreibung, tbHinweise, tbHints, tbMeaning;
-  private Label lReq, lName, lCode, lPref;
+  private long codeSystemEntityVersionId, codeSystemVersionId, valueSetVersionId;
+
+  GenericList genericListMetadata = null;
+  GenericList genericListTranslation = null;
+  
   private TreeNode tnSelected;
-  private Component gridT;
-  private Tab tabDetails;
-  private ConceptValueSetMembership cvsm;
-  private Row rOrderNr, rStructureEntry, rBedeutung, rAwbeschreibung, rHinweise, rHints, rMeaning;
-  private Combobox cbStatus;
+  //private CodeSystemEntityVersion csevAssociatedVersionId = null;
+  private long csevAssociatedVersionId = 0;
+  
+  private IUpdateModal updateListener = null;
 
-  @Override
-  public void doAfterComposeCustom()
+  public PopupConcept()
   {
-    contentMode = (Integer) arg.get("ContentMode");
-    if (arg.get("TreeNode") != null)
-      tnSelected = (TreeNode) arg.get("TreeNode");
-    id = (Long) arg.get("Id");
-    versionId = (Long) arg.get("VersionId");
-  }
+    logger.debug("PopupConcept() - Konstruktor");
 
-  private void loadAssociations()
-  {
-    if (tnSelected.getResponseListConceptAssociations() == null)
-    {
-      // Parameter erzeugen und im folgenden zusammenbauen
-      ListConceptAssociationsRequestType parameter_ListCA = new ListConceptAssociationsRequestType();
+    // load arguments
+    //id = ArgumentHelper.getWindowArgumentLong("Id");
+    codeSystemEntityVersionId = ArgumentHelper.getWindowArgumentLong("VersionId");
+    logger.debug("versionId: " + codeSystemEntityVersionId);
+    
+    codeSystemVersionId = ArgumentHelper.getWindowArgumentLong("CodeSystemVersionId");
+    valueSetVersionId = ArgumentHelper.getWindowArgumentLong("ValueSetVersionId");
+    
+    logger.debug("codeSystemVersionId: " + codeSystemVersionId);
+    logger.debug("valueSetVersionId: " + valueSetVersionId);
 
-      // CSE erstellen und CSEV einsetzen  
-      CodeSystemEntity cseNew = new CodeSystemEntity();
-      CodeSystemEntityVersion csevNew = new CodeSystemEntityVersion();
-      cseNew.setId(csev.getCodeSystemEntity().getId());
-      csevNew.setVersionId(csev.getVersionId());
-      cseNew.getCodeSystemEntityVersions().add(csevNew);
-
-            // Zusatzinformationen anfordern um anzuzeigen ob noch Kinder vorhanden sind oder nicht
-      //        parameter_ListCA.setLookForward(true);    
-      parameter_ListCA.setDirectionBoth(true);
-      parameter_ListCA.setCodeSystemEntity(cseNew);
-
-      // Anfrage an WS (ListConceptAssociations) stellen mit parameter_ListCA                       
-      csevNew.setCodeSystemEntity(null);       // damit es kein infinity Deep Problem gibt
-
-      // Falls es beim Ausführen des WS zum Fehler kommt
-      ListConceptAssociationsResponse.Return response = null;
-      try
-      {
-        response = WebServiceHelper.listConceptAssociations(parameter_ListCA);
-      }
-      catch (Exception e)
-      {
-        e.printStackTrace();
-      }
-
-      tnSelected.setResponseListConceptAssociations(response);
-    }
-    loadCrossmappings();
-    loadLinkedConcepts();
-    loadOntologies();
-  }
-
-  private void loadCSEVFromArguments()
-  {
-    csev = (CodeSystemEntityVersion) arg.get("CSEV");
+    /*csev = (CodeSystemEntityVersion) ArgumentHelper.getWindowArgument("CSEV");
     if (csev != null)
     {
       csc = csev.getCodeSystemConcepts().get(0);
       cse = csev.getCodeSystemEntity();
-      loadDetails();
-    }
-  }
+    }*/
 
-  private void loadCsMetadata(Return responseDetails, boolean editableMetadataList)
-  {
-    for (CodeSystemMetadataValue csmdv : responseDetails.getCodeSystemEntity().getCodeSystemEntityVersions().get(0).getCodeSystemMetadataValues())
+    contentMode = (CONTENTMODE) ArgumentHelper.getWindowArgument("ContentMode");
+    logger.debug("contentMode: " + contentMode.name());
+
+    editMode = EDITMODES.NONE;
+    Object o = ArgumentHelper.getWindowArgument("EditMode");
+    if (o != null)
     {
-      csmdv.setCodeSystemEntityVersion(responseDetails.getCodeSystemEntity().getCodeSystemEntityVersions().get(0));
-      metadata.add(csmdv);
-    }
-
-    if (metadata.isEmpty())
-    {
-      window.getFellow("tabMetadata").setVisible(false);
-      return;
-    }
-    window.getFellow("tabMetadata").setVisible(true);
-
-    Listheader lh1 = new Listheader(Labels.getLabel("common.metadata")),
-            lh2 = new Listheader(Labels.getLabel("common.value"));
-    lh1.setSortAscending(new ComparatorCsMetadata(true));
-    lh1.setSortDescending(new ComparatorCsMetadata(false));
-    listMetadata.getListhead().getChildren().add(lh1);
-    listMetadata.getListhead().getChildren().add(lh2);
-
-    listMetadata.setItemRenderer(new ListitemRendererCsMetadataList(editableMetadataList));
-    listMetadata.setModel(new SimpleListModel(metadata));
-    lh1.sort(true);
-  }
-
-  private void loadVsMetadata(ReturnValueSetConceptMetadataResponse.Return responseDetails, boolean editableMetadataList)
-  {
-    for (ValueSetMetadataValue vsmdv : responseDetails.getValueSetMetadataValue())
-    {
-      metadata.add(vsmdv);
-    }
-
-    if (metadata.isEmpty())
-    {
-      window.getFellow("tabMetadata").setVisible(false);
-      return;
-    }
-    window.getFellow("tabMetadata").setVisible(true);
-
-    Listheader lh1 = new Listheader(Labels.getLabel("common.metadata")),
-            lh2 = new Listheader(Labels.getLabel("common.value"));
-    lh1.setSortAscending(new ComparatorVsMetadata(true));
-    lh1.setSortDescending(new ComparatorVsMetadata(false));
-    listMetadata.getListhead().getChildren().add(lh1);
-    listMetadata.getListhead().getChildren().add(lh2);
-
-    listMetadata.setItemRenderer(new ListitemRendererVsMetadataList(editableMetadataList));
-    listMetadata.setModel(new SimpleListModel(metadata));
-    lh1.sort(true);
-  }
-
-  private void loadTranslations(Return responseDetails, boolean editableTranslationsList)
-  {
-
-    for (CodeSystemConceptTranslation csct : responseDetails.getCodeSystemEntity().getCodeSystemEntityVersions().get(0).getCodeSystemConcepts().get(0).getCodeSystemConceptTranslations())
-    {
-      translations.add(csct);
-    }
-
-    if (translations.isEmpty())
-    {
-      window.getFellow("tabTranslations").setVisible(false);
-      return;
-    }
-    window.getFellow("tabTranslations").setVisible(true);
-
-    Listheader lh1 = new Listheader(Labels.getLabel("common.language")),
-            lh2 = new Listheader(Labels.getLabel("common.value"));
-    lh1.setSortAscending(new ComparatorTranslations(true));
-    lh1.setSortDescending(new ComparatorTranslations(false));
-    listTranslations.getListhead().getChildren().add(lh1);
-    listTranslations.getListhead().getChildren().add(lh2);
-
-    listTranslations.setItemRenderer(new ListitemRendererTranslations(editableTranslationsList));
-    listTranslations.setModel(new SimpleListModel(translations));
-    lh1.sort(true);
-  }
-
-  private void loadCrossmappings()
-  {
-    ListModelList crossmappings = new ListModelList();
-
-    for (CodeSystemEntityVersionAssociation cseva : tnSelected.getResponseListConceptAssociations().getCodeSystemEntityVersionAssociation())
-    {
-      if (cseva.getAssociationKind().compareTo(3) == 0 && crossmappings.contains(cseva) == false)
+      try
       {
-        crossmappings.add(cseva);
+        editMode = (EDITMODES) o;
+      }
+      catch (NumberFormatException ex)
+      {
+        LoggingOutput.outputException(ex, PopupCodeSystem.class);
       }
     }
+    logger.debug("Edit Mode: " + editMode.name());
 
-    if (crossmappings.isEmpty())
+    hierarchyMode = HIERARCHYMODE.NONE;
+    o = ArgumentHelper.getWindowArgument("Association");
+    if (o != null)
     {
-      window.getFellow("tabCrossmapping").setVisible(false);
-      return;
+      hierarchyMode = (HIERARCHYMODE) o;
     }
-    window.getFellow("tabCrossmapping").setVisible(true);
+    logger.debug("hierarchyMode: " + hierarchyMode.name());
+    
+    o = ArgumentHelper.getWindowArgument("TreeNode");
+    if (o != null)
+      tnSelected = (TreeNode) o;
+    
+    //csevAssociatedVersionId = (CodeSystemEntityVersion) ArgumentHelper.getWindowArgument("CSEVAssociated"); // für assoziationen   
+    csevAssociatedVersionId = ArgumentHelper.getWindowArgumentLong("CSEVAssociated"); // für assoziationen   
 
-    Listheader lh1 = new Listheader(Labels.getLabel("common.concept")),
-            lh2 = new Listheader(Labels.getLabel("common.codeSystem"));
-    listCrossmappings.getListhead().getChildren().add(lh1);
-    listCrossmappings.getListhead().getChildren().add(lh2);
-    listCrossmappings.setModel(crossmappings);
-
-    //renderer
-    listCrossmappings.setItemRenderer(new ListitemRendererCrossmapping(csev.getVersionId()));
+    initData();
   }
 
-  private void loadLinkedConcepts()
+  public void afterCompose()
   {
-    ListModelList linkedConcepts = new ListModelList();
+    logger.debug("PopupConcept() - afterCompose()");
 
-    for (CodeSystemEntityVersionAssociation cseva : tnSelected.getResponseListConceptAssociations().getCodeSystemEntityVersionAssociation())
+    setWindowTitle();
+    showDetailsVisibilty();
+
+    // fill domain values with selected codes
+    DomainHelper.getInstance().fillCombobox((Combobox) getFellow("cbStatus"), de.fhdo.Definitions.DOMAINID_STATUS,
+            csev == null ? "" : "" + csev.getStatusVisibility());
+
+    // load data without bindings (dates, ...)
+    if (csev.getStatusVisibilityDate() != null)
+      ((Datebox) getFellow("dateBoxSD")).setValue(new Date(csev.getStatusVisibilityDate().toGregorianCalendar().getTimeInMillis()));
+    if (csev.getInsertTimestamp() != null)
+      ((Datebox) getFellow("dateBoxID")).setValue(new Date(csev.getInsertTimestamp().toGregorianCalendar().getTimeInMillis()));
+    if (csev.getEffectiveDate() != null)
+      ((Datebox) getFellow("dateBoxReleasedAt")).setValue(new Date(csev.getEffectiveDate().toGregorianCalendar().getTimeInMillis()));
+
+    ComponentHelper.setVisible("divId", editMode == EDITMODES.CREATE_NEW_VERSION || editMode == EDITMODES.MAINTAIN ||
+            editMode == EDITMODES.DETAILSONLY, this);
+    
+    
+    initListMetadata();
+    
+    showComponents();
+  }
+
+  private void showComponents()
+  {
+    logger.debug("showComponents()");
+
+    List<String> ignoreList = new LinkedList<String>();
+    ignoreList.add("rowCSVStatus");  // immer readonly 
+    ignoreList.add("dateBoxID");
+    ignoreList.add("cbIsLeaf");
+    ignoreList.add("buttonExpand");
+    
+    
+
+    boolean readOnly = (editMode == EDITMODES.DETAILSONLY || editMode == EDITMODES.NONE);
+    ComponentHelper.doDisableAll(getFellow("tabpanelDetails"), readOnly, ignoreList);
+
+    logger.debug("version checked: " + (editMode == EDITMODES.CREATE_NEW_VERSION || editMode == EDITMODES.CREATE ? "true" : "false"));
+
+    ((Checkbox) getFellow("cbNewVersion")).setVisible(editMode == EDITMODES.CREATE || editMode == EDITMODES.CREATE_NEW_VERSION || editMode == EDITMODES.MAINTAIN);
+    ((Checkbox) getFellow("cbNewVersion")).setChecked(editMode == EDITMODES.CREATE_NEW_VERSION || editMode == EDITMODES.CREATE);
+    ((Checkbox) getFellow("cbNewVersion")).setDisabled(editMode != EDITMODES.MAINTAIN);
+
+    ComponentHelper.setVisible("bCreate", editMode == EDITMODES.CREATE || editMode == EDITMODES.CREATE_NEW_VERSION || editMode == EDITMODES.MAINTAIN, this);
+  }
+
+  private void initData()
+  {
+    // Properties
+    guiConceptMinimalVisible = !PropertiesHelper.getInstance().isGuiConceptMinimal();
+    guiConceptExpandableVisible = PropertiesHelper.getInstance().isGuiConceptExpandable();
+
+    logger.debug("guiConceptMinimalVisible: " + guiConceptMinimalVisible);
+    logger.debug("guiConceptExpandableVisible: " + guiConceptExpandableVisible);
+
+    if (editMode == EDITMODES.CREATE)
     {
-      if (cseva.getAssociationKind().compareTo(4) == 0 && linkedConcepts.contains(cseva) == false)
+      logger.debug("new entry");
+      // new entry
+      csev = new CodeSystemEntityVersion();
+      csc = new CodeSystemConcept();
+      cse = new CodeSystemEntity();
+      csvem = new CodeSystemVersionEntityMembership();
+
+      csc.setIsPreferred(Boolean.TRUE);
+      csev.getCodeSystemConcepts().add(csc);
+      csev.setStatusVisibility(1); // TODO: 1 durch Konstante ersetzen
+      csev.setIsLeaf(Boolean.TRUE);
+      csvem.setIsAxis(Boolean.FALSE);
+
+      if (hierarchyMode == HIERARCHYMODE.ROOT)
       {
-        linkedConcepts.add(cseva);
+        csvem.setIsMainClass(Boolean.TRUE);
+        // TODO isAxis ?
+      }
+      else
+      {
+        this.setTitle(Labels.getLabel("popupConcept.createSubconcept"));
+        csvem.setIsMainClass(Boolean.FALSE);
       }
     }
-
-    if (linkedConcepts.isEmpty())
+    else
     {
-      window.getFellow("tabLinkedConcepts").setVisible(false);
-      return;
-    }
-    window.getFellow("tabLinkedConcepts").setVisible(true);
-    Listheader lh1 = new Listheader(Labels.getLabel("common.association")),
-            lh2 = new Listheader(Labels.getLabel("common.concept"));
-    lh1.setWidth("30%");
-    listLinkedConcepts.getListhead().setSizable(true);
-    listLinkedConcepts.getListhead().getChildren().add(lh1);
-    listLinkedConcepts.getListhead().getChildren().add(lh2);
-    listLinkedConcepts.setModel(linkedConcepts);
+      logger.debug("load concept details");
+      // load concept details
+      ReturnConceptDetailsRequestType parameter = new ReturnConceptDetailsRequestType();
+      parameter.setCodeSystemEntity(new CodeSystemEntity());
+      CodeSystemEntityVersion csev_ws = new CodeSystemEntityVersion();
+      csev_ws.setVersionId(codeSystemEntityVersionId);
+      parameter.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev_ws);
 
-    // Renderer
-    listLinkedConcepts.setItemRenderer(new ListitemRendererLinkedConcepts(csev.getVersionId()));
-  }
-
-  private void loadOntologies()
-  {
-    ListModelList ontologies = new ListModelList();
-
-    for (CodeSystemEntityVersionAssociation cseva : tnSelected.getResponseListConceptAssociations().getCodeSystemEntityVersionAssociation())
-    {
-      if (cseva.getAssociationKind().compareTo(1) == 0)
+      if (SessionHelper.isUserLoggedIn())
       {
-        if (cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1() != null || cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId2() != null)
+        parameter.setLoginToken(SessionHelper.getSessionId());
+      }
+
+      ReturnConceptDetailsResponse.Return response = WebServiceHelper.returnConceptDetails(parameter);
+      
+      // keine csev zurueckgekommen (wegen moeglicher Fehler beim WS)
+      if (response.getCodeSystemEntity() == null)
+        return;
+
+      // load entities
+      cse = response.getCodeSystemEntity();
+      for (CodeSystemEntityVersion csev_db : cse.getCodeSystemEntityVersions())
+      {
+        if (csev_db.getVersionId().longValue() == cse.getCurrentVersionId())
         {
-          if (ontologies.contains(cseva) == false)
-            ontologies.add(cseva);
+          csev = csev_db;
+          csc = csev.getCodeSystemConcepts().get(0);
+          break;
         }
       }
-    }
-
-    if (ontologies.isEmpty())
-    {
-      window.getFellow("tabOntologies").setVisible(false);
-      return;
-    }
-    window.getFellow("tabOntologies").setVisible(true);
-    Listheader lh1 = new Listheader(Labels.getLabel("common.association")),
-            lh2 = new Listheader(Labels.getLabel("common.concept")),
-            lh3 = new Listheader(Labels.getLabel("common.code")),
-            lh4 = new Listheader(Labels.getLabel("common.isPreferredTerm"));
-    lh1.setWidth("100px");
-    lh3.setWidth("100px");
-    listOntologies.getListhead().setSizable(true);
-    listOntologies.getListhead().getChildren().add(lh1);
-    listOntologies.getListhead().getChildren().add(lh2);
-    listOntologies.getListhead().getChildren().add(lh3);
-    listOntologies.getListhead().getChildren().add(lh4);
-    listOntologies.setModel(ontologies);
-
-    // Renderer
-    listOntologies.setItemRenderer(new ListitemRendererOntologies(csev.getVersionId()));
-  }
-
-  private void loadDetails()
-  {
-    // Daten einlesen
-    loadDatesIntoGUI();
-    
-    
-
-    // Metadaten und Uebersetzungen laden
-    ReturnConceptDetailsRequestType parameter = new ReturnConceptDetailsRequestType();
-    parameter.setCodeSystemEntity(cse);
-    parameter.getCodeSystemEntity().getCodeSystemEntityVersions().clear();
-    parameter.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev);
-    //CSE aus CSEV entfernen, sonst inf,loop
-    csev.setCodeSystemEntity(null);
-
-    if (SessionHelper.isUserLoggedIn())
-    {
-      parameter.setLoginToken(SessionHelper.getSessionId());
-    }
-
-    Return response = WebServiceHelper.returnConceptDetails(parameter);
-
-    // keine csev zurueckgekommen (wegen moeglicher Fehler beim WS)
-    if (response.getCodeSystemEntity() == null)
-      return;
-
-    // das Loeschen der cse aus der csev wieder rueckgaengig machen (war nur fuer die Anfrage an WS)
-    csev.setCodeSystemEntity(cse);
-
-    // CodeSystemVersionEntityMembership nachladen
-    if (response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().isEmpty() == false)
-    {
-      csvem = response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().get(0);
-      cse.getCodeSystemVersionEntityMemberships().clear();
-      cse.getCodeSystemVersionEntityMemberships().add(csvem);
-    }
-
-    if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
-    {
-      ReturnValueSetConceptMetadataRequestType para = new ReturnValueSetConceptMetadataRequestType();
-      para.setCodeSystemEntityVersionId(csev.getVersionId());
-      para.setValuesetVersionId(versionId);
-      listMetadata.setAttribute("valuesetVersionId", versionId);
-      listMetadata.setAttribute("codeSystemEntityVersionId", csev.getVersionId());
-      listMetadata.setAttribute("contentMode", contentMode);
-
-      listTranslations.setAttribute("cse", cse);
-      listTranslations.setAttribute("csev", csev);
-      listTranslations.setAttribute("csevm", csvem);
-
-      ReturnValueSetConceptMetadataResponse.Return resp = WebServiceHelper.returnValueSetConceptMetadata(para);
-      loadVsMetadata(resp, false);
-
-    }
-    else
-    {
-      listMetadata.setAttribute("cse", cse);
-      listMetadata.setAttribute("csev", csev);
-      listMetadata.setAttribute("csevm", csvem);
-      listMetadata.setAttribute("contentMode", contentMode);
-      listMetadata.setAttribute("versionId", versionId);
-
-      listTranslations.setAttribute("cse", cse);
-      listTranslations.setAttribute("csev", csev);
-      listTranslations.setAttribute("csevm", csvem);
-
-      loadCsMetadata(response, false);
-    }
-
-    loadTranslations(response, false);
-    loadAssociations();
-
-    loadTbStatus();
-  }
-
-  private void loadTbStatus()
-  {
-    
-    String status_cd = "";
-    long domain_id;
-    
-    //csev.getStatusVisibility()
-            
-    if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
-    {
-
-      for (ConceptValueSetMembership cvsmL : csev.getConceptValueSetMemberships())
+      
+      for(CodeSystemVersionEntityMembership csvem_db : cse.getCodeSystemVersionEntityMemberships())
       {
-        if (cvsmL.getId().getValuesetVersionId() == versionId)
-          cvsm = cvsmL;
+        if(csvem_db.getId() != null && codeSystemVersionId == csvem_db.getId().getCodeSystemVersionId())
+        {
+          csvem = csvem_db;
+          logger.debug("csvem found");
+          break;
+        }
       }
 
-      status_cd = String.valueOf(cvsm.getStatus());
-      domain_id = Definitions.STATUS;
-      //tbStatus.setValue(String.valueOf(cvsm.getStatus()));
-      cbStructureEntry.setChecked(cvsm.isIsStructureEntry());
-      rStructureEntry.setVisible(true);
-      tbOrderNr.setValue(String.valueOf(cvsm.getOrderNr()));
-      rOrderNr.setVisible(true);
+      // das Loeschen der cse aus der csev wieder rueckgaengig machen (war nur fuer die Anfrage an WS)
+      //csev.setCodeSystemEntity(cse);
+      // CodeSystemVersionEntityMembership nachladen
+      /*if (response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().isEmpty() == false)
+      {
+        csvem = response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().get(0);
+        cse.getCodeSystemVersionEntityMemberships().clear();
+        cse.getCodeSystemVersionEntityMemberships().add(csvem);
+      }*/
 
-      tbBedeutung.setValue(cvsm.getMeaning());
-      rBedeutung.setVisible(true);
-      tbAwbeschreibung.setValue(cvsm.getDescription());
-      rAwbeschreibung.setVisible(true);
-      tbHinweise.setValue(cvsm.getHints());
-      rHinweise.setVisible(true);
+      if (contentMode == CONTENTMODE.VALUESET)
+      {
+        ReturnValueSetConceptMetadataRequestType para = new ReturnValueSetConceptMetadataRequestType();
+        para.setCodeSystemEntityVersionId(csev.getVersionId());
+        para.setValuesetVersionId(valueSetVersionId);
+//      listMetadata.setAttribute("valuesetVersionId", versionId);
+//      listMetadata.setAttribute("codeSystemEntityVersionId", csev.getVersionId());
+//      listMetadata.setAttribute("contentMode", contentMode);
+//
+//      listTranslations.setAttribute("cse", cse);
+//      listTranslations.setAttribute("csev", csev);
+//      listTranslations.setAttribute("csevm", csvem);
 
-      rHints.setVisible(false);
-      rMeaning.setVisible(false);
-
+        ReturnValueSetConceptMetadataResponse.Return resp = WebServiceHelper.returnValueSetConceptMetadata(para);
+//     TODO loadVsMetadata(resp, false);
+      }
+      else
+      {
+        // TODO
+//      listMetadata.setAttribute("cse", cse);
+//      listMetadata.setAttribute("csev", csev);
+//      listMetadata.setAttribute("csevm", csvem);
+//      listMetadata.setAttribute("contentMode", contentMode);
+//      listMetadata.setAttribute("versionId", versionId);
+//
+//      listTranslations.setAttribute("cse", cse);
+//      listTranslations.setAttribute("csev", csev);
+//      listTranslations.setAttribute("csevm", csvem);
+//
+//      loadCsMetadata(response, false);
+      }
+      
+      
     }
-    else
+
+//    loadTranslations(response, false);
+//    loadAssociations();
+//
+//    loadTbStatus();
+  }
+
+  private void setWindowTitle()
+  {
+    String title;
+
+    switch (editMode)
     {
-      //tbStatus.setValue(String.valueOf(csev.getStatusVisibility()));
-      status_cd = String.valueOf(csev.getStatusVisibility());
-      domain_id = Definitions.STATUS_CONCEPT_VISIBILITY;
+      case CREATE:
+      case CREATE_NEW_VERSION:
+        if (hierarchyMode == HIERARCHYMODE.SUB)
+          title = Labels.getLabel("popupConcept.createSubconcept");
+        else
+          title = Labels.getLabel("popupConcept.newConcept");
+        break;
+      case DETAILSONLY:
+        title = Labels.getLabel("popupConcept.showConcept");
+        break;
+      case MAINTAIN:
+        title = Labels.getLabel("popupConcept.editConcept");
+        break;
+
+      default:
+        //title = Labels.getLabel("common.details");
+        throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    this.setTitle(title);
+  }
+
+  private void showDetailsVisibilty()
+  {
+    logger.debug("showDetailsVisibilty()");
+
+    // concept
+    ComponentHelper.setVisible("buttonExpand", guiConceptExpandableVisible, this);
     
-    // Combobox füllen
-    DomainHelper.getInstance().fillCombobox(cbStatus, domain_id, status_cd);
+    ComponentHelper.setVisible("rMeaning", guiConceptMinimalVisible, this);
+    ComponentHelper.setVisible("rowAbbrevation", guiConceptMinimalVisible, this);
+//    ComponentHelper.setVisible("rowDescriptionEng", guiCodesystemMinimalVisible, this);
+//
+//    // code system version
+//    ComponentHelper.setVisible("rowValidityRange", guiCodesystemVersionMinimalVisible, this);
+//    ComponentHelper.setVisible("rowDateFrom", guiCodesystemVersionMinimalVisible, this);
+//    ComponentHelper.setVisible("rowDateTo", guiCodesystemVersionMinimalVisible, this);
+//    ComponentHelper.setVisible("rowCSVStatus", guiCodesystemVersionMinimalVisible, this);
+//    ComponentHelper.setVisible("rowCSVPrefLang", guiCodesystemVersionMinimalVisible, this);
+//    ComponentHelper.setVisible("rowCSVLicence", guiCodesystemVersionMinimalVisible, this);
+//
+//    ComponentHelper.setVisible("buttonExpandCSV", guiCodesystemVersionExpandableVisible, this);
+//
+//    Button buttonExpandCS = (Button) getFellow("buttonExpandCS");
+//    Button buttonExpandCSV = (Button) getFellow("buttonExpandCSV");
+//
+//    // Buttons
+//    if (guiCodesystemMinimalVisible)
+//      buttonExpandCS.setImage("/rsc/img/symbols/collapse_16x16.png");
+//    else
+//      buttonExpandCS.setImage("/rsc/img/symbols/expand_16x16.png");
+//
+//    if (guiCodesystemVersionMinimalVisible)
+//      buttonExpandCSV.setImage("/rsc/img/symbols/collapse_16x16.png");
+//    else
+//      buttonExpandCSV.setImage("/rsc/img/symbols/expand_16x16.png");
   }
 
-  private CreateConceptAssociationResponse.Return createAssociationResponse(CodeSystemEntityVersion csev1, CodeSystemEntityVersion csev2, int assoKind, int assoType)
+  public void onClickExpand()
   {
-    CreateConceptAssociationRequestType parameterAssociation = new CreateConceptAssociationRequestType();
-    CreateConceptAssociationResponse.Return responseAccociation = null;
-    CodeSystemEntityVersionAssociation cseva = new CodeSystemEntityVersionAssociation();
+    logger.debug("Expand CS...");
 
-    if (csev1 != null && csev2 != null)
+    guiConceptMinimalVisible = !guiConceptMinimalVisible;
+
+    showDetailsVisibilty();
+    this.invalidate();
+  }
+
+  public void tabSelected()
+  {
+    logger.debug("Tab selected");
+    Tabbox tabboxFilter = (Tabbox) getFellow("tabboxFilter");
+    Tabpanel selPanel = tabboxFilter.getSelectedPanel();
+    if (selPanel != null)
     {
-      cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(csev1);
-      cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId2(csev2);
-      cseva.setAssociationKind(assoKind); // 1 = ontologisch, 2 = taxonomisch, 3 = cross mapping   
-      cseva.setLeftId(csev1.getVersionId()); // immer linkes Element also csev1
-      cseva.setAssociationType(new AssociationType()); // Assoziationen sind ja auch CSEs und hier muss die CSEVid der Assoziation angegben werden.
-      cseva.getAssociationType().setCodeSystemEntityVersionId((long) assoType);
+      logger.debug("selPanel: " + selPanel.getId());
 
-      // Login
-      parameterAssociation.setLoginToken(SessionHelper.getSessionId());
-
-      // Association
-      parameterAssociation.setCodeSystemEntityVersionAssociation(cseva);
-
-      // Call WS and prevent loops in SOAP Message        
-      long cse1id = csev1.getCodeSystemEntity().getId();
-      csev1.setCodeSystemEntity(null);
-      csev2.setCodeSystemEntity(null);
-      responseAccociation = WebServiceHelper.createConceptAssociation(parameterAssociation);
-      csev1.setCodeSystemEntity(new CodeSystemEntity());
-      csev1.getCodeSystemEntity().setId(cse1id);
-      csev2.setCodeSystemEntity(cse);
+      if (selPanel.getId().equals("tabpanelMetadata"))
+      {
+        initListMetadata();
+      }
+      else if (selPanel.getId().equals("tabpanelTranslations"))
+      {
+        initListTranslation();
+      }
     }
 
-    return responseAccociation;
   }
 
-  @Override
-  protected void initializeDatabinder()
+  private void initListMetadata()
   {
-    binder = new AnnotateDataBinder(window);
-    binder.bindBean("cse", cse);
-    binder.bindBean("csev", csev);
-    binder.bindBean("csc", csc);
-    binder.bindBean("csvem", csvem);
-    binder.bindBean("metadata", metadata);
-    binder.bindBean("translations", translations);
-    binder.bindBean("versioning", versioning);
-    binder.loadAll();
-  }
+    // Header
+    List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
+    header.add(new GenericListHeaderType(Labels.getLabel("common.metadata"), 160, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("common.value"), 0, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("common.language"), 100, "", true, "String", true, true, false, false));
 
-  @Override
-  protected void loadDatesIntoGUI()
-  {
-    if (csev != null)
-    {
-      if (csev.getEffectiveDate() != null)
-        dateBoxED.setValue(new Date(csev.getEffectiveDate().toGregorianCalendar().getTimeInMillis()));
-      if (csev.getInsertTimestamp() != null)
-        dateBoxID.setValue(new Date(csev.getInsertTimestamp().toGregorianCalendar().getTimeInMillis()));
-      if (csev.getStatusVisibilityDate() != null)
-        dateBoxSD.setValue(new Date(csev.getStatusVisibilityDate().toGregorianCalendar().getTimeInMillis()));
-    }
-    else
-    {
-      dateBoxED.setValue(null);
-      dateBoxID.setValue(null);
-      dateBoxSD.setValue(null);
-    }
-  }
+    List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
 
-  @Override
-  protected void editmodeDetails()
-  {
-    loadCSEVFromArguments();
-    window.setTitle(Labels.getLabel("popupConcept.showConcept"));
-    cbAxis.setDisabled(true);
-    cbMainClass.setDisabled(true);
-    cbIsLeaf.setDisabled(true);
-    cbNewVersion.setVisible(false);
-    cbPreferred.setDisabled(true);
-    dateBoxED.setDisabled(true);
-    dateBoxID.setDisabled(true);
-    dateBoxSD.setDisabled(true);
-    tbTerm.setReadonly(true);
-    tbAbbrevation.setReadonly(true);
-    tbDescription.setReadonly(true);
-    tbCode.setReadonly(true);
-    cbStatus.setDisabled(true);
-    lReq.setVisible(false);
-    lName.setValue(Labels.getLabel("common.designation"));
-    lCode.setValue(Labels.getLabel("common.code"));
-    lPref.setValue(Labels.getLabel("common.preferred"));
-    bCreate.setVisible(false);
-    listMetadata.setDisabled(true);
-    listTranslations.setDisabled(true);
-    gridT.setVisible(true);
-    bMetaParaChange.setDisabled(true);
-    bTranslationNew.setDisabled(true);
-    tbHints.setReadonly(true);
-    tbMeaning.setReadonly(true);
-    if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    if (contentMode == CONTENTMODE.VALUESET)
     {
-      cbStructureEntry.setDisabled(true);
-      tbOrderNr.setReadonly(true);
-      tbBedeutung.setReadonly(true);
-      tbAwbeschreibung.setReadonly(true);
-      tbHinweise.setReadonly(true);
-    }
-  }
-
-  @Override
-  protected void editmodeCreate()
-  { //Erstellen
-    window.setTitle(Labels.getLabel("popupConcept.newConcept"));
-    csev = new CodeSystemEntityVersion();
-    csc = new CodeSystemConcept();
-    cse = new CodeSystemEntity();
-    csvem = new CodeSystemVersionEntityMembership();
-    versioning = new VersioningType();
-    csc.setIsPreferred(Boolean.TRUE);
-    csev.getCodeSystemConcepts().add(csc);
-    csev.setStatusVisibility(1); // TODO: 1 durch Konstante ersetzen
-    csev.setIsLeaf(Boolean.TRUE);
-    csvem.setIsAxis(Boolean.FALSE);
-    versioning.setCreateNewVersion(Boolean.TRUE);
-
-    hierarchyMode = (Integer) arg.get("Association");
-    if (hierarchyMode == 3)
-    {
-      //window.setTitle(Labels.getLabel("popupConcept.createRootConcept"));
-      csvem.setIsMainClass(Boolean.TRUE);
+      for (ValueSetMetadataValue meta : csev.getValueSetMetadataValues())
+      {
+        GenericListRowType row = createRowFromMetadataParameter(meta.getParameterValue(), meta.getMetadataParameter());
+        dataList.add(row);
+      }
     }
     else
     {
-      window.setTitle(Labels.getLabel("popupConcept.createSubconcept"));
-      csvem.setIsMainClass(Boolean.FALSE);
+      for (CodeSystemMetadataValue meta : csev.getCodeSystemMetadataValues())
+      {
+        GenericListRowType row = createRowFromMetadataParameter(meta.getParameterValue(), meta.getMetadataParameter());
+        dataList.add(row);
+      }
     }
 
-    cbAxis.setDisabled(false);
-    cbMainClass.setDisabled(true);
-    cbIsLeaf.setDisabled(true);
-    cbNewVersion.setVisible(true);
-    cbNewVersion.setDisabled(true);
-    cbPreferred.setDisabled(false);
-    dateBoxED.setReadonly(false);
-    dateBoxID.setReadonly(true);
-    dateBoxSD.setReadonly(true);
-    tbTerm.setReadonly(false);
-    tbTerm.setFocus(true);
-    tbAbbrevation.setReadonly(false);
-    tbDescription.setReadonly(false);
-    tbCode.setReadonly(false);
-    cbStatus.setDisabled(false);
-    lReq.setVisible(true);
-    lName.setValue(Labels.getLabel("common.designation") + "*");
-    lCode.setValue(Labels.getLabel("common.code") + "*");
-    lPref.setValue(Labels.getLabel("common.termPreferred") + "*");
-    bCreate.setVisible(true);
-    bCreate.setLabel(Labels.getLabel("common.create"));
-    listMetadata.setDisabled(true);
-    listTranslations.setDisabled(true);
-    gridT.setVisible(true);
-    bMetaParaChange.setDisabled(true);
-    bTranslationNew.setDisabled(true);
+    // Liste initialisieren
+    Include inc = (Include) getFellow("incListMetadata");
+    Window winGenericList = (Window) inc.getFellow("winGenericList");
+    genericListMetadata = (GenericList) winGenericList;
+    genericListMetadata.setListId("metadata");
+
+    //genericList.setListActions(this);
+    genericListMetadata.setButton_new(false);
+    genericListMetadata.setButton_edit(false);
+    genericListMetadata.setButton_delete(false);
+    genericListMetadata.setListHeader(header);
+    genericListMetadata.setDataList(dataList);
+
   }
 
-  @Override
-  protected void editmodeMaintainVersionNew()
+  private GenericListRowType createRowFromMetadataParameter(String value, MetadataParameter meta)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    GenericListRowType row = new GenericListRowType();
+
+    GenericListCellType[] cells = new GenericListCellType[3];
+    cells[0] = new GenericListCellType(meta.getParamName(), false, "");
+    cells[1] = new GenericListCellType(value, false, "");
+    cells[2] = new GenericListCellType(DomainHelper.getInstance().getDomainValueDisplayText(Definitions.DOMAINID_LANGUAGECODES, meta.getLanguageCd()), false, "");
+
+    row.setData(meta);
+    row.setCells(cells);
+
+    return row;
   }
 
-  @Override
-  protected void editmodeMaintain()
+  private void initListTranslation()
   {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  @Override
-  protected void editmodeMaintainVersionEdit()
-  {
-    loadCSEVFromArguments();
-    window.setTitle(Labels.getLabel("popupConcept.editConcept"));
-    versioning = new VersioningType();
-    versioning.setCreateNewVersion(Boolean.FALSE); // TODO: Probleme mit Assoziationen bei neuen Versionen; Vorerst keine neuen Versionen erstellbar                
-
-    if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    if (genericListTranslation == null)
     {
+      logger.debug("initListTranslation()");
 
-      cbAxis.setDisabled(true);
-      cbMainClass.setDisabled(true);
-      cbIsLeaf.setDisabled(true);
-      cbNewVersion.setVisible(false);
-      cbNewVersion.setDisabled(true); // TODO: Probleme mit Assoziationen bei neuen Versionen; Vorerst keine neuen Versionen erstellbar
-      cbPreferred.setDisabled(true);
-      dateBoxED.setReadonly(true);
-      dateBoxID.setReadonly(true);
-      dateBoxSD.setReadonly(true);
-      tbTerm.setReadonly(true);
-      tbAbbrevation.setReadonly(true);
-      tbDescription.setReadonly(true);
-      tbCode.setReadonly(true);
-      cbStatus.setDisabled(true);
-      lReq.setVisible(false);
-      lName.setValue(Labels.getLabel("common.designation"));
-      lCode.setValue(Labels.getLabel("common.code"));
-      lPref.setValue(Labels.getLabel("common.termPreferred"));
-      bCreate.setVisible(true);
-      bCreate.setLabel(Labels.getLabel("common.change"));
-      listMetadata.setDisabled(false);
-      cbStructureEntry.setDisabled(false);
-      tbOrderNr.setReadonly(false);
-      tbBedeutung.setReadonly(false);
-      tbAwbeschreibung.setReadonly(false);
-      tbHinweise.setReadonly(false);
-      tbHints.setReadonly(true);
-      tbMeaning.setReadonly(true);
+      // Header
+      List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
+      header.add(new GenericListHeaderType(Labels.getLabel("common.language"), 160, "", true, "String", true, true, false, false));
+      header.add(new GenericListHeaderType(Labels.getLabel("common.translation"), 0, "", true, "String", true, true, false, false));
+      header.add(new GenericListHeaderType(Labels.getLabel("common.abbrevation"), 150, "", true, "String", true, true, false, false));
 
-      Listheader lh1 = new Listheader(Labels.getLabel("common.metadata")),
-              lh2 = new Listheader(Labels.getLabel("common.value"));
-      lh1.setSortAscending(new ComparatorVsMetadata(true));
-      lh1.setSortDescending(new ComparatorVsMetadata(false));
+      List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
 
-      listMetadata.setItemRenderer(new ListitemRendererVsMetadataList(true));
-      listMetadata.setModel(new SimpleListModel(metadata));
-      lh1.sort(true);
+      logger.debug("Anzahl: " + csc.getCodeSystemConceptTranslations().size());
 
-      gridT.setVisible(true);
-      bMetaParaChange.setDisabled(false);
+      for (CodeSystemConceptTranslation data : csc.getCodeSystemConceptTranslations())
+      {
+        GenericListRowType row = createRowFromTranslation(data);
+        dataList.add(row);
+      }
 
-      listTranslations.setDisabled(false);
-      Listheader lh1t = new Listheader(Labels.getLabel("common.language")),
-              lh2t = new Listheader(Labels.getLabel("common.value"));
-      lh1t.setSortAscending(new ComparatorTranslations(true));
-      lh1t.setSortDescending(new ComparatorTranslations(false));
+      // Liste initialisieren
+      Include inc = (Include) getFellow("incListTranslation");
+      Window winGenericList = (Window) inc.getFellow("winGenericList");
+      genericListTranslation = (GenericList) winGenericList;
+      genericListTranslation.setListId("translation");
 
-      listTranslations.setItemRenderer(new ListitemRendererTranslations(true));
-      listTranslations.setModel(new SimpleListModel(translations));
-      lh1t.sort(true);
-
-      bTranslationNew.setDisabled(false);
+      //genericList.setListActions(this);
+      genericListTranslation.setButton_new(false);
+      genericListTranslation.setButton_edit(false);
+      genericListTranslation.setButton_delete(false);
+      genericListTranslation.setListHeader(header);
+      genericListTranslation.setDataList(dataList);
     }
-    else
+  }
+
+  private GenericListRowType createRowFromTranslation(CodeSystemConceptTranslation data)
+  {
+    GenericListRowType row = new GenericListRowType();
+
+    GenericListCellType[] cells = new GenericListCellType[3];
+    cells[0] = new GenericListCellType(DomainHelper.getInstance().getDomainValueDisplayText(Definitions.DOMAINID_LANGUAGECODES, data.getLanguageCd()), false, "");
+    cells[1] = new GenericListCellType(data.getTerm(), false, "");
+    cells[2] = new GenericListCellType(data.getTermAbbrevation(), false, "");
+
+    row.setData(data);
+    row.setCells(cells);
+
+    return row;
+  }
+
+  public void onOkClicked()
+  {
+    logger.debug("onOkClicked() - save data...");
+
+    // save data without bindings (dates, ...)
+    /*Date date = ((Datebox) getFellow("dateBoxED")).getValue();
+     if (date != null)
+     codeSystemVersion.setExpirationDate(DateTimeHelper.dateToXMLGregorianCalendar(date));
+     else
+     codeSystemVersion.setExpirationDate(null);*/
+    // check mandatory fields
+    if ((csc.getCode() == null || csc.getCode().length() == 0)
+            || (csc.getTerm() == null || csc.getTerm().length() == 0))
     {
-
-      cbAxis.setDisabled(false);
-      cbMainClass.setDisabled(false);
-      cbIsLeaf.setDisabled(false);
-      cbNewVersion.setVisible(true);
-      cbNewVersion.setDisabled(true); // TODO: Probleme mit Assoziationen bei neuen Versionen; Vorerst keine neuen Versionen erstellbar
-      cbPreferred.setDisabled(false);
-      dateBoxED.setReadonly(false);
-      dateBoxID.setReadonly(true);
-      dateBoxSD.setReadonly(true);
-      tbTerm.setReadonly(false);
-      tbAbbrevation.setReadonly(false);
-      tbDescription.setReadonly(false);
-      tbHints.setReadonly(false);
-      tbMeaning.setReadonly(false);
-      tbCode.setReadonly(false);
-      cbStatus.setDisabled(true);
-      lReq.setVisible(false);
-      lName.setValue(Labels.getLabel("common.designation"));
-      lCode.setValue(Labels.getLabel("common.code"));
-      lPref.setValue(Labels.getLabel("common.termPreferred"));
-      bCreate.setVisible(true);
-      bCreate.setLabel(Labels.getLabel("common.change"));
-      listMetadata.setDisabled(false);
-
-      Listheader lh1 = new Listheader(Labels.getLabel("common.metadata")),
-              lh2 = new Listheader(Labels.getLabel("common.value"));
-      lh1.setSortAscending(new ComparatorVsMetadata(true));
-      lh1.setSortDescending(new ComparatorVsMetadata(false));
-
-      listMetadata.setItemRenderer(new ListitemRendererCsMetadataList(true));
-      listMetadata.setModel(new SimpleListModel(metadata));
-      lh1.sort(true);
-
-      gridT.setVisible(true);
-      bMetaParaChange.setDisabled(false);
-
-      listTranslations.setDisabled(false);
-      Listheader lh1t = new Listheader(Labels.getLabel("common.language")),
-              lh2t = new Listheader(Labels.getLabel("common.value"));
-      lh1t.setSortAscending(new ComparatorTranslations(true));
-      lh1t.setSortDescending(new ComparatorTranslations(false));
-
-      listTranslations.setItemRenderer(new ListitemRendererTranslations(true));
-      listTranslations.setModel(new SimpleListModel(translations));
-      lh1t.sort(true);
-
-      bTranslationNew.setDisabled(false);
+      Messagebox.show(Labels.getLabel("common.mandatoryFields"), Labels.getLabel("common.requiredField"), Messagebox.OK, Messagebox.EXCLAMATION);
+      return;
     }
-  }
 
-  @Override
-  protected void editmodeUpdateStatus()
-  {
-    loadCSEVFromArguments();
-
-    window.setTitle(Labels.getLabel("popupConcept.editConceptStatus"));
-    cbAxis.setDisabled(true);
-    cbMainClass.setDisabled(true);
-    cbIsLeaf.setDisabled(true);
-    cbNewVersion.setVisible(false);
-    cbPreferred.setDisabled(true);
-    dateBoxED.setReadonly(true);
-    dateBoxID.setReadonly(true);
-    dateBoxSD.setReadonly(true);
-    tbTerm.setReadonly(true);
-    tbAbbrevation.setReadonly(true);
-    tbDescription.setReadonly(true);
-    tbHints.setReadonly(true);
-    tbMeaning.setReadonly(true);
-    tbCode.setReadonly(true);
-    cbStatus.setDisabled(false);
-    lReq.setVisible(false);
-    lName.setValue(Labels.getLabel("common.designation"));
-    lCode.setValue(Labels.getLabel("common.code"));
-    lPref.setValue(Labels.getLabel("common.termPreferred"));
-    bCreate.setVisible(true);
-    bCreate.setLabel(Labels.getLabel("common.changeStatus"));
-    gridT.setVisible(true);
-    bMetaParaChange.setDisabled(true);
-    bTranslationNew.setDisabled(true);
-    listMetadata.setDisabled(true);
-    listTranslations.setDisabled(true);
-
-    if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
-    {
-
-      cbStructureEntry.setDisabled(true);
-      tbOrderNr.setReadonly(true);
-      tbBedeutung.setReadonly(true);
-      tbAwbeschreibung.setReadonly(true);
-      tbHinweise.setReadonly(true);
-    }
-  }
-
-  @Override
-  protected void editmodeUpdateStatusVersion()
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  @Override
-  protected void create()
-  {
-        // Create Concept //////////////////////////////////////////////////////        
-//        Authoring                   port_authoring    = new Authoring_Service().getAuthoringPort();
-    logger.debug("create()");
-    
-    // CodeSystemVersionEntityMembership
+    // build structure for webservice
     cse.getCodeSystemVersionEntityMemberships().clear();
     cse.getCodeSystemVersionEntityMemberships().add(csvem);
 
-    // CodeSystemEntity(Version)
+    csev.getCodeSystemConcepts().clear();
+    csev.getCodeSystemConcepts().add(csc);
+
     cse.getCodeSystemEntityVersions().clear();
     cse.getCodeSystemEntityVersions().add(csev);
-    
-    CodeSystemConcept csc = csev.getCodeSystemConcepts().get(0);
-    logger.debug("Term: " + csc.getTerm());
-    logger.debug("Code: " + csc.getCode());
-    
 
-    // Daten setzen mit Convertierung von Date -> XMLGregorianCalendar
+    boolean success = false;
+    logger.debug("editMode: " + editMode.name());
+
     try
     {
-      if (dateBoxED != null && dateBoxED.getValue() != null)
+      // -> status date can't be updated manually
+      switch (editMode)
       {
-        GregorianCalendar c = new GregorianCalendar();
-        c.setTimeInMillis(dateBoxED.getValue().getTime());
-        csev.setEffectiveDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(c));
+        case CREATE:
+          success = save_Create();
+          break;
+        case MAINTAIN:
+          success = save_MaintainVersion();
+          break;
+        case CREATE_NEW_VERSION:
+          success = save_MaintainVersion();
+          break;
       }
     }
-    catch (DatatypeConfigurationException ex)
+    catch (Exception ex)
     {
-      Logger.getLogger(PopupConcept.class.getName()).log(Level.SEVERE, null, ex);
-    }
+      Messagebox.show(ex.getLocalizedMessage());
+      LoggingOutput.outputException(ex, this);
 
-    // CodeSystem + CodeSystemVersion
-    if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+      success = false;
+    }
+    
+    if(updateListener != null && 
+           (editMode == EDITMODES.MAINTAIN || 
+            editMode == EDITMODES.CREATE_NEW_VERSION ||
+            editMode == EDITMODES.CREATE ))
     {
-      CreateConceptRequestType parameterCSC = new CreateConceptRequestType();
-      CreateConceptResponse.Return responseCreateConcept = null;
-
-      // Login                         
-      parameterCSC.setLoginToken(SessionHelper.getSessionId());
-
-      // CodeSystem
-      CodeSystem cs = new CodeSystem();
-      CodeSystemVersion csv = new CodeSystemVersion();
-      cs.setId(id);
-      csv.setVersionId(versionId);
-      cs.getCodeSystemVersions().add(csv);
-      parameterCSC.setCodeSystem(cs);
-
-      // CodeSystemEntity + CSEV
-      parameterCSC.setCodeSystemEntity(cse);
-
-      parameterCSC.setCodeSystem(cs);
-
-      // WS anfrage
-      csev.setCodeSystemEntity(null);     //CSE aus CSEV entfernen, sonst inf,loop
-      responseCreateConcept = WebServiceHelper.createConcept(parameterCSC);
-      csev.setCodeSystemEntity(cse);  // das Löschen der cse aus der csev wieder rückgängig machen (war nur für die Anfrage an WS) 
-
-      // Meldung falls CreateConcept fehlgeschlagen
-      if (responseCreateConcept.getReturnInfos().getStatus() != de.fhdo.terminologie.ws.authoring.Status.OK)
-        try
-        {
-          Messagebox.show(Labels.getLabel("common.error") + "\n" + Labels.getLabel("popupConcept.conceptNotCreated") + "\n\n" + responseCreateConcept.getReturnInfos().getMessage());
-          return;
-        }
-        catch (Exception ex)
-        {
-          Logger.getLogger(PopupConcept.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-      // die neue cse(v) hat noch keine id. Für Assoziationen aber nötig => aus response auslesen
-      csev.setVersionId(responseCreateConcept.getCodeSystemEntity().getCurrentVersionId());
-      cse.setId(responseCreateConcept.getCodeSystemEntity().getId());
-      cse.setCurrentVersionId(csev.getVersionId());
-    }
-    else if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
-    { // ValueSets; Es werden nur Verknüpfungen zu CSE(V)s erstellt und keine neuen Konzepte angelegt
-      // siehe ganz unten
+      // update tree
+      
+      updateListener.update(cse, editMode == EDITMODES.MAINTAIN || editMode == EDITMODES.CREATE_NEW_VERSION);
     }
 
-    // TreeNode erstellen und danach update, damit das neue Konzept auch angezeigt wird                
-    TreeNode newTreeNode = new TreeNode(csev);
+    if (success)
+      this.detach();
 
-    // In Root einhängen
-    if (hierarchyMode == 3)
-    { // Root
-      Tree t = (Tree) windowParent.getFellow("treeConcepts");
-      ((TreeNode) ((TreeModel) t.getModel()).get_root()).getChildren().add(newTreeNode);
-    }
-    // Create Association für sub-konzepte und TreeNode einhängen
-    else if (hierarchyMode == 2)
-    { // sub-ebene
-      // Assoziation erstellen; geht erst nachdem die neue CSE(V) erstell wurde und eine Id bekommen hat
-      CodeSystemEntityVersion csevAssociated = null;
-      csevAssociated = (CodeSystemEntityVersion) arg.get("CSEVAssociated"); // für assoziationen   
-      CreateConceptAssociationResponse.Return responseAssociation = null;
-      responseAssociation = createAssociationResponse(csevAssociated, csev, 2, 4);
-
-      try
-      {
-        if (responseAssociation != null && responseAssociation.getReturnInfos().getStatus() != de.fhdo.terminologie.ws.conceptassociation.Status.OK)
-          Messagebox.show(Labels.getLabel("common.error") + "\n" + Labels.getLabel("popupConcept.associationNotCreated") + "\n\n" + responseAssociation.getReturnInfos().getMessage());
-        else
-        {
-          if (responseAssociation.getReturnInfos().getOverallErrorCategory() == de.fhdo.terminologie.ws.conceptassociation.OverallErrorCategory.INFO)
-          {
-            tnSelected.getChildren().add(newTreeNode);
-          }
-          else
-          {
-            Messagebox.show(Labels.getLabel("popupConcept.associationNotCreated") + "\n\n" + responseAssociation.getReturnInfos().getMessage());
-          }
-        }
-      }
-      catch (Exception ex)
-      {
-        Logger.getLogger(PopupConcept.class.getName()).log(Level.SEVERE, null, ex);
-      }
-    }
-    ((ContentConcepts) windowParent).updateModel(true);
-    window.detach();
   }
 
-  @Override
-  protected void maintainVersionNew()
+  public boolean save_MaintainVersion()
   {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  @Override
-  protected void maintain()
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  @Override
-  protected void maintainVersionEdit()
-  {
-
-    if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+    logger.debug("save_MaintainVersion()");
+    
+    Checkbox cbNewVersion = (Checkbox)getFellow("cbNewVersion");
+    
+    if (contentMode == CONTENTMODE.CODESYSTEM)
     {
       MaintainConceptRequestType parameter = new MaintainConceptRequestType();
-      parameter.setCodeSystemVersionId(versionId);
-      // Daten setzen mit Convertierung von Date -> XMLGregorianCalendar
-      try
-      {
-        if (dateBoxED != null && dateBoxED.getValue() != null)
-        {
-          GregorianCalendar c = new GregorianCalendar();
-          c.setTimeInMillis(dateBoxED.getValue().getTime());
-          csev.setEffectiveDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(c));
-        }
-      }
-      catch (DatatypeConfigurationException ex)
-      {
-        Logger.getLogger(PopupConcept.class.getName()).log(Level.SEVERE, null, ex);
-      }
-
+      parameter.setCodeSystemVersionId(codeSystemVersionId);
+      
       // Login
       parameter.setLoginToken(SessionHelper.getSessionId());
 
@@ -1020,8 +676,8 @@ public class PopupConcept extends PopupWindow
         else
           Messagebox.show(Labels.getLabel("common.error") + "\n" + Labels.getLabel("popupConcept.conceptNotCreated") + "\n\n" + response.getReturnInfos().getMessage());
 
-        window.detach();
-        ((ContentConcepts) windowParent).updateModel(true);
+        this.detach();
+        //((ContentConcepts) this.getParent()).updateModel(true);  // TODO funktioniert nicht, zeigt Änderungen nicht an
       }
       catch (Exception ex)
       {
@@ -1031,7 +687,7 @@ public class PopupConcept extends PopupWindow
     else
     {
       // ValueSet
-      MaintainConceptValueSetMembershipRequestType parameter = new MaintainConceptValueSetMembershipRequestType();
+      /*TODO MaintainConceptValueSetMembershipRequestType parameter = new MaintainConceptValueSetMembershipRequestType();
 
       // Login
       parameter.setLoginToken(SessionHelper.getSessionId());
@@ -1063,8 +719,8 @@ public class PopupConcept extends PopupWindow
       {
         if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
           Messagebox.show(Labels.getLabel("popupConcept.editConceptSuccessfully"));
-        ((ContentConcepts) windowParent).updateModel(true);
-        window.detach();
+        ((ContentConcepts) this.getParent()).updateModel(true);
+        this.detach();
         cvsm.setStatus(Integer.valueOf(DomainHelper.getInstance().getComboboxCd(cbStatus)));
         cvsm.setIsStructureEntry(cbStructureEntry.isChecked());
         cvsm.setOrderNr(Long.valueOf(tbOrderNr.getValue()));
@@ -1076,146 +732,259 @@ public class PopupConcept extends PopupWindow
       catch (Exception ex)
       {
         Logger.getLogger(PopupConcept.class.getName()).log(Level.SEVERE, null, ex);
-      }
+      }*/
     }
+    
+    return true;
   }
-
-  @Override
-  protected void updateStatus()
+  
+  public boolean save_Create()
   {
+    logger.debug("save_Create()");
 
-    if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+    if (checkIfConceptExists(csc.getCode()))
+      return false;
+
+    // Liste leeren, da hier so viele CSVs drin stehen wie es Versionen gibt. Als Parameter darf aber nur genau EINE CSV drin stehen.
+    CreateConceptRequestType parameter = new CreateConceptRequestType();
+
+    // set parameter
+    parameter.setLoginToken(de.fhdo.helper.SessionHelper.getSessionId());
+
+    parameter.setCodeSystem(new CodeSystem());
+    CodeSystemVersion csv = new CodeSystemVersion();
+    csv.setVersionId(codeSystemVersionId);
+    //parameter.getCodeSystem().setId(id);
+    parameter.getCodeSystem().getCodeSystemVersions().add(csv);
+
+    parameter.setCodeSystemEntity(cse); // cse structure build before
+
+    // WS aufruf
+    CreateConceptResponse.Return response = WebServiceHelper.createConcept(parameter);
+
+    // Message über Erfolg/Misserfolg                
+    if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
     {
+      //Messagebox.show(Labels.getLabel("popupCodeSystem.newCodeSystemsuccessfullyCreated"));
+      // die neue cse(v) hat noch keine id. Für Assoziationen aber nötig => aus response auslesen
+      csev.setVersionId(response.getCodeSystemEntity().getCurrentVersionId());
+      cse.setId(response.getCodeSystemEntity().getId());
+      cse.setCurrentVersionId(csev.getVersionId());
+      
+      logger.debug("new Entity-ID: " + cse.getId());
+      logger.debug("new Version-ID: " + csev.getVersionId());
 
-      UpdateConceptStatusRequestType parameter = new UpdateConceptStatusRequestType();
-      //parameter.setCodeSystemVersionId(versionId);
-      // Login
-      parameter.setLoginToken(SessionHelper.getSessionId());
+      // TreeNode erstellen und danach update, damit das neue Konzept auch angezeigt wird                
+      //TreeNode newTreeNode = new TreeNode(csev);
 
-      // CSE
-      parameter.setCodeSystemEntity(cse);
-      csev.setStatusVisibility(Integer.valueOf(DomainHelper.getInstance().getComboboxCd(cbStatus)));
-      //csev.setStatusVisibilityDate(new Date());
-      //CSEV    
-      csev.setCodeSystemEntity(null);     //CSE aus CSEV entfernen, sonst inf,loop
-      parameter.getCodeSystemEntity().getCodeSystemEntityVersions().clear();
-      parameter.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev);
+      // TODO irgendwie hier auslagern
+      // In Root einhängen
+      if (hierarchyMode == HIERARCHYMODE.ROOT)
+      { // Root
+        //Tree t = (Tree) this.getParent().getFellow("treeConcepts");
+        //((TreeNode) ((TreeModel) t.getModel()).get_root()).getChildren().add(newTreeNode);
+      }
+      // Create Association für sub-konzepte und TreeNode einhängen
+      else if (hierarchyMode == HIERARCHYMODE.SUB)
+      { 
+        logger.debug("create association...");
+        // sub-ebene
+        // Assoziation erstellen; geht erst nachdem die neue CSE(V) erstell wurde und eine Id bekommen hat
+        logger.debug("to id: " + csevAssociatedVersionId);
+        
+        CreateConceptAssociationResponse.Return responseAssociation = 
+                createAssociation(csevAssociatedVersionId, csev.getVersionId(), 2, 4);
 
-      UpdateConceptStatusResponse.Return response = WebServiceHelper.updateConceptStatus(parameter);
-
-      csev.setCodeSystemEntity(cse);  // das Löschen der cse aus der csev wieder rückgängig machen (war nur für die Anfrage an WS)       
-
-      // Meldung
-      try
-      {
-        if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
+        try
         {
-          Messagebox.show(Labels.getLabel("popupConcept.editStatusSuccessfully"));
-          ((ContentConcepts) windowParent).updateModel(true);
-          window.detach();
+          if (responseAssociation != null && responseAssociation.getReturnInfos().getStatus() != de.fhdo.terminologie.ws.conceptassociation.Status.OK)
+            Messagebox.show(Labels.getLabel("common.error") + "\n" + Labels.getLabel("popupConcept.associationNotCreated") + "\n\n" + responseAssociation.getReturnInfos().getMessage());
+          else
+          {
+            if (responseAssociation.getReturnInfos().getOverallErrorCategory() == de.fhdo.terminologie.ws.conceptassociation.OverallErrorCategory.INFO)
+            {
+              CodeSystemEntityVersionAssociation cseva = new CodeSystemEntityVersionAssociation();
+              cseva.setLeftId(csevAssociatedVersionId);
+              csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().add(cseva);
+              //tnSelected.getChildren().add(newTreeNode);
+            }
+            else
+            {
+              Messagebox.show(Labels.getLabel("popupConcept.associationNotCreated") + "\n\n" + responseAssociation.getReturnInfos().getMessage());
+            }
+          }
         }
-        else
-          Messagebox.show(Labels.getLabel("common.error") + " \n" + Labels.getLabel("popupConcept.editStatusfailed") + "\n\n" + response.getReturnInfos().getMessage());
+        catch (Exception ex)
+        {
+          Logger.getLogger(PopupConcept.class.getName()).log(Level.SEVERE, null, ex);
+        }
       }
-      catch (Exception ex)
-      {
-        Logger.getLogger(PopupConcept.class.getName()).log(Level.SEVERE, null, ex);
-      }
+      //((ContentConcepts) this.getParent()).updateModel(true);
+
     }
     else
     {
+      Messagebox.show(Labels.getLabel("common.error") + "\n" + Labels.getLabel("popupConcept.conceptNotCreated") + "\n\n" + response.getReturnInfos().getMessage());
+    }
 
-      UpdateConceptValueSetMembershipStatusRequestType parameter = new UpdateConceptValueSetMembershipStatusRequestType();
-      // Login
-      parameter.setLoginToken(SessionHelper.getSessionId());
+    return true;
+  }
 
-      CodeSystemEntityVersion codeSystemEntityVersion = new CodeSystemEntityVersion();
-      codeSystemEntityVersion.getConceptValueSetMemberships().clear();
-      ConceptValueSetMembership cvsmL = new ConceptValueSetMembership();
+  private boolean checkIfConceptExists(String name)
+  {
+    logger.debug("checkIfConceptExists with code: " + name);
 
-      cvsmL.setValueSetVersion(new ValueSetVersion());
-      cvsmL.getValueSetVersion().setVersionId(cvsm.getId().getValuesetVersionId());
-      cvsmL.setCodeSystemEntityVersion(new CodeSystemEntityVersion());
-      cvsmL.getCodeSystemEntityVersion().setVersionId(cvsm.getId().getCodeSystemEntityVersionId());
-      cvsmL.setStatusDate(DateTimeHelper.dateToXMLGregorianCalendar(new Date()));
-      cvsmL.setStatus(Integer.valueOf(DomainHelper.getInstance().getComboboxCd(cbStatus)));
-      codeSystemEntityVersion.getConceptValueSetMemberships().add(cvsmL);
-      parameter.setCodeSystemEntityVersion(codeSystemEntityVersion);
+    if (contentMode == CONTENTMODE.VALUESET)
+    {
+      // TODO doppelte Werte erlaubt?
+      return false;
+    }
+    else
+    {
+      ListCodeSystemConceptsRequestType request = new ListCodeSystemConceptsRequestType();
+      request.setCodeSystem(new CodeSystem());
+      CodeSystemVersion csv = new CodeSystemVersion();
+      csv.setVersionId(codeSystemVersionId);
+      request.getCodeSystem().getCodeSystemVersions().add(csv);
 
-      UpdateConceptValueSetMembershipStatusResponse.Return response = WebServiceHelper.updateConceptValueSetMembershipStatus(parameter);
+      request.setCodeSystemEntity(new CodeSystemEntity());
+      CodeSystemEntityVersion csev_ws = new CodeSystemEntityVersion();
+      CodeSystemConcept csc_ws = new CodeSystemConcept();
+      csc_ws.setCode(name);
+      csev_ws.getCodeSystemConcepts().add(csc_ws);
+      request.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev_ws);
 
-      // Meldung
-      try
+      ListCodeSystemConceptsResponse.Return response = WebServiceHelper.listCodeSystemConcepts(request);
+      if (response.getReturnInfos().getStatus() == Status.OK)
       {
-        if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
+        for (CodeSystemEntity cse_ws : response.getCodeSystemEntity())
         {
-          Messagebox.show(Labels.getLabel("popupConcept.editStatusSuccessfully"));
-          ((ContentConcepts) windowParent).updateModel(true);
-          window.detach();
-          cvsm.setStatus(Integer.valueOf(DomainHelper.getInstance().getComboboxCd(cbStatus)));
+          String code_ws = cse_ws.getCodeSystemEntityVersions().get(0).getCodeSystemConcepts().get(0).getCode();
+          if (code_ws == null)
+            continue;
+
+          if (code_ws.equalsIgnoreCase(name))
+            return true;
         }
-        else
-          Messagebox.show(Labels.getLabel("common.error") + " \n" + Labels.getLabel("popupConcept.editStatusfailed") + "\n\n" + response.getReturnInfos().getMessage());
       }
-      catch (Exception ex)
+      else
       {
-        Logger.getLogger(PopupConcept.class.getName()).log(Level.SEVERE, null, ex);
+        Messagebox.show(response.getReturnInfos().getMessage());
+        return true;
       }
     }
-  }
 
-  @Override
-  protected void updateStatusVersion()
+    return false;
+  }
+  
+  private CreateConceptAssociationResponse.Return createAssociation(long csev1_id, long csev2_id, int assoKind, long assoType_id)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
+    CreateConceptAssociationRequestType parameterAssociation = new CreateConceptAssociationRequestType();
+    CreateConceptAssociationResponse.Return responseAccociation = null;
+    CodeSystemEntityVersionAssociation cseva = new CodeSystemEntityVersionAssociation();
 
-  public void onCheck$cbNewVersion(Event event)
+    if (csev1_id > 0 && csev2_id > 0)
+    {
+      CodeSystemEntityVersion csev1 = new CodeSystemEntityVersion();
+      csev1.setVersionId(csev1_id);
+      CodeSystemEntityVersion csev2 = new CodeSystemEntityVersion();
+      csev2.setVersionId(csev2_id);
+      
+      cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(csev1);
+      cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId2(csev2);
+      cseva.setAssociationKind(assoKind); // 1 = ontologisch, 2 = taxonomisch, 3 = cross mapping   
+      cseva.setLeftId(csev1.getVersionId()); // immer linkes Element also csev1
+      cseva.setAssociationType(new AssociationType()); // Assoziationen sind ja auch CSEs und hier muss die CSEVid der Assoziation angegben werden.
+      cseva.getAssociationType().setCodeSystemEntityVersionId(assoType_id);
+
+      // Login
+      parameterAssociation.setLoginToken(SessionHelper.getSessionId());
+
+      // Association
+      parameterAssociation.setCodeSystemEntityVersionAssociation(cseva);
+
+      // Call WS and prevent loops in SOAP Message        
+      responseAccociation = WebServiceHelper.createConceptAssociation(parameterAssociation);
+      //csev1.setCodeSystemEntity(new CodeSystemEntity());
+      //csev1.getCodeSystemEntity().setId(cse1id);
+      //csev2.setCodeSystemEntity(cse);
+    }
+
+    return responseAccociation;
+  }
+  
+ 
+
+  /**
+   * @return the csev
+   */
+  public CodeSystemEntityVersion getCsev()
   {
-    if (cbNewVersion.isChecked())
-      bCreate.setLabel(Labels.getLabel("common.create"));
-    else
-      bCreate.setLabel(Labels.getLabel("common.change"));
+    return csev;
   }
 
-  public void onClick$bCreate(Event event)
+  /**
+   * @param csev the csev to set
+   */
+  public void setCsev(CodeSystemEntityVersion csev)
   {
-    buttonAction();
+    this.csev = csev;
   }
 
-  public void onClick$tabDetails()
+  /**
+   * @return the csc
+   */
+  public CodeSystemConcept getCsc()
   {
-
-    bCreate.setDisabled(false);
+    return csc;
   }
 
-  public void onClick$tabMetadata()
+  /**
+   * @param csc the csc to set
+   */
+  public void setCsc(CodeSystemConcept csc)
   {
-
-    bCreate.setDisabled(true);
+    this.csc = csc;
   }
 
-  public void onClick$tabTranslations()
+  /**
+   * @return the cse
+   */
+  public CodeSystemEntity getCse()
   {
-
-    bCreate.setDisabled(true);
+    return cse;
   }
 
-  public void onClick$tabCrossmapping()
+  /**
+   * @param cse the cse to set
+   */
+  public void setCse(CodeSystemEntity cse)
   {
-
-    bCreate.setDisabled(true);
+    this.cse = cse;
   }
 
-  public void onClick$tabLinkedConcepts()
+  /**
+   * @return the csvem
+   */
+  public CodeSystemVersionEntityMembership getCsvem()
   {
-
-    bCreate.setDisabled(true);
+    return csvem;
   }
 
-  public void onClick$tabOntologies()
+  /**
+   * @param csvem the csvem to set
+   */
+  public void setCsvem(CodeSystemVersionEntityMembership csvem)
   {
-
-    bCreate.setDisabled(true);
+    this.csvem = csvem;
   }
+
+  /**
+   * @param updateListener the updateListener to set
+   */
+  public void setUpdateListener(IUpdateModal updateListener)
+  {
+    this.updateListener = updateListener;
+  }
+
 }

@@ -109,7 +109,7 @@ public class ListitemRendererCrossmapping implements ListitemRenderer
         if (response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().isEmpty() == false)
         {
           Long csvId = response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().get(0).getId().getCodeSystemVersionId();
-          for (CodeSystemVersion csv : TreeModelCS.getCsvList())
+          for (CodeSystemVersion csv : TreeModelCS.getInstance().getCsvList())
           {
             if (csv.getVersionId().compareTo(csvId) == 0)
             {

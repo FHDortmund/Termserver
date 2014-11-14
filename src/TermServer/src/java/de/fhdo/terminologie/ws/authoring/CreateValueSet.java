@@ -126,7 +126,7 @@ public class CreateValueSet
         logger.debug("Neue Value Set-Version wird erstellt");
         vsv = new ValueSetVersion();
         vsv.setName(sdf.format(new Date()));
-        vsv.setValidityRange(238l);
+        vsv.setValidityRange(4l);
       }
 
       if(vsv.getName() == null || vsv.getName().length() <= 0)

@@ -13,7 +13,7 @@
      <ui-factory-class>org.zkoss.spring.bean.ZkSpringUiFactory</ui-factory-class>
   </system-config>-->
   <system-config>
-    <disable-event-thread>true</disable-event-thread>
+    <disable-event-thread>false</disable-event-thread>
   </system-config>
 
   <language-config>

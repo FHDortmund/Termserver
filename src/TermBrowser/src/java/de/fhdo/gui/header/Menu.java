@@ -440,7 +440,8 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
     try
     {
       Map<String, Object> data = new HashMap<String, Object>();
-      data.put("EditMode", PopupWindow.EDITMODE_DETAILSONLY);
+      //data.put("EditMode", PopupWindow.EDITMODE_DETAILSONLY);
+      data.put("EditMode", 1);
       Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupUserDetails.zul", this, data);
       w.doModal();
     }

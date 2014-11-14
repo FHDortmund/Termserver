@@ -41,7 +41,7 @@ public class Definitions
   public static final long DOMAINID_IMPORT_TYPES_VS = 12;
   public static final long STATUS_CONCEPT_VISIBILITY = 13;
   public static final long STATUS_CONCEPT_DEACTIVATED = 14;
-  public static final long STATUS = 15;
+  public static final long DOMAINID_STATUS = 15;
   
   /*public static enum STATUS_CODES
   {

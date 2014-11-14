@@ -28,16 +28,16 @@ import org.zkoss.zul.Window;
  */
 public abstract class PopupWindow extends GenericForwardComposer{
     private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
-    public final static int  EDITMODE_DETAILSONLY = 1,
-                             EDITMODE_CREATE = 2,
-                             EDITMODE_MAINTAIN_VERSION_NEW = 3,
-                             EDITMODE_MAINTAIN = 4,
-                             EDITMODE_MAINTAIN_VERSION_EDIT = 5,
-                             EDITMODE_UPDATESTATUS = 6,
-                             EDITMODE_UPDATESTATUS_VERSION = 7;    
+//    public final static int  EDITMODE_DETAILSONLY = 1,
+//                             EDITMODE_CREATE = 2,
+//                             EDITMODE_MAINTAIN_VERSION_NEW = 3,
+//                             EDITMODE_MAINTAIN = 4,
+//                             EDITMODE_MAINTAIN_VERSION_EDIT = 5,
+//                             EDITMODE_UPDATESTATUS = 6,
+//                             EDITMODE_UPDATESTATUS_VERSION = 7;    
     
     protected AnnotateDataBinder binder;
-    protected VersioningType     versioning;;  
+    protected VersioningType     versioning;
     protected int                editMode = EDITMODE_DETAILSONLY;  
     protected Window             window;
     protected Window             windowParent;  

@@ -185,7 +185,7 @@ public class CreateCodeSystem
         {
           csv_parameter.setCodeSystem(new CodeSystem());
           csv_parameter.getCodeSystem().setId(cs_db.getId());
-          csv_parameter.setValidityRange(238l);
+          csv_parameter.setValidityRange(4l);
           
           // CSV in DB speichern um neue Id zu erhalten
           hb_session.save(csv_parameter);

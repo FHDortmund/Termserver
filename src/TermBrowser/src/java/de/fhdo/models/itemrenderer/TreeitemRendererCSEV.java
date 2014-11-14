@@ -18,6 +18,7 @@ package de.fhdo.models.itemrenderer;
 
 import de.fhdo.collaboration.helper.AssignTermHelper;
 import de.fhdo.gui.main.modules.ContentConcepts;
+import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.gui.main.modules.PopupWindow;
 import de.fhdo.helper.SendBackHelper;
 import de.fhdo.helper.SessionHelper;
@@ -282,7 +283,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       public void onEvent(Event event) throws Exception
       {
         ((ContentConcepts) parentWindow).onSelect();
-        ((ContentConcepts) parentWindow).showPopupConcept(PopupWindow.EDITMODE_DETAILSONLY);
+      // TODO  ((ContentConcepts) parentWindow).showPopupConcept(PopupWindow.EDITMODE_DETAILSONLY);
       }
     });
 
@@ -528,8 +529,8 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     Menuitem miDetails = new Menuitem(Labels.getLabel("common.details"));
     Menuitem miEdit = new Menuitem(Labels.getLabel("treeitemRendererCSEV.editConcept"));
     Menuitem miStatus = new Menuitem(Labels.getLabel("treeitemRendererCSEV.editStatus"));
-    Menuitem miNewC2 = new Menuitem(Labels.getLabel("treeitemRendererCSEV.newSubConcept"));
-    Menuitem miNewC3 = new Menuitem(Labels.getLabel("treeitemRendererCSEV.newRootConcept"));
+    Menuitem miNewSubConcept = new Menuitem(Labels.getLabel("treeitemRendererCSEV.newSubConcept"));
+    Menuitem miNewRootConcept = new Menuitem(Labels.getLabel("treeitemRendererCSEV.newRootConcept"));
     Menuitem miDeepLink = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miCreateDeepLink"));
     Menuitem miRemoveVS = null;// = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miRemoveFromVS"));
     if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
@@ -544,7 +545,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-        ((ContentConcepts) parentWindow).showPopupConcept(PopupWindow.EDITMODE_DETAILSONLY);
+        ((ContentConcepts) parentWindow).showPopupConcept(PopupConcept.EDITMODES.DETAILSONLY, null);
       }
     });
 
@@ -552,31 +553,31 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-        ((ContentConcepts) parentWindow).showPopupConcept(PopupWindow.EDITMODE_MAINTAIN_VERSION_EDIT);
+        ((ContentConcepts) parentWindow).showPopupConcept(PopupConcept.EDITMODES.MAINTAIN, null);
       }
     });
 
-    miStatus.addEventListener("onClick", new EventListener()
+//    miStatus.addEventListener("onClick", new EventListener()
+//    {
+//      public void onEvent(Event event) throws Exception
+//      {
+//        // TODO ((ContentConcepts) parentWindow).showPopupConcept(PopupWindow.EDITMODE_UPDATESTATUS);
+//      }
+//    });
+
+    miNewSubConcept.addEventListener("onClick", new EventListener()
     {
       public void onEvent(Event event) throws Exception
       {
-        ((ContentConcepts) parentWindow).showPopupConcept(PopupWindow.EDITMODE_UPDATESTATUS);
+        ((ContentConcepts) parentWindow).showPopupConcept(PopupConcept.EDITMODES.CREATE, PopupConcept.HIERARCHYMODE.SUB);
       }
     });
 
-    miNewC2.addEventListener("onClick", new EventListener()
+    miNewRootConcept.addEventListener("onClick", new EventListener()
     {
       public void onEvent(Event event) throws Exception
       {
-        ((ContentConcepts) parentWindow).showPopupConcept(PopupWindow.EDITMODE_CREATE, 2);
-      }
-    });
-
-    miNewC3.addEventListener("onClick", new EventListener()
-    {
-      public void onEvent(Event event) throws Exception
-      {
-        ((ContentConcepts) parentWindow).showPopupConcept(PopupWindow.EDITMODE_CREATE, 3);
+        ((ContentConcepts) parentWindow).showPopupConcept(PopupConcept.EDITMODES.CREATE, PopupConcept.HIERARCHYMODE.ROOT);
       }
     });
 
@@ -657,7 +658,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
         }
       }
 
-      boolean allowed = true;
+      /*boolean allowed = true;
       if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
       {
         allowed = AssignTermHelper.isUserAllowed(((CodeSystemVersion) source).getCodeSystem());
@@ -669,47 +670,24 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
         allowed = AssignTermHelper.isUserAllowed(((ValueSetVersion) source).getValueSet());
       }
 
-      if (allowed)
+      if (allowed)*/
       {
 
         new Menuseparator().setParent(contextMenu);
         miEdit.setParent(contextMenu);
         miStatus.setParent(contextMenu);
         new Menuseparator().setParent(contextMenu);
-        miNewC2.setParent(contextMenu);
-        miNewC3.setParent(contextMenu);
+        miNewSubConcept.setParent(contextMenu);
+        miNewRootConcept.setParent(contextMenu);
         new Menuseparator().setParent(contextMenu);
         miRemoveVS.setParent(contextMenu);
 
-      //            Iterator<TreeNode> itVS = TreeModelVS.getTreeModel(parentWindow.getDesktop()).get_root().getChildren().iterator();
-        //            while(itVS.hasNext()){
-        //                final ValueSet  vs      = (ValueSet)itVS.next().getData();
-        //                Menu            mVS     = new Menu(vs.getName());
-        //                Menupopup       mpVS    = new Menupopup();
-        //                mVS.setParent(mpAddToVS);                
-        //                mpVS.setParent(mVS);
-        //
-        //                // VS Versionen einfuegen
-        //                Iterator<ValueSetVersion> itVSV = vs.getValueSetVersions().iterator();
-        //                while(itVSV.hasNext()){
-        //                    final ValueSetVersion vsv = itVSV.next();
-        //                    Menuitem miVSV = new Menuitem(vsv.getInsertTimestamp().toString());
-        //                    miVSV.addEventListener("onClick", new EventListener(){
-        //                        public void onEvent(Event event) throws Exception {                            
-        //                            CodeSystemEntityVersion csev = (CodeSystemEntityVersion) data;
-        //                            CodeSystemEntity cse = csev.getCodeSystemEntity();                            
-        //                            ((ContentConcepts)parentWindow).addConceptToValueSet(cse.getId(),csev.getVersionId(), vs.getId(), vsv.getVersionId());
-        //                        }            
-        //                    });
-        //                    miVSV.setParent(mpVS);
-        //                }
-        //            }    
         if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
         {
           //miRemoveVS.setParent(contextMenu);
           miStatus.setDisabled(false);
-          miNewC2.setDisabled(true);
-          miNewC3.setDisabled(true);
+          miNewSubConcept.setDisabled(true);
+          miNewRootConcept.setDisabled(true);
           miDeepLink.setDisabled(true);
           mAddToVS.setVisible(false);
         }

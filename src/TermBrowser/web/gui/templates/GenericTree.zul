@@ -15,6 +15,12 @@ Die Initialisierung des Baumes geschieht über GenericTree.java
       <north border="none">
         <toolbar id="toolbarFilterCollapse">
           <hbox>
+            <div id="divRefresh" visible="false">
+              <toolbarbutton id="tbb_Refresh"
+                             image="/rsc/img/generictree/refresh_16x16.png"
+                             onClick="winGenericTree.refresh()" tooltiptext="Aktualisiert die Ansicht"/>
+            </div>
+
             <div id="divExpandCollapse">
               <toolbarbutton id="tbb_Expand"
                              image="/rsc/img/generictree/expand_16x16.png"
@@ -27,10 +33,12 @@ Die Initialisierung des Baumes geschieht über GenericTree.java
             
 
             <div id="divFilter">
-              <separator orient="vertical" />
-              <image src="/rsc/img/generictree/filter_16x16.png" width="16px" height="16px"/>
-              <textbox id="filter_classes" width="120px" 
-                       onChanging="winGenericTree.filterChanged(event)" />
+              <hbox>
+                <separator orient="vertical" />
+                <image src="/rsc/img/generictree/filter_16x16.png" width="16px" height="16px"/>
+                <textbox id="filter_classes" width="120px" 
+                         onChanging="winGenericTree.filterChanged(event)" />
+              </hbox>
             </div>
           </hbox>
         </toolbar>
@@ -84,6 +92,19 @@ Die Initialisierung des Baumes geschieht über GenericTree.java
             <button id="buttonDelete" label="Löschen" onClick="winGenericTree.onDelete()"
                     image="/rsc/img/generictree/delete.png" tooltiptext="Löscht den markierten Eintrag"
                     disabled="true" visible="false"/>
+          </div>
+          
+          <div align="right">
+            <hbox>
+              <div id="divEditButtonsRight" style="margin-top:-2px;">
+              
+              </div>
+              <grid width="140px" style="margin-top:-8px;" visible="false" id="gridCount">
+                <foot>
+                  <footer id="footer_category" label=" "/>
+                </foot>
+              </grid>
+            </hbox>
           </div>
           <!--<div align="right">
             <button id="buttonExport" label="Exportieren..." onClick="winStandards.onExport(event)" image="/rsc/img/symbols/export_16x16.png"

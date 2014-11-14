@@ -128,12 +128,14 @@ public class MaintainCodeSystemVersion
             csvNew.getCodeSystem().setId(cs_db.getId());
 
             //Zwingende Variable darf nicht NULL sein!
-            csvNew.setValidityRange(238l); // 238 => optional
+            csvNew.setValidityRange(4l); // 4 => optional
 
             // Ein paar Defaultwerte setzen
             csvNew.setInsertTimestamp(new java.util.Date()); // Aktuelles Datum          
             csvNew.setStatus(Definitions.STATUS_CODES.ACTIVE.getCode());
             csvNew.setStatusDate(new java.util.Date()); // Aktuelles Datum 
+            
+            
           }
           // Alte Version editieren:  csvNew = csv aus DB
           else
@@ -182,6 +184,8 @@ public class MaintainCodeSystemVersion
           // UnderLicence setzen falls vorhanden
           if (csv_Request.getUnderLicence() != null)
             csvNew.setUnderLicence(csv_Request.getUnderLicence());
+          
+          csvNew.setLastChangeDate(new java.util.Date());
 
           // csvNew schon mal in der DB Speichern, damit ggf eine Id vergeben wird die dann gleich bei den licenceTypes benötigt wird
           if (parameter.getVersioning().getCreateNewVersion())

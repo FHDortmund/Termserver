@@ -50,6 +50,14 @@ public class PropertiesHelper
   private String termserverServiceName;
   private boolean collaborationActive = false;
   
+  private boolean guiCodesystemMinimal;
+  private boolean guiCodesystemVersionMinimal;
+  private boolean guiConceptMinimal;
+  
+  private boolean guiCodesystemExpandable;
+  private boolean guiCodesystemVersionExpandable;
+  private boolean guiConceptExpandable;
+  
   public static PropertiesHelper getInstance()
   {
     if (instance == null)
@@ -81,6 +89,13 @@ public class PropertiesHelper
       termserverServiceName = config.getProperty("termserver.serviceName", "TermServer/");
       
       collaborationActive = getBooleanValue(config.getProperty("collaboration.active", "false"));
+      
+      guiCodesystemExpandable = getBooleanValue(config.getProperty("gui.codesystem.expandable", "false"));
+      guiCodesystemMinimal = getBooleanValue(config.getProperty("gui.codesystem.minimal", "false"));
+      guiCodesystemVersionExpandable = getBooleanValue(config.getProperty("gui.codesystem_version.expandable", "false"));
+      guiCodesystemVersionMinimal = getBooleanValue(config.getProperty("gui.codesystem_version.minimal", "false"));
+      guiConceptExpandable = getBooleanValue(config.getProperty("gui.concept.expandable", "false"));
+      guiConceptMinimal = getBooleanValue(config.getProperty("gui.concept.minimal", "false"));
       
       logger.debug("login_classname: " + login_classname);
       logger.debug("termserverUrl: " + termserverUrl);
@@ -141,6 +156,54 @@ public class PropertiesHelper
   public boolean isCollaborationActive()
   {
     return collaborationActive;
+  }
+
+  /**
+   * @return the guiCodesystemMinimal
+   */
+  public boolean isGuiCodesystemMinimal()
+  {
+    return guiCodesystemMinimal;
+  }
+
+  /**
+   * @return the guiCodesystemVersionMinimal
+   */
+  public boolean isGuiCodesystemVersionMinimal()
+  {
+    return guiCodesystemVersionMinimal;
+  }
+
+  /**
+   * @return the guiConceptMinimal
+   */
+  public boolean isGuiConceptMinimal()
+  {
+    return guiConceptMinimal;
+  }
+
+  /**
+   * @return the guiCodesystemExpandable
+   */
+  public boolean isGuiCodesystemExpandable()
+  {
+    return guiCodesystemExpandable;
+  }
+
+  /**
+   * @return the guiCodesystemVersionExpandable
+   */
+  public boolean isGuiCodesystemVersionExpandable()
+  {
+    return guiCodesystemVersionExpandable;
+  }
+
+  /**
+   * @return the guiConceptExpandable
+   */
+  public boolean isGuiConceptExpandable()
+  {
+    return guiConceptExpandable;
   }
 
 }

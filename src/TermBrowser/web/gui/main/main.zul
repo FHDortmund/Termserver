@@ -55,7 +55,8 @@
                         
       <!--muss ganz zum schluss stehe, da sonst auf north, south,etc, nicht zugegriffen werden kann-->
       <center id="blMainCenter">
-        <include id="mainWindowCenter" src="./ContentCSVSDefault.zul"  moder="defer"/>
+        <!--<include id="mainWindowCenter" src="./ContentCSVSDefault.zul"  moder="defer"/>-->
+        <include id="mainWindowCenter" src="./TreeAndContent.zul" moder="defer"/>
       </center>    
     </borderlayout>
   </window>

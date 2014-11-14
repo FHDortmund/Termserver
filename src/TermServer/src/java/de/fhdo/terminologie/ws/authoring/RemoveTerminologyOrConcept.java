@@ -185,6 +185,11 @@ public class RemoveTerminologyOrConcept
               sErrorMessage = "Either CodeSystem, ValueSet or CodeSystemEntityVersion may not be null!";
               erfolg = false;
             }
+            else if (Request.getDeleteInfo().getType() == null)
+            {
+              sErrorMessage = "A delete type has to been specified.";
+              erfolg = false;
+            }
           }
         }
       }

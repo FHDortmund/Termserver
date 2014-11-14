@@ -1,18 +1,6 @@
-/* 
- * CTS2 based Terminology Server and Terminology Browser
- * Copyright (C) 2014 FH Dortmund: Peter Haas, Robert Muetzner
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
 package de.fhdo.tree;
 
@@ -23,6 +11,9 @@ import java.util.LinkedList;
 import java.util.List;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.DropEvent;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.InputEvent;
 import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zk.ui.util.Clients;
@@ -33,10 +24,10 @@ import org.zkoss.zul.Div;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Menupopup;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Separator;
 import org.zkoss.zul.South;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Tree;
-import org.zkoss.zul.TreeModel;
 import org.zkoss.zul.TreeNode;
 import org.zkoss.zul.Treecell;
 import org.zkoss.zul.Treechildren;
@@ -57,7 +48,7 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
   private List<GenericTreeRowType> dataList;
   private List<GenericTreeHeaderType> listHeader;
   private GenericTreeItemRenderer treeitemRenderer;
-  private TreeModel treeModel;
+  private DefaultTreeModel treeModel;
   //private ListModelList listModelFilter;
   private IGenericTreeActions treeActions;
   private IOnDrop dropEvent;
@@ -72,13 +63,16 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
   private Treeitem lastSelectedTreeitem;
   private boolean oneFilter;
   private List<Button> customButtonList;
+  private int countButtonsAtBegin;
   private String listId;
   private Tree tree;
   private boolean autoExpandAll;
   private Menupopup menupopup;
   private boolean showFilter;
   private boolean showExpandCollapse;
+  private boolean showRefresh;
   String classFilter = "";
+  private boolean multiple;
 
   public GenericTree()
   {
@@ -134,7 +128,9 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
 
       for (int i = 0; i < customButtonList.size(); ++i)
       {
-        customButtonList.get(i).setDisabled(disabled);
+        Object ob = customButtonList.get(i).getAttribute("disabled");
+        if (ob == null || (Boolean) ob == true)
+          customButtonList.get(i).setDisabled(disabled);
       }
     }
     catch (Exception e)
@@ -236,6 +232,14 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
   {
     logger.debug("createTreeModel()");
 
+    //treeModel.setMultiple(multiple);
+    if(multiple)
+    {
+      //tree.set
+      //treeModel.setMultiple(true);
+      //lb.setMultiple(true);
+      //lb.setCheckmark(true);
+    }
     /*
      List<TreeNode> dataList = new LinkedList<TreeNode>();
      List<TreeNode> subList = new LinkedList<TreeNode>();
@@ -257,6 +261,8 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
     TreeNode tnRoot = new DefaultTreeNode(null, createTreeNodeList(dataList));
     //TreeNode tnRoot = new DefaultTreeNode(dataList); 
     treeModel = new DefaultTreeModel(tnRoot);
+    
+    treeModel.setMultiple(multiple);
 
     //Tree tree = (Tree) getFellow("generictree");
     initFellowTree();
@@ -394,9 +400,9 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
         treecol.setImage(head.getImage());
         if (head.getWidth() > 0)
           treecol.setWidth(head.getWidth() + "px");
-          //treecol.setWidth("100%");
-        
-        if(head.isHflexMin())
+        //treecol.setWidth("100%");
+
+        if (head.isHflexMin())
           treecol.setHflex("min");
         //treecol.setHflex("min");
 
@@ -501,32 +507,28 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
         {
           if (Messagebox.show("Möchten Sie den ausgewählten Eintrag wirklich löschen?", "Löschen", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION) == Messagebox.YES)
           {
-            // Liste dynamisch erneuern
-            //Tree tree = (Tree) getFellow("generictree");
-            //Treeitem ti = tree.getSelectedItem();
-
-            //Treeitem parent = ti.getParentItem();
-            //logger.debug("Anzahl Kinder: " + parent.getChildren().size());
-            //ti.detach();
-
-            DefaultTreeNode selectedTreeNode = (DefaultTreeNode) lastSelectedTreeitem.getAttribute("treenode");
-            TreeNode parentNode = selectedTreeNode.getParent();
-            logger.debug("Anzahl Node-Kinder: " + parentNode.getChildCount());
-            if (parentNode.getChildCount() > 1)
+            // Baum dynamisch erneuern
+            if (treeActions.onTreeDeleted(listId, ((GenericTreeRowType) o).getData()))
             {
-              parentNode.remove(selectedTreeNode);
-            }
-            else
-            {
-              // Sonderfall (!)
-              Tree tree = (Tree) getFellow("generictree");
-              Treeitem ti = tree.getSelectedItem();
+              DefaultTreeNode selectedTreeNode = (DefaultTreeNode) lastSelectedTreeitem.getAttribute("treenode");
+              TreeNode parentNode = selectedTreeNode.getParent();
+              logger.debug("Anzahl Node-Kinder: " + parentNode.getChildCount());
+              if (parentNode.getChildCount() > 1)
+              {
+                parentNode.remove(selectedTreeNode);
+              }
+              else
+              {
+                // Sonderfall (!)
+                Tree tree = (Tree) getFellow("generictree");
+                Treeitem ti = tree.getSelectedItem();
 
-              ti.detach();
-              parentNode.remove(selectedTreeNode);
+                ti.detach();
+                parentNode.remove(selectedTreeNode);
+              }
             }
 
-            treeActions.onTreeDeleted(listId, ((GenericTreeRowType) o).getData());
+            //treeActions.onTreeDeleted(listId, ((GenericTreeRowType) o).getData());
           }
           else
             logger.info("Nein geklickt");
@@ -764,6 +766,12 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
     initFellowTree();
     doCollapseExpandAll(tree, false);
   }
+  
+  public void refresh()
+  {
+    if(treeActions != null)
+      treeActions.onTreeRefresh(listId);
+  }
 
   private void setTextAndFocus(String ID, String Value)
   {
@@ -930,16 +938,35 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
   }
 
   /**
-   * @param dropEvent the dropEvent to set
+   * @param _dropEvent the dropEvent to set
    */
-  public void setDropEvent(IOnDrop dropEvent)
+  public void setDropEvent(IOnDrop _dropEvent)
   {
     logger.debug("[GenericTree.java] setDropEvent()");
-    this.dropEvent = dropEvent;
+    this.dropEvent = _dropEvent;
 
     initFellowTree();
     if (tree != null)
+    {
       tree.setDroppable("true");
+
+      Iterable<EventListener<? extends Event>> it = tree.getEventListeners(Events.ON_DROP);
+      if (it != null && it.iterator() != null && it.iterator().hasNext() == false)
+      {
+        logger.debug("Drop-Event Listener hinzufügen");
+        
+        tree.addEventListener(Events.ON_DROP, new EventListener<Event>()
+        {
+          public void onEvent(Event t) throws Exception
+          {
+            logger.debug("DROP on list");
+
+            if (dropEvent != null)
+              dropEvent.onTreeDropped((DropEvent) t);
+          }
+        });
+      }
+    }
 
     if (treeitemRenderer != null)
       treeitemRenderer.setDropEvent(dropEvent);
@@ -953,8 +980,6 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
     initFellowTree();
     return tree;
   }
-
-
 
   /**
    * @param showFilter the showFilter to set
@@ -975,6 +1000,14 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
 
     ((Div) getFellow("divExpandCollapse")).setVisible(showFilter);
   }
+  
+  public void setShowRefresh(boolean refresh)
+  {
+    this.showRefresh = refresh;
+    logger.debug("setShowRefresh: " + refresh);
+
+    ((Div) getFellow("divRefresh")).setVisible(showRefresh);
+  }
 
   /**
    * @return the draggable
@@ -990,5 +1023,122 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
   public void setDraggable(boolean draggable)
   {
     this.draggable = draggable;
+  }
+
+  /**
+   * @return the multiple
+   */
+  public boolean isMultiple()
+  {
+    return multiple;
+  }
+
+  /**
+   * @param multiple the multiple to set
+   */
+  public void setMultiple(boolean multiple)
+  {
+    this.multiple = multiple;
+  }
+  
+  public void cleanup()
+  {
+    Tree tree2 = getTree();
+    tree2.getChildren().clear();
+    
+    Treecols cols = new Treecols();
+    cols.setSizable(true);
+    cols.setId("treecols");
+    tree2.appendChild(cols);
+  }
+  
+  public void addCustomButton(Button button)
+  {
+    logger.debug("addCustomButton");
+
+    Object o = button.getAttribute("disabled");
+    if (o == null || (Boolean) o == true)
+      button.setDisabled(true);
+
+    button.setHeight("24px");
+
+    if (customButtonList.contains(button) == false)
+    {
+      customButtonList.add(button);
+    }
+    else
+      logger.debug("Button bereits vorhanden");
+
+    boolean alignRight = false;
+    Object ob = button.getAttribute("right");
+    if (ob != null && (Boolean) ob == true)
+      alignRight = true;
+
+    logger.debug("right: " + alignRight);
+
+    if (alignRight)
+    {
+      Div div = (Div) getFellow("divEditButtonsRight");
+      div.setVisible(true);
+
+      Separator sep = new Separator();
+      sep.setSpacing("4px");
+      sep.setOrient("vertical");
+
+      div.appendChild(sep);
+      div.appendChild(button);
+    }
+    else
+    {
+      Div div = (Div) getFellow("divEditButtons");
+      div.setVisible(true);
+
+      if (countButtonsAtBegin == 0)
+      {
+        countButtonsAtBegin = div.getChildren().size();
+      }
+
+      Separator sep = new Separator();
+      sep.setSpacing("4px");
+      sep.setOrient("vertical");
+
+      div.appendChild(sep);
+      div.appendChild(button);
+    }
+
+    setSouthHeight();
+  }
+
+  /**
+   * Entfernt alle benutzerdefinierte Buttons
+   */
+  public void removeCustomButtons()
+  {
+    Div div = (Div) getFellow("divEditButtons");
+
+    if (countButtonsAtBegin == 0)
+    {
+      countButtonsAtBegin = div.getChildren().size();
+    }
+
+    int anzahl = div.getChildren().size();
+    for (int i = countButtonsAtBegin; i < anzahl; ++i)
+    {
+      div.getChildren().remove(countButtonsAtBegin);
+    }
+
+    div = (Div) getFellow("divEditButtonsRight");
+    div.getChildren().clear();
+
+    customButtonList.clear();
+
+  }
+
+  /**
+   * @param treeId the treeId to set
+   */
+  public void setTreeId(String treeId)
+  {
+    this.listId = treeId;
   }
 }

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="window" border="none" height="100%" width="100%" use="de.fhdo.gui.main.TreeAndContent">
+    <borderlayout>
+      <west id="westTreeCSVSDV" border="0" size="350px" maxsize="450" splittable="true" collapsible="true">
+        <borderlayout >
+          <center border="0" margins="2,2,2,2">
+            <tabbox id="tabboxFilter" onSelect="window.onFilterTabChanged()" vflex="true">
+              <tabs>
+                <tab id="tabCS" label="${labels.common.codeSystems}" />
+                <tab id="tabVS" label="${labels.common.valueSets}"/>
+                <!--<tab id="tabSearch" label="${labels.common.search}"/>-->
+              </tabs>
+              <tabpanels>                  
+                <tabpanel id="tabpanelCS">
+                  <div width="100%" height="100%">
+                    <hbox id="message" visible="false" style="margin-left: 8px; margin-top:8px; margin-bottom:8px;">
+                      <image src="/rsc/img/symbols/warning_32x32.png"/>
+                      <div style="margin-left: 8px; margin-top:0px;">
+                        <label id="labelMessage" value="" />
+                      </div>
+                    </hbox>
+                    
+                    <include id="incTreeCS" src="/gui/templates/GenericTree.zul" width="100%" height="100%"/>
+                  </div>
+                  <!--<toolbar width="100%">
+                    <hbox align="center" >
+                      <toolbarbutton image="/rsc/img/symbols/expand_16x16.png" 
+                                 onClick="window.expandTreeCS()" 
+                                 tooltiptext="${labels.componentTreeAndContent.expandTreeCS}"/>
+                      <toolbarbutton image="/rsc/img/symbols/collapse_16x16.png"
+                                 onClick="window.collapseTreeCS()"
+                                 tooltiptext="${labels.componentTreeAndContent.colapseTreeCS}" />
+                      <toolbarbutton image="/rsc/img/symbols/refresh.png"
+                                 onClick="window.refreshCS()"
+                                 tooltiptext="${labels.componentTreeAndContent.refreshTreeCS}" />
+                    </hbox>
+                  </toolbar>
+                  <tree id="treeCS" vflex="true" zclass="z-tree" height="100%" width="100%" multiple="false"> 
+                    <treecols sizable="true">
+                      <treecol label="${labels.common.name}"> </treecol>                                    
+                    </treecols>
+                  </tree>
+                  <div style="text-align:right;margin-top:4px;">
+                    <button id="bNewCS" label="${labels.common.codeSystem}" onClick='window.onClickedNewCS()' image="/rsc/img/list/add.png" disabled="false"/>
+                    <button id="bNewCSV" label="${labels.common.version}" onClick='window.onClickedNewVersionCS()' image="/rsc/img/list/add.png"       disabled="true"/>
+                    <button id="bEditCSV" label="${labels.common.edit}" onClick='window.onClickedEditCS()' image="/rsc/img/list/pencil.png"    disabled="true"/>
+                    <button id="bDetailsCSV" label="${labels.common.details}" onClick="window.onClickedDetailsCS()" image="/rsc/img/list/magnifier.png" disabled="true"/>
+                  </div>-->
+                </tabpanel>
+                <tabpanel id="tabpanelVS">
+                  <!--                  <include id="incTreeVS" src="/gui/templates/GenericTree.zul"/>-->
+                  <include id="incTreeVS" src="/gui/templates/GenericTree.zul"/>  
+                  <!--                  <toolbar width="100%">
+                    <toolbarbutton image="/rsc/img/symbols/expand_16x16.png"    
+                               onClick="window.expandTreeVS()"  
+                               tooltiptext="${labels.componentTreeAndContent.expandTreeVS}"/>
+                    <toolbarbutton image="/rsc/img/symbols/collapse_16x16.png"   
+                               onClick="window.collapseTreeVS()" 
+                               tooltiptext="${labels.componentTreeAndContent.colapseTreeVS}"/>
+                    <toolbarbutton image="/rsc/img/symbols/refresh.png"        
+                               onClick="window.refreshVS()"
+                               tooltiptext="${labels.componentTreeAndContent.refreshTreeVS}" />
+                  </toolbar>                            
+                  <tree id="treeVS" vflex="true" height="100%" width="100%"  multiple="false" checkmark="false"> 
+                    <treecols sizable="true" >
+                      <treecol label="${labels.common.name}"> </treecol>                                    
+                    </treecols>
+                  </tree>
+                  <div style="text-align:right;margin-top:4px;">
+                    <button id="bNewVS" label="${labels.common.valueSet}" onClick='window.onClickedNewVS()' image="/rsc/img/list/add.png" disabled="false" autodisable="self"/>
+                    <button id="bNewVSV" label="${labels.common.version}" onClick='window.onClickedNewVersionVS()' image="/rsc/img/list/add.png" disabled="true" autodisable="self"/>
+                    <button id="bEditVSV" label="${labels.common.edit}" onClick='window.onClickedEditVS()' image="/rsc/img/list/pencil.png" disabled="true" autodisable="self"/>
+                    <button id="bDetailsVSV" label="${labels.common.details}"   onClick="window.onClickedDetailsVS()" image="/rsc/img/list/magnifier.png" disabled="true" autodisable="self"/>
+                  </div>-->
+                </tabpanel>   
+                <!--                <tabpanel id="tabpanelSearch">
+                  <include id="incListSearch" src="/gui/templates/GenericList.zul"/>
+                  <toolbar width="100%">
+                    <hbox>
+                      <div style="margin-top:-2px;">
+                        <toolbarbutton image="/rsc/img/symbols/refresh.png" 
+                                   onClick="window.refreshSearch()" 
+                                   tooltiptext="${labels.componentTreeAndContent.refreshTreeSearch}" />
+                      </div>
+                      <div style="margin-top:1px;">
+                        <image src="/rsc/img/symbols/filter_16x16.png" 
+                           width="16px"  
+                           height="16px" 
+                        />
+                      </div>
+                      <textbox id="filter_classesSearch" 
+                           width="120px"
+                           onChanging="window.filterChanged(event)"
+                           tooltiptext="${labels.componentTreeAndContent.treeSearchFilter}"/>
+                    </hbox>
+                  </toolbar>                           
+                  <tree id="treeSearch" vflex="true" height="100%" width="100%" 
+                    multiple="false" checkmark="false"
+                    mold="paging" pageSize="20">
+                    <treecols sizable="true">
+                      <treecol label="${labels.common.name}"> </treecol>
+                      <treecol label="${labels.common.type}" width="65px"> </treecol>
+                    </treecols>                    
+                  </tree>
+                  <div style="text-align:right;margin-top:4px;">
+                    <button id="bEditSearch"    label="${labels.common.edit}"     onClick="window.popupDetails(5)" image="/rsc/img/list/pencil.png"    disabled="true"/>
+                    <button id="bDetailsSearch" label="${labels.common.details}"  onClick="window.popupDetails(1)" image="/rsc/img/list/magnifier.png" disabled="true"/>
+                  </div>
+                </tabpanel>-->
+              </tabpanels>
+            </tabbox>
+          </center>    
+      
+        </borderlayout>
+      </west>
+      <center title="${labels.common.contents}" border="none" id="center">        
+        <include id="incConcepts" mode="instant"/>
+      </center>
+    </borderlayout>    
+
+  </window>
+</zk>

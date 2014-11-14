@@ -253,7 +253,7 @@ public class TreeModelCSEV
     List<TreeNode> treeNodesRoot = new ArrayList<TreeNode>();
     HashMap<String, TreeNode> currentParent = new HashMap<String, TreeNode>();
 
-    // Build TreeNodes ist with CSEV as Data        
+    // Build TreeNodes ist with CSEV as Data
     for (CodeSystemEntityVersion csev : listCSEVResponse)
     {
       // current Version found -> create node
@@ -720,7 +720,7 @@ public class TreeModelCSEV
     CodeSystemEntityVersion csev = (CodeSystemEntityVersion) tn.getData();
 
     long csvId = csev.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().get(0).getCodeSystemVersion().getVersionId();
-    for (CodeSystemVersion csv : TreeModelCS.getCsvList())
+    for (CodeSystemVersion csv : TreeModelCS.getInstance().getCsvList())
     {
       if (csv.getVersionId().equals(csvId))
       {

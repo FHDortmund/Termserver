@@ -6,7 +6,7 @@
           <tabs>
             <tab id="tabCS"     label="${labels.common.codeSystems}" />
             <tab id="tabVS"     label="${labels.common.valueSets}"/>
-            <tab id="tabSearch" label="${labels.common.searchVocVal}"/>
+            <tab id="tabSearch" label="${labels.common.search}"/>
           </tabs>
           <tabpanels>                  
             <tabpanel id="tabpanelCS">
@@ -29,11 +29,11 @@
                 </treecols>
               </tree>
               <div style="text-align:right;margin-top:4px;">
-                <button id="bNewCS"      label="${labels.common.codeSystem}"  onClick='windowCSVS.popupDetails(2)' image="/rsc/img/list/add.png"  disabled="false"  />
-                <button id="bNewCSV"     label="${labels.common.version}"     onClick='windowCSVS.popupDetails(3)' image="/rsc/img/list/add.png"       disabled="true"/>
-                <button id="bEditCSV"    label="${labels.common.edit}"        onClick='windowCSVS.popupDetails(5)' image="/rsc/img/list/pencil.png"    disabled="true"/>
+                <button id="bNewCS" label="${labels.common.codeSystem}" onClick='windowCSVS.onClickedNewCS()' image="/rsc/img/list/add.png" disabled="false"/>
+                <button id="bNewCSV" label="${labels.common.version}" onClick='windowCSVS.onClickedNewVersionCS()' image="/rsc/img/list/add.png"       disabled="true"/>
+                <button id="bEditCSV" label="${labels.common.edit}" onClick='windowCSVS.onClickedEditCS()' image="/rsc/img/list/pencil.png"    disabled="true"/>
                 <!--<button id="bGlobSearchCSV" label="${labels.common.searchGlob}"     onClick="windowCSVS.popupDetails(97)" image="/rsc/img/list/folder_magnify.png" disabled="false"/>-->
-                <button id="bDetailsCSV" label="${labels.common.details}"     onClick="windowCSVS.popupDetails(1)" image="/rsc/img/list/magnifier.png" disabled="true"/>
+                <button id="bDetailsCSV" label="${labels.common.details}" onClick="windowCSVS.onClickedDetailsCS()" image="/rsc/img/list/magnifier.png" disabled="true"/>
               </div>
             </tabpanel>                
             <tabpanel id="tabpanelVS">
@@ -54,11 +54,11 @@
                 </treecols>
               </tree>
               <div style="text-align:right;margin-top:4px;">
-                <button id="bNewVS"      label="${labels.common.valueSet}"  onClick='windowCSVS.popupDetails(2)' image="/rsc/img/list/add.png" disabled="false" />
-                <button id="bNewVSV"     label="${labels.common.version}"   onClick='windowCSVS.popupDetails(3)' image="/rsc/img/list/add.png"       disabled="true"/>
-                <button id="bEditVSV"    label="${labels.common.edit}"      onClick='windowCSVS.popupDetails(5)' image="/rsc/img/list/pencil.png"    disabled="true"/>
+                <button id="bNewVS" label="${labels.common.valueSet}" onClick='windowCSVS.onClickedNewVS()' image="/rsc/img/list/add.png" disabled="false" autodisable="self"/>
+                <button id="bNewVSV" label="${labels.common.version}" onClick='windowCSVS.onClickedNewVersionVS()' image="/rsc/img/list/add.png" disabled="true" autodisable="self"/>
+                <button id="bEditVSV" label="${labels.common.edit}" onClick='windowCSVS.onClickedEditVS()' image="/rsc/img/list/pencil.png" disabled="true" autodisable="self"/>
                 <!--<button id="bGlobSearchVSV" label="${labels.common.searchGlob}"     onClick="windowCSVS.popupDetails(98)" image="/rsc/img/list/folder_magnify.png" disabled="false"/>-->
-                <button id="bDetailsVSV" label="${labels.common.details}"   onClick="windowCSVS.popupDetails(1)" image="/rsc/img/list/magnifier.png" disabled="true"/>
+                <button id="bDetailsVSV" label="${labels.common.details}"   onClick="windowCSVS.onClickedDetailsVS()" image="/rsc/img/list/magnifier.png" disabled="true" autodisable="self"/>
               </div>
             </tabpanel>   
             <tabpanel id="tabpanelSearch">
@@ -81,7 +81,9 @@
                            tooltiptext="${labels.componentTreeAndContent.treeSearchFilter}"/>
                 </hbox>
               </toolbar>                           
-              <tree  id="treeSearch" vflex="true" height="100%" width="100%"  multiple="false" checkmark="false">
+              <tree id="treeSearch" vflex="true" height="100%" width="100%" 
+                    multiple="false" checkmark="false"
+                    mold="paging" pageSize="20">
                 <treecols sizable="true">
                   <treecol label="${labels.common.name}"> </treecol>
                   <treecol label="${labels.common.type}" width="65px"> </treecol>
