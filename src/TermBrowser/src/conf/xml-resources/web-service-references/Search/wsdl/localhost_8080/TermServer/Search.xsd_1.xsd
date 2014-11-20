@@ -634,7 +634,9 @@
 
 <xs:complexType name="listMetadataParameterRequestType">
 <xs:sequence>
+<xs:element name="codeSystem" type="ns1:codeSystem" minOccurs="0" />
 <xs:element name="loginToken" type="xs:string" minOccurs="0" />
+<xs:element name="valueSet" type="ns1:valueSet" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 

@@ -58,6 +58,19 @@ public class Authorization
       }
     }
   }
+  public static void login(String username, String password)
+  {
+    IAuthorization auth = getAuthorizationClass();
+    
+    if(auth != null)
+    {
+      if(auth.doLogin(username, password))
+      {
+        logger.debug("login successful");
+        //ViewHelper.gotoSrc(null);
+      }
+    }
+  }
   public static void logout()
   {
     IAuthorization auth = getAuthorizationClass();

@@ -25,6 +25,8 @@ import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.ws.conceptassociation.ListConceptAssociationsRequestType;
 import de.fhdo.terminologie.ws.search.ListCodeSystemConceptsRequestType;
 import de.fhdo.terminologie.ws.search.ListCodeSystemConceptsResponse;
+import de.fhdo.terminologie.ws.search.ListMetadataParameterRequestType;
+import de.fhdo.terminologie.ws.search.ListMetadataParameterResponse;
 import de.fhdo.terminologie.ws.search.ListValueSetContents;
 import de.fhdo.terminologie.ws.search.ListValueSetContentsRequestType;
 import de.fhdo.terminologie.ws.search.ListValueSetContentsResponse;
@@ -60,6 +62,7 @@ import types.termserver.fhdo.de.CodeSystemEntityVersion;
 import types.termserver.fhdo.de.CodeSystemEntityVersionAssociation;
 import types.termserver.fhdo.de.CodeSystemVersion;
 import types.termserver.fhdo.de.CodeSystemVersionEntityMembership;
+import types.termserver.fhdo.de.MetadataParameter;
 import types.termserver.fhdo.de.ValueSet;
 import types.termserver.fhdo.de.ValueSetVersion;
 
@@ -73,6 +76,8 @@ public class ConceptsTree implements IUpdateModal
   protected static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
   private Tree treeConcepts;
   private DefaultTreeModel treeModel;
+
+  
 
  
 
@@ -88,6 +93,8 @@ public class ConceptsTree implements IUpdateModal
   }
   private CONTENT_TYPE contentType;
 
+  private long codeSystemId;
+  private long valueSetId;
   private long codeSystemVersionId;
   private long valueSetVersionId;
 
@@ -96,6 +103,8 @@ public class ConceptsTree implements IUpdateModal
 
   private PagingResultType paging;
   private int currentPageIndex;
+  
+  private List<MetadataParameter> listMetadata;
 
   public ConceptsTree()
   {
@@ -121,7 +130,37 @@ public class ConceptsTree implements IUpdateModal
     else contentType = CONTENT_TYPE.CODESYSTEM;
 
     fillTree();
-
+    loadMetadata();
+  }
+  
+  private void loadMetadata()
+  {
+    logger.debug("loadMetadata()");
+    listMetadata = new LinkedList<MetadataParameter>();            
+    
+    ListMetadataParameterRequestType request = new ListMetadataParameterRequestType();
+    request.setLoginToken(SessionHelper.getSessionId());
+    if(contentType == CONTENT_TYPE.CODESYSTEM)
+    {
+      request.setCodeSystem(new CodeSystem());
+      request.getCodeSystem().setId(codeSystemId);
+      logger.debug("... with code system id: " + codeSystemId);
+    }
+    else if(contentType == CONTENT_TYPE.VALUESET)
+    {
+      request.setValueSet(new ValueSet());
+      request.getValueSet().setId(valueSetId);
+      logger.debug("... with value set id: " + valueSetId);
+    }
+    
+    ListMetadataParameterResponse.Return response = WebServiceHelper.listMetadataParameter(request);
+    logger.debug("Webservice result: " + response.getReturnInfos().getMessage());
+    
+    if(response.getReturnInfos().getStatus() == Status.OK)
+    {
+      listMetadata = response.getMetadataParameter();
+    }
+    
   }
 
   private void fillTree()
@@ -418,11 +457,17 @@ public class ConceptsTree implements IUpdateModal
     else if (valueSetVersionId > 0)
       data.put("ContentMode", PopupConcept.CONTENTMODE.VALUESET);
 
+    
+    data.put("CodeSystemId", codeSystemId);
+    data.put("ValueSetId", valueSetId);
+    
     data.put("CodeSystemVersionId", codeSystemVersionId);
     data.put("ValueSetVersionId", valueSetVersionId);
 
     data.put("Association", hierarchyMode);  // mode 1 = gleiche ebene, 2 = subebene, 3 = oberste ebene 
     data.put("CSEVAssociated", CSEVAssociatedVersionId);
+    
+    data.put("MetadataList", listMetadata);
 
     try
     {
@@ -457,8 +502,13 @@ public class ConceptsTree implements IUpdateModal
     else if (valueSetVersionId > 0)
       data.put("ContentMode", PopupConcept.CONTENTMODE.VALUESET);
 
+    data.put("CodeSystemId", codeSystemId);
+    data.put("ValueSetId", valueSetId);
+    
     data.put("CodeSystemVersionId", codeSystemVersionId);
     data.put("ValueSetVersionId", valueSetVersionId);
+    
+    data.put("MetadataList", listMetadata);
 
     try
     {
@@ -486,8 +536,13 @@ public class ConceptsTree implements IUpdateModal
     else if (valueSetVersionId > 0)
       data.put("ContentMode", PopupConcept.CONTENTMODE.VALUESET);
 
+    data.put("CodeSystemId", codeSystemId);
+    data.put("ValueSetId", valueSetId);
+    
     data.put("CodeSystemVersionId", codeSystemVersionId);
     data.put("ValueSetVersionId", valueSetVersionId);
+    
+    data.put("MetadataList", listMetadata);
 
     /*    
      data.put("Tree", treeConcepts);
@@ -951,5 +1006,21 @@ public class ConceptsTree implements IUpdateModal
   public ContentConcepts getConceptsWindow()
   {
     return conceptsWindow;
+  }
+  
+  /**
+   * @param codeSystemId the codeSystemId to set
+   */
+  public void setCodeSystemId(long codeSystemId)
+  {
+    this.codeSystemId = codeSystemId;
+  }
+
+  /**
+   * @param valueSetId the valueSetId to set
+   */
+  public void setValueSetId(long valueSetId)
+  {
+    this.valueSetId = valueSetId;
   }
 }

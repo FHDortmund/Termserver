@@ -16,6 +16,7 @@
  */
 package de.fhdo.terminologie.ws.search;
 
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.CodeSystem;
 import de.fhdo.terminologie.db.hibernate.MetadataParameter;
@@ -77,6 +78,15 @@ public class ListMetadataParameter
                 + " left join fetch mp.valueSet vs";
 
         HQLParameterHelper parameterHelper = new HQLParameterHelper();
+        
+        if(parameter != null)
+        {
+          if(parameter.getCodeSystem() != null && parameter.getCodeSystem().getId() != null)
+            parameterHelper.addParameter("cs.", "id", parameter.getCodeSystem().getId());
+          
+          if(parameter.getValueSet() != null && parameter.getValueSet().getId() != null)
+            parameterHelper.addParameter("vs.", "id", parameter.getValueSet().getId());
+        }
 
         // Parameter hinzufügen (immer mit AND verbunden)
         hql += parameterHelper.getWhere("");
@@ -100,7 +110,7 @@ public class ListMetadataParameter
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         response.getReturnInfos().setMessage("Fehler bei 'ListMetadataParameters', Hibernate: " + e.getLocalizedMessage());
 
-        logger.error("Fehler bei 'ListMetadataParameter', Hibernate: " + e.getLocalizedMessage());
+        LoggingOutput.outputException(e, this);
       }
       finally
       {
@@ -171,8 +181,7 @@ public class ListMetadataParameter
       response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
       response.getReturnInfos().setMessage("Fehler bei 'ListMetadataParameter': " + e.getLocalizedMessage());
 
-      logger.error("Fehler bei 'ListMetadataParameter': " + e.getLocalizedMessage());
-      e.printStackTrace();
+      LoggingOutput.outputException(e, this);
     }
 
     return response;
@@ -181,12 +190,29 @@ public class ListMetadataParameter
   private boolean validateParameter(ListMetadataParameterRequestType Request, ListMetadataParameterResponseType Response)
   {
     boolean erfolg = true;
+    String message = "";
+    
+    if(Request != null)
+    {
+      if(Request.getCodeSystem() != null && (Request.getCodeSystem().getId() == null || Request.getCodeSystem().getId() == 0))
+      {
+        message = "No ID for given Code System found.";
+        erfolg = false;
+      }
+      
+      if(Request.getValueSet() != null && (Request.getValueSet().getId() == null || Request.getValueSet().getId() == 0))
+      {
+        message = "No ID for given Value Set found.";
+        erfolg = false;
+      }
+    }
     
 
     if (erfolg == false)
     {
       Response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
       Response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+      Response.getReturnInfos().setMessage(message);
     }
 
     return erfolg;

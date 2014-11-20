@@ -51,6 +51,10 @@ public class MetadataParameter implements java.io.Serializable
   private String paramDatatype;
   private String metadataParameterType;
   private String languageCd;
+  private String description;
+  private String paramNameDisplay;
+  private Integer maxLength;
+  
   private Set<CodeSystemMetadataValue> codeSystemMetadataValues = new HashSet<CodeSystemMetadataValue>(0);
   private Set<ValueSetMetadataValue> valueSetMetadataValues = new HashSet<ValueSetMetadataValue>(0);
 
@@ -175,4 +179,40 @@ public class MetadataParameter implements java.io.Serializable
   {
     this.languageCd = languageCd;
   }
+  
+  
+  @Column(name = "maxLength", nullable = true)
+  public Integer getMaxLength()
+  {
+    return this.maxLength;
+  }
+
+  public void setMaxLength(Integer maxLength)
+  {
+    this.maxLength = maxLength;
+  }
+  
+  @Column(name = "paramNameDisplay", nullable = true)
+  public String getParamNameDisplay()
+  {
+    return this.paramNameDisplay;
+  }
+
+  public void setParamNameDisplay(String paramNameDisplay)
+  {
+    this.paramNameDisplay = paramNameDisplay;
+  }
+  
+  @Column(name = "description", nullable = true)
+  public String getDescription()
+  {
+    return this.description;
+  }
+
+  public void setDescription(String description)
+  {
+    this.description = description;
+  }
+
+  
 }

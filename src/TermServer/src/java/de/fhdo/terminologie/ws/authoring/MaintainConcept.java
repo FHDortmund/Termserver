@@ -22,9 +22,10 @@ import de.fhdo.terminologie.db.hibernate.CodeSystemConcept;
 import de.fhdo.terminologie.db.hibernate.CodeSystemConceptTranslation;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntity;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersion;
+import de.fhdo.terminologie.db.hibernate.CodeSystemMetadataValue;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersionEntityMembership;
+import de.fhdo.terminologie.db.hibernate.MetadataParameter;
 import de.fhdo.terminologie.helper.LastChangeHelper;
-import de.fhdo.terminologie.helper.LoginHelper;
 import de.fhdo.terminologie.ws.authoring.types.MaintainConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.types.MaintainConceptResponseType;
 import de.fhdo.terminologie.ws.authorization.Authorization;
@@ -35,7 +36,8 @@ import java.util.Set;
 
 /**
  *
- * @author Sven Becker
+ * @author Sven Becker edited 2014-11-17 Robert Mützner
+ * <robert.muetzner@fh-dortmund.de>
  */
 public class MaintainConcept
 {
@@ -174,6 +176,28 @@ public class MaintainConcept
             }
           }
 
+          if (csev_Request.getCodeSystemMetadataValues() != null)
+          {
+            logger.debug("check for metadata changes...");
+
+            for (CodeSystemMetadataValue mv : csev_Request.getCodeSystemMetadataValues())
+            {
+              CodeSystemEntityVersion csev_db = csev_New;
+
+              if (mv.getParameterValue() != null && mv.getParameterValue().length() > 0)
+              {
+                // add new md value
+                CodeSystemMetadataValue mv_db = new CodeSystemMetadataValue(mv.getParameterValue());
+                mv_db.setMetadataParameter(new MetadataParameter());
+                mv_db.getMetadataParameter().setId(mv.getMetadataParameter().getId());
+                mv_db.setCodeSystemEntityVersion(csev_db);
+                hb_session.save(mv_db);
+
+                logger.debug("save metadata-value with mp-id: " + mv_db.getMetadataParameter().getId() + ", value: " + mv_db.getParameterValue());
+              }
+            }
+          }
+
           cse_db.setCurrentVersionId(csev_New.getVersionId());
           hb_session.save(cse_db);
         }
@@ -221,6 +245,7 @@ public class MaintainConcept
               csc_New.setHints(csc_Request.getHints());
             if (csc_Request.getDescription() != null)
               csc_New.setDescription(csc_Request.getDescription());
+
             // CodeSystemConceptTranslation(s) anlegen, falls vorhanden
             if (csc_Request.getCodeSystemConceptTranslations() != null)
             {
@@ -267,6 +292,67 @@ public class MaintainConcept
                     csct_New.setTermAbbrevation(csct_Request.getTermAbbrevation());
 
                   hb_session.merge(csct_New);
+                }
+              }
+            }
+          }
+
+          // metadata
+          if (csev_Request.getCodeSystemMetadataValues() != null)
+          {
+            logger.debug("check for metadata changes...");
+
+            for (CodeSystemMetadataValue mv : csev_Request.getCodeSystemMetadataValues())
+            {
+              CodeSystemEntityVersion csev_db = csev_New;
+              CodeSystemMetadataValue mv_db = null;
+
+              // check if exists
+              boolean mv_exists = false;
+              for (CodeSystemMetadataValue mv_db_loop : csev_db.getCodeSystemMetadataValues())
+              {
+                if (mv_db_loop.getMetadataParameter().getId().longValue() == mv.getMetadataParameter().getId())
+                {
+                  mv_exists = true;
+                  mv_db = mv_db_loop;
+                  break;
+                }
+              }
+
+              if (mv_exists)
+              {
+                if (mv.getParameterValue() == null || mv.getParameterValue().length() == 0)
+                {
+                  // delete existing md value
+                  hb_session.delete(mv_db);
+                  csev_db.getCodeSystemMetadataValues().remove(mv_db);
+                  logger.debug("remove metadata-value with mp-id: " + mv_db.getMetadataParameter().getId() + ", value: " + mv_db.getParameterValue());
+                }
+                else
+                {
+                  if (mv.getParameterValue() != null && mv.getParameterValue().equals(mv_db.getParameterValue()) == false)
+                  {
+                    // replace existing md value
+                    mv_db.setParameterValue(mv.getParameterValue());
+                    hb_session.update(mv_db);
+                    logger.debug("edit metadata-value with mp-id: " + mv_db.getMetadataParameter().getId() + ", value: " + mv_db.getParameterValue());
+                  }
+                  else
+                    logger.debug("no need to change metadata-value with mp-id: " + mv_db.getMetadataParameter().getId() + ", value: " + mv_db.getParameterValue());
+                }
+              }
+              else
+              {
+                if (mv.getParameterValue() != null && mv.getParameterValue().length() > 0)
+                {
+                  // add new md value
+                  mv_db = new CodeSystemMetadataValue(mv.getParameterValue());
+                  mv_db.setMetadataParameter(new MetadataParameter());
+                  mv_db.getMetadataParameter().setId(mv.getMetadataParameter().getId());
+                  mv_db.setCodeSystemEntityVersion(csev_db);
+                  hb_session.save(mv_db);
+
+                  logger.debug("save metadata-value with mp-id: " + mv_db.getMetadataParameter().getId() + ", value: " + mv_db.getParameterValue());
                 }
               }
             }

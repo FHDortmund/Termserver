@@ -273,6 +273,11 @@ public class ContentConcepts extends Window implements AfterCompose
     //if(concepts == null)
     concepts = new ConceptsTree(treeConcepts, this);
 
+    if(codeSystem != null)
+      concepts.setCodeSystemId(codeSystem.getId());
+    else if(valueSet != null)
+      concepts.setValueSetId(valueSet.getId());
+    
     if (codeSystemVersion != null)
       concepts.setCodeSystemVersionId(codeSystemVersion.getVersionId());
     else if (valueSetVersion != null)
@@ -315,7 +320,7 @@ public class ContentConcepts extends Window implements AfterCompose
     concepts.openConceptDetails();
   }
 
-  public void onDeleteClicked()
+  /*public void onDeleteClicked()
   {
     if (SessionHelper.isUserLoggedIn())
     {
@@ -351,7 +356,7 @@ public class ContentConcepts extends Window implements AfterCompose
         }
       }
     }
-  }
+  }*/
 
   public void onPaging(Event event)
   {
@@ -369,7 +374,7 @@ public class ContentConcepts extends Window implements AfterCompose
     ComponentHelper.setVisibleAndDisabled("buttonNewSub", loggedIn, csev == null, this);
     ComponentHelper.setVisibleAndDisabled("buttonEdit", loggedIn, csev == null, this);
 
-    ComponentHelper.setVisible("buttonDeleteVersion", loggedIn, this);
+    //ComponentHelper.setVisible("buttonDeleteVersion", loggedIn, this);
     //ComponentHelper.setVisibleAndDisabled("buttonDeleteVersion", loggedIn, csev == null, this);
     
   }

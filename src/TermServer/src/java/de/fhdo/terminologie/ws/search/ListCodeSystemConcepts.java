@@ -25,6 +25,7 @@ import de.fhdo.terminologie.db.hibernate.CodeSystemConceptTranslation;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntity;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersion;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersionAssociation;
+import de.fhdo.terminologie.db.hibernate.CodeSystemMetadataValue;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersionEntityMembership;
 import de.fhdo.terminologie.helper.CodeSystemHelper;
@@ -48,6 +49,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.type.StandardBasicTypes;
 
@@ -347,7 +349,9 @@ public class ListCodeSystemConcepts
                 allEntries = true;
             }
 
-            pageSize = Integer.valueOf(parameter.getPagingParameter().getPageSize());
+            if(parameter.getPagingParameter().getPageSize() != null)
+              pageSize = Integer.valueOf(parameter.getPagingParameter().getPageSize());
+            if(parameter.getPagingParameter().getPageIndex() != null)
             pageIndex = parameter.getPagingParameter().getPageIndex();
           }
 
@@ -587,6 +591,29 @@ public class ListCodeSystemConcepts
                   csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().addAll(
                           responseTraverse.getCodeSystemEntityVersionRoot().getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1());
                 }
+              }
+            }
+            
+            if(parameter.isLoadMetadata() != null && parameter.isLoadMetadata().booleanValue())
+            {
+              String hql = "from CodeSystemMetadataValue mv "
+                      + " join fetch mv.metadataParameter mp "
+                      + " where codeSystemEntityVersionId=:csev_id";
+              
+              Query query = hb_session.createQuery(hql);
+              query.setLong("csev_id", csev.getVersionId());
+              csev.setCodeSystemMetadataValues(new HashSet<CodeSystemMetadataValue>(query.list()));
+              
+              // remove circle problems
+              for(CodeSystemMetadataValue mv : csev.getCodeSystemMetadataValues())
+              {
+                mv.setCodeSystemEntityVersion(null);
+                mv.getMetadataParameter().setCodeSystem(null);
+                mv.getMetadataParameter().setValueSet(null);
+                mv.getMetadataParameter().setValueSetMetadataValues(null);
+                mv.getMetadataParameter().setCodeSystemMetadataValues(null);
+                mv.getMetadataParameter().setDescription(null);
+                mv.getMetadataParameter().setMetadataParameterType(null);
               }
             }
 

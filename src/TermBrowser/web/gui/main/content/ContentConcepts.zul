@@ -74,11 +74,12 @@
                     disabled="true"/>
           </div>
           <div align="right">
-            <button id="buttonDeleteVersion"
+<!--            <button id="buttonDeleteVersion"
                     label="${labels.common.deleteVersion}" 
                     onClick="winConcepts.onDeleteClicked()" 
                     image="/rsc/img/symbols/delete_12x12.png"
-                    disabled="false"/>
+                    disabled="false"/>-->
+            
             <!--            <label value="${labels.contentConcepts.moreFunctions}" style="color:gray"/>
             <button id="bNew" label="${labels.contentConcepts.newConcept}" onClick="windowConcepts.onClickedNewRootConcept()" image="/rsc/img/list/add.png"    visible="false" />
             <button id="bEdit" label="${labels.common.edit}" onClick="windowConcepts.onClickedEditConcept()" image="/rsc/img/list/pencil.png" visible="false" disabled="true"/>

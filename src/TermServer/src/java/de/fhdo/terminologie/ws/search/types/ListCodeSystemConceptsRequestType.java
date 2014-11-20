@@ -54,6 +54,12 @@ public class ListCodeSystemConceptsRequestType
   @XmlElement(required = false)
   private SortingType sortingParameter;
   
+  @XmlElement(required = false)
+  private Boolean loadMetadata;
+  
+  @XmlElement(required = false)
+  private Boolean loadTranslation;
+  
   
   /**
    * @return the login
@@ -165,5 +171,37 @@ public class ListCodeSystemConceptsRequestType
   public void setSortingParameter(SortingType sortingParameter)
   {
     this.sortingParameter = sortingParameter;
+  }
+
+  /**
+   * @return the loadMetadata
+   */
+  public Boolean isLoadMetadata()
+  {
+    return loadMetadata;
+  }
+
+  /**
+   * @param loadMetadata the loadMetadata to set
+   */
+  public void setLoadMetadata(Boolean loadMetadata)
+  {
+    this.loadMetadata = loadMetadata;
+  }
+
+  /**
+   * @return the loadTranslation
+   */
+  public Boolean isLoadTranslation()
+  {
+    return loadTranslation;
+  }
+
+  /**
+   * @param loadTranslation the loadTranslation to set
+   */
+  public void setLoadTranslation(Boolean loadTranslation)
+  {
+    this.loadTranslation = loadTranslation;
   }
 }

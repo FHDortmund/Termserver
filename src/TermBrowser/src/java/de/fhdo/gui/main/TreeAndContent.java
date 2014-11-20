@@ -16,13 +16,17 @@
  */
 package de.fhdo.gui.main;
 
+import de.fhdo.authorization.Authorization;
 import static de.fhdo.gui.main.ContentCSVSDefault.logger;
 import de.fhdo.gui.main.modules.PopupCodeSystem;
 import de.fhdo.gui.main.modules.PopupValueSet;
+import de.fhdo.helper.ArgumentHelper;
 import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.ParameterHelper;
+import de.fhdo.helper.PropertiesHelper;
 import de.fhdo.helper.SendBackHelper;
 import de.fhdo.helper.SessionHelper;
+import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.logging.LoggingOutput;
 import de.fhdo.models.CodesystemGenericTreeModel;
@@ -98,6 +102,20 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
 
     // Lade Session-Werte
     mode = SessionHelper.getMainViewMode();
+    
+    String username = ArgumentHelper.getWindowParameterString("usr");
+    String password = ArgumentHelper.getWindowParameterString("pw");
+    
+    if(username.length() > 0 && password.length() > 0)
+    {
+      // try login
+      logger.debug("Try login...");
+      
+      Authorization.login(username, password);
+      //WebServiceHelper.login(null)
+      
+    }
+    
     allowEditing = SessionHelper.isUserLoggedIn();
 
   }
@@ -214,14 +232,18 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     Window winGenericTree = (Window) inc.getFellow("winGenericTree");
     genericTreeCS = (GenericTree) winGenericTree;
 
-    CodesystemGenericTreeModel.getInstance().initGenericTree(genericTreeCS, this);
+    int count = CodesystemGenericTreeModel.getInstance().initGenericTree(genericTreeCS, this);
     genericTreeCS.setTreeId("codesystems");
+    logger.debug("Count: " + count);
 
     genericTreeCS.setButton_new(allowEditing);
     genericTreeCS.setButton_edit(allowEditing);
     genericTreeCS.setShowRefresh(true);
+    genericTreeCS.setAutoExpandAll(count <= PropertiesHelper.getInstance().getExpandTreeAutoCount());
 
     genericTreeCS.removeCustomButtons();
+    
+    
 
     Button buttonDetails = new Button(Labels.getLabel("common.details"), "/rsc/img/list/magnifier.png");
     buttonDetails.addEventListener(Events.ON_CLICK, new EventListener<Event>()
@@ -314,6 +336,14 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
       ComponentHelper.setVisible("message", false, this);
       ComponentHelper.setVisible("incTreeCS", true, this);
     }
+    
+//    logger.debug("Count: " + count);
+//    logger.debug("Expand till: " + PropertiesHelper.getInstance().getExpandTreeAutoCount());
+//    
+//    if(count <= PropertiesHelper.getInstance().getExpandTreeAutoCount())
+//    {
+//      genericTreeCS.expandAll();
+//    }
   }
 
   private void createTabContent_VS()
@@ -429,6 +459,10 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
       ComponentHelper.setVisible("incTreeCS", true, this);
     }*/
     
+//    if(count <= PropertiesHelper.getInstance().getExpandTreeAutoCount())
+//    {
+//      genericTreeVS.expandAll();
+//    }
     
   }
 

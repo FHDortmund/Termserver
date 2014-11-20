@@ -16,7 +16,6 @@
  */
 package de.fhdo.terminologie.db;
 
-import de.fhdo.terminologie.db.hibernate.LicencedUserId;
 import java.io.File;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.SessionFactory;
@@ -86,7 +85,10 @@ public class HibernateUtil
   public static SessionFactory getSessionFactory()
   {
     if(sessionFactory == null)
+    {
       sessionFactory = buildSessionFactory();
+      de.fhdo.terminologie.db.DB.getInstance().checkForUpdates();
+    }
     
     return sessionFactory;
   }

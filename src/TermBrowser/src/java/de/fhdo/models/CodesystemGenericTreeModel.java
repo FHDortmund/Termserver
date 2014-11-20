@@ -61,6 +61,7 @@ public class CodesystemGenericTreeModel
   private boolean loaded = false;
   private List<DomainValue> listDV = new LinkedList();
   private String errorMessage;
+  private int count = 0;
   //private ArrayList<CodeSystemVersion> csvList = new ArrayList<CodeSystemVersion>();
 
   public CodesystemGenericTreeModel()
@@ -102,6 +103,7 @@ public class CodesystemGenericTreeModel
       {
         listDV = response.getDomainValue();
         loaded = true;
+        //count = response.getReturnInfos().getCount();
       }
       else
       {
@@ -117,7 +119,13 @@ public class CodesystemGenericTreeModel
     }
   }
   
-  public void initGenericTree(GenericTree tree, IGenericTreeActions treeActions)
+  /**
+   * 
+   * @param tree
+   * @param treeActions
+   * @return count entries
+   */
+  public int initGenericTree(GenericTree tree, IGenericTreeActions treeActions)
   {
     initData();
     
@@ -126,6 +134,7 @@ public class CodesystemGenericTreeModel
     
     // Daten erzeugen und der Liste hinzufügen
     //List<GenericTreeRowType> dataList = new LinkedList<GenericTreeRowType>();
+    count = 0;
     List<GenericTreeRowType> dataList = createModel();
     
     // Liste initialisieren
@@ -138,7 +147,10 @@ public class CodesystemGenericTreeModel
     tree.setListHeader(header);
     tree.setDataList(dataList);
     
-    
+    return count;
+//    if(dataList != null)
+//      return dataList.size();
+//    else return 0;
   }
   
   private List<GenericTreeRowType> createModel()
@@ -200,6 +212,8 @@ public class CodesystemGenericTreeModel
       
       cells[0] = new GenericTreeCellType(tc, false, "");
       row.setData(cs);
+      
+      count++;
 
       /*// Kinder (CodeSystemVersions) suchen und dem CodeSystem hinzufügen            
       for (CodeSystemVersion csv : cs.getCodeSystemVersions())
@@ -216,6 +230,7 @@ public class CodesystemGenericTreeModel
       
       cells[0] = new GenericTreeCellType(csv.getName(), false, "");
       row.setData(csv);
+      
     }
     else if (obj instanceof DomainValue)
     {

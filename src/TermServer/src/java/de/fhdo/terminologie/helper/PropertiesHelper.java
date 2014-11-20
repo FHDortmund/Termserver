@@ -73,8 +73,8 @@ public class PropertiesHelper
       config.load(new FileInputStream(filename));
 
       // load properties
-      //login_classname = config.getProperty("login.classname", "UsernamePasswordMethod");
-      login_classname = config.getProperty("login.classname", "kjshdf");
+      login_classname = config.getProperty("login.classname", "UsernamePasswordMethod");
+      //login_classname = config.getProperty("login.classname", "kjshdf");
       
       logger.debug("login_classname: " + login_classname);
     }

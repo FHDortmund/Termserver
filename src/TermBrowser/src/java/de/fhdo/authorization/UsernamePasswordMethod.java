@@ -17,9 +17,12 @@
 package de.fhdo.authorization;
 
 import de.fhdo.gui.admin.Login;
+import de.fhdo.helper.CookieHelper;
+import de.fhdo.helper.MD5;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.logging.LoggingOutput;
+import de.fhdo.terminologie.ws.authorization.LoginResponse;
 import de.fhdo.terminologie.ws.authorization.LogoutResponseType;
 import de.fhdo.terminologie.ws.authorization.Status;
 import java.util.LinkedList;
@@ -29,6 +32,7 @@ import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
@@ -38,12 +42,13 @@ import org.zkoss.zul.Window;
  */
 public class UsernamePasswordMethod implements IAuthorization
 {
+
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
 
   public boolean doLogin()
   {
     logger.debug("[UsernamePasswordMethod] doLogin()");
-    
+
     // open login window
     try
     {
@@ -62,18 +67,46 @@ public class UsernamePasswordMethod implements IAuthorization
     return false;
   }
 
+  public boolean doLogin(String username, String password)
+  {
+    List<String> parameterList = new LinkedList<String>();
+    parameterList.add(username);
+    parameterList.add(MD5.getMD5(password));
+
+    LoginResponse.Return response = WebServiceHelper.login(parameterList);
+    logger.debug("Antwort: " + response.getReturnInfos().getMessage());
+
+    if (response.getReturnInfos().getStatus() == Status.OK
+            && response.getParameterList() != null && response.getParameterList().size() > 0)
+    {
+      // Hauptseite aufrufen
+      //CookieHelper.removeCookie("show_captcha");
+      //CookieHelper.setCookie("username", username);
+
+      logger.debug("Login erfolgreich, Session-ID: " + response.getParameterList().get(0));
+      SessionHelper.setValue("session_id", response.getParameterList().get(0));
+      SessionHelper.setValue("user_name", username);
+
+      //Clients.showBusy("Login erfolgreich\n\nTermBrowser wird geladen...");
+      //Executions.sendRedirect("/gui/main/main.zul");
+      //Executions.getCurrent().sendRedirect("../../TermBrowser/gui/main/main.zul?" + "p1=" + userAndPseudEnc);
+      return true;
+    }
+    
+    return false;
+  }
+
   public boolean doLogout()
   {
     logger.debug("[UsernamePasswordMethod] doLogout()");
-    
+
     // Webservice aufrufen
     logger.debug("Authorization.logout()-Webservice wird aufgerufen");
-    
-    
+
     // Generische Parameterliste füllen (hier nur SessionID)
     List<String> parameterList = new LinkedList<String>();
     parameterList.add(SessionHelper.getSessionId());
-    
+
     LogoutResponseType response = WebServiceHelper.logout(parameterList);
     logger.debug("Antwort: " + response.getReturnInfos().getMessage());
 
@@ -97,5 +130,4 @@ public class UsernamePasswordMethod implements IAuthorization
     return false;
   }
 
-  
 }

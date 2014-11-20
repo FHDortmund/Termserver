@@ -16,6 +16,9 @@
  */
 package de.fhdo.terminologie.ws.search.types;
 
+import de.fhdo.terminologie.db.hibernate.CodeSystem;
+import de.fhdo.terminologie.db.hibernate.ValueSet;
+
 
 
 /**
@@ -25,6 +28,8 @@ package de.fhdo.terminologie.ws.search.types;
 public class ListMetadataParameterRequestType
 {
   private String loginToken;
+  private CodeSystem codeSystem;
+  private ValueSet valueSet;
   
   public ListMetadataParameterRequestType()
   {
@@ -45,5 +50,37 @@ public class ListMetadataParameterRequestType
   public void setLoginToken(String login)
   {
     this.loginToken = login;
+  }
+
+  /**
+   * @return the codeSystem
+   */
+  public CodeSystem getCodeSystem()
+  {
+    return codeSystem;
+  }
+
+  /**
+   * @param codeSystem the codeSystem to set
+   */
+  public void setCodeSystem(CodeSystem codeSystem)
+  {
+    this.codeSystem = codeSystem;
+  }
+
+  /**
+   * @return the valueSet
+   */
+  public ValueSet getValueSet()
+  {
+    return valueSet;
+  }
+
+  /**
+   * @param valueSet the valueSet to set
+   */
+  public void setValueSet(ValueSet valueSet)
+  {
+    this.valueSet = valueSet;
   }
 }

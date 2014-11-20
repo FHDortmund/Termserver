@@ -58,6 +58,8 @@ public class PropertiesHelper
   private boolean guiCodesystemVersionExpandable;
   private boolean guiConceptExpandable;
   
+  private int expandTreeAutoCount = 50;
+  
   public static PropertiesHelper getInstance()
   {
     if (instance == null)
@@ -97,10 +99,13 @@ public class PropertiesHelper
       guiConceptExpandable = getBooleanValue(config.getProperty("gui.concept.expandable", "false"));
       guiConceptMinimal = getBooleanValue(config.getProperty("gui.concept.minimal", "false"));
       
+      expandTreeAutoCount = getIntValue("gui.tree.expandTreeAutoCount", 50);
+      
       logger.debug("login_classname: " + login_classname);
       logger.debug("termserverUrl: " + termserverUrl);
       logger.debug("termserverServiceName: " + termserverServiceName);
       logger.debug("collaborationActive: " + collaborationActive);
+      logger.debug("expandTreeAutoCount: " + expandTreeAutoCount);
     }
     catch (Exception e)
     {
@@ -124,6 +129,27 @@ public class PropertiesHelper
     }
 
     return false;
+  }
+  
+  private int getIntValue(String s)
+  {
+    return getIntValue(s, 0);
+  }
+  private int getIntValue(String s, int defaultValue)
+  {
+    if (s == null || s.length() == 0)
+      return defaultValue;
+
+    try
+    {
+      return Integer.parseInt(s);
+    }
+    catch(Exception ex)
+    {
+      
+    }
+
+    return defaultValue;
   }
 
   /**
@@ -204,6 +230,22 @@ public class PropertiesHelper
   public boolean isGuiConceptExpandable()
   {
     return guiConceptExpandable;
+  }
+
+  /**
+   * @return the expandTreeAutoCount
+   */
+  public int getExpandTreeAutoCount()
+  {
+    return expandTreeAutoCount;
+  }
+
+  /**
+   * @param expandTreeAutoCount the expandTreeAutoCount to set
+   */
+  public void setExpandTreeAutoCount(int expandTreeAutoCount)
+  {
+    this.expandTreeAutoCount = expandTreeAutoCount;
   }
 
 }

@@ -28,6 +28,7 @@ import de.fhdo.list.GenericList;
 import de.fhdo.list.GenericListCellType;
 import de.fhdo.list.GenericListHeaderType;
 import de.fhdo.list.GenericListRowType;
+import de.fhdo.list.IUpdateData;
 import de.fhdo.logging.LoggingOutput;
 import de.fhdo.models.TreeModel;
 import de.fhdo.models.TreeNode;
@@ -78,23 +79,26 @@ import types.termserver.fhdo.de.ValueSetMetadataValue;
  *
  * @author Robert Mützner <robert.muetzner@fh-dortmund.de>
  */
-public class PopupConcept extends Window implements AfterCompose
+public class PopupConcept extends Window implements AfterCompose, IUpdateData
 {
 
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
 
   public static enum EDITMODES
   {
+
     NONE, DETAILSONLY, CREATE, MAINTAIN, CREATE_NEW_VERSION
   }
 
   public static enum HIERARCHYMODE
   {
+
     NONE, SAME, SUB, ROOT
   }
-  
+
   public static enum CONTENTMODE
   {
+
     CODESYSTEM, VALUESET
   }
 
@@ -111,14 +115,19 @@ public class PopupConcept extends Window implements AfterCompose
   private CodeSystemVersionEntityMembership csvem;
 
   private long codeSystemEntityVersionId, codeSystemVersionId, valueSetVersionId;
+  private long codeSystemId, valueSetId;
 
   GenericList genericListMetadata = null;
   GenericList genericListTranslation = null;
-  
+
   private TreeNode tnSelected;
   //private CodeSystemEntityVersion csevAssociatedVersionId = null;
   private long csevAssociatedVersionId = 0;
-  
+
+  private List<MetadataParameter> listMetadata;
+  private List<CodeSystemMetadataValue> listMetadataValuesCS;
+  private List<ValueSetMetadataValue> listMetadataValuesVS;
+
   private IUpdateModal updateListener = null;
 
   public PopupConcept()
@@ -129,25 +138,34 @@ public class PopupConcept extends Window implements AfterCompose
     //id = ArgumentHelper.getWindowArgumentLong("Id");
     codeSystemEntityVersionId = ArgumentHelper.getWindowArgumentLong("VersionId");
     logger.debug("versionId: " + codeSystemEntityVersionId);
-    
+
     codeSystemVersionId = ArgumentHelper.getWindowArgumentLong("CodeSystemVersionId");
     valueSetVersionId = ArgumentHelper.getWindowArgumentLong("ValueSetVersionId");
-    
+
+    codeSystemId = ArgumentHelper.getWindowArgumentLong("CodeSystemId");
+    valueSetId = ArgumentHelper.getWindowArgumentLong("ValueSetId");
+
+    Object o = ArgumentHelper.getWindowArgument("MetadataList");
+    if (o != null)
+      listMetadata = (List<MetadataParameter>) o;
+
     logger.debug("codeSystemVersionId: " + codeSystemVersionId);
     logger.debug("valueSetVersionId: " + valueSetVersionId);
 
-    /*csev = (CodeSystemEntityVersion) ArgumentHelper.getWindowArgument("CSEV");
-    if (csev != null)
-    {
-      csc = csev.getCodeSystemConcepts().get(0);
-      cse = csev.getCodeSystemEntity();
-    }*/
+    logger.debug("codeSystemId: " + codeSystemId);
+    logger.debug("valueSetId: " + valueSetId);
 
+    /*csev = (CodeSystemEntityVersion) ArgumentHelper.getWindowArgument("CSEV");
+     if (csev != null)
+     {
+     csc = csev.getCodeSystemConcepts().get(0);
+     cse = csev.getCodeSystemEntity();
+     }*/
     contentMode = (CONTENTMODE) ArgumentHelper.getWindowArgument("ContentMode");
     logger.debug("contentMode: " + contentMode.name());
 
     editMode = EDITMODES.NONE;
-    Object o = ArgumentHelper.getWindowArgument("EditMode");
+    o = ArgumentHelper.getWindowArgument("EditMode");
     if (o != null)
     {
       try
@@ -168,11 +186,11 @@ public class PopupConcept extends Window implements AfterCompose
       hierarchyMode = (HIERARCHYMODE) o;
     }
     logger.debug("hierarchyMode: " + hierarchyMode.name());
-    
+
     o = ArgumentHelper.getWindowArgument("TreeNode");
     if (o != null)
       tnSelected = (TreeNode) o;
-    
+
     //csevAssociatedVersionId = (CodeSystemEntityVersion) ArgumentHelper.getWindowArgument("CSEVAssociated"); // für assoziationen   
     csevAssociatedVersionId = ArgumentHelper.getWindowArgumentLong("CSEVAssociated"); // für assoziationen   
 
@@ -198,12 +216,11 @@ public class PopupConcept extends Window implements AfterCompose
     if (csev.getEffectiveDate() != null)
       ((Datebox) getFellow("dateBoxReleasedAt")).setValue(new Date(csev.getEffectiveDate().toGregorianCalendar().getTimeInMillis()));
 
-    ComponentHelper.setVisible("divId", editMode == EDITMODES.CREATE_NEW_VERSION || editMode == EDITMODES.MAINTAIN ||
-            editMode == EDITMODES.DETAILSONLY, this);
-    
-    
+    ComponentHelper.setVisible("divId", editMode == EDITMODES.CREATE_NEW_VERSION || editMode == EDITMODES.MAINTAIN
+            || editMode == EDITMODES.DETAILSONLY, this);
+
     initListMetadata();
-    
+
     showComponents();
   }
 
@@ -216,8 +233,6 @@ public class PopupConcept extends Window implements AfterCompose
     ignoreList.add("dateBoxID");
     ignoreList.add("cbIsLeaf");
     ignoreList.add("buttonExpand");
-    
-    
 
     boolean readOnly = (editMode == EDITMODES.DETAILSONLY || editMode == EDITMODES.NONE);
     ComponentHelper.doDisableAll(getFellow("tabpanelDetails"), readOnly, ignoreList);
@@ -282,7 +297,7 @@ public class PopupConcept extends Window implements AfterCompose
       }
 
       ReturnConceptDetailsResponse.Return response = WebServiceHelper.returnConceptDetails(parameter);
-      
+
       // keine csev zurueckgekommen (wegen moeglicher Fehler beim WS)
       if (response.getCodeSystemEntity() == null)
         return;
@@ -298,10 +313,10 @@ public class PopupConcept extends Window implements AfterCompose
           break;
         }
       }
-      
-      for(CodeSystemVersionEntityMembership csvem_db : cse.getCodeSystemVersionEntityMemberships())
+
+      for (CodeSystemVersionEntityMembership csvem_db : cse.getCodeSystemVersionEntityMemberships())
       {
-        if(csvem_db.getId() != null && codeSystemVersionId == csvem_db.getId().getCodeSystemVersionId())
+        if (csvem_db.getId() != null && codeSystemVersionId == csvem_db.getId().getCodeSystemVersionId())
         {
           csvem = csvem_db;
           logger.debug("csvem found");
@@ -313,12 +328,11 @@ public class PopupConcept extends Window implements AfterCompose
       //csev.setCodeSystemEntity(cse);
       // CodeSystemVersionEntityMembership nachladen
       /*if (response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().isEmpty() == false)
-      {
-        csvem = response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().get(0);
-        cse.getCodeSystemVersionEntityMemberships().clear();
-        cse.getCodeSystemVersionEntityMemberships().add(csvem);
-      }*/
-
+       {
+       csvem = response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().get(0);
+       cse.getCodeSystemVersionEntityMemberships().clear();
+       cse.getCodeSystemVersionEntityMemberships().add(csvem);
+       }*/
       if (contentMode == CONTENTMODE.VALUESET)
       {
         ReturnValueSetConceptMetadataRequestType para = new ReturnValueSetConceptMetadataRequestType();
@@ -350,8 +364,7 @@ public class PopupConcept extends Window implements AfterCompose
 //
 //      loadCsMetadata(response, false);
       }
-      
-      
+
     }
 
 //    loadTranslations(response, false);
@@ -394,9 +407,16 @@ public class PopupConcept extends Window implements AfterCompose
 
     // concept
     ComponentHelper.setVisible("buttonExpand", guiConceptExpandableVisible, this);
-    
+
     ComponentHelper.setVisible("rMeaning", guiConceptMinimalVisible, this);
     ComponentHelper.setVisible("rowAbbrevation", guiConceptMinimalVisible, this);
+
+    ComponentHelper.setVisible("rowCSVStatus", guiConceptMinimalVisible, this);
+    ComponentHelper.setVisible("rowInsertedAt", guiConceptMinimalVisible, this);
+    ComponentHelper.setVisible("rowPreferred", guiConceptMinimalVisible, this);
+    ComponentHelper.setVisible("rowMainAxis", guiConceptMinimalVisible, this);
+    ComponentHelper.setVisible("rowLeaf", guiConceptMinimalVisible, this);
+
 //    ComponentHelper.setVisible("rowDescriptionEng", guiCodesystemMinimalVisible, this);
 //
 //    // code system version
@@ -457,30 +477,87 @@ public class PopupConcept extends Window implements AfterCompose
 
   private void initListMetadata()
   {
+    listMetadataValuesCS = new LinkedList<CodeSystemMetadataValue>();
+    listMetadataValuesVS = new LinkedList<ValueSetMetadataValue>();
+
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
     header.add(new GenericListHeaderType(Labels.getLabel("common.metadata"), 160, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType(Labels.getLabel("common.value"), 0, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("common.value"), 0, "", true, "String", true, true, editMode == EDITMODES.CREATE || editMode == EDITMODES.CREATE_NEW_VERSION || editMode == EDITMODES.MAINTAIN, false));
     header.add(new GenericListHeaderType(Labels.getLabel("common.language"), 100, "", true, "String", true, true, false, false));
 
     List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
 
-    if (contentMode == CONTENTMODE.VALUESET)
+    for (MetadataParameter mp : listMetadata)
     {
-      for (ValueSetMetadataValue meta : csev.getValueSetMetadataValues())
+      String value = "";
+      boolean gefunden = false;
+
+      // load value
+      if (contentMode == CONTENTMODE.VALUESET)
       {
-        GenericListRowType row = createRowFromMetadataParameter(meta.getParameterValue(), meta.getMetadataParameter());
-        dataList.add(row);
+        for (ValueSetMetadataValue meta : csev.getValueSetMetadataValues())
+        {
+          if (meta.getMetadataParameter().getId().longValue() == mp.getId())
+          {
+            value = meta.getParameterValue();
+            listMetadataValuesVS.add(meta);
+            gefunden = true;
+            break;
+          }
+        }
       }
-    }
-    else
-    {
-      for (CodeSystemMetadataValue meta : csev.getCodeSystemMetadataValues())
+      else
       {
-        GenericListRowType row = createRowFromMetadataParameter(meta.getParameterValue(), meta.getMetadataParameter());
-        dataList.add(row);
+        for (CodeSystemMetadataValue meta : csev.getCodeSystemMetadataValues())
+        {
+          if (meta.getMetadataParameter().getId().longValue() == mp.getId())
+          {
+            value = meta.getParameterValue();
+            listMetadataValuesCS.add(meta);
+            gefunden = true;
+            break;
+          }
+        }
       }
+
+      if (gefunden == false)
+      {
+        if (contentMode == CONTENTMODE.VALUESET)
+        {
+          ValueSetMetadataValue meta = new ValueSetMetadataValue();
+          meta.setParameterValue("");
+          meta.setMetadataParameter(mp);
+          listMetadataValuesVS.add(meta);
+        }
+        else
+        {
+          CodeSystemMetadataValue meta = new CodeSystemMetadataValue();
+          meta.setParameterValue("");
+          meta.setMetadataParameter(mp);
+          listMetadataValuesCS.add(meta);
+        }
+      }
+
+      GenericListRowType row = createRowFromMetadataParameter(value, mp);
+      dataList.add(row);
     }
+    /*if (contentMode == CONTENTMODE.VALUESET)
+     {
+     for (ValueSetMetadataValue meta : csev.getValueSetMetadataValues())
+     {
+     GenericListRowType row = createRowFromMetadataParameter(meta.getParameterValue(), meta.getMetadataParameter());
+     dataList.add(row);
+     }
+     }
+     else
+     {
+     for (CodeSystemMetadataValue meta : csev.getCodeSystemMetadataValues())
+     {
+     GenericListRowType row = createRowFromMetadataParameter(meta.getParameterValue(), meta.getMetadataParameter());
+     dataList.add(row);
+     }
+     }*/
 
     // Liste initialisieren
     Include inc = (Include) getFellow("incListMetadata");
@@ -489,6 +566,7 @@ public class PopupConcept extends Window implements AfterCompose
     genericListMetadata.setListId("metadata");
 
     //genericList.setListActions(this);
+    genericListMetadata.setUpdateDataListener(this);
     genericListMetadata.setButton_new(false);
     genericListMetadata.setButton_edit(false);
     genericListMetadata.setButton_delete(false);
@@ -597,6 +675,25 @@ public class PopupConcept extends Window implements AfterCompose
 
     try
     {
+      // add metadata to request
+      //genericListMetadata.
+      //csev.getCodeSystemMetadataValues()
+      if (contentMode == CONTENTMODE.VALUESET)
+      {
+        csev.getValueSetMetadataValues().clear();
+        csev.getValueSetMetadataValues().addAll(listMetadataValuesVS);
+      }
+      else
+      {
+        csev.getCodeSystemMetadataValues().clear();
+        csev.getCodeSystemMetadataValues().addAll(listMetadataValuesCS);
+        
+        for(CodeSystemMetadataValue mv : listMetadataValuesCS)
+        {
+          logger.debug("add metadata with id: " + mv.getMetadataParameter().getId() + ", value: " + mv.getParameterValue());
+        }
+      }
+
       // -> status date can't be updated manually
       switch (editMode)
       {
@@ -618,14 +715,14 @@ public class PopupConcept extends Window implements AfterCompose
 
       success = false;
     }
-    
-    if(updateListener != null && 
-           (editMode == EDITMODES.MAINTAIN || 
-            editMode == EDITMODES.CREATE_NEW_VERSION ||
-            editMode == EDITMODES.CREATE ))
+
+    if (updateListener != null
+            && (editMode == EDITMODES.MAINTAIN
+            || editMode == EDITMODES.CREATE_NEW_VERSION
+            || editMode == EDITMODES.CREATE))
     {
       // update tree
-      
+
       updateListener.update(cse, editMode == EDITMODES.MAINTAIN || editMode == EDITMODES.CREATE_NEW_VERSION);
     }
 
@@ -637,14 +734,14 @@ public class PopupConcept extends Window implements AfterCompose
   public boolean save_MaintainVersion()
   {
     logger.debug("save_MaintainVersion()");
-    
-    Checkbox cbNewVersion = (Checkbox)getFellow("cbNewVersion");
-    
+
+    Checkbox cbNewVersion = (Checkbox) getFellow("cbNewVersion");
+
     if (contentMode == CONTENTMODE.CODESYSTEM)
     {
       MaintainConceptRequestType parameter = new MaintainConceptRequestType();
       parameter.setCodeSystemVersionId(codeSystemVersionId);
-      
+
       // Login
       parameter.setLoginToken(SessionHelper.getSessionId());
 
@@ -689,55 +786,55 @@ public class PopupConcept extends Window implements AfterCompose
       // ValueSet
       /*TODO MaintainConceptValueSetMembershipRequestType parameter = new MaintainConceptValueSetMembershipRequestType();
 
-      // Login
-      parameter.setLoginToken(SessionHelper.getSessionId());
+       // Login
+       parameter.setLoginToken(SessionHelper.getSessionId());
 
-      CodeSystemEntityVersion codeSystemEntityVersion = new CodeSystemEntityVersion();
-      codeSystemEntityVersion.getConceptValueSetMemberships().clear();
-      ConceptValueSetMembership cvsmL = new ConceptValueSetMembership();
+       CodeSystemEntityVersion codeSystemEntityVersion = new CodeSystemEntityVersion();
+       codeSystemEntityVersion.getConceptValueSetMemberships().clear();
+       ConceptValueSetMembership cvsmL = new ConceptValueSetMembership();
 
-      cvsmL.setValueSetVersion(new ValueSetVersion());
-      cvsmL.getValueSetVersion().setVersionId(cvsm.getId().getValuesetVersionId());
-      cvsmL.setCodeSystemEntityVersion(new CodeSystemEntityVersion());
-      cvsmL.getCodeSystemEntityVersion().setVersionId(cvsm.getId().getCodeSystemEntityVersionId());
-      cvsmL.setStatusDate(DateTimeHelper.dateToXMLGregorianCalendar(new Date()));
+       cvsmL.setValueSetVersion(new ValueSetVersion());
+       cvsmL.getValueSetVersion().setVersionId(cvsm.getId().getValuesetVersionId());
+       cvsmL.setCodeSystemEntityVersion(new CodeSystemEntityVersion());
+       cvsmL.getCodeSystemEntityVersion().setVersionId(cvsm.getId().getCodeSystemEntityVersionId());
+       cvsmL.setStatusDate(DateTimeHelper.dateToXMLGregorianCalendar(new Date()));
 
-      cvsmL.setStatus(Integer.valueOf(DomainHelper.getInstance().getComboboxCd(cbStatus)));
-      cvsmL.setIsStructureEntry(cbStructureEntry.isChecked());
-      cvsmL.setOrderNr(Long.valueOf(tbOrderNr.getValue()));
-      cvsmL.setMeaning(tbBedeutung.getValue());
-      cvsmL.setDescription(tbAwbeschreibung.getValue());
-      cvsmL.setHints(tbHinweise.getValue());
+       cvsmL.setStatus(Integer.valueOf(DomainHelper.getInstance().getComboboxCd(cbStatus)));
+       cvsmL.setIsStructureEntry(cbStructureEntry.isChecked());
+       cvsmL.setOrderNr(Long.valueOf(tbOrderNr.getValue()));
+       cvsmL.setMeaning(tbBedeutung.getValue());
+       cvsmL.setDescription(tbAwbeschreibung.getValue());
+       cvsmL.setHints(tbHinweise.getValue());
 
-      codeSystemEntityVersion.getConceptValueSetMemberships().add(cvsmL);
-      parameter.setCodeSystemEntityVersion(codeSystemEntityVersion);
+       codeSystemEntityVersion.getConceptValueSetMemberships().add(cvsmL);
+       parameter.setCodeSystemEntityVersion(codeSystemEntityVersion);
 
-      // Versioning 
-      MaintainConceptValueSetMembershipResponse.Return response = WebServiceHelper.maintainConceptValueSetMembership(parameter);
+       // Versioning 
+       MaintainConceptValueSetMembershipResponse.Return response = WebServiceHelper.maintainConceptValueSetMembership(parameter);
 
-      try
-      {
-        if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
-          Messagebox.show(Labels.getLabel("popupConcept.editConceptSuccessfully"));
-        ((ContentConcepts) this.getParent()).updateModel(true);
-        this.detach();
-        cvsm.setStatus(Integer.valueOf(DomainHelper.getInstance().getComboboxCd(cbStatus)));
-        cvsm.setIsStructureEntry(cbStructureEntry.isChecked());
-        cvsm.setOrderNr(Long.valueOf(tbOrderNr.getValue()));
-        cvsm.setMeaning(tbBedeutung.getValue());
-        cvsm.setDescription(tbAwbeschreibung.getValue());
-        cvsm.setHints(tbHinweise.getValue());
+       try
+       {
+       if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
+       Messagebox.show(Labels.getLabel("popupConcept.editConceptSuccessfully"));
+       ((ContentConcepts) this.getParent()).updateModel(true);
+       this.detach();
+       cvsm.setStatus(Integer.valueOf(DomainHelper.getInstance().getComboboxCd(cbStatus)));
+       cvsm.setIsStructureEntry(cbStructureEntry.isChecked());
+       cvsm.setOrderNr(Long.valueOf(tbOrderNr.getValue()));
+       cvsm.setMeaning(tbBedeutung.getValue());
+       cvsm.setDescription(tbAwbeschreibung.getValue());
+       cvsm.setHints(tbHinweise.getValue());
 
-      }
-      catch (Exception ex)
-      {
-        Logger.getLogger(PopupConcept.class.getName()).log(Level.SEVERE, null, ex);
-      }*/
+       }
+       catch (Exception ex)
+       {
+       Logger.getLogger(PopupConcept.class.getName()).log(Level.SEVERE, null, ex);
+       }*/
     }
-    
+
     return true;
   }
-  
+
   public boolean save_Create()
   {
     logger.debug("save_Create()");
@@ -752,6 +849,7 @@ public class PopupConcept extends Window implements AfterCompose
     parameter.setLoginToken(de.fhdo.helper.SessionHelper.getSessionId());
 
     parameter.setCodeSystem(new CodeSystem());
+    parameter.getCodeSystem().setId(codeSystemId);
     CodeSystemVersion csv = new CodeSystemVersion();
     csv.setVersionId(codeSystemVersionId);
     //parameter.getCodeSystem().setId(id);
@@ -770,13 +868,12 @@ public class PopupConcept extends Window implements AfterCompose
       csev.setVersionId(response.getCodeSystemEntity().getCurrentVersionId());
       cse.setId(response.getCodeSystemEntity().getId());
       cse.setCurrentVersionId(csev.getVersionId());
-      
+
       logger.debug("new Entity-ID: " + cse.getId());
       logger.debug("new Version-ID: " + csev.getVersionId());
 
       // TreeNode erstellen und danach update, damit das neue Konzept auch angezeigt wird                
       //TreeNode newTreeNode = new TreeNode(csev);
-
       // TODO irgendwie hier auslagern
       // In Root einhängen
       if (hierarchyMode == HIERARCHYMODE.ROOT)
@@ -786,14 +883,14 @@ public class PopupConcept extends Window implements AfterCompose
       }
       // Create Association für sub-konzepte und TreeNode einhängen
       else if (hierarchyMode == HIERARCHYMODE.SUB)
-      { 
+      {
         logger.debug("create association...");
         // sub-ebene
         // Assoziation erstellen; geht erst nachdem die neue CSE(V) erstell wurde und eine Id bekommen hat
         logger.debug("to id: " + csevAssociatedVersionId);
-        
-        CreateConceptAssociationResponse.Return responseAssociation = 
-                createAssociation(csevAssociatedVersionId, csev.getVersionId(), 2, 4);
+
+        CreateConceptAssociationResponse.Return responseAssociation
+                = createAssociation(csevAssociatedVersionId, csev.getVersionId(), 2, 4);
 
         try
         {
@@ -876,7 +973,7 @@ public class PopupConcept extends Window implements AfterCompose
 
     return false;
   }
-  
+
   private CreateConceptAssociationResponse.Return createAssociation(long csev1_id, long csev2_id, int assoKind, long assoType_id)
   {
     CreateConceptAssociationRequestType parameterAssociation = new CreateConceptAssociationRequestType();
@@ -889,7 +986,7 @@ public class PopupConcept extends Window implements AfterCompose
       csev1.setVersionId(csev1_id);
       CodeSystemEntityVersion csev2 = new CodeSystemEntityVersion();
       csev2.setVersionId(csev2_id);
-      
+
       cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(csev1);
       cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId2(csev2);
       cseva.setAssociationKind(assoKind); // 1 = ontologisch, 2 = taxonomisch, 3 = cross mapping   
@@ -912,8 +1009,42 @@ public class PopupConcept extends Window implements AfterCompose
 
     return responseAccociation;
   }
-  
- 
+
+  public void onCellUpdated(int cellIndex, Object data, GenericListRowType row)
+  {
+    logger.debug("onCellUpdated()");
+    
+    if (cellIndex == 1 && row != null && row.getData() != null && row.getData() instanceof MetadataParameter
+            && data != null && data instanceof String)
+    {
+      logger.debug("set value in list");
+      
+      MetadataParameter mp = (MetadataParameter) row.getData();
+      
+      if (contentMode == CONTENTMODE.VALUESET)
+      {
+        for(ValueSetMetadataValue mv : listMetadataValuesVS)
+        {
+          if(mv.getMetadataParameter().getId().longValue() == mp.getId())
+          {
+            mv.setParameterValue(data.toString());
+            break;
+          }
+        }
+      }
+      else
+      {
+        for(CodeSystemMetadataValue mv : listMetadataValuesCS)
+        {
+          if(mv.getMetadataParameter().getId().longValue() == mp.getId())
+          {
+            mv.setParameterValue(data.toString());
+            break;
+          }
+        }
+      }
+    }
+  }
 
   /**
    * @return the csev

@@ -104,19 +104,19 @@
                       <label value="${labels.common.statusLastEdited}"/>        
                       <datebox  id="dateBoxSD" width="150px" format="medium+medium"/>
                     </row>                                                        -->
-                    <row>
+                    <row id="rowInsertedAt">
                       <label value="${labels.common.insertedAt}:"/>
                       <datebox id="dateBoxID" width="150px" format="medium+medium" disabled="true"/> 
                     </row>
-                    <row>
+                    <row id="rowValidFrom">
                       <label value="${labels.common.validFrom}:"/>              
                       <datebox  id="dateBoxReleasedAt" width="150px" format="medium+medium"/> 
                     </row>                                                 
-                    <row>
+                    <row id="rowPreferred">
                       <label value="${labels.common.preferred}:" id="lPref"/>
                       <checkbox id="cbPreferred" value="@{winConceptDetails.csc.isPreferred}"   checked="@{winConceptDetails.csc.isPreferred}"/>
                     </row>
-                    <row>
+                    <row id="rowMainAxis">
                       <hbox>
                         <label value="${labels.common.mainAxis}"/>
                         <label value="/"/>
@@ -128,7 +128,7 @@
                         <checkbox id="cbMainClass"   value="@{winConceptDetails.csvem.isMainClass}" checked="@{winConceptDetails.csvem.isMainClass}"/>
                       </hbox>
                     </row>
-                    <row>
+                    <row id="rowLeaf">
                       <label value="${labels.common.isLeaf}:"/>               
                       <checkbox id="cbIsLeaf" value="@{winConceptDetails.csev.isLeaf}" checked="@{winConceptDetails.csev.isLeaf}"
                               disabled="true"/>

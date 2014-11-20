@@ -29,15 +29,11 @@ import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersionEntityMembership;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersionEntityMembershipId;
 import de.fhdo.terminologie.db.hibernate.MetadataParameter;
-import de.fhdo.terminologie.helper.HQLParameterHelper;
 import de.fhdo.terminologie.helper.LastChangeHelper;
-import de.fhdo.terminologie.helper.LoginHelper;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptResponseType;
 import de.fhdo.terminologie.ws.authorization.Authorization;
 import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
-import de.fhdo.terminologie.ws.types.LoginInfoType;
-
 import de.fhdo.terminologie.ws.types.ReturnType;
 import java.util.Date;
 import java.util.HashSet;
@@ -161,6 +157,8 @@ public class CreateConcept
         if (entityVersion.getAssociationTypes() != null && entityVersion.getAssociationTypes().size() > 0)
           assType = (AssociationType) entityVersion.getAssociationTypes().toArray()[0];
 
+        Set<CodeSystemMetadataValue> listMetadataCS = entityVersion.getCodeSystemMetadataValues();
+        
         //entityVersion.setStatus(Definitions.STATUS_CODES.ACTIVE.getCode());
         //entityVersion.setStatus();  
         if (entityVersion.getStatusVisibility() == null)
@@ -240,6 +238,27 @@ public class CreateConcept
           hb_session.save(assType);
         }
 
+        logger.debug("save metadata...");
+        if (listMetadataCS != null)
+        {
+          logger.debug("check values...");
+
+          for (CodeSystemMetadataValue mv : listMetadataCS)
+          {
+            if (mv.getParameterValue() != null && mv.getParameterValue().length() > 0)
+            {
+              // add new md value
+              CodeSystemMetadataValue mv_db = new CodeSystemMetadataValue(mv.getParameterValue());
+              mv_db.setMetadataParameter(new MetadataParameter());
+              mv_db.getMetadataParameter().setId(mv.getMetadataParameter().getId());
+              mv_db.setCodeSystemEntityVersion(entityVersion);
+              hb_session.save(mv_db);
+
+              logger.debug("save metadata-value with mp-id: " + mv_db.getMetadataParameter().getId() + ", value: " + mv_db.getParameterValue());
+            }
+          }
+        }
+
         // Beziehung zum Vokabular speichern
         if (codeSystemVersionId > 0)
         {
@@ -268,47 +287,46 @@ public class CreateConcept
           hb_session.save(membership);
         }
 
-        if (paramCodeSystem != null && paramCodeSystem.getId() != null)
-        {
-          //Check ob MetadataParameter default Values angelegt werden müssen
-          String hql = "select distinct mp from MetadataParameter mp";
-          hql += " join fetch mp.codeSystem cs";
+        /*if (paramCodeSystem != null && paramCodeSystem.getId() != null)
+         {
+         //Check ob MetadataParameter default Values angelegt werden müssen
+         String hql = "select distinct mp from MetadataParameter mp";
+         hql += " join fetch mp.codeSystem cs";
 
-          HQLParameterHelper parameterHelper = new HQLParameterHelper();
-          parameterHelper.addParameter("cs.", "id", paramCodeSystem.getId());
+         HQLParameterHelper parameterHelper = new HQLParameterHelper();
+         parameterHelper.addParameter("cs.", "id", paramCodeSystem.getId());
 
-          // Parameter hinzufügen (immer mit AND verbunden)
-          hql += parameterHelper.getWhere("");
-          logger.debug("HQL: " + hql);
+         // Parameter hinzufügen (immer mit AND verbunden)
+         hql += parameterHelper.getWhere("");
+         logger.debug("HQL: " + hql);
 
-          // Query erstellen
-          org.hibernate.Query q = hb_session.createQuery(hql);
-          parameterHelper.applyParameter(q);
+         // Query erstellen
+         org.hibernate.Query q = hb_session.createQuery(hql);
+         parameterHelper.applyParameter(q);
 
-          List<MetadataParameter> mpList = q.list();
-          if (!mpList.isEmpty())
-          {
-            Iterator<MetadataParameter> iter = mpList.iterator();
-            while (iter.hasNext())
-            {
-              MetadataParameter mp = (MetadataParameter) iter.next();
-              if (mp.getCodeSystem() != null && mp.getCodeSystem().getName() != null)
-              {
-                if (!mp.getCodeSystem().getName().equals("LOINC"))
-                {
-                  CodeSystemMetadataValue csmv = new CodeSystemMetadataValue();
+         List<MetadataParameter> mpList = q.list();
+         if (!mpList.isEmpty())
+         {
+         Iterator<MetadataParameter> iter = mpList.iterator();
+         while (iter.hasNext())
+         {
+         MetadataParameter mp = (MetadataParameter) iter.next();
+         if (mp.getCodeSystem() != null && mp.getCodeSystem().getName() != null)
+         {
+         if (!mp.getCodeSystem().getName().equals("LOINC"))
+         {
+         CodeSystemMetadataValue csmv = new CodeSystemMetadataValue();
 
-                  csmv.setParameterValue("");
-                  csmv.setMetadataParameter(mp);
-                  csmv.setCodeSystemEntityVersion(entityVersion);
+         csmv.setParameterValue("");
+         csmv.setMetadataParameter(mp);
+         csmv.setCodeSystemEntityVersion(entityVersion);
 
-                  hb_session.save(csmv);
-                }
-              }
-            }
-          }
-        }
-        
+         hb_session.save(csmv);
+         }
+         }
+         }
+         }
+         }*/
         response.getReturnInfos().setCount(1);
       }
       catch (Exception e)
@@ -364,7 +382,8 @@ public class CreateConcept
         response.getReturnInfos().setMessage("Konzept erfolgreich erstellt");
         response.getReturnInfos().setCount(1);
       }
-      else response.getReturnInfos().setCount(0);
+      else
+        response.getReturnInfos().setCount(0);
 
     }
     catch (Exception e)

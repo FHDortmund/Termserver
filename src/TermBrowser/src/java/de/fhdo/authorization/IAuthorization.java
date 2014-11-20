@@ -25,6 +25,8 @@ import java.util.List;
 public interface IAuthorization
 {
   public boolean doLogin();
+  public boolean doLogin(String username, String password);
   public boolean doLogout();
+  
   
 }
