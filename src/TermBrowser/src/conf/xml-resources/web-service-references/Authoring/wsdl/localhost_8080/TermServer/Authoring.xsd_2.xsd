@@ -2,93 +2,13 @@
 
 <xs:import namespace="http://authoring.ws.terminologie.fhdo.de/" schemaLocation="http://localhost:8080/TermServer/Authoring?xsd=1" />
 
-<xs:complexType name="valueSet">
+<xs:complexType name="valueSetMetadataValue">
 <xs:sequence>
-<xs:element name="currentVersionId" type="xs:long" minOccurs="0" />
-<xs:element name="description" type="xs:string" minOccurs="0" />
-<xs:element name="descriptionEng" type="xs:string" minOccurs="0" />
+<xs:element name="codeSystemEntityVersion" type="tns:codeSystemEntityVersion" minOccurs="0" />
 <xs:element name="id" type="xs:long" minOccurs="0" />
-<xs:element name="metadataParameters" type="tns:metadataParameter" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="name" type="xs:string" minOccurs="0" />
-<xs:element name="status" type="xs:int" minOccurs="0" />
-<xs:element name="statusDate" type="xs:dateTime" minOccurs="0" />
-<xs:element name="valueSetVersions" type="tns:valueSetVersion" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="website" type="xs:string" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="metadataParameter">
-<xs:sequence>
-<xs:element name="codeSystem" type="tns:codeSystem" minOccurs="0" />
-<xs:element name="codeSystemMetadataValues" type="tns:codeSystemMetadataValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="id" type="xs:long" minOccurs="0" />
-<xs:element name="languageCd" type="xs:string" minOccurs="0" />
-<xs:element name="metadataParameterType" type="xs:string" minOccurs="0" />
-<xs:element name="paramDatatype" type="xs:string" minOccurs="0" />
-<xs:element name="paramName" type="xs:string" minOccurs="0" />
-<xs:element name="valueSet" type="tns:valueSet" minOccurs="0" />
-<xs:element name="valueSetMetadataValues" type="tns:valueSetMetadataValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="codeSystem">
-<xs:sequence>
-<xs:element name="codeSystemType" type="xs:string" minOccurs="0" />
-<xs:element name="codeSystemVersions" type="tns:codeSystemVersion" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="currentVersionId" type="xs:long" minOccurs="0" />
-<xs:element name="description" type="xs:string" minOccurs="0" />
-<xs:element name="descriptionEng" type="xs:string" minOccurs="0" />
-<xs:element name="domainValues" type="tns:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="id" type="xs:long" minOccurs="0" />
-<xs:element name="insertTimestamp" type="xs:dateTime" minOccurs="0" />
-<xs:element name="metadataParameters" type="tns:metadataParameter" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="name" type="xs:string" minOccurs="0" />
-<xs:element name="website" type="xs:string" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="codeSystemVersion">
-<xs:sequence>
-<xs:element name="codeSystem" type="tns:codeSystem" minOccurs="0" />
-<xs:element name="codeSystemVersionEntityMemberships" type="tns:codeSystemVersionEntityMembership" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="description" type="xs:string" minOccurs="0" />
-<xs:element name="expirationDate" type="xs:dateTime" minOccurs="0" />
-<xs:element name="insertTimestamp" type="xs:dateTime" minOccurs="0" />
-<xs:element name="lastChangeDate" type="xs:dateTime" minOccurs="0" />
-<xs:element name="licenceHolder" type="xs:string" minOccurs="0" />
-<xs:element name="licenceTypes" type="tns:licenceType" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="licencedUsers" type="tns:licencedUser" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="name" type="xs:string" minOccurs="0" />
-<xs:element name="oid" type="xs:string" minOccurs="0" />
-<xs:element name="preferredLanguageCd" type="xs:string" minOccurs="0" />
-<xs:element name="previousVersionId" type="xs:long" minOccurs="0" />
-<xs:element name="releaseDate" type="xs:dateTime" minOccurs="0" />
-<xs:element name="source" type="xs:string" minOccurs="0" />
-<xs:element name="status" type="xs:int" minOccurs="0" />
-<xs:element name="statusDate" type="xs:dateTime" minOccurs="0" />
-<xs:element name="underLicence" type="xs:boolean" minOccurs="0" />
-<xs:element name="validityRange" type="xs:long" minOccurs="0" />
-<xs:element name="versionId" type="xs:long" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="codeSystemVersionEntityMembership">
-<xs:sequence>
-<xs:element name="codeSystemEntity" type="tns:codeSystemEntity" minOccurs="0" />
-<xs:element name="codeSystemVersion" type="tns:codeSystemVersion" minOccurs="0" />
-<xs:element name="id" type="tns:codeSystemVersionEntityMembershipId" minOccurs="0" />
-<xs:element name="isAxis" type="xs:boolean" minOccurs="0" />
-<xs:element name="isMainClass" type="xs:boolean" minOccurs="0" />
-<xs:element name="orderNr" type="xs:long" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="codeSystemEntity">
-<xs:sequence>
-<xs:element name="codeSystemEntityVersions" type="tns:codeSystemEntityVersion" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="codeSystemVersionEntityMemberships" type="tns:codeSystemVersionEntityMembership" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="currentVersionId" type="xs:long" minOccurs="0" />
-<xs:element name="id" type="xs:long" minOccurs="0" />
+<xs:element name="metadataParameter" type="tns:metadataParameter" minOccurs="0" />
+<xs:element name="parameterValue" type="xs:string" minOccurs="0" />
+<xs:element name="valuesetVersionId" type="xs:long" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
@@ -170,12 +90,169 @@
 </xs:sequence>
 </xs:complexType>
 
+<xs:complexType name="codeSystemEntity">
+<xs:sequence>
+<xs:element name="codeSystemEntityVersions" type="tns:codeSystemEntityVersion" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="codeSystemVersionEntityMemberships" type="tns:codeSystemVersionEntityMembership" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="currentVersionId" type="xs:long" minOccurs="0" />
+<xs:element name="id" type="xs:long" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="codeSystemVersionEntityMembership">
+<xs:sequence>
+<xs:element name="codeSystemEntity" type="tns:codeSystemEntity" minOccurs="0" />
+<xs:element name="codeSystemVersion" type="tns:codeSystemVersion" minOccurs="0" />
+<xs:element name="id" type="tns:codeSystemVersionEntityMembershipId" minOccurs="0" />
+<xs:element name="isAxis" type="xs:boolean" minOccurs="0" />
+<xs:element name="isMainClass" type="xs:boolean" minOccurs="0" />
+<xs:element name="orderNr" type="xs:long" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="codeSystemVersion">
+<xs:sequence>
+<xs:element name="codeSystem" type="tns:codeSystem" minOccurs="0" />
+<xs:element name="codeSystemVersionEntityMemberships" type="tns:codeSystemVersionEntityMembership" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="description" type="xs:string" minOccurs="0" />
+<xs:element name="expirationDate" type="xs:dateTime" minOccurs="0" />
+<xs:element name="insertTimestamp" type="xs:dateTime" minOccurs="0" />
+<xs:element name="lastChangeDate" type="xs:dateTime" minOccurs="0" />
+<xs:element name="licenceHolder" type="xs:string" minOccurs="0" />
+<xs:element name="licenceTypes" type="tns:licenceType" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="licencedUsers" type="tns:licencedUser" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="name" type="xs:string" minOccurs="0" />
+<xs:element name="oid" type="xs:string" minOccurs="0" />
+<xs:element name="preferredLanguageCd" type="xs:string" minOccurs="0" />
+<xs:element name="previousVersionId" type="xs:long" minOccurs="0" />
+<xs:element name="releaseDate" type="xs:dateTime" minOccurs="0" />
+<xs:element name="source" type="xs:string" minOccurs="0" />
+<xs:element name="status" type="xs:int" minOccurs="0" />
+<xs:element name="statusDate" type="xs:dateTime" minOccurs="0" />
+<xs:element name="underLicence" type="xs:boolean" minOccurs="0" />
+<xs:element name="validityRange" type="xs:long" minOccurs="0" />
+<xs:element name="versionId" type="xs:long" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="codeSystem">
+<xs:sequence>
+<xs:element name="codeSystemType" type="xs:string" minOccurs="0" />
+<xs:element name="codeSystemVersions" type="tns:codeSystemVersion" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="currentVersionId" type="xs:long" minOccurs="0" />
+<xs:element name="description" type="xs:string" minOccurs="0" />
+<xs:element name="descriptionEng" type="xs:string" minOccurs="0" />
+<xs:element name="domainValues" type="tns:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="id" type="xs:long" minOccurs="0" />
+<xs:element name="insertTimestamp" type="xs:dateTime" minOccurs="0" />
+<xs:element name="metadataParameters" type="tns:metadataParameter" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="name" type="xs:string" minOccurs="0" />
+<xs:element name="website" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="domainValue">
+<xs:sequence>
+<xs:element name="attribut1classname" type="xs:string" minOccurs="0" />
+<xs:element name="attribut1value" type="xs:string" minOccurs="0" />
+<xs:element name="codeSystems" type="tns:codeSystem" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="domain" type="tns:domain" minOccurs="0" />
+<xs:element name="domainCode" type="xs:string" minOccurs="0" />
+<xs:element name="domainDisplay" type="xs:string" minOccurs="0" />
+<xs:element name="domainValueId" type="xs:long" minOccurs="0" />
+<xs:element name="domainValuesForDomainValueId1" type="tns:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="domainValuesForDomainValueId2" type="tns:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="imageFile" type="xs:string" minOccurs="0" />
+<xs:element name="orderNo" type="xs:int" minOccurs="0" />
+<xs:element name="sysParamsForModifyLevel" type="tns:sysParam" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="sysParamsForValidityDomain" type="tns:sysParam" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="domain">
+<xs:sequence>
+<xs:element name="defaultValue" type="xs:string" minOccurs="0" />
+<xs:element name="description" type="xs:string" minOccurs="0" />
+<xs:element name="displayOrder" type="xs:long" minOccurs="0" />
+<xs:element name="displayText" type="xs:string" minOccurs="0" />
+<xs:element name="domainId" type="xs:long" minOccurs="0" />
+<xs:element name="domainName" type="xs:string" minOccurs="0" />
+<xs:element name="domainOid" type="xs:string" minOccurs="0" />
+<xs:element name="domainType" type="xs:string" minOccurs="0" />
+<xs:element name="domainValues" type="tns:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="isOptional" type="xs:boolean" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="sysParam">
+<xs:sequence>
+<xs:element name="description" type="xs:string" minOccurs="0" />
+<xs:element name="domainValueByModifyLevel" type="tns:domainValue" minOccurs="0" />
+<xs:element name="domainValueByValidityDomain" type="tns:domainValue" minOccurs="0" />
+<xs:element name="id" type="xs:long" minOccurs="0" />
+<xs:element name="javaDatatype" type="xs:string" minOccurs="0" />
+<xs:element name="name" type="xs:string" minOccurs="0" />
+<xs:element name="objectId" type="xs:long" minOccurs="0" />
+<xs:element name="value" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="metadataParameter">
+<xs:sequence>
+<xs:element name="codeSystem" type="tns:codeSystem" minOccurs="0" />
+<xs:element name="codeSystemMetadataValues" type="tns:codeSystemMetadataValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="description" type="xs:string" minOccurs="0" />
+<xs:element name="id" type="xs:long" minOccurs="0" />
+<xs:element name="languageCd" type="xs:string" minOccurs="0" />
+<xs:element name="maxLength" type="xs:int" minOccurs="0" />
+<xs:element name="metadataParameterType" type="xs:string" minOccurs="0" />
+<xs:element name="paramDatatype" type="xs:string" minOccurs="0" />
+<xs:element name="paramName" type="xs:string" minOccurs="0" />
+<xs:element name="paramNameDisplay" type="xs:string" minOccurs="0" />
+<xs:element name="valueSet" type="tns:valueSet" minOccurs="0" />
+<xs:element name="valueSetMetadataValues" type="tns:valueSetMetadataValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
 <xs:complexType name="codeSystemMetadataValue">
 <xs:sequence>
 <xs:element name="codeSystemEntityVersion" type="tns:codeSystemEntityVersion" minOccurs="0" />
 <xs:element name="id" type="xs:long" minOccurs="0" />
 <xs:element name="metadataParameter" type="tns:metadataParameter" minOccurs="0" />
 <xs:element name="parameterValue" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="valueSet">
+<xs:sequence>
+<xs:element name="currentVersionId" type="xs:long" minOccurs="0" />
+<xs:element name="description" type="xs:string" minOccurs="0" />
+<xs:element name="descriptionEng" type="xs:string" minOccurs="0" />
+<xs:element name="id" type="xs:long" minOccurs="0" />
+<xs:element name="metadataParameters" type="tns:metadataParameter" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="name" type="xs:string" minOccurs="0" />
+<xs:element name="status" type="xs:int" minOccurs="0" />
+<xs:element name="statusDate" type="xs:dateTime" minOccurs="0" />
+<xs:element name="valueSetVersions" type="tns:valueSetVersion" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="website" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="valueSetVersion">
+<xs:sequence>
+<xs:element name="conceptValueSetMemberships" type="tns:conceptValueSetMembership" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="insertTimestamp" type="xs:dateTime" minOccurs="0" />
+<xs:element name="lastChangeDate" type="xs:dateTime" minOccurs="0" />
+<xs:element name="name" type="xs:string" minOccurs="0" />
+<xs:element name="oid" type="xs:string" minOccurs="0" />
+<xs:element name="preferredLanguageCd" type="xs:string" minOccurs="0" />
+<xs:element name="previousVersionId" type="xs:long" minOccurs="0" />
+<xs:element name="releaseDate" type="xs:dateTime" minOccurs="0" />
+<xs:element name="status" type="xs:int" minOccurs="0" />
+<xs:element name="statusDate" type="xs:dateTime" minOccurs="0" />
+<xs:element name="validityRange" type="xs:long" minOccurs="0" />
+<xs:element name="valueSet" type="tns:valueSet" minOccurs="0" />
+<xs:element name="versionId" type="xs:long" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
@@ -199,41 +276,6 @@
 <xs:sequence>
 <xs:element name="codeSystemEntityVersionId" type="xs:long" minOccurs="0" />
 <xs:element name="valuesetVersionId" type="xs:long" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="valueSetVersion">
-<xs:sequence>
-<xs:element name="conceptValueSetMemberships" type="tns:conceptValueSetMembership" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="insertTimestamp" type="xs:dateTime" minOccurs="0" />
-<xs:element name="lastChangeDate" type="xs:dateTime" minOccurs="0" />
-<xs:element name="name" type="xs:string" minOccurs="0" />
-<xs:element name="oid" type="xs:string" minOccurs="0" />
-<xs:element name="preferredLanguageCd" type="xs:string" minOccurs="0" />
-<xs:element name="previousVersionId" type="xs:long" minOccurs="0" />
-<xs:element name="releaseDate" type="xs:dateTime" minOccurs="0" />
-<xs:element name="status" type="xs:int" minOccurs="0" />
-<xs:element name="statusDate" type="xs:dateTime" minOccurs="0" />
-<xs:element name="validityRange" type="xs:long" minOccurs="0" />
-<xs:element name="valueSet" type="tns:valueSet" minOccurs="0" />
-<xs:element name="versionId" type="xs:long" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="valueSetMetadataValue">
-<xs:sequence>
-<xs:element name="codeSystemEntityVersion" type="tns:codeSystemEntityVersion" minOccurs="0" />
-<xs:element name="id" type="xs:long" minOccurs="0" />
-<xs:element name="metadataParameter" type="tns:metadataParameter" minOccurs="0" />
-<xs:element name="parameterValue" type="xs:string" minOccurs="0" />
-<xs:element name="valuesetVersionId" type="xs:long" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="codeSystemVersionEntityMembershipId">
-<xs:sequence>
-<xs:element name="codeSystemEntityId" type="xs:long" minOccurs="0" />
-<xs:element name="codeSystemVersionId" type="xs:long" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
@@ -291,49 +333,10 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="domainValue">
+<xs:complexType name="codeSystemVersionEntityMembershipId">
 <xs:sequence>
-<xs:element name="attribut1classname" type="xs:string" minOccurs="0" />
-<xs:element name="attribut1value" type="xs:string" minOccurs="0" />
-<xs:element name="codeSystems" type="tns:codeSystem" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="domain" type="tns:domain" minOccurs="0" />
-<xs:element name="domainCode" type="xs:string" minOccurs="0" />
-<xs:element name="domainDisplay" type="xs:string" minOccurs="0" />
-<xs:element name="domainValueId" type="xs:long" minOccurs="0" />
-<xs:element name="domainValuesForDomainValueId1" type="tns:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="domainValuesForDomainValueId2" type="tns:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="imageFile" type="xs:string" minOccurs="0" />
-<xs:element name="orderNo" type="xs:int" minOccurs="0" />
-<xs:element name="sysParamsForModifyLevel" type="tns:sysParam" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="sysParamsForValidityDomain" type="tns:sysParam" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="domain">
-<xs:sequence>
-<xs:element name="defaultValue" type="xs:string" minOccurs="0" />
-<xs:element name="description" type="xs:string" minOccurs="0" />
-<xs:element name="displayOrder" type="xs:long" minOccurs="0" />
-<xs:element name="displayText" type="xs:string" minOccurs="0" />
-<xs:element name="domainId" type="xs:long" minOccurs="0" />
-<xs:element name="domainName" type="xs:string" minOccurs="0" />
-<xs:element name="domainOid" type="xs:string" minOccurs="0" />
-<xs:element name="domainType" type="xs:string" minOccurs="0" />
-<xs:element name="domainValues" type="tns:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="isOptional" type="xs:boolean" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="sysParam">
-<xs:sequence>
-<xs:element name="description" type="xs:string" minOccurs="0" />
-<xs:element name="domainValueByModifyLevel" type="tns:domainValue" minOccurs="0" />
-<xs:element name="domainValueByValidityDomain" type="tns:domainValue" minOccurs="0" />
-<xs:element name="id" type="xs:long" minOccurs="0" />
-<xs:element name="javaDatatype" type="xs:string" minOccurs="0" />
-<xs:element name="name" type="xs:string" minOccurs="0" />
-<xs:element name="objectId" type="xs:long" minOccurs="0" />
-<xs:element name="value" type="xs:string" minOccurs="0" />
+<xs:element name="codeSystemEntityId" type="xs:long" minOccurs="0" />
+<xs:element name="codeSystemVersionId" type="xs:long" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 </xs:schema>

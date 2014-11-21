@@ -27,6 +27,7 @@ public class CreateCodeSystemRequestType
 {
   private String loginToken;
   private CodeSystem codeSystem;
+  private Boolean assignTaxonomy;
 
   /**
    * @return the login
@@ -58,6 +59,22 @@ public class CreateCodeSystemRequestType
   public void setCodeSystem(CodeSystem codeSystem)
   {
     this.codeSystem = codeSystem;
+  }
+
+  /**
+   * @return the assignTaxonomy
+   */
+  public Boolean getAssignTaxonomy()
+  {
+    return assignTaxonomy;
+  }
+
+  /**
+   * @param assignTaxonomy the assignTaxonomy to set
+   */
+  public void setAssignTaxonomy(Boolean assignTaxonomy)
+  {
+    this.assignTaxonomy = assignTaxonomy;
   }
   
   

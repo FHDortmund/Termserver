@@ -63,15 +63,23 @@ public class Logger4j
    */
   private void initLogger()
   {
+    boolean fileExists = false;
+    String sFile = System.getProperty("catalina.base") + "/conf/termserver.log4j.cfg.xml";
+    
     try
     {
-      
-      /*Configuration*************************************************************************/  
-      String sFile = System.getProperty("catalina.base") + "/conf/termserver.log4j.cfg.xml";
-      /***************************************************************************************/
       File file = new File(sFile);
-
-      if (file.exists() == false)
+      fileExists = file.exists();
+    }
+    catch(Exception ex)
+    {
+      
+    }
+    
+    try
+    {
+      //if (file.exists() == false)
+      if(fileExists == false)
       {
         System.out.println("Logger ohne Konfigdatei erstellen, Datei nicht gefunden: " + sFile);
         

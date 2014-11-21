@@ -38,8 +38,9 @@ public class HibernateUtil
     {
       // Configuration path
       String path = System.getProperty("catalina.base") + "/conf/termserver.hibernate.cfg.xml";
+      //path = "C:\\Privat\\Programmierung\\apache-tomcat-8.0.8\\conf\\termserver.hibernate.cfg.xml" ;
        
-      logger.info("Hibernate Configuration path: " + path);
+      logger.info("Hibernate Configuration path: " + path); 
       
       // Create the SessionFactory from hibernate.cfg.xml
       File file = new File(path);

@@ -11,6 +11,7 @@
           <tabs>
             <tab id="tabDetails" label="${labels.common.details}" />
             <tab id="tabMetaParameter" label="${labels.common.metaParameter}"/>
+            <tab id="tabTaxonomy" label="${labels.common.taxonomy}"/>
           </tabs>
           <tabpanels>
             <tabpanel id="tabpanelDetails">
@@ -139,6 +140,9 @@
 <!--              <listbox id="listMetadataParameter" vflex="true" height="99%" hflex="true" >
                 <listhead></listhead>
               </listbox>-->
+            </tabpanel>
+            <tabpanel id="tabpanelTaxonomy" >
+              <include id="incTree" src="/gui/templates/GenericTree.zul"/>
             </tabpanel>
           </tabpanels>
         </tabbox>

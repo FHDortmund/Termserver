@@ -16,12 +16,16 @@
  */
 package de.fhdo.gui.main.content;
 
+import de.fhdo.Definitions;
 import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.helper.ComponentHelper;
+import de.fhdo.helper.DateTimeHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.logging.LoggingOutput;
+import de.fhdo.terminologie.ws.authoring.UpdateConceptStatusRequestType;
+import de.fhdo.terminologie.ws.authoring.UpdateConceptStatusResponse;
 import de.fhdo.terminologie.ws.conceptassociation.ListConceptAssociationsRequestType;
 import de.fhdo.terminologie.ws.search.ListCodeSystemConceptsRequestType;
 import de.fhdo.terminologie.ws.search.ListCodeSystemConceptsResponse;
@@ -35,6 +39,7 @@ import de.fhdo.terminologie.ws.search.PagingType;
 import de.fhdo.terminologie.ws.search.SortingType;
 import de.fhdo.terminologie.ws.search.Status;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -77,18 +82,16 @@ public class ConceptsTree implements IUpdateModal
   private Tree treeConcepts;
   private DefaultTreeModel treeModel;
 
-  
-
- 
-
   private enum DISPLAY_MODE
   {
+
     TREEVIEW, LARGEDATA
   }
   private DISPLAY_MODE displayMode;
-  
+
   public enum CONTENT_TYPE
   {
+
     CODESYSTEM, VALUESET
   }
   private CONTENT_TYPE contentType;
@@ -103,7 +106,7 @@ public class ConceptsTree implements IUpdateModal
 
   private PagingResultType paging;
   private int currentPageIndex;
-  
+
   private List<MetadataParameter> listMetadata;
 
   public ConceptsTree()
@@ -124,49 +127,50 @@ public class ConceptsTree implements IUpdateModal
     currentPageIndex = 0;
 
     displayMode = DISPLAY_MODE.TREEVIEW;
-    
-    if(valueSetVersionId > 0)
+
+    if (valueSetVersionId > 0)
       contentType = CONTENT_TYPE.VALUESET;
-    else contentType = CONTENT_TYPE.CODESYSTEM;
+    else
+      contentType = CONTENT_TYPE.CODESYSTEM;
 
     fillTree();
     loadMetadata();
   }
-  
+
   private void loadMetadata()
   {
     logger.debug("loadMetadata()");
-    listMetadata = new LinkedList<MetadataParameter>();            
-    
+    listMetadata = new LinkedList<MetadataParameter>();
+
     ListMetadataParameterRequestType request = new ListMetadataParameterRequestType();
     request.setLoginToken(SessionHelper.getSessionId());
-    if(contentType == CONTENT_TYPE.CODESYSTEM)
+    if (contentType == CONTENT_TYPE.CODESYSTEM)
     {
       request.setCodeSystem(new CodeSystem());
       request.getCodeSystem().setId(codeSystemId);
       logger.debug("... with code system id: " + codeSystemId);
     }
-    else if(contentType == CONTENT_TYPE.VALUESET)
+    else if (contentType == CONTENT_TYPE.VALUESET)
     {
       request.setValueSet(new ValueSet());
       request.getValueSet().setId(valueSetId);
       logger.debug("... with value set id: " + valueSetId);
     }
-    
+
     ListMetadataParameterResponse.Return response = WebServiceHelper.listMetadataParameter(request);
     logger.debug("Webservice result: " + response.getReturnInfos().getMessage());
-    
-    if(response.getReturnInfos().getStatus() == Status.OK)
+
+    if (response.getReturnInfos().getStatus() == Status.OK)
     {
       listMetadata = response.getMetadataParameter();
     }
-    
+
   }
 
   private void fillTree()
   {
     ComponentHelper.setVisible("treecolSource", valueSetVersionId > 0, conceptsWindow);
-    
+
     List<CodeSystemEntity> cseList = null;
 
     if (displayMode == DISPLAY_MODE.LARGEDATA)
@@ -262,7 +266,7 @@ public class ConceptsTree implements IUpdateModal
     {
       ListValueSetContentsRequestType parameter = createParameterForValueSets();
       ListValueSetContentsResponse.Return response = WebServiceHelper.listValueSetContents(parameter);
-      
+
       logger.debug("ListValueSetContentsResponse: " + response.getReturnInfos().getMessage());
 
       if (response.getReturnInfos().getStatus() == Status.OK)
@@ -350,8 +354,8 @@ public class ConceptsTree implements IUpdateModal
       CodeSystemEntityVersion csev = cse.getCodeSystemEntityVersions().get(0);
       csev.setCodeSystemEntity(cse);
 
-      if ((csev.isIsLeaf() != null && csev.isIsLeaf().booleanValue()) ||
-           contentType == CONTENT_TYPE.VALUESET)
+      if ((csev.isIsLeaf() != null && csev.isIsLeaf().booleanValue())
+              || contentType == CONTENT_TYPE.VALUESET)
       {
         // end element (leaf)
         list.add(new DefaultTreeNode(csev));
@@ -395,15 +399,14 @@ public class ConceptsTree implements IUpdateModal
     {
       Treeitem treeItem = treeConcepts.getSelectedItem();
       logger.debug("isOpen: " + treeItem.isOpen());
-      
+
       Object o = treeItem.getAttribute("loaded");
-      if(o != null && ((Boolean)o).booleanValue())
+      if (o != null && ((Boolean) o).booleanValue())
       {
         // data loaded
         logger.debug("data loaded");
         return;
       }
-      
 
       if (treeItem.isOpen() == false || forceLoading)
       {
@@ -457,16 +460,15 @@ public class ConceptsTree implements IUpdateModal
     else if (valueSetVersionId > 0)
       data.put("ContentMode", PopupConcept.CONTENTMODE.VALUESET);
 
-    
     data.put("CodeSystemId", codeSystemId);
     data.put("ValueSetId", valueSetId);
-    
+
     data.put("CodeSystemVersionId", codeSystemVersionId);
     data.put("ValueSetVersionId", valueSetVersionId);
 
     data.put("Association", hierarchyMode);  // mode 1 = gleiche ebene, 2 = subebene, 3 = oberste ebene 
     data.put("CSEVAssociated", CSEVAssociatedVersionId);
-    
+
     data.put("MetadataList", listMetadata);
 
     try
@@ -482,11 +484,78 @@ public class ConceptsTree implements IUpdateModal
     }
   }
 
+  public void deleteConcept()
+  {
+    CodeSystemEntityVersion csev = getSelection();
+    if (csev != null)
+      deleteConcept(csev.getVersionId());
+  }
+
+  public void deleteConcept(long csev_id)
+  {
+    logger.debug("deleteConcept, csev-id: " + csev_id);
+
+    if (Messagebox.show(Labels.getLabel("common.deleteConcept"), Labels.getLabel("common.delete"), Messagebox.YES | Messagebox.NO, Messagebox.QUESTION)
+            == Messagebox.YES)
+    {
+      UpdateConceptStatusRequestType request = new UpdateConceptStatusRequestType();
+      request.setLoginToken(SessionHelper.getSessionId());
+      request.setCodeSystemEntity(new CodeSystemEntity());
+      CodeSystemEntityVersion csev = new CodeSystemEntityVersion();
+      csev.setVersionId(csev_id);
+      csev.setStatusDeactivated(Definitions.STATUS_DEACTIVATED_DELETED);
+      csev.setStatusDeactivatedDate(DateTimeHelper.dateToXMLGregorianCalendar(new Date()));
+      csev.setStatusVisibility(Definitions.STATUS_VISIBILITY_INVISIBLE);
+      csev.setStatusVisibilityDate(DateTimeHelper.dateToXMLGregorianCalendar(new Date()));
+      request.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev);
+
+      UpdateConceptStatusResponse.Return response = WebServiceHelper.updateConceptStatus(request);
+
+      if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
+      {
+        // remove item from tree
+        Treeitem treeItem = treeConcepts.getSelectedItem();
+        if (treeItem != null)
+        {
+          TreeNode selectedTreeNode = (TreeNode) treeItem.getAttribute("treenode");
+
+          if (selectedTreeNode != null)
+          {
+            TreeNode parentNode = selectedTreeNode.getParent();
+            logger.debug("Anzahl Node-Kinder: " + parentNode.getChildCount());
+            if (parentNode.getChildCount() > 1)
+            {
+              parentNode.remove(selectedTreeNode);
+            }
+            else
+            {
+              // Sonderfall (!)
+              treeItem.detach();
+              parentNode.remove(selectedTreeNode);
+            }
+          }
+        }
+
+      }
+      else
+      {
+        Messagebox.show(response.getReturnInfos().getMessage());
+      }
+    }
+
+  }
+
   public void maintainConcept()
   {
     CodeSystemEntityVersion csev = getSelection();
     if (csev != null)
-      maintainConcept(csev.getVersionId());
+    {
+      if(csev.getStatusVisibility() == Definitions.STATUS_VISIBILITY_VISIBLE && 
+         csev.getStatusDeactivated() <= Definitions.STATUS_DEACTIVATED_ACTIVE)
+      {
+        maintainConcept(csev.getVersionId());
+      }
+    }
   }
 
   public void maintainConcept(long csev_id)
@@ -504,10 +573,10 @@ public class ConceptsTree implements IUpdateModal
 
     data.put("CodeSystemId", codeSystemId);
     data.put("ValueSetId", valueSetId);
-    
+
     data.put("CodeSystemVersionId", codeSystemVersionId);
     data.put("ValueSetVersionId", valueSetVersionId);
-    
+
     data.put("MetadataList", listMetadata);
 
     try
@@ -538,10 +607,10 @@ public class ConceptsTree implements IUpdateModal
 
     data.put("CodeSystemId", codeSystemId);
     data.put("ValueSetId", valueSetId);
-    
+
     data.put("CodeSystemVersionId", codeSystemVersionId);
     data.put("ValueSetVersionId", valueSetVersionId);
-    
+
     data.put("MetadataList", listMetadata);
 
     /*    
@@ -722,7 +791,7 @@ public class ConceptsTree implements IUpdateModal
     ValueSetVersion vsv = new ValueSetVersion();
     vsv.setVersionId(valueSetVersionId);
     parameter.getValueSet().getValueSetVersions().add(vsv);
-    
+
     parameter.setReadMetadataLevel(false);
 
     logger.debug("create reqeust parameter for vsv-id: " + valueSetVersionId);
@@ -738,7 +807,7 @@ public class ConceptsTree implements IUpdateModal
 
     return parameter;
   }
-  
+
   private ListCodeSystemConceptsRequestType createParameterForCodeSystems(boolean onlyMainClasses)
   {
     ListCodeSystemConceptsRequestType parameter = new ListCodeSystemConceptsRequestType();
@@ -879,15 +948,15 @@ public class ConceptsTree implements IUpdateModal
               parent.remove(selectedTreeNode);
               selectedTreeNode.setData(csev);
               parent.insert(selectedTreeNode, index);
-              
+
               selectedTreeNode.getChildren().clear();
-              
+
               // select treeitem and set loaded = fals to force reloading
               logger.debug("search treeitem...");
-              for(Treeitem ti : treeConcepts.getItems())
+              for (Treeitem ti : treeConcepts.getItems())
               {
                 CodeSystemEntityVersion csev_ti = ti.getValue();
-                if(csev_ti.getVersionId().longValue() == csev.getVersionId())
+                if (csev_ti.getVersionId().longValue() == csev.getVersionId())
                 {
                   // found
                   logger.debug("found");
@@ -992,7 +1061,7 @@ public class ConceptsTree implements IUpdateModal
     return contentType;
   }
 
-   /**
+  /**
    * @return the treeConcepts
    */
   public Tree getTreeConcepts()
@@ -1007,7 +1076,7 @@ public class ConceptsTree implements IUpdateModal
   {
     return conceptsWindow;
   }
-  
+
   /**
    * @param codeSystemId the codeSystemId to set
    */

@@ -177,7 +177,7 @@ public class CreateConcept
         // new attributes, set if they are null
         if (entityVersion.getStatusDeactivated() == null)
         {
-          entityVersion.setStatusDeactivated(0);
+          entityVersion.setStatusDeactivated(1);
           entityVersion.setStatusDeactivatedDate(new Date());
         }
         if (entityVersion.getStatusWorkflow() == null)

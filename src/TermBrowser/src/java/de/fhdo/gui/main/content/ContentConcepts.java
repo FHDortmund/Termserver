@@ -319,6 +319,12 @@ public class ContentConcepts extends Window implements AfterCompose
   {
     concepts.openConceptDetails();
   }
+  
+  public void onDeleteClicked()
+  {
+    if (SessionHelper.isUserLoggedIn())
+      concepts.deleteConcept();
+  }
 
   /*public void onDeleteClicked()
   {
@@ -373,7 +379,10 @@ public class ContentConcepts extends Window implements AfterCompose
     ComponentHelper.setVisible("buttonNew", loggedIn, this);
     ComponentHelper.setVisibleAndDisabled("buttonNewSub", loggedIn, csev == null, this);
     ComponentHelper.setVisibleAndDisabled("buttonEdit", loggedIn, csev == null, this);
+    ComponentHelper.setVisibleAndDisabled("buttonDelete", loggedIn, csev == null, this);
 
+    
+    
     //ComponentHelper.setVisible("buttonDeleteVersion", loggedIn, this);
     //ComponentHelper.setVisibleAndDisabled("buttonDeleteVersion", loggedIn, csev == null, this);
     

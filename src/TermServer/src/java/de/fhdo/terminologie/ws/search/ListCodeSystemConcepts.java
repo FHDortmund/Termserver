@@ -454,6 +454,11 @@ public class ListCodeSystemConcepts
 
           q.addScalar("csc2.meaning", StandardBasicTypes.TEXT); //Index: 32
           q.addScalar("csc2.hints", StandardBasicTypes.TEXT);
+          
+          q.addScalar("csc2.statusDeactivated", StandardBasicTypes.INTEGER); // Index: 34
+          q.addScalar("csc2.statusDeactivatedDate", StandardBasicTypes.DATE);
+          q.addScalar("csc2.statusWorkflow", StandardBasicTypes.INTEGER);
+          q.addScalar("csc2.statusWorkflowDate", StandardBasicTypes.DATE);
 
           parameterHelper.applySQLParameter(q);
           q.setString("languageCd", languageCd);
@@ -542,6 +547,15 @@ public class ListCodeSystemConcepts
               csev.setStatusVisibilityDate((Date) item[12]);
             if (item[13] != null)
               csev.setVersionId((Long) item[13]);
+            
+            if (item[34] != null)
+              csev.setStatusDeactivated((Integer) item[34]);
+            if (item[35] != null)
+              csev.setStatusDeactivatedDate((Date) item[35]);
+            if (item[36] != null)
+              csev.setStatusWorkflow((Integer) item[36]);
+            if (item[37] != null)
+              csev.setStatusWorkflowDate((Date) item[37]);
 
             // Code System Entity
             if (item[15] != null)

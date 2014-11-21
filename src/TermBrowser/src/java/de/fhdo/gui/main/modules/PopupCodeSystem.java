@@ -32,6 +32,7 @@ import de.fhdo.list.GenericListCellType;
 import de.fhdo.list.GenericListHeaderType;
 import de.fhdo.list.GenericListRowType;
 import de.fhdo.logging.LoggingOutput;
+import de.fhdo.models.CodesystemGenericTreeModel;
 import de.fhdo.terminologie.ws.authoring.CreateCodeSystemRequestType;
 import de.fhdo.terminologie.ws.authoring.CreateCodeSystemResponse;
 import de.fhdo.terminologie.ws.authoring.MaintainCodeSystemVersionRequestType;
@@ -42,9 +43,16 @@ import de.fhdo.terminologie.ws.search.ListCodeSystemsResponse;
 import de.fhdo.terminologie.ws.search.ReturnCodeSystemDetailsRequestType;
 import de.fhdo.terminologie.ws.search.ReturnCodeSystemDetailsResponse;
 import de.fhdo.terminologie.ws.search.Status;
+import de.fhdo.tree.GenericTree;
+import de.fhdo.tree.GenericTreeCellType;
+import de.fhdo.tree.GenericTreeHeaderType;
+import de.fhdo.tree.GenericTreeRowType;
+import de.fhdo.tree.IUpdateData;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import org.hibernate.Session;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Button;
@@ -63,13 +71,14 @@ import types.termserver.fhdo.de.MetadataParameter;
  *
  * @author Robert Mützner <robert.muetzner@fh-dortmund.de>
  */
-public class PopupCodeSystem extends Window implements AfterCompose
+public class PopupCodeSystem extends Window implements AfterCompose, IUpdateData
 {
 
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
 
   public static enum EDITMODES
   {
+
     NONE, DETAILSONLY, CREATE, MAINTAIN, CREATE_NEW_VERSION
   }
 
@@ -84,10 +93,12 @@ public class PopupCodeSystem extends Window implements AfterCompose
   private boolean guiCodesystemVersionExpandableVisible;
 
   private boolean showVersion;
-  
+
   private IUpdateModal updateListener;
 
   GenericList genericList;
+  private GenericTree genericTreeTaxonomy;
+  private List<Long> selectedTaxonomyDomainValueIDs = null;
 
   public PopupCodeSystem()
   {
@@ -163,6 +174,7 @@ public class PopupCodeSystem extends Window implements AfterCompose
     }
 
     initListMetadata();
+    initTaxonomy();
 
     showComponents();
   }
@@ -175,7 +187,7 @@ public class PopupCodeSystem extends Window implements AfterCompose
     ignoreList.add("tabpanelMetaparameter");
     ignoreList.add("buttonExpandCS");
     ignoreList.add("buttonExpandCSV");
-     
+
     boolean readOnly = (editMode == EDITMODES.DETAILSONLY || editMode == EDITMODES.NONE);
     ComponentHelper.doDisableAll(getFellow("tabboxFilter"), readOnly, ignoreList);
 
@@ -230,6 +242,17 @@ public class PopupCodeSystem extends Window implements AfterCompose
     boolean success = false;
 
     logger.debug("editMode: " + editMode.name());
+    codeSystem.getDomainValues().clear();
+
+    if (selectedTaxonomyDomainValueIDs != null)
+    {
+      for (Long l : selectedTaxonomyDomainValueIDs)
+      {
+        DomainValue dv = new DomainValue();
+        dv.setDomainValueId(l);
+        codeSystem.getDomainValues().add(dv);
+      }
+    }
 
     try
     {
@@ -257,13 +280,13 @@ public class PopupCodeSystem extends Window implements AfterCompose
 
     if (success)
     {
-      if(updateListener != null)
+      if (updateListener != null)
       {
-        if(editMode == EDITMODES.MAINTAIN || editMode == EDITMODES.CREATE_NEW_VERSION)
+        if (editMode == EDITMODES.MAINTAIN || editMode == EDITMODES.CREATE_NEW_VERSION)
         {
           updateListener.update(codeSystem, true);
         }
-        else if(editMode == EDITMODES.CREATE)
+        else if (editMode == EDITMODES.CREATE)
         {
           updateListener.update(codeSystem, false);
         }
@@ -289,6 +312,8 @@ public class PopupCodeSystem extends Window implements AfterCompose
     // Login, cs
     parameter.setLoginToken(de.fhdo.helper.SessionHelper.getSessionId());
     parameter.setCodeSystem(codeSystem);
+    
+    parameter.setAssignTaxonomy(selectedTaxonomyDomainValueIDs != null);
 
     // WS aufruf
     codeSystemVersion.setCodeSystem(null); // XML Zirkel verhindern
@@ -352,6 +377,8 @@ public class PopupCodeSystem extends Window implements AfterCompose
     parameter.setLoginToken(de.fhdo.helper.SessionHelper.getSessionId());
     parameter.setCodeSystem(codeSystem);
     parameter.setVersioning(versioning);
+    
+    parameter.setAssignTaxonomy(selectedTaxonomyDomainValueIDs != null);
 
     // WS aufruf
     codeSystemVersion.setCodeSystem(null);    // Zirkel entfernen
@@ -600,6 +627,139 @@ public class PopupCodeSystem extends Window implements AfterCompose
     this.invalidate();
   }
 
+  private void initTaxonomy()
+  {
+    if (editMode == EDITMODES.CREATE || editMode == EDITMODES.CREATE_NEW_VERSION
+            || editMode == EDITMODES.MAINTAIN)
+    {
+      // init taxonomy tree for selection
+      initDomainValueTree(Definitions.DOMAINID_CODESYSTEM_TAXONOMY);
+
+      getFellow("tabTaxonomy").setVisible(true);
+    }
+    else
+    {
+      getFellow("tabTaxonomy").setVisible(false);
+    }
+  }
+
+  private void initDomainValueTree(long DomainID)
+  {
+    logger.debug("initDomainValueTree: " + DomainID);
+
+    // Header
+    List<GenericTreeHeaderType> header = new LinkedList<GenericTreeHeaderType>();
+    header.add(new GenericTreeHeaderType(Labels.getLabel("common.assigned"), 100, "", true, "Bool", true, false, true));
+    header.add(new GenericTreeHeaderType(Labels.getLabel("common.code"), 140, "", true, "String", false, false, false));
+    header.add(new GenericTreeHeaderType(Labels.getLabel("common.designation"), 400, "", true, "String", false, false, false));
+
+    // Daten laden
+    List<GenericTreeRowType> dataList = new LinkedList<GenericTreeRowType>();
+    try
+    {
+      //String hql = "from DomainValue where domainId=" + DomainID + " order by orderNo,domainDisplay";
+      //List<de.fhdo.terminologie.db.hibernate.DomainValue> dvList = hb_session.createQuery(hql).list();
+
+      //for (int i = 0; i < dvList.size(); ++i)
+      for (DomainValue domainValue : CodesystemGenericTreeModel.getInstance().getListDV())
+      {
+        if(domainValue.getDomainValueId() == null || domainValue.getDomainValueId() == 0)
+          continue;  // z.B. "Sonstige"
+        
+        if (domainValue.getDomainValuesForDomainValueId1() == null
+                || domainValue.getDomainValuesForDomainValueId1().size() == 0)
+        {
+          // Nur root-Elemente auf oberster Ebene
+          boolean zugeordnet = false;
+          if (domainValue.getCodeSystems() != null && codeSystem.getId() != null && codeSystem.getId() > 0)
+          {
+            for (CodeSystem cs : domainValue.getCodeSystems())
+            {
+              if (cs.getId().longValue() == codeSystem.getId())
+              {
+                zugeordnet = true;
+                break;
+              }
+            }
+          }
+          
+          long cs_id = 0;
+          if(codeSystem != null && codeSystem.getId() != null)
+            cs_id = codeSystem.getId();
+          
+          GenericTreeRowType row = createTreeRowFromDomainValue(domainValue, zugeordnet, cs_id);
+
+          dataList.add(row);
+        }
+      }
+    }
+    catch (Exception e)
+    {
+      LoggingOutput.outputException(e, this);
+    }
+
+    // Liste initialisieren
+    Include inc = (Include) getFellow("incTree");
+    Window winGenericTree = (Window) inc.getFellow("winGenericTree");
+
+    genericTreeTaxonomy = (GenericTree) winGenericTree;
+    //genericListValues.setUserDefinedId("2");
+
+    //genericTree.setTreeActions(this);
+    genericTreeTaxonomy.setUpdateDataListener(this);
+    genericTreeTaxonomy.setButton_new(false);
+    genericTreeTaxonomy.setButton_edit(false);
+    genericTreeTaxonomy.setButton_delete(false);
+    genericTreeTaxonomy.setListHeader(header);
+    genericTreeTaxonomy.setDataList(dataList);
+
+  }
+
+  private GenericTreeRowType createTreeRowFromDomainValue(DomainValue domainValue, boolean Zugeordnet, long CodesystemId)
+  {
+    GenericTreeRowType row = new GenericTreeRowType(null);
+
+    GenericTreeCellType[] cells = new GenericTreeCellType[3];
+    cells[0] = new GenericTreeCellType(Zugeordnet, false, "");
+    cells[1] = new GenericTreeCellType(domainValue.getDomainCode(), false, "");
+    cells[2] = new GenericTreeCellType(domainValue.getDomainDisplay(), false, "");
+
+    if (Zugeordnet)
+    {
+      if (selectedTaxonomyDomainValueIDs == null)
+        selectedTaxonomyDomainValueIDs = new LinkedList<Long>();
+      selectedTaxonomyDomainValueIDs.add(domainValue.getDomainValueId());
+    }
+
+    row.setData(domainValue);
+    row.setCells(cells);
+
+    if (domainValue.getDomainValuesForDomainValueId2() != null)
+    {
+      for (DomainValue dvChild : domainValue.getDomainValuesForDomainValueId2())
+      {
+        boolean zugeordnet = false;
+        if (dvChild.getCodeSystems() != null && codeSystem.getId() != null && codeSystem.getId() > 0)
+        {
+          for (CodeSystem cs : dvChild.getCodeSystems())
+          {
+            if (cs.getId().longValue() == CodesystemId)
+            {
+
+              zugeordnet = true;
+              break;
+            }
+          }
+
+        }
+
+        row.getChildRows().add(createTreeRowFromDomainValue(dvChild, zugeordnet, CodesystemId));
+      }
+    }
+
+    return row;
+  }
+
   private void initListMetadata()
   {
     // Header
@@ -646,6 +806,35 @@ public class PopupCodeSystem extends Window implements AfterCompose
     row.setCells(cells);
 
     return row;
+  }
+
+  public void onCellUpdated(int cellIndex, Object data, GenericTreeRowType row)
+  {
+    logger.debug("onCellUpdated, index: " + cellIndex + ", data: " + data);
+
+    Boolean assigned = (Boolean) data;
+
+    DomainValue dv = (DomainValue) row.getData();
+    logger.debug("dvid: " + dv.getDomainValueId());
+
+    if (selectedTaxonomyDomainValueIDs == null)
+      selectedTaxonomyDomainValueIDs = new LinkedList<Long>();
+
+    if (assigned)
+    {
+      selectedTaxonomyDomainValueIDs.add(dv.getDomainValueId());
+    }
+    else
+    {
+      if (selectedTaxonomyDomainValueIDs.contains(dv.getDomainValueId()))
+        selectedTaxonomyDomainValueIDs.remove(dv.getDomainValueId());
+    }
+
+    logger.debug("SelectedTaxonomyDomainValueIDs:");
+    for (Long l : selectedTaxonomyDomainValueIDs)
+    {
+      logger.debug(l);
+    }
   }
 
   /**

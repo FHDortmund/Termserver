@@ -133,12 +133,8 @@ public class ReturnConceptAssociationTypeDetails
 
           if (codeSystemEntity.getCodeSystemEntityVersions() != null)
           {
-            Iterator<CodeSystemEntityVersion> itVersions = codeSystemEntity.getCodeSystemEntityVersions().iterator();
-
-            while (itVersions.hasNext())
+            for(CodeSystemEntityVersion csev : codeSystemEntity.getCodeSystemEntityVersions())
             {
-              CodeSystemEntityVersion csev = itVersions.next();
-
               csev.setCodeSystemEntity(null);
               csev.setConceptValueSetMemberships(null);
               csev.setCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1(null);
@@ -168,6 +164,7 @@ public class ReturnConceptAssociationTypeDetails
           response.setCodeSystemEntity(codeSystemEntity);
           response.getReturnInfos().setCount(1);
         }
+        else logger.debug("CSE ist null");
 
       }
       catch (Exception e)
@@ -187,7 +184,7 @@ public class ReturnConceptAssociationTypeDetails
 
       if (codeSystemEntity == null)
       {
-        response.getReturnInfos().setMessage("Zu den angegebenen IDs wurde kein AssociationType gefunden!");
+        response.getReturnInfos().setMessage("Zur angegebenen Versions-ID wurde kein AssociationType gefunden!");
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
       }
       else

@@ -16,18 +16,20 @@
  */
 package de.fhdo.gui.main.content;
 
+import de.fhdo.Definitions;
 import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.helper.SessionHelper;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.OpenEvent;
+import org.zkoss.zul.Image;
 import org.zkoss.zul.Menuitem;
 import org.zkoss.zul.Menupopup;
 import org.zkoss.zul.Menuseparator;
+import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.TreeNode;
 import org.zkoss.zul.Treecell;
 import org.zkoss.zul.Treeitem;
@@ -47,10 +49,23 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
 
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
   ConceptsTree conceptsTree;
+  EventListener noteListener = null;
 
   public TreeitemRendererCSEV(ConceptsTree conceptsTree)
   {
     this.conceptsTree = conceptsTree;
+    
+    noteListener = new EventListener()
+    {
+      public void onEvent(Event event) throws Exception
+      {
+        if(event.getTarget() != null && event.getTarget() instanceof Image)
+        {
+          Image img = (Image) event.getTarget();
+          Messagebox.show(img.getTooltiptext());
+        }
+      }
+    };
   }
 
   public void render(Treeitem treeItem, Object object, int i) throws Exception
@@ -69,16 +84,49 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       CodeSystemConcept csc = csev.getCodeSystemConcepts().get(0);
 
       String style = "color:#000000;";
+      
+      if(csev.getStatusVisibility() == Definitions.STATUS_VISIBILITY_INVISIBLE)
+      {
+        style = "color:#808080;";
+      }
 
-      // append data to row
+      // designation
       Treecell cell = new Treecell(getString(csc.getTerm()));
       cell.setStyle(style);
       treeRow.appendChild(cell);
 
+      // code
       cell = new Treecell(getString(csc.getCode()));
       cell.setStyle(style);
       treeRow.appendChild(cell);
-
+      
+      // details
+      cell = new Treecell();
+      
+      if(csc.getDescription() != null && csc.getDescription().length() > 0)
+      {
+        Image img = new Image("/rsc/img/filetypes/note.png");
+        img.setTooltiptext(csc.getDescription());
+        img.addEventListener(Events.ON_CLICK, noteListener);
+        cell.appendChild(img);
+      }
+      if(csev.getStatusVisibility() != null && csev.getStatusVisibility() == Definitions.STATUS_VISIBILITY_INVISIBLE)
+      {
+        Image img = new Image("/rsc/img/symbols/hidden.png");
+        img.setTooltiptext(Labels.getLabel("common.invisible"));
+        cell.appendChild(img);
+      }
+      if(csev.getStatusDeactivated() != null && csev.getStatusDeactivated() == Definitions.STATUS_DEACTIVATED_DELETED)
+      {
+        Image img = new Image("/rsc/img/symbols/delete_12x12.png");
+        img.setTooltiptext(Labels.getLabel("common.deleted"));
+        cell.appendChild(img);
+      }
+      
+      cell.setStyle(style);
+      treeRow.appendChild(cell);
+      
+      // source (if value set)
       if (conceptsTree.getContentType() == ConceptsTree.CONTENT_TYPE.VALUESET)
       {
         CodeSystemEntity cse = csev.getCodeSystemEntity();

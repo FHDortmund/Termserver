@@ -20,6 +20,7 @@ import de.fhdo.terminologie.Definitions;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.CodeSystem;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
+import de.fhdo.terminologie.db.hibernate.DomainValue;
 import de.fhdo.terminologie.db.hibernate.LicenceType;
 import de.fhdo.terminologie.helper.LastChangeHelper;
 import de.fhdo.terminologie.helper.LoginHelper;
@@ -29,7 +30,10 @@ import de.fhdo.terminologie.ws.authorization.Authorization;
 import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
 import de.fhdo.terminologie.ws.types.ReturnType;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 /**
  *
@@ -251,6 +255,11 @@ public class MaintainCodeSystemVersion
           }
 
           hb_session.update(cs_db);
+          
+          if(parameter.getAssignTaxonomy() != null && parameter.getAssignTaxonomy().booleanValue())
+          {
+            assignTaxonomyValues(cs_db.getId(), cs_Request.getDomainValues(), hb_session);
+          }
         }
       }
       catch (Exception e)
@@ -295,6 +304,76 @@ public class MaintainCodeSystemVersion
       logger.error(response.getReturnInfos().getMessage());
     }
     return response;
+  }
+  
+  public void assignTaxonomyValues(long codeSystemId, Set<DomainValue> values, Session hb_session)
+  {
+    logger.debug("assignTaxonomyValues...");
+    logger.debug("codeSystemId: " + codeSystemId);
+    
+    if(values == null)
+      return;
+    
+    logger.debug("count: " + values.size());
+    
+    String hql = "select distinct dv from DomainValue dv"
+            + " left join dv.codeSystems cs"
+            + " where cs.id=:id";
+    
+    logger.debug("hql: " + hql);
+    Query q = hb_session.createQuery(hql);
+    q.setParameter("id", codeSystemId);
+    
+    List<DomainValue> dvList_db = q.list();
+    logger.debug("count domain values: " + dvList_db.size());
+    
+    // check adding new values
+    for(DomainValue dv : values)
+    {
+      boolean found = false;
+      for(DomainValue dv_db : dvList_db)
+      {
+        if(dv_db.getDomainValueId().longValue() == dv.getDomainValueId())
+        {
+          found = true;
+          break;
+        }
+      }
+      
+      if(found == false)
+      {
+        // add new value
+        String sql = "INSERT INTO domain_value_has_code_system VALUES(" + dv.getDomainValueId() + "," + codeSystemId + ")";
+        logger.debug("sql: " + sql);
+        hb_session.createSQLQuery(sql).executeUpdate();
+      }
+    }
+    
+    // check removing values
+    for(DomainValue dv_db : dvList_db)
+    {
+      boolean found = false;
+      for(DomainValue dv : values)
+      {
+        if(dv_db.getDomainValueId().longValue() == dv.getDomainValueId())
+        {
+          found = true;
+          break;
+        }
+      }
+      
+      if(found == false)
+      {
+        // remove existing value
+        String sql = "DELETE FROM domain_value_has_code_system WHERE domain_value_domainValueId=" + dv_db.getDomainValueId() + 
+                " and code_system_id=" + codeSystemId;
+        logger.debug("sql: " + sql);
+        hb_session.createSQLQuery(sql).executeUpdate();
+      }
+    }
+    
+    
+    
   }
 
   private boolean validateParameter(MaintainCodeSystemVersionRequestType request, MaintainCodeSystemVersionResponseType response)

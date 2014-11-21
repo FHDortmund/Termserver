@@ -20,6 +20,7 @@ import de.fhdo.terminologie.Definitions;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.CodeSystem;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
+import de.fhdo.terminologie.db.hibernate.DomainValue;
 import de.fhdo.terminologie.db.hibernate.LicenceType;
 import de.fhdo.terminologie.helper.LoginHelper;
 import de.fhdo.terminologie.ws.authoring.types.CreateCodeSystemRequestType;
@@ -57,7 +58,6 @@ public class CreateCodeSystem
     if (logger.isInfoEnabled())
       logger.info("====== CreateCodeSystems gestartet ======");
 
-    
     // Return-Informationen anlegen
     CreateCodeSystemResponseType response = new CreateCodeSystemResponseType();
     response.setReturnInfos(new ReturnType());
@@ -83,8 +83,7 @@ public class CreateCodeSystem
       response.getReturnInfos().setMessage("You have to be logged in to use this service.");
       return response;
     }
-    
-    
+
     boolean createHibernateSession = (session == null);
     logger.debug("createHibernateSession: " + createHibernateSession);
 
@@ -125,8 +124,8 @@ public class CreateCodeSystem
       csv_parameter.setCodeSystemVersionEntityMemberships(null);
       csv_parameter.setLicencedUsers(null);
       csv_parameter.setInsertTimestamp(new java.util.Date()); // Aktuelles Datum
-      
-      if(csv_parameter.getStatus() == null)
+
+      if (csv_parameter.getStatus() == null)
       {
         csv_parameter.setStatus(Definitions.STATUS_CODES.ACTIVE.getCode());
       }
@@ -144,6 +143,8 @@ public class CreateCodeSystem
       try // 2. try-catch-Block zum Abfangen von Hibernate-Fehlern
       {
         // CodeSystem in der Datenbank speichern
+        Set<DomainValue> dvListTemp = cs_parameter.getDomainValues();
+        cs_parameter.setDomainValues(null);
 
         // 1. prüfen, ob CodeSystem bereits vorhanden ist und nur die Version neu ist
         CodeSystem cs_db = null;
@@ -186,7 +187,7 @@ public class CreateCodeSystem
           csv_parameter.setCodeSystem(new CodeSystem());
           csv_parameter.getCodeSystem().setId(cs_db.getId());
           csv_parameter.setValidityRange(4l);
-          
+
           // CSV in DB speichern um neue Id zu erhalten
           hb_session.save(csv_parameter);
 
@@ -213,7 +214,14 @@ public class CreateCodeSystem
             hb_session.save(lt);
           }
         }
-        
+
+        // assign taxonomy
+        if (parameter.getAssignTaxonomy() != null && parameter.getAssignTaxonomy().booleanValue())
+        {
+          MaintainCodeSystemVersion mcsv = new MaintainCodeSystemVersion();
+          mcsv.assignTaxonomyValues(cs_parameter.getId(), dvListTemp, hb_session);
+        }
+
         response.getReturnInfos().setCount(1);
       }
       catch (Exception e)
@@ -313,7 +321,7 @@ public class CreateCodeSystem
           sErrorMessage = "Es muss ein Name oder eine ID für das CodeSystem angegeben werden!";
           erfolg = false;
         }
-        
+
         Set<CodeSystemVersion> csvSet = cs.getCodeSystemVersions();
         if (csvSet == null || csvSet.isEmpty() || csvSet.size() > 1)
         {

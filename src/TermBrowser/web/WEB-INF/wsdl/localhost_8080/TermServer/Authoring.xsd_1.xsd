@@ -278,16 +278,16 @@
 
 <xs:element name="valueSetVersion" type="ns1:valueSetVersion" />
 
-<xs:complexType name="CreateValueSet">
+<xs:complexType name="MaintainValueSetConceptMetadataValue">
 <xs:sequence>
-<xs:element name="parameter" type="tns:createValueSetRequestType" minOccurs="0" />
+<xs:element name="parameter" type="tns:maintainValueSetConceptMetadataValueRequestType" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="createValueSetRequestType">
+<xs:complexType name="maintainValueSetConceptMetadataValueRequestType">
 <xs:sequence>
 <xs:element name="loginToken" type="xs:string" minOccurs="0" />
-<xs:element name="valueSet" type="ns1:valueSet" minOccurs="0" />
+<xs:element name="valueSetMetadataValues" type="ns1:valueSetMetadataValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
 </xs:sequence>
 </xs:complexType>
 
@@ -316,13 +316,13 @@
 
 
 
-<xs:complexType name="CreateValueSetResponse">
+<xs:complexType name="MaintainValueSetConceptMetadataValueResponse">
 <xs:sequence>
 <xs:element name="return" minOccurs="0">
 <xs:complexType>
 <xs:sequence>
 <xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="valueSet" type="ns1:valueSet" minOccurs="0" />
+<xs:element name="valueSetMetadataValues" type="ns1:valueSetMetadataValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
 </xs:sequence>
 </xs:complexType>
 </xs:element>
@@ -338,26 +338,26 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="MaintainValueSetConceptMetadataValue">
+<xs:complexType name="CreateValueSet">
 <xs:sequence>
-<xs:element name="parameter" type="tns:maintainValueSetConceptMetadataValueRequestType" minOccurs="0" />
+<xs:element name="parameter" type="tns:createValueSetRequestType" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="maintainValueSetConceptMetadataValueRequestType">
+<xs:complexType name="createValueSetRequestType">
 <xs:sequence>
 <xs:element name="loginToken" type="xs:string" minOccurs="0" />
-<xs:element name="valueSetMetadataValues" type="ns1:valueSetMetadataValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="valueSet" type="ns1:valueSet" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="MaintainValueSetConceptMetadataValueResponse">
+<xs:complexType name="CreateValueSetResponse">
 <xs:sequence>
 <xs:element name="return" minOccurs="0">
 <xs:complexType>
 <xs:sequence>
 <xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="valueSetMetadataValues" type="ns1:valueSetMetadataValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="valueSet" type="ns1:valueSet" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 </xs:element>
@@ -451,6 +451,33 @@
 </xs:sequence>
 </xs:complexType>
 
+<xs:complexType name="CreateCodeSystem">
+<xs:sequence>
+<xs:element name="parameter" type="tns:createCodeSystemRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="createCodeSystemRequestType">
+<xs:sequence>
+<xs:element name="assignTaxonomy" type="xs:boolean" minOccurs="0" />
+<xs:element name="codeSystem" type="ns1:codeSystem" minOccurs="0" />
+<xs:element name="loginToken" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="CreateCodeSystemResponse">
+<xs:sequence>
+<xs:element name="return" minOccurs="0">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
+<xs:element name="codeSystem" type="ns1:codeSystem" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+
 <xs:complexType name="RemoveValueSetContent">
 <xs:sequence>
 <xs:element name="parameter" type="tns:removeValueSetContentRequestType" minOccurs="0" />
@@ -477,26 +504,25 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="CreateCodeSystem">
+<xs:complexType name="UpdateConceptStatus">
 <xs:sequence>
-<xs:element name="parameter" type="tns:createCodeSystemRequestType" minOccurs="0" />
+<xs:element name="parameter" type="tns:updateConceptStatusRequestType" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="createCodeSystemRequestType">
+<xs:complexType name="updateConceptStatusRequestType">
 <xs:sequence>
-<xs:element name="codeSystem" type="ns1:codeSystem" minOccurs="0" />
+<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" minOccurs="0" />
 <xs:element name="loginToken" type="xs:string" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="CreateCodeSystemResponse">
+<xs:complexType name="UpdateConceptStatusResponse">
 <xs:sequence>
 <xs:element name="return" minOccurs="0">
 <xs:complexType>
 <xs:sequence>
 <xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="codeSystem" type="ns1:codeSystem" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 </xs:element>
@@ -537,31 +563,6 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="UpdateConceptStatus">
-<xs:sequence>
-<xs:element name="parameter" type="tns:updateConceptStatusRequestType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="updateConceptStatusRequestType">
-<xs:sequence>
-<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" minOccurs="0" />
-<xs:element name="loginToken" type="xs:string" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="UpdateConceptStatusResponse">
-<xs:sequence>
-<xs:element name="return" minOccurs="0">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-
 <xs:complexType name="CreateConcept">
 <xs:sequence>
 <xs:element name="parameter" type="tns:createConceptRequestType" minOccurs="0" />
@@ -583,6 +584,32 @@
 <xs:sequence>
 <xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
 <xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="DeleteValueSetConceptMetadataValue">
+<xs:sequence>
+<xs:element name="parameter" type="tns:deleteValueSetConceptMetadataValueRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="deleteValueSetConceptMetadataValueRequestType">
+<xs:sequence>
+<xs:element name="loginToken" type="xs:string" minOccurs="0" />
+<xs:element name="valueSetMetadataValue" type="ns1:valueSetMetadataValue" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="DeleteValueSetConceptMetadataValueResponse">
+<xs:sequence>
+<xs:element name="return" minOccurs="0">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
+<xs:element name="valueSetMetadataValue" type="ns1:valueSetMetadataValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
 </xs:sequence>
 </xs:complexType>
 </xs:element>
@@ -634,32 +661,6 @@
 <xs:complexType>
 <xs:sequence>
 <xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="DeleteValueSetConceptMetadataValue">
-<xs:sequence>
-<xs:element name="parameter" type="tns:deleteValueSetConceptMetadataValueRequestType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="deleteValueSetConceptMetadataValueRequestType">
-<xs:sequence>
-<xs:element name="loginToken" type="xs:string" minOccurs="0" />
-<xs:element name="valueSetMetadataValue" type="ns1:valueSetMetadataValue" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="DeleteValueSetConceptMetadataValueResponse">
-<xs:sequence>
-<xs:element name="return" minOccurs="0">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="valueSetMetadataValue" type="ns1:valueSetMetadataValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
 </xs:sequence>
 </xs:complexType>
 </xs:element>
@@ -804,6 +805,7 @@
 
 <xs:complexType name="maintainCodeSystemVersionRequestType">
 <xs:sequence>
+<xs:element name="assignTaxonomy" type="xs:boolean" minOccurs="0" />
 <xs:element name="codeSystem" type="ns1:codeSystem" minOccurs="0" />
 <xs:element name="loginToken" type="xs:string" minOccurs="0" />
 <xs:element name="versioning" type="tns:versioningType" minOccurs="0" />

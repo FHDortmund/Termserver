@@ -20,8 +20,9 @@
                 onSelect="winConcepts.onConceptSelect()"
                 onPaging="winConcepts.onPaging(event)">
             <treecols sizable="true">
-              <treecol label="${labels.common.name}" sort="auto" id="tcTerm" hflex="min" />
+              <treecol label="${labels.common.designation}" sort="auto" id="tcTerm" hflex="min" />
               <treecol label="${labels.common.code}" sort="auto" id="tcCode" width="180px" />
+              <treecol label="${labels.common.details}" sort="auto" id="tcDetails" width="80px" />
               <treecol label="${labels.common.source}" sort="auto" id="treecolSource" hflex="min" visible="false" 
               />
             </treecols>
@@ -61,6 +62,12 @@
                     label="${labels.common.edit}"
                     onClick="winConcepts.onEditClicked()" 
                     image="/rsc/img/list/pencil.png" 
+                    visible="false" 
+                    disabled="true"/>
+            <button id="buttonDelete" 
+                    label="${labels.common.delete}"
+                    onClick="winConcepts.onDeleteClicked()" 
+                    image="/rsc/img/list/delete.png" 
                     visible="false" 
                     disabled="true"/>
             <!--            <button id="bSearch" 

@@ -39,9 +39,18 @@ public class Definitions
   public static final long DOMAINID_CODESYSTEM_TAXONOMY = 8;
   public static final long DOMAINID_CODESYSTEMVERSION_VALIDITYRANGE = 9;
   public static final long DOMAINID_IMPORT_TYPES_VS = 12;
-  public static final long STATUS_CONCEPT_VISIBILITY = 13;
-  public static final long STATUS_CONCEPT_DEACTIVATED = 14;
+  public static final long DOMAINID_STATUS_CONCEPT_VISIBILITY = 13;
+  public static final long DOMAINID_STATUS_CONCEPT_DEACTIVATED = 14;
   public static final long DOMAINID_STATUS = 15;
+  
+  
+  public static final int STATUS_VISIBILITY_INVISIBLE = 0;
+  public static final int STATUS_VISIBILITY_VISIBLE = 1;
+  
+  public static final int STATUS_DEACTIVATED_DEACTIVE = 0;
+  public static final int STATUS_DEACTIVATED_ACTIVE = 1;
+  public static final int STATUS_DEACTIVATED_DELETED = 2;
+  public static final int STATUS_DEACTIVATED_DEPRECATED = 3;
   
   /*public static enum STATUS_CODES
   {

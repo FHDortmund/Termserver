@@ -29,6 +29,7 @@ public class MaintainCodeSystemVersionRequestType
   private String loginToken;
   private VersioningType versioning;
   private CodeSystem codeSystem;
+  private Boolean assignTaxonomy;
 
   public MaintainCodeSystemVersionRequestType()
   {
@@ -81,6 +82,22 @@ public class MaintainCodeSystemVersionRequestType
   public void setCodeSystem(CodeSystem codeSystem)
   {
     this.codeSystem = codeSystem;
+  }
+
+  /**
+   * @return the assignTaxonomy
+   */
+  public Boolean getAssignTaxonomy()
+  {
+    return assignTaxonomy;
+  }
+
+  /**
+   * @param assignTaxonomy the assignTaxonomy to set
+   */
+  public void setAssignTaxonomy(Boolean assignTaxonomy)
+  {
+    this.assignTaxonomy = assignTaxonomy;
   }
   
 }

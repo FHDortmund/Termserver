@@ -270,6 +270,14 @@ public class CodesystemGenericTreeModel
   {
     return errorMessage;
   }
+
+  /**
+   * @return the listDV
+   */
+  public List<DomainValue> getListDV()
+  {
+    return listDV;
+  }
   
   
 }

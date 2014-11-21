@@ -477,7 +477,7 @@ public class PopupConcept_old extends PopupWindow
     {
       //tbStatus.setValue(String.valueOf(csev.getStatusVisibility()));
       status_cd = String.valueOf(csev.getStatusVisibility());
-      domain_id = Definitions.STATUS_CONCEPT_VISIBILITY;
+      domain_id = Definitions.DOMAINID_STATUS_CONCEPT_VISIBILITY;
     }
     
     // Combobox füllen
