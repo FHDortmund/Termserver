@@ -28,6 +28,7 @@ import de.fhdo.terminologie.db.hibernate.CodeSystemMetadataValue;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersionEntityMembership;
 import de.fhdo.terminologie.db.hibernate.MetadataParameter;
+import de.fhdo.terminologie.helper.PropertiesHelper;
 import de.fhdo.terminologie.ws.administration.types.ExportCodeSystemContentRequestType;
 import de.fhdo.terminologie.ws.administration.types.ExportCodeSystemContentResponseType;
 import de.fhdo.terminologie.ws.search.ReturnCodeSystemDetails;
@@ -90,9 +91,11 @@ public class ExportCSV
       //csv = new CsvWriter(new FileWriter(csv_output_url), ';');
 
       ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      csv = new CsvWriter(bos, ';', Charset.forName("ISO-8859-1")); // TODO Charset prüfen
-      csv.setTextQualifier('\'');
-      csv.setForceQualifier(true);
+      //csv = new CsvWriter(bos, ';', Charset.forName("ISO-8859-1")); // TODO Charset prüfen
+      //csv.setTextQualifier('\'');
+      csv = new CsvWriter(bos, PropertiesHelper.getInstance().getDelimiter(), Charset.forName("ISO-8859-1")); // TODO Charset prüfen
+      csv.setTextQualifier(PropertiesHelper.getInstance().getExportCsvQualifier());
+      csv.setForceQualifier(PropertiesHelper.getInstance().isExportCsvForceQualifier());
 
       try
       {

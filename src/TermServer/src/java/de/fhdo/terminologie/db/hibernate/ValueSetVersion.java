@@ -59,6 +59,7 @@ public class ValueSetVersion implements java.io.Serializable
   private String oid;
   private String name;
   private Long validityRange;
+  private Long virtualCodeSystemVersionId;
   private Date lastChangeDate;
   private Set<ConceptValueSetMembership> conceptValueSetMemberships = new HashSet<ConceptValueSetMembership>(0);
 
@@ -238,6 +239,18 @@ public class ValueSetVersion implements java.io.Serializable
   public void setConceptValueSetMemberships(Set<ConceptValueSetMembership> conceptValueSetMemberships)
   {
     this.conceptValueSetMemberships = conceptValueSetMemberships;
+  }
+  
+  
+  @Column(name = "virtualCodeSystemVersionId")
+  public Long getVirtualCodeSystemVersionId()
+  {
+    return this.virtualCodeSystemVersionId;
+  }
+
+  public void setVirtualCodeSystemVersionId(Long virtualCodeSystemVersionId)
+  {
+    this.virtualCodeSystemVersionId = virtualCodeSystemVersionId;
   }
 
 }

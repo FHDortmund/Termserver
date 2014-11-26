@@ -33,6 +33,7 @@ public class Index extends Window
   {
     logger.debug("Index.zul - load login page...");
     loginZul = PropertiesHelper.getInstance().getLoginZul();
+    logger.debug("zul: " + loginZul);
   }
 
   /**

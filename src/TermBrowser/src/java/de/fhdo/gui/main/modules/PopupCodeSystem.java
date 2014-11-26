@@ -282,6 +282,12 @@ public class PopupCodeSystem extends Window implements AfterCompose, IUpdateData
     {
       if (updateListener != null)
       {
+        if(showVersion)
+        {
+          codeSystem.getCodeSystemVersions().clear();
+          codeSystem.getCodeSystemVersions().add(codeSystemVersion);
+        }
+          
         if (editMode == EDITMODES.MAINTAIN || editMode == EDITMODES.CREATE_NEW_VERSION)
         {
           updateListener.update(codeSystem, true);

@@ -22,7 +22,7 @@ package de.fhdo;
  */
 public class Definitions
 {
-  public final static String VERSION = "2.0";
+  public final static String VERSION = "2.0.1";
   
   public final static String APP_KEY = "TERMSERVER";
   
@@ -51,6 +51,48 @@ public class Definitions
   public static final int STATUS_DEACTIVATED_ACTIVE = 1;
   public static final int STATUS_DEACTIVATED_DELETED = 2;
   public static final int STATUS_DEACTIVATED_DEPRECATED = 3;
+  
+  
+  
+  public static enum ASSOCIATION_KIND
+  {
+    ONTOLOGY(1), TAXONOMY(2), CROSS_MAPPING(3), LINK(4);
+    private int code;
+
+    private ASSOCIATION_KIND(int c)
+    {
+      code = c;
+    }
+
+    public int getCode()
+    {
+      return code;
+    }
+  }
+
+  public static boolean isAssociationKindValid(Integer kind)
+  {
+    ASSOCIATION_KIND[] kinds = ASSOCIATION_KIND.values();
+
+    for (int i = 0; i < kinds.length; ++i)
+    {
+      if (kinds[i].getCode() == kind)
+        return true;
+    }
+    return false;
+  }
+
+  public static String readAssociationKinds()
+  {
+    String s = "";
+    ASSOCIATION_KIND[] kinds = ASSOCIATION_KIND.values();
+
+    for (int i = 0; i < kinds.length; ++i)
+    {
+      s += "\n" + kinds[i].name() + " (" + kinds[i].getCode() + ")";
+    }
+    return s;
+  }
   
   /*public static enum STATUS_CODES
   {

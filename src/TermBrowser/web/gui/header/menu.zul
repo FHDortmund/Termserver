@@ -44,9 +44,9 @@
       
       <menu label="${labels.common.help}">
         <menupopup>
-          <menuitem label="${labels.menu.enquiry}" onClick="win.callEnquiry()"></menuitem>
-          <menuseparator/>
-          <menuitem label="${labels.menu.manualPub}" image="/rsc/img/filetypes/acrobat.png">
+          <!--<menuitem label="${labels.menu.enquiry}" onClick="win.callEnquiry()"></menuitem>
+          <menuseparator/>-->
+          <menuitem label="${labels.menu.manual}" image="/rsc/img/filetypes/acrobat.png">
             <attribute name="onClick">
               <![CDATA[ Filedownload.save("/rsc/Benutzerhandbuch_PublikationsumgebungV1.1.pdf", null);]]>
             </attribute>
@@ -58,7 +58,7 @@
           </menuitem>
           <!--<menuitem id="menuitemEnquiry" label="${labels.menu.enquiry}" onClick="win.callEnquiry()" image="/rsc/img/symbols/help_16x16.png"></menuitem>-->
           <!--<menuseparator></menuseparator>-->
-          <menuitem id="menuitemOIDPortal" label="${labels.menu.oidRegister}" onClick="win.callOidRegister()" image="/rsc/img/symbols/info16_16.png"></menuitem>
+          <!--<menuitem id="menuitemOIDPortal" label="${labels.menu.oidRegister}" onClick="win.callOidRegister()" image="/rsc/img/symbols/info16_16.png"></menuitem>-->
           <menuitem label="${labels.menu.aboutTB}" onClick="win.onUeberClicked()" image="/rsc/img/symbols/info16_16.png"></menuitem>
         </menupopup>
       </menu>

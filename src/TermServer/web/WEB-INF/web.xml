@@ -28,6 +28,16 @@
         <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>ValueSetRepository_Service</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>SVS_ValueSetRepository</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Administration</servlet-name>
         <url-pattern>/Administration</url-pattern>
@@ -47,6 +57,14 @@
     <servlet-mapping>
         <servlet-name>Authoring</servlet-name>
         <url-pattern>/Authoring</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ValueSetRepository_Service</servlet-name>
+        <url-pattern>/ValueSetRepository_Service</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SVS_ValueSetRepository</servlet-name>
+        <url-pattern>/SVS_ValueSetRepository</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

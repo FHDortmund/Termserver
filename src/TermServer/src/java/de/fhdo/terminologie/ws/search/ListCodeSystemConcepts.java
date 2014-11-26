@@ -29,6 +29,7 @@ import de.fhdo.terminologie.db.hibernate.CodeSystemMetadataValue;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersionEntityMembership;
 import de.fhdo.terminologie.helper.CodeSystemHelper;
+import de.fhdo.terminologie.helper.DateHelper;
 import de.fhdo.terminologie.helper.HQLParameterHelper;
 import de.fhdo.terminologie.helper.LicenceHelper;
 import de.fhdo.terminologie.helper.SysParameter;
@@ -44,6 +45,7 @@ import de.fhdo.terminologie.ws.types.ReturnType;
 import de.fhdo.terminologie.ws.types.SortingType;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -105,6 +107,7 @@ public class ListCodeSystemConcepts
     
 
     int maxPageSizeUserSpecific = 10;
+    //int maxPageSizeUserSpecific = 1;
     if (parameter.getPagingParameter() != null && parameter.getPagingParameter().getUserPaging() != null)
     {
       if (parameter.getPagingParameter().getUserPaging())
@@ -421,13 +424,13 @@ public class ListCodeSystemConcepts
           q.addScalar("csc2.isPreferred", StandardBasicTypes.BOOLEAN);
           q.addScalar("csc2.codeSystemEntityVersionId", StandardBasicTypes.LONG);
 
-          q.addScalar("csc2.effectiveDate", StandardBasicTypes.DATE);  // Index: 6
-          q.addScalar("csc2.insertTimestamp", StandardBasicTypes.DATE);
+          q.addScalar("csc2.effectiveDate", StandardBasicTypes.TIMESTAMP);  // Index: 6
+          q.addScalar("csc2.insertTimestamp", StandardBasicTypes.TIMESTAMP);
           q.addScalar("csc2.isLeaf", StandardBasicTypes.BOOLEAN);
           q.addScalar("csc2.majorRevision", StandardBasicTypes.INTEGER);
           q.addScalar("csc2.minorRevision", StandardBasicTypes.INTEGER);
           q.addScalar("csc2.statusVisibility", StandardBasicTypes.INTEGER);
-          q.addScalar("csc2.statusVisibilityDate", StandardBasicTypes.DATE);
+          q.addScalar("csc2.statusVisibilityDate", StandardBasicTypes.TIMESTAMP);
           q.addScalar("csc2.versionId", StandardBasicTypes.LONG);
           q.addScalar("csc2.codeSystemEntityId", StandardBasicTypes.LONG);
 
@@ -449,16 +452,16 @@ public class ListCodeSystemConcepts
           q.addScalar("cseva1.associationTypeId", StandardBasicTypes.LONG);
           q.addScalar("cseva1.associationKind", StandardBasicTypes.INTEGER);
           q.addScalar("cseva1.status", StandardBasicTypes.INTEGER);
-          q.addScalar("cseva1.statusDate", StandardBasicTypes.DATE);
+          q.addScalar("cseva1.statusDate", StandardBasicTypes.TIMESTAMP);
           q.addScalar("cseva1.insertTimestamp", StandardBasicTypes.TIMESTAMP);
 
           q.addScalar("csc2.meaning", StandardBasicTypes.TEXT); //Index: 32
           q.addScalar("csc2.hints", StandardBasicTypes.TEXT);
           
           q.addScalar("csc2.statusDeactivated", StandardBasicTypes.INTEGER); // Index: 34
-          q.addScalar("csc2.statusDeactivatedDate", StandardBasicTypes.DATE);
+          q.addScalar("csc2.statusDeactivatedDate", StandardBasicTypes.TIMESTAMP);
           q.addScalar("csc2.statusWorkflow", StandardBasicTypes.INTEGER);
-          q.addScalar("csc2.statusWorkflowDate", StandardBasicTypes.DATE);
+          q.addScalar("csc2.statusWorkflowDate", StandardBasicTypes.TIMESTAMP);
 
           parameterHelper.applySQLParameter(q);
           q.setString("languageCd", languageCd);
@@ -532,9 +535,9 @@ public class ListCodeSystemConcepts
 
             // Entity Version
             if (item[6] != null)
-              csev.setEffectiveDate((Date) item[6]);
+              csev.setEffectiveDate(DateHelper.getDateFromObject(item[6]));
             if (item[7] != null)
-              csev.setInsertTimestamp((Date) item[7]);
+              csev.setInsertTimestamp(DateHelper.getDateFromObject(item[7]));
             if (item[8] != null)
               csev.setIsLeaf((Boolean) item[8]);
             if (item[9] != null)
@@ -544,18 +547,18 @@ public class ListCodeSystemConcepts
             if (item[11] != null)
               csev.setStatusVisibility((Integer) item[11]);
             if (item[12] != null)
-              csev.setStatusVisibilityDate((Date) item[12]);
+              csev.setStatusVisibilityDate(DateHelper.getDateFromObject(item[12]));
             if (item[13] != null)
               csev.setVersionId((Long) item[13]);
             
             if (item[34] != null)
               csev.setStatusDeactivated((Integer) item[34]);
             if (item[35] != null)
-              csev.setStatusDeactivatedDate((Date) item[35]);
+              csev.setStatusDeactivatedDate(DateHelper.getDateFromObject(item[35]));
             if (item[36] != null)
               csev.setStatusWorkflow((Integer) item[36]);
             if (item[37] != null)
-              csev.setStatusWorkflowDate((Date) item[37]);
+              csev.setStatusWorkflowDate(DateHelper.getDateFromObject(item[37]));
 
             // Code System Entity
             if (item[15] != null)
@@ -1139,9 +1142,9 @@ public class ListCodeSystemConcepts
       if (item[29] != null)
         cseva.setStatus((Integer) item[29]);
       if (item[30] != null)
-        cseva.setStatusDate((Date) item[30]);
+        cseva.setStatusDate(DateHelper.getDateFromObject( item[30]));
       if (item[31] != null)
-        cseva.setInsertTimestamp((Date) item[31]);
+        cseva.setInsertTimestamp(DateHelper.getDateFromObject(item[31]));
 
       if (cseva.getLeftId() == null || cseva.getLeftId().longValue() == csev.getVersionId().longValue())
       {

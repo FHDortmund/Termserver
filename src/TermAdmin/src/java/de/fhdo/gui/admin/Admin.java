@@ -110,6 +110,10 @@ public class Admin extends Window implements AfterCompose
     {
       includePage("incDatenbank", "/gui/admin/modules/terminology/datenbank.zul");
     }
+    else if (ID.equals("tabAssociations"))
+    {
+      includePage("incAssociations", "/gui/admin/modules/terminology/associations.zul");
+    }
     else logger.debug("ID nicht bekannt: " + ID);
 
     SessionHelper.setValue("termadmin_tabid", ID);

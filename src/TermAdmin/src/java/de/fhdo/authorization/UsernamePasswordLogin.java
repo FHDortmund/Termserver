@@ -25,8 +25,10 @@ import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.ws.authorization.LoginResponse;
 import de.fhdo.terminologie.ws.authorization.Status;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import org.hibernate.Session;
 import org.zkoss.zk.ui.Executions;
@@ -74,12 +76,11 @@ public class UsernamePasswordLogin extends Window implements org.zkoss.zk.ui.ext
       Authorization.logout();//LoginHelper.getInstance().logout();
 
     /*String activationMD5 = "" + (String) Executions.getCurrent().getParameter("reg");
-    if (activationMD5.length() > 0 && activationMD5.equals("null") == false)
-    {
-      // Benutzer jetzt aktivieren(!)
-      activated = LoginHelper.getInstance().activate(activationMD5);
-    }*/
-
+     if (activationMD5.length() > 0 && activationMD5.equals("null") == false)
+     {
+     // Benutzer jetzt aktivieren(!)
+     activated = LoginHelper.getInstance().activate(activationMD5);
+     }*/
     String userParam = "" + (String) Executions.getCurrent().getParameter("user");
 
     if (userParam.length() > 0 && userParam.equals("null") == false)
@@ -118,7 +119,7 @@ public class UsernamePasswordLogin extends Window implements org.zkoss.zk.ui.ext
     }
 
     loadInfo();
-    
+
     Session hb_session = HibernateUtil.getSessionFactory().openSession();
 
     // DB vorbereiten
@@ -204,11 +205,10 @@ public class UsernamePasswordLogin extends Window implements org.zkoss.zk.ui.ext
         SessionHelper.setValue("user_id", Long.parseLong(response.getParameterList().get(1)));
         SessionHelper.setValue("user_name", tbUser.getText());
         SessionHelper.setValue("is_admin", true);
-        
+
         logger.debug("Login successfull");
         logger.debug("session_id: " + response.getParameterList().get(0));
         logger.debug("user_id: " + Long.parseLong(response.getParameterList().get(1)));
-        
 
         Clients.showBusy("Login erfolgreich\n\nTermAdmin wird geladen...");  // TODO übersetzen
         Executions.sendRedirect("/gui/admin/admin.zul");
@@ -236,7 +236,6 @@ public class UsernamePasswordLogin extends Window implements org.zkoss.zk.ui.ext
       LoggingOutput.outputException(e, this);
     }
 
-    
   }
 
   /**
@@ -244,22 +243,40 @@ public class UsernamePasswordLogin extends Window implements org.zkoss.zk.ui.ext
    */
   public void sendPassword() throws InterruptedException
   {
-    if (Messagebox.show("Möchten Sie ein neues, zufällig generiertes Passwort an Ihre Email-Adresse geschickt bekommen?",
-            "Neues Passwort", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION) == Messagebox.YES)
+    /*if (Messagebox.show("Möchten Sie ein neues, zufällig generiertes Passwort an Ihre Email-Adresse geschickt bekommen?",
+     "Neues Passwort", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION) == Messagebox.YES)
+     {
+
+     boolean erfolg = Authorization.resendPassword(username);
+
+     if (erfolg)
+     {
+     Messagebox.show("Neues Passwort erfolgreich verschickt",
+     "Neues Passwort", Messagebox.OK, Messagebox.INFORMATION);
+     }
+     else
+     {
+     Messagebox.show("Fehler beim Verschicken des neuen Passworts. Bitte wenden Sie sich an den Administrator.",
+     "Neues Passwort", Messagebox.OK, Messagebox.EXCLAMATION);
+     }
+     }*/
+    try
     {
+      logger.debug("erstelle Fenster...");
 
-      boolean erfolg = Authorization.resendPassword(username);
+      Map map = new HashMap();
+      map.put("username", username);
 
-      if (erfolg)
-      {
-        Messagebox.show("Neues Passwort erfolgreich verschickt",
-                "Neues Passwort", Messagebox.OK, Messagebox.INFORMATION);
-      }
-      else
-      {
-        Messagebox.show("Fehler beim Verschicken des neuen Passworts. Bitte wenden Sie sich an den Administrator.",
-                "Neues Passwort", Messagebox.OK, Messagebox.EXCLAMATION);
-      }
+      Window win = (Window) Executions.createComponents(
+              "/gui/authorization/resendPasswordDialog.zul", null, map);
+
+      //((ResendPasswordDialog) win).setUpdateListInterface(this);
+      logger.debug("öffne Fenster...");
+      win.doModal();
+    }
+    catch (Exception ex)
+    {
+      LoggingOutput.outputException(ex, this);
     }
   }
 

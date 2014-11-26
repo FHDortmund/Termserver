@@ -60,6 +60,10 @@ public class PropertiesHelper
   
   private int expandTreeAutoCount = 50;
   
+  private long associationTaxonomyDefaultVersionId = 4;
+  private long associationCrossmappingDefaultVersionId = 0;
+  private long associationLinkDefaultVersionId = 0;
+  
   public static PropertiesHelper getInstance()
   {
     if (instance == null)
@@ -99,6 +103,10 @@ public class PropertiesHelper
       guiConceptExpandable = getBooleanValue(config.getProperty("gui.concept.expandable", "false"));
       guiConceptMinimal = getBooleanValue(config.getProperty("gui.concept.minimal", "false"));
       
+      associationTaxonomyDefaultVersionId = getLongValue(config.getProperty("association.taxonomy.default.versionId", "4"), 4);
+      associationCrossmappingDefaultVersionId = getLongValue(config.getProperty("association.crossmapping.default.versionId", "0"), 0);
+      associationLinkDefaultVersionId = getLongValue(config.getProperty("association.link.default.versionId", "0"), 0);
+      
       expandTreeAutoCount = getIntValue("gui.tree.expandTreeAutoCount", 50);
       
       logger.debug("login_classname: " + login_classname);
@@ -129,6 +137,23 @@ public class PropertiesHelper
     }
 
     return false;
+  }
+  
+  private long getLongValue(String s, long defaultValue)
+  {
+    if (s == null || s.length() == 0)
+      return defaultValue;
+
+    try
+    {
+      return Long.parseLong(s);
+    }
+    catch(Exception ex)
+    {
+      
+    }
+
+    return defaultValue;
   }
   
   private int getIntValue(String s)
@@ -246,6 +271,54 @@ public class PropertiesHelper
   public void setExpandTreeAutoCount(int expandTreeAutoCount)
   {
     this.expandTreeAutoCount = expandTreeAutoCount;
+  }
+
+  /**
+   * @return the associationTaxonomyDefaultVersionId
+   */
+  public long getAssociationTaxonomyDefaultVersionId()
+  {
+    return associationTaxonomyDefaultVersionId;
+  }
+
+  /**
+   * @param associationTaxonomyDefaultVersionId the associationTaxonomyDefaultVersionId to set
+   */
+  public void setAssociationTaxonomyDefaultVersionId(long associationTaxonomyDefaultVersionId)
+  {
+    this.associationTaxonomyDefaultVersionId = associationTaxonomyDefaultVersionId;
+  }
+
+  /**
+   * @return the associationCrossmappingDefaultVersionId
+   */
+  public long getAssociationCrossmappingDefaultVersionId()
+  {
+    return associationCrossmappingDefaultVersionId;
+  }
+
+  /**
+   * @param associationCrossmappingDefaultVersionId the associationCrossmappingDefaultVersionId to set
+   */
+  public void setAssociationCrossmappingDefaultVersionId(long associationCrossmappingDefaultVersionId)
+  {
+    this.associationCrossmappingDefaultVersionId = associationCrossmappingDefaultVersionId;
+  }
+
+  /**
+   * @return the associationLinkDefaultVersionId
+   */
+  public long getAssociationLinkDefaultVersionId()
+  {
+    return associationLinkDefaultVersionId;
+  }
+
+  /**
+   * @param associationLinkDefaultVersionId the associationLinkDefaultVersionId to set
+   */
+  public void setAssociationLinkDefaultVersionId(long associationLinkDefaultVersionId)
+  {
+    this.associationLinkDefaultVersionId = associationLinkDefaultVersionId;
   }
 
 }

@@ -9,7 +9,7 @@
       tooltiptext="Bearbeiten Sie Ihr TermServer Profil"/>
       <toolbarbutton id="tb_loginInfo" image="/rsc/img/symbols/info16_16.png" label="-" tooltiptext="Info über den Login-Status"/>
       <toolbarbutton id="tb_logout" image="/rsc/img/symbols/unlock_16x16.png" label="Abmelden" onClick='win.onLogoutClicked()'
-      tooltiptext="Meldet den aktuellen Benutzer vom System ab" visible="false"/>
+      tooltiptext="Meldet den aktuellen Benutzer vom System ab" visible="true"/>
       <toolbarbutton id="tb_termbrowser" image="/rsc/img/symbols/find_16x16.png" label="Terminologie-Browser" onClick='win.onCallBrowserClicked()'
       tooltiptext="Wechselt zum Terminologie-Browser" visible="false"/>
     </toolbar>

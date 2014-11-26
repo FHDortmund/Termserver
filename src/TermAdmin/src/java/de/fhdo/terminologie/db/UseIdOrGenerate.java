@@ -24,7 +24,7 @@ import de.fhdo.collaboration.db.classes.Collaborationuser;
 import de.fhdo.terminologie.db.hibernate.TermUser;
 import java.io.Serializable;
 import org.hibernate.HibernateException;
-import org.hibernate.engine.SessionImplementor;
+import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.id.IdentityGenerator;
 
 public class UseIdOrGenerate extends IdentityGenerator

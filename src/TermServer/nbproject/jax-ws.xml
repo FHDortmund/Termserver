@@ -16,6 +16,9 @@
     <service name="Authoring">
       <implementation-class>de.fhdo.terminologie.ws.authoring.Authoring</implementation-class>
     </service>
+    <service name="SVS_ValueSetRepository">
+      <implementation-class>de.fhdo.terminologie.ws.administration.SVS_ValueSetRepository</implementation-class>
+    </service>
   </services>
   <clients>
   </clients>

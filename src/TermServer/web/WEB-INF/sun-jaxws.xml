@@ -5,4 +5,6 @@
   <endpoint implementation="de.fhdo.terminologie.ws.conceptAssociation.ConceptAssociations" name="ConceptAssociations" url-pattern="/ConceptAssociations"/>
   <endpoint implementation="de.fhdo.terminologie.ws.authorization.Authorization" name="Authorization" url-pattern="/Authorization"/>
   <endpoint implementation="de.fhdo.terminologie.ws.authoring.Authoring" name="Authoring" url-pattern="/Authoring"/>
+  <!--<endpoint implementation="de.fhdo.terminologie.ws.administration.svs.SVS_ValueSetRepository" name="ValueSetRepository_Service" url-pattern="/ValueSetRepository_Service"/>-->
+  <endpoint implementation="de.fhdo.terminologie.ws.administration.SVS_ValueSetRepository" name="SVS_ValueSetRepository" url-pattern="/SVS_ValueSetRepository"/>
 </endpoints>

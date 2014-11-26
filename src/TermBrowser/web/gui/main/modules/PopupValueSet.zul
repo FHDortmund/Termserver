@@ -126,6 +126,11 @@
                       <label value="${labels.common.preferredLanguage}:"/>    
                       <combobox id="cboxPreferredLanguage" hflex="true" readonly="true"/>
                     </row>
+                    
+                    <row id="rowVVS">
+                      <label value="${labels.common.vvs}:"/>    
+                      <combobox id="cboxVVS" hflex="true" readonly="true"/>
+                    </row>
                   </rows>
                 </grid> 
               </groupbox>

@@ -62,6 +62,41 @@ public class ArgumentHelper
     return l;
   }
   
+  public static int getWindowArgumentInt(String argName)
+  {
+    int l = 0;
+    try
+    {
+      Object o = getWindowArgument(argName);
+
+      if (o != null)
+        l = (Integer) o;
+    }
+    catch (Exception e)
+    {
+      LoggingOutput.outputException(e, ArgumentHelper.class);
+    }
+
+    return l;
+  }
+  
+  public static String getWindowArgumentString(String argName)
+  {
+    try
+    {
+      Object o = getWindowArgument(argName);
+
+      if (o != null)
+        return o.toString();
+    }
+    catch (Exception e)
+    {
+      LoggingOutput.outputException(e, ArgumentHelper.class);
+    }
+
+    return "";
+  }
+  
   public static Object getWindowParameter(String argName)
   {
     try
@@ -74,6 +109,22 @@ public class ArgumentHelper
     }
 
     return null;
+  }
+  
+  public static String getWindowParameterString(String argName)
+  {
+    try
+    {
+      Object o = Executions.getCurrent().getParameter(argName);
+      if(o != null)
+        return o.toString();
+    }
+    catch (Exception e)
+    {
+      LoggingOutput.outputException(e, ArgumentHelper.class);
+    }
+
+    return "";
   }
   
 }

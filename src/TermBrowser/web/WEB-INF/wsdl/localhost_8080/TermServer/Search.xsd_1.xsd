@@ -529,6 +529,8 @@
 <xs:element name="pagingParameter" type="tns:pagingType" minOccurs="0" />
 <xs:element name="lookForward" type="xs:boolean" />
 <xs:element name="sortingParameter" type="tns:sortingType" minOccurs="0" />
+<xs:element name="loadMetadata" type="xs:boolean" minOccurs="0" />
+<xs:element name="loadTranslation" type="xs:boolean" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
@@ -626,6 +628,32 @@
 </xs:sequence>
 </xs:complexType>
 
+<xs:complexType name="ReturnCodeSystemDetails">
+<xs:sequence>
+<xs:element name="parameter" type="tns:returnCodeSystemDetailsRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="returnCodeSystemDetailsRequestType">
+<xs:sequence>
+<xs:element name="codeSystem" type="ns1:codeSystem" minOccurs="0" />
+<xs:element name="loginToken" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ReturnCodeSystemDetailsResponse">
+<xs:sequence>
+<xs:element name="return" minOccurs="0">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
+<xs:element name="codeSystem" type="ns1:codeSystem" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+
 <xs:complexType name="ListMetadataParameter">
 <xs:sequence>
 <xs:element name="parameter" type="tns:listMetadataParameterRequestType" minOccurs="0" />
@@ -647,32 +675,6 @@
 <xs:sequence>
 <xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
 <xs:element name="metadataParameter" type="ns1:metadataParameter" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-</xs:sequence>
-</xs:complexType>
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ReturnCodeSystemDetails">
-<xs:sequence>
-<xs:element name="parameter" type="tns:returnCodeSystemDetailsRequestType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="returnCodeSystemDetailsRequestType">
-<xs:sequence>
-<xs:element name="codeSystem" type="ns1:codeSystem" minOccurs="0" />
-<xs:element name="loginToken" type="xs:string" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ReturnCodeSystemDetailsResponse">
-<xs:sequence>
-<xs:element name="return" minOccurs="0">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="codeSystem" type="ns1:codeSystem" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 </xs:element>

@@ -16,18 +16,17 @@
  */
 package de.fhdo.terminologie.ws.authoring;
 
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.Definitions;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.AssociationType;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntity;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersion;
-import de.fhdo.terminologie.helper.LoginHelper;
 import de.fhdo.terminologie.ws.authoring.types.MaintainConceptAssociationTypeRequestType;
 import de.fhdo.terminologie.ws.authoring.types.MaintainConceptAssociationTypeResponseType;
 import de.fhdo.terminologie.ws.authorization.Authorization;
 import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
 import de.fhdo.terminologie.ws.types.ReturnType;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -93,7 +92,9 @@ public class MaintainConceptAssociationType
         if (bNewVersion)
         {
           // original CSE aus DB laden
-          cse_db = (CodeSystemEntity) hb_session.load(CodeSystemEntity.class, cse_Request.getId());
+          //cse_db = (CodeSystemEntity) hb_session.load(CodeSystemEntity.class, cse_Request.getId());
+          CodeSystemEntityVersion csev_db = (CodeSystemEntityVersion) hb_session.load(CodeSystemEntityVersion.class, csev_Request.getVersionId());
+          cse_db = csev_db.getCodeSystemEntity();
 
           // neues CodeSystemEntityVersion-Objekt erzeugen
           csev_New = new CodeSystemEntityVersion();
@@ -133,7 +134,7 @@ public class MaintainConceptAssociationType
             hb_session.save(aType_New);
           }
 
-          
+          cse_db = csev_New.getCodeSystemEntity();
           cse_db.setCurrentVersionId(csev_New.getVersionId());
           hb_session.save(cse_db);
         }
@@ -142,7 +143,7 @@ public class MaintainConceptAssociationType
         else
         {
           // original CSE aus DB laden                                  
-          cse_db = (CodeSystemEntity) hb_session.load(CodeSystemEntity.class, cse_Request.getId());
+          //cse_db = (CodeSystemEntity) hb_session.load(CodeSystemEntity.class, cse_Request.getId());
 
           // Request CSEV, benötigt man für die versionId
           csev_Request = (CodeSystemEntityVersion) cse_Request.getCodeSystemEntityVersions().toArray()[0];
@@ -176,6 +177,7 @@ public class MaintainConceptAssociationType
           
 
           // Nachdem die neuen Objekte angelegt oder die alten aktualisiert wurden, speichere CSE in DB
+          cse_db = csev_New.getCodeSystemEntity();
           cse_db.setCurrentVersionId(csev_New.getVersionId());
           hb_session.save(cse_db);
         }
@@ -186,7 +188,9 @@ public class MaintainConceptAssociationType
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         response.getReturnInfos().setMessage("Fehler bei 'MaintainConceptAssociationType', Hibernate: " + e.getLocalizedMessage());
+        
         logger.error(response.getReturnInfos().getMessage());
+        LoggingOutput.outputException(e, this);
       }
       finally
       {
@@ -216,6 +220,8 @@ public class MaintainConceptAssociationType
       response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
       response.getReturnInfos().setMessage("Fehler bei 'MaintainConceptAssociationType': " + e.getLocalizedMessage());
       logger.error(response.getReturnInfos().getMessage());
+      
+      LoggingOutput.outputException(e, this);
     }
     return response;
   }

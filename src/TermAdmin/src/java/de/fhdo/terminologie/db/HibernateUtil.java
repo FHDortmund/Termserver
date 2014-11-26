@@ -82,7 +82,14 @@ public class HibernateUtil
   {
     if (sessionFactory == null)
       sessionFactory = buildSessionFactory();
-
+    
+    return sessionFactory;
+  }
+  
+  public static SessionFactory getNewSessionFactory()
+  {
+    sessionFactory = buildSessionFactory();
+    
     return sessionFactory;
   }
 

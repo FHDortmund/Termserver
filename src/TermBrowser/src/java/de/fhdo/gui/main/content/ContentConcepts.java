@@ -16,19 +16,21 @@
  */
 package de.fhdo.gui.main.content;
 
+import de.fhdo.gui.main.TreeAndContent;
+import de.fhdo.gui.main.modules.PopupCodeSystem;
 import de.fhdo.gui.main.modules.PopupConcept;
+import de.fhdo.gui.main.modules.PopupExport;
+import de.fhdo.gui.main.modules.PopupValueSet;
 import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.SessionHelper;
-import de.fhdo.helper.WebServiceHelper;
+import de.fhdo.interfaces.IUpdateModal;
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.models.CodesystemGenericTreeModel;
 import de.fhdo.models.comparators.ComparatorCodesystemVersions;
-import de.fhdo.terminologie.ws.authoring.DeleteInfo;
-import de.fhdo.terminologie.ws.authoring.RemoveTerminologyOrConceptRequestType;
-import de.fhdo.terminologie.ws.authoring.RemoveTerminologyOrConceptResponseType;
-import de.fhdo.terminologie.ws.authoring.Type;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import org.zkoss.util.resource.Labels;
+import java.util.Map;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.ext.AfterCompose;
@@ -38,7 +40,6 @@ import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.ComboitemRenderer;
 import org.zkoss.zul.ListModelList;
-import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Tree;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.event.PagingEvent;
@@ -52,7 +53,7 @@ import types.termserver.fhdo.de.ValueSetVersion;
  *
  * @author Robert Mützner <robert.muetzner@fh-dortmund.de>
  */
-public class ContentConcepts extends Window implements AfterCompose
+public class ContentConcepts extends Window implements AfterCompose, IUpdateModal
 {
 
   protected static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
@@ -104,10 +105,17 @@ public class ContentConcepts extends Window implements AfterCompose
 
       if (codeSystemVersion == null)
       {
+        Object obj = SessionHelper.getValue("loadCSV");
+        long loadCsvId = 0;
+        if (obj != null)
+        {
+          loadCsvId = Long.parseLong(obj.toString());
+          SessionHelper.setValue("loadCSV", null);
+        }
         // load default version
         for (CodeSystemVersion csv : codeSystem.getCodeSystemVersions())
         {
-          if (csv.getVersionId().longValue() == codeSystem.getCurrentVersionId().longValue())
+          if (loadCsvId == csv.getVersionId().longValue() || (loadCsvId == 0 && csv.getVersionId().longValue() == codeSystem.getCurrentVersionId().longValue()))
           {
             codeSystemVersion = csv;
             logger.debug("Version given with default id: " + codeSystemVersion.getVersionId());
@@ -273,11 +281,11 @@ public class ContentConcepts extends Window implements AfterCompose
     //if(concepts == null)
     concepts = new ConceptsTree(treeConcepts, this);
 
-    if(codeSystem != null)
+    if (codeSystem != null)
       concepts.setCodeSystemId(codeSystem.getId());
-    else if(valueSet != null)
+    else if (valueSet != null)
       concepts.setValueSetId(valueSet.getId());
-    
+
     if (codeSystemVersion != null)
       concepts.setCodeSystemVersionId(codeSystemVersion.getVersionId());
     else if (valueSetVersion != null)
@@ -319,51 +327,107 @@ public class ContentConcepts extends Window implements AfterCompose
   {
     concepts.openConceptDetails();
   }
-  
+
   public void onDeleteClicked()
   {
     if (SessionHelper.isUserLoggedIn())
       concepts.deleteConcept();
   }
 
-  /*public void onDeleteClicked()
+  public void onEditVersionClicked()
   {
     if (SessionHelper.isUserLoggedIn())
     {
-      if (codeSystem != null && codeSystemVersion != null)
+      try
       {
-        logger.debug("onDeleteClicked()");
-        
-        if (Messagebox.show(Labels.getLabel("common.deleteCSVersion"), Labels.getLabel("common.deleteSystem"), Messagebox.YES | Messagebox.NO, Messagebox.QUESTION) 
-                == Messagebox.YES)
+        if (codeSystem != null)
         {
-          logger.debug("deleting...");
-          RemoveTerminologyOrConceptRequestType request = new RemoveTerminologyOrConceptRequestType();
-          request.setLoginToken(SessionHelper.getSessionId());
-          request.setDeleteInfo(new DeleteInfo());
-          CodeSystem cs = new CodeSystem();
-          cs.setId(codeSystem.getId());
-          CodeSystemVersion csv = new CodeSystemVersion();
-          csv.setVersionId(codeSystemVersion.getVersionId());
-          cs.getCodeSystemVersions().add(csv);
-          request.getDeleteInfo().setCodeSystem(cs);
-          request.getDeleteInfo().setType(Type.CODE_SYSTEM_VERSION);
-          
-          RemoveTerminologyOrConceptResponseType response = WebServiceHelper.removeTerminologyOrConcept(request);
-          
-          Messagebox.show(response.getReturnInfos().getMessage());
-          
-          CodesystemGenericTreeModel.getInstance().reloadData();
-          Executions.sendRedirect("");  // reload page
+          Map<String, Object> data = new HashMap<String, Object>();
+          data.put("CS", codeSystem);
+          data.put("CSV", codeSystemVersion);
+          data.put("EditMode", PopupCodeSystem.EDITMODES.MAINTAIN);
+
+          Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupCodeSystem.zul", this, data);
+          ((PopupCodeSystem) w).setUpdateListener(this);
+          w.doModal();
         }
-        else
+        else if (valueSet != null)
         {
-          logger.debug("not deleting...");
+          Map<String, Object> data = new HashMap<String, Object>();
+          data.put("VS", valueSet);
+          data.put("VSV", valueSetVersion);
+          data.put("EditMode", PopupValueSet.EDITMODES.MAINTAIN);
+
+          Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupValueSet.zul", this, data);
+          ((PopupValueSet) w).setUpdateListener(this);
+          w.doModal();
         }
       }
-    }
-  }*/
+      catch (Exception e)
+      {
+        LoggingOutput.outputException(e, this);
+      }
 
+      //if (allowEditing)
+      //TreeAndContent.popupCodeSystem(codeSystem, PopupCodeSystem.EDITMODES.MAINTAIN, false, this);
+      //else
+      //  TreeAndContent.popupCodeSystem(cs, PopupCodeSystem.EDITMODES.DETAILSONLY, false, this);
+    }
+    //concepts..createConcept(PopupConcept.HIERARCHYMODE.ROOT, 0);
+  }
+  
+  public void onExportClicked()
+  {
+    logger.debug("onExportClicked()");
+    if(codeSystemVersion != null)
+    {
+      codeSystemVersion.setCodeSystem(codeSystem);
+      PopupExport.doModal(codeSystemVersion, null);
+    }
+    else if(valueSetVersion != null)
+    {
+      valueSetVersion.setValueSet(valueSet);
+      PopupExport.doModal(null, valueSetVersion);
+    }
+  }
+
+  /*public void onDeleteClicked()
+   {
+   if (SessionHelper.isUserLoggedIn())
+   {
+   if (codeSystem != null && codeSystemVersion != null)
+   {
+   logger.debug("onDeleteClicked()");
+        
+   if (Messagebox.show(Labels.getLabel("common.deleteCSVersion"), Labels.getLabel("common.deleteSystem"), Messagebox.YES | Messagebox.NO, Messagebox.QUESTION) 
+   == Messagebox.YES)
+   {
+   logger.debug("deleting...");
+   RemoveTerminologyOrConceptRequestType request = new RemoveTerminologyOrConceptRequestType();
+   request.setLoginToken(SessionHelper.getSessionId());
+   request.setDeleteInfo(new DeleteInfo());
+   CodeSystem cs = new CodeSystem();
+   cs.setId(codeSystem.getId());
+   CodeSystemVersion csv = new CodeSystemVersion();
+   csv.setVersionId(codeSystemVersion.getVersionId());
+   cs.getCodeSystemVersions().add(csv);
+   request.getDeleteInfo().setCodeSystem(cs);
+   request.getDeleteInfo().setType(Type.CODE_SYSTEM_VERSION);
+          
+   RemoveTerminologyOrConceptResponseType response = WebServiceHelper.removeTerminologyOrConcept(request);
+          
+   Messagebox.show(response.getReturnInfos().getMessage());
+          
+   CodesystemGenericTreeModel.getInstance().reloadData();
+   Executions.sendRedirect("");  // reload page
+   }
+   else
+   {
+   logger.debug("not deleting...");
+   }
+   }
+   }
+   }*/
   public void onPaging(Event event)
   {
     concepts.onPaging((PagingEvent) event);
@@ -381,11 +445,38 @@ public class ContentConcepts extends Window implements AfterCompose
     ComponentHelper.setVisibleAndDisabled("buttonEdit", loggedIn, csev == null, this);
     ComponentHelper.setVisibleAndDisabled("buttonDelete", loggedIn, csev == null, this);
 
-    
-    
+    ComponentHelper.setVisible("buttonEditVersion", loggedIn, this);
+
     //ComponentHelper.setVisible("buttonDeleteVersion", loggedIn, this);
     //ComponentHelper.setVisibleAndDisabled("buttonDeleteVersion", loggedIn, csev == null, this);
-    
+  }
+
+  public void update(Object o, boolean edited)
+  {
+    // CSEV edited?
+    if (o != null && o instanceof CodeSystem)
+    {
+      CodeSystem cs = (CodeSystem) o;
+
+      /*codeSystem = cs;
+       if(cs.getCodeSystemVersions() != null && cs.getCodeSystemVersions().size() > 0)
+       codeSystemVersion = cs.getCodeSystemVersions().get(0);
+      
+       fillVersionList();*/
+      SessionHelper.setValue("loadCS", cs.getId());
+
+      if (cs.getCodeSystemVersions() != null && cs.getCodeSystemVersions().size() > 0)
+      {
+        SessionHelper.setValue("loadCSV", cs.getCodeSystemVersions().get(0).getVersionId());
+      }
+
+      SessionHelper.setValue("selectedCS", null);
+      SessionHelper.setValue("selectedVS", null);
+
+      CodesystemGenericTreeModel.getInstance().reloadData();
+      Executions.sendRedirect(null);  // page reload
+    }
+
   }
 
 }

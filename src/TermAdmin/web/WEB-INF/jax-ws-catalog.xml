@@ -16,6 +16,9 @@
     <system systemId="http://localhost:8080/TermServer/Administration?wsdl" uri="wsdl/localhost_8080/TermServer/Administration.wsdl"/>
     <system systemId="http://localhost:8080/TermServer/Administration?xsd=1" uri="wsdl/localhost_8080/TermServer/Administration.xsd_1.xsd"/>
     <system systemId="http://localhost:8080/TermServer/Administration?xsd=2" uri="wsdl/localhost_8080/TermServer/Administration.xsd_2.xsd"/>
+    <system systemId="http://localhost:8080/TermServer/Search?wsdl" uri="wsdl/localhost_8080/TermServer/Search.wsdl"/>
+    <system systemId="http://localhost:8080/TermServer/Search?xsd=1" uri="wsdl/localhost_8080/TermServer/Search.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/TermServer/Search?xsd=2" uri="wsdl/localhost_8080/TermServer/Search.xsd_2.xsd"/>
 </catalog>
 
 

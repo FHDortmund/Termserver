@@ -5,12 +5,34 @@
     <borderlayout>
       <!-- specifies information about the cs/vs, defines filter, ... -->
       <north border="0">
-        <hbox style="margin-left: 8px; margin-top:8px; margin-bottom:8px;">
-          <div>
+        <!--<hbox style="margin-left: 8px; margin-top:8px; margin-bottom:8px;">-->
+        <!--<div>-->
+        <div style="margin-left: 8px; margin-top:8px; margin-bottom:8px; margin-right:8px;">
+          <div align="left" style="float:left; margin-bottom: 4px;">
             <label value="${labels.common.version}: "/>
-            <combobox id="cbVersion" readonly="true" width="300px" onSelect="winConcepts.onVersionChanged()"/>
+            <combobox id="cbVersion" readonly="true" width="250px" onSelect="winConcepts.onVersionChanged()"/>
+            <button id="buttonNewVersion" 
+                    onClick="winConcepts.onNewVersionClicked()" 
+                    image="/rsc/img/list/add.png"    
+                    visible="false" />
+            <button id="buttonEditVersion" 
+                    onClick="winConcepts.onEditVersionClicked()" 
+                    image="/rsc/img/list/pencil.png" 
+                    autodisable="self"
+                    visible="false" 
+                    disabled="false"/>
           </div>
-        </hbox>
+          
+          <div align="right">
+            <button id="buttonExport" 
+                    label="${labels.treeitemRenderer_CS_VS_DV.exportCodeSystemVersion}..."
+                    onClick="winConcepts.onExportClicked()" 
+                    image="/rsc/img/symbols/export_16x16.png" 
+                    autodisable="self"
+                    />
+          </div>
+        </div>
+        <!--</hbox>-->
       </north>
       <center border="0">
         <div width="100%" height="100%">
@@ -81,11 +103,11 @@
                     disabled="true"/>
           </div>
           <div align="right">
-<!--            <button id="buttonDeleteVersion"
-                    label="${labels.common.deleteVersion}" 
-                    onClick="winConcepts.onDeleteClicked()" 
-                    image="/rsc/img/symbols/delete_12x12.png"
-                    disabled="false"/>-->
+            <!--            <button id="buttonDeleteVersion"
+            label="${labels.common.deleteVersion}" 
+            onClick="winConcepts.onDeleteClicked()" 
+            image="/rsc/img/symbols/delete_12x12.png"
+            disabled="false"/>-->
             
             <!--            <label value="${labels.contentConcepts.moreFunctions}" style="color:gray"/>
             <button id="bNew" label="${labels.contentConcepts.newConcept}" onClick="windowConcepts.onClickedNewRootConcept()" image="/rsc/img/list/add.png"    visible="false" />

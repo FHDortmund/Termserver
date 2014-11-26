@@ -32,6 +32,7 @@ import de.fhdo.list.GenericListCellType;
 import de.fhdo.list.GenericListHeaderType;
 import de.fhdo.list.GenericListRowType;
 import de.fhdo.logging.LoggingOutput;
+import de.fhdo.models.CodesystemGenericTreeModel;
 import de.fhdo.terminologie.ws.authoring.CreateValueSetRequestType;
 import de.fhdo.terminologie.ws.authoring.CreateValueSetResponse;
 import de.fhdo.terminologie.ws.authoring.MaintainValueSetRequestType;
@@ -50,10 +51,15 @@ import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Comboitem;
+import org.zkoss.zul.ComboitemRenderer;
 import org.zkoss.zul.Datebox;
 import org.zkoss.zul.Include;
+import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
+import types.termserver.fhdo.de.CodeSystem;
+import types.termserver.fhdo.de.CodeSystemVersion;
 import types.termserver.fhdo.de.DomainValue;
 import types.termserver.fhdo.de.MetadataParameter;
 import types.termserver.fhdo.de.ValueSet;
@@ -134,7 +140,7 @@ public class PopupValueSet extends Window implements AfterCompose
     // fill domain values with selected codes
     DomainHelper.getInstance().fillCombobox((Combobox) getFellow("cboxStatusVS"), de.fhdo.Definitions.DOMAINID_STATUS,
             valueSet == null || valueSet.getStatus() == null ? "" : "" + valueSet.getStatus());
-    
+
     if (valueSet.getStatusDate() != null)
       ((Datebox) getFellow("dateBoxStatusVS")).setValue(new Date(valueSet.getStatusDate().toGregorianCalendar().getTimeInMillis()));
 
@@ -159,6 +165,7 @@ public class PopupValueSet extends Window implements AfterCompose
         ((Datebox) getFellow("dateBoxStatusVSV")).setValue(new Date(valueSetVersion.getStatusDate().toGregorianCalendar().getTimeInMillis()));
     }
 
+    initVVS();
     initListMetadata();
 
     showComponents();
@@ -200,6 +207,20 @@ public class PopupValueSet extends Window implements AfterCompose
 
       valueSetVersion.setPreferredLanguageCd(DomainHelper.getInstance().getComboboxCd((Combobox) getFellow("cboxPreferredLanguage")));
       logger.debug("getPreferredLanguageCd: " + valueSetVersion.getPreferredLanguageCd());
+
+      valueSetVersion.setVirtualCodeSystemVersionId(null);
+      Combobox cb = (Combobox) getFellow("cboxVVS");
+      if (cb != null && cb.getSelectedItem() != null)
+      {
+        Object o = cb.getSelectedItem().getValue();
+        if (o != null && o instanceof CodeSystemVersion)
+        {
+          CodeSystemVersion csv = (CodeSystemVersion) o;
+          valueSetVersion.setVirtualCodeSystemVersionId(csv.getVersionId());
+        }
+      }
+      
+      logger.debug("getVirtualCodeSystemVersionId: " + valueSetVersion.getVirtualCodeSystemVersionId());
 
       // Range of Validity
       try
@@ -499,6 +520,56 @@ public class PopupValueSet extends Window implements AfterCompose
       }
     }
 
+  }
+
+  private void initVVS()
+  {
+    final Combobox cb = (Combobox) getFellow("cboxVVS");
+
+    List<CodeSystem> csList = CodesystemGenericTreeModel.getInstance().getListCS();
+    List<CodeSystemVersion> csvList = new LinkedList<CodeSystemVersion>();
+    
+    CodeSystemVersion csvTemp = new CodeSystemVersion();
+    csvTemp.setCodeSystem(new CodeSystem());
+    csvTemp.getCodeSystem().setId(0l);
+    csvTemp.setVersionId(0l);
+    csvList.add(csvTemp); // no selection
+    
+    for (CodeSystem cs : csList)
+    {
+      for (CodeSystemVersion csv : cs.getCodeSystemVersions())
+      {
+        csv.setCodeSystem(cs);
+        csvList.add(csv);
+      }
+    }
+
+    // create renderer
+    cb.setItemRenderer(new ComboitemRenderer<CodeSystemVersion>()
+    {
+      public void render(Comboitem item, CodeSystemVersion csv, int i) throws Exception
+      {
+        if (csv != null)
+        {
+          item.setValue(csv);
+          if(csv.getName() == null || csv.getCodeSystem().getName() == null)
+            item.setLabel("-");
+          else item.setLabel(csv.getCodeSystem().getName() + " - " + csv.getName());
+
+          if (valueSetVersion.getVirtualCodeSystemVersionId() != null && valueSetVersion.getVirtualCodeSystemVersionId() > 0
+                  && csv.getVersionId() != null && valueSetVersion.getVirtualCodeSystemVersionId().longValue() == csv.getVersionId())
+          {
+            cb.setSelectedItem(item);
+            cb.setText(item.getLabel());
+          }
+        }
+        else
+          item.setLabel("");
+      }
+    });
+
+    // create model
+    cb.setModel(new ListModelList<CodeSystemVersion>(csvList));
   }
 
   private void createNewValuesetVersion()

@@ -186,7 +186,8 @@ public class HQLParameterHelper
         //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //s = sdf.format(obj.obj);
         
-        q.setDate("s_" + obj.fieldName, (java.util.Date)obj.obj);
+        //q.setDate("s_" + obj.fieldName, (java.util.Date)obj.obj);
+        q.setTimestamp("s_" + obj.fieldName, (java.util.Date)obj.obj);
         //logger.debug("SDF: " + sdf.format(obj.obj));
       }
       else if(obj.obj instanceof Boolean)

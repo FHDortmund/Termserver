@@ -136,11 +136,36 @@ public class ListValueSetContents
         if (metadataParameter_Level_Id > 0)
           sql += " LEFT JOIN value_set_metadata_value vsmv ON csev.versionId=vsmv.codeSystemEntityVersionId";
 
+        boolean virtualValueSet = false;
+
+        ValueSetVersion vsv_db = (ValueSetVersion) hb_session.get(ValueSetVersion.class, vsv.getVersionId());
+        if (vsv_db == null)
+        {
+          response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
+          response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+          response.getReturnInfos().setMessage("Value Set with id " + vsv.getVersionId() + " does not exist.");
+          return response;
+        }
+        if (vsv_db.getVirtualCodeSystemVersionId() != null && vsv_db.getVirtualCodeSystemVersionId() > 0)
+        {
+          // get concepts from a codesystem version
+          sql = "select * from code_system_entity_version csev"
+                  + " JOIN code_system_concept csc ON csev.versionId=csc.codeSystemEntityVersionId"
+                  + " JOIN code_system_entity cse ON csev.codeSystemEntityId=cse.id"
+                  + " JOIN code_system_version_entity_membership csvem ON csvem.codeSystemEntityId=cse.id"
+                  + " JOIN code_system_version csv ON csv.versionId=csvem.codeSystemVersionId";
+
+          virtualValueSet = true;
+        }
+
         // Parameter dem Helper hinzufügen
         // bitte immer den Helper verwenden oder manuell Parameter per Query.setString() hinzufügen,
         // sonst sind SQL-Injections möglich
         HQLParameterHelper parameterHelper = new HQLParameterHelper();
-        parameterHelper.addParameter("", "cvsm.valuesetVersionId", valueSetVersionId);
+        if (virtualValueSet == false)
+        {
+          parameterHelper.addParameter("", "cvsm.valuesetVersionId", valueSetVersionId);
+        }
 
         if (metadataParameter_Level_Id > 0)
           parameterHelper.addParameter("", "vsmv.metadataParameterId", metadataParameter_Level_Id);
@@ -150,11 +175,16 @@ public class ListValueSetContents
           parameterHelper.addParameter("csev.", "statusVisibility", Definitions.STATUS_CODES.ACTIVE.getCode());
         }
 
-        if (vsv.getConceptValueSetMemberships() != null && vsv.getConceptValueSetMemberships().size() > 0)
+        if (virtualValueSet == false && vsv.getConceptValueSetMemberships() != null && vsv.getConceptValueSetMemberships().size() > 0)
         {
           ConceptValueSetMembership cvsm = vsv.getConceptValueSetMemberships().iterator().next();
           if (cvsm.getStatusDate() != null)
             parameterHelper.addParameter("cvsm.", "statusDate", cvsm.getStatusDate());
+        }
+
+        if (virtualValueSet)
+        {
+          parameterHelper.addParameter("csv.", "versionId", vsv_db.getVirtualCodeSystemVersionId());
         }
 
         // Parameter hinzufügen (immer mit AND verbunden)
@@ -162,6 +192,9 @@ public class ListValueSetContents
         String where = parameterHelper.getWhere("");
 
         String sortStr = " ORDER BY cvsm.orderNr,csc.code";
+
+        if (virtualValueSet)
+          sortStr = " ORDER BY csc.code";
 
         if (parameter.getSortingParameter() != null)
         {
@@ -218,13 +251,16 @@ public class ListValueSetContents
         q.addScalar("csc.meaning", StandardBasicTypes.TEXT); //Index: 17
         q.addScalar("csc.hints", StandardBasicTypes.TEXT);
 
-        q.addScalar("cvsm.valueOverride", StandardBasicTypes.TEXT); //Index: 19
-        q.addScalar("cvsm.status", StandardBasicTypes.INTEGER);
-        q.addScalar("cvsm.statusDate", StandardBasicTypes.DATE);
-        q.addScalar("cvsm.isStructureEntry", StandardBasicTypes.BOOLEAN);
-        q.addScalar("cvsm.orderNr", StandardBasicTypes.LONG);
-        q.addScalar("cvsm.description", StandardBasicTypes.TEXT);
-        q.addScalar("cvsm.hints", StandardBasicTypes.TEXT);
+        if (virtualValueSet == false)
+        {
+          q.addScalar("cvsm.valueOverride", StandardBasicTypes.TEXT); //Index: 19
+          q.addScalar("cvsm.status", StandardBasicTypes.INTEGER);
+          q.addScalar("cvsm.statusDate", StandardBasicTypes.DATE);
+          q.addScalar("cvsm.isStructureEntry", StandardBasicTypes.BOOLEAN);
+          q.addScalar("cvsm.orderNr", StandardBasicTypes.LONG);
+          q.addScalar("cvsm.description", StandardBasicTypes.TEXT);
+          q.addScalar("cvsm.hints", StandardBasicTypes.TEXT);
+        }
 
         q.addScalar("csvem.isAxis", StandardBasicTypes.BOOLEAN); // Index: 26
         q.addScalar("csvem.isMainClass", StandardBasicTypes.BOOLEAN);
@@ -327,100 +363,163 @@ public class ListValueSetContents
           cvsm = new ConceptValueSetMembership();
           csv = new CodeSystemVersion();
 
+          int index = 0;
+
           // Konzept
-          if (item[0] != null)
-            csc.setCode(item[0].toString());
-          if (item[1] != null)
-            csc.setTerm(item[1].toString());
-          if (item[2] != null)
-            csc.setTermAbbrevation(item[2].toString());
-          if (item[3] != null)
-            csc.setDescription(item[3].toString());
-          if (item[4] != null)
-            csc.setIsPreferred((Boolean) item[4]);
-          if (item[5] != null)
-            csc.setCodeSystemEntityVersionId((Long) item[5]);
-          if (item[17] != null)
-            csc.setMeaning(item[17].toString());
-          if (item[18] != null)
-            csc.setHints(item[18].toString());
+          /*if (item[0] != null)
+           csc.setCode(item[0].toString());
+           if (item[1] != null)
+           csc.setTerm(item[1].toString());
+           if (item[2] != null)
+           csc.setTermAbbrevation(item[2].toString());
+           if (item[3] != null)
+           csc.setDescription(item[3].toString());
+           if (item[4] != null)
+           csc.setIsPreferred((Boolean) item[4]);
+           if (item[5] != null)
+           csc.setCodeSystemEntityVersionId((Long) item[5]);
+           if (item[17] != null)
+           csc.setMeaning(item[17].toString());
+           if (item[18] != null)
+           csc.setHints(item[18].toString());
 
-          // Entity Version
-          if (item[6] != null)
-            csev.setEffectiveDate((Date) item[6]);
-          if (item[7] != null)
-            csev.setInsertTimestamp((Date) item[7]);
-          if (item[8] != null)
-            csev.setIsLeaf((Boolean) item[8]);
-          if (item[9] != null)
-            csev.setMajorRevision((Integer) item[9]);
-          if (item[10] != null)
-            csev.setMinorRevision((Integer) item[10]);
-          if (item[11] != null)
-            csev.setStatusVisibility((Integer) item[11]);
-          if (item[12] != null)
-            csev.setStatusVisibilityDate((Date) item[12]);
-          if (item[13] != null)
-          {
-            csev.setVersionId((Long) item[13]);
+           // Entity Version
+           if (item[6] != null)
+           csev.setEffectiveDate((Date) item[6]);
+           if (item[7] != null)
+           csev.setInsertTimestamp((Date) item[7]);
+           if (item[8] != null)
+           csev.setIsLeaf((Boolean) item[8]);
+           if (item[9] != null)
+           csev.setMajorRevision((Integer) item[9]);
+           if (item[10] != null)
+           csev.setMinorRevision((Integer) item[10]);
+           if (item[11] != null)
+           csev.setStatusVisibility((Integer) item[11]);
+           if (item[12] != null)
+           csev.setStatusVisibilityDate((Date) item[12]);
+           if (item[13] != null)
+           {
+           csev.setVersionId((Long) item[13]);
+           cvsm.setId(new ConceptValueSetMembershipId(csev.getVersionId(), valueSetVersionId));
+           }
+           // Code System Entity
+           if (item[15] != null)
+           cse.setId((Long) item[15]);
+           if (item[16] != null)
+           cse.setCurrentVersionId((Long) item[16]);
+
+           if (virtualValueSet == false)
+           {
+           if (item[19] != null)
+           cvsm.setValueOverride(item[19].toString());
+           if (item[20] != null)
+           cvsm.setStatus((Integer) item[20]);
+           if (item[21] != null)
+           cvsm.setStatusDate((Date) item[21]);
+           if (item[22] != null)
+           cvsm.setIsStructureEntry((Boolean) item[22]);
+           if (item[23] != null)
+           cvsm.setOrderNr((Long) item[23]);
+           if (item[24] != null)
+           cvsm.setDescription(item[24].toString());
+           if (item[25] != null)
+           cvsm.setHints(item[25].toString());
+           }
+
+           if (item[26] != null)
+           csvem.setIsAxis((Boolean) item[26]);
+           if (item[27] != null)
+           csvem.setIsMainClass((Boolean) item[27]);
+
+           if (item[28] != null)
+           csv.setPreviousVersionId((Long) item[28]);
+           if (item[29] != null)
+           csv.setName(item[29].toString());
+           if (item[30] != null)
+           csv.setStatus((Integer) item[30]);
+           if (item[31] != null)
+           csv.setStatusDate((Date) item[31]);
+           if (item[32] != null)
+           csv.setReleaseDate((Date) item[32]);
+           if (item[33] != null)
+           csv.setExpirationDate((Date) item[33]);
+           if (item[34] != null)
+           csv.setSource(item[34].toString());
+           if (item[35] != null)
+           csv.setPreferredLanguageCd(item[35].toString());
+           if (item[36] != null)
+           csv.setOid(item[36].toString());
+           if (item[37] != null)
+           csv.setLicenceHolder(item[37].toString());
+           if (item[38] != null)
+           csv.setUnderLicence((Boolean) item[38]);
+           if (item[39] != null)
+           csv.setInsertTimestamp((Date) item[39]);
+           if (item[40] != null)
+           csv.setValidityRange((Long) item[40]);
+
+           // Metadaten hinzufügen
+           if (item[41] != null)
+           csv.setVersionId((Long) item[41]);*/
+          csc.setCode(getItemStr(item, index++));
+          csc.setTerm(getItemStr(item, index++));
+          csc.setTermAbbrevation(getItemStr(item, index++));
+          csc.setDescription(getItemStr(item, index++));
+          csc.setIsPreferred(getItemBool(item, index++));
+          csc.setCodeSystemEntityVersionId(getItemLong(item, index++));
+
+          csev.setEffectiveDate(getItemDate(item, index++));
+          csev.setInsertTimestamp(getItemDate(item, index++));
+          csev.setIsLeaf(getItemBool(item, index++));
+          csev.setMajorRevision(getItemInt(item, index++));
+          csev.setMinorRevision(getItemInt(item, index++));
+          csev.setStatusVisibility(getItemInt(item, index++));
+          csev.setStatusVisibilityDate(getItemDate(item, index++));
+          csev.setVersionId(getItemLong(item, index++));
+          if (csev.getVersionId() != null)
             cvsm.setId(new ConceptValueSetMembershipId(csev.getVersionId(), valueSetVersionId));
-          }
+
+          long cse_id = getItemLong(item, index++);
+
           // Code System Entity
-          if (item[15] != null)
-            cse.setId((Long) item[15]);
-          if (item[16] != null)
-            cse.setCurrentVersionId((Long) item[16]);
+          cse.setId(getItemLong(item, index++));
+          cse.setCurrentVersionId(getItemLong(item, index++));
 
-          if (item[19] != null)
-            cvsm.setValueOverride(item[19].toString());
-          if (item[20] != null)
-            cvsm.setStatus((Integer) item[20]);
-          if (item[21] != null)
-            cvsm.setStatusDate((Date) item[21]);
-          if (item[22] != null)
-            cvsm.setIsStructureEntry((Boolean) item[22]);
-          if (item[23] != null)
-            cvsm.setOrderNr((Long) item[23]);
-          if (item[24] != null)
-            cvsm.setDescription(item[24].toString());
-          if (item[25] != null)
-            cvsm.setHints(item[25].toString());
+          csc.setMeaning(getItemStr(item, index++));  // Index: 17
+          csc.setHints(getItemStr(item, index++));
 
-          if (item[26] != null)
-            csvem.setIsAxis((Boolean) item[26]);
-          if (item[27] != null)
-            csvem.setIsMainClass((Boolean) item[27]);
+          if (virtualValueSet == false)
+          {
+            cvsm.setValueOverride(getItemStr(item, index++));
+            cvsm.setStatus(getItemInt(item, index++));
+            cvsm.setStatusDate(getItemDate(item, index++));
+            cvsm.setIsStructureEntry(getItemBool(item, index++));
+            cvsm.setOrderNr(getItemLong(item, index++));
+            cvsm.setDescription(getItemStr(item, index++));
+            cvsm.setHints(getItemStr(item, index++));
+          }
 
-          if (item[28] != null)
-            csv.setPreviousVersionId((Long) item[28]);
-          if (item[29] != null)
-            csv.setName(item[29].toString());
-          if (item[30] != null)
-            csv.setStatus((Integer) item[30]);
-          if (item[31] != null)
-            csv.setStatusDate((Date) item[31]);
-          if (item[32] != null)
-            csv.setReleaseDate((Date) item[32]);
-          if (item[33] != null)
-            csv.setExpirationDate((Date) item[33]);
-          if (item[34] != null)
-            csv.setSource(item[34].toString());
-          if (item[35] != null)
-            csv.setPreferredLanguageCd(item[35].toString());
-          if (item[36] != null)
-            csv.setOid(item[36].toString());
-          if (item[37] != null)
-            csv.setLicenceHolder(item[37].toString());
-          if (item[38] != null)
-            csv.setUnderLicence((Boolean) item[38]);
-          if (item[39] != null)
-            csv.setInsertTimestamp((Date) item[39]);
-          if (item[40] != null)
-            csv.setValidityRange((Long) item[40]);
+          csvem.setIsAxis(getItemBool(item, index++));
+          csvem.setIsMainClass(getItemBool(item, index++));
+
+          csv.setPreviousVersionId(getItemLong(item, index++));
+          csv.setName(getItemStr(item, index++));
+          csv.setStatus(getItemInt(item, index++));
+          csv.setStatusDate(getItemDate(item, index++));
+          csv.setReleaseDate(getItemDate(item, index++));
+          csv.setExpirationDate(getItemDate(item, index++));
+          csv.setSource(getItemStr(item, index++));
+          csv.setPreferredLanguageCd(getItemStr(item, index++));
+          csv.setOid(getItemStr(item, index++));
+          csv.setLicenceHolder(getItemStr(item, index++));
+          csv.setUnderLicence(getItemBool(item, index++));
+          csv.setInsertTimestamp(getItemDate(item, index++));
+          csv.setValidityRange(getItemLong(item, index++));
 
           // Metadaten hinzufügen
-          if (item[41] != null)
-            csv.setVersionId((Long) item[41]);
+          if (metadataParameter_Level_Id > 0)
+            csv.setVersionId(getItemLong(item, index++));
 
           // Metadaten hinzufügen
           if (item != null && item.length > 42 && item[42] != null)
@@ -454,19 +553,22 @@ public class ListValueSetContents
 
         if (response.getCodeSystemEntity() == null || anzahl == 0)
         {
-          response.getReturnInfos().setMessage("Zu dem angegebenen ValueSet wurden keine Konzepte gefunden!");
+          //response.getReturnInfos().setMessage("Zu dem angegebenen ValueSet wurden keine Konzepte gefunden!");
+          response.getReturnInfos().setMessage("No concepts found for given Value Set!");
           response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         }
         else
         {
-          response.getReturnInfos().setMessage("Konzepte zu einem ValueSet erfolgreich gelesen");
+          if(virtualValueSet)
+            response.getReturnInfos().setMessage(anzahl + " concepts successfully returned (Virtual Value Set).");
+          else response.getReturnInfos().setMessage(anzahl + " concepts successfully returned.");
           response.getReturnInfos().setStatus(ReturnType.Status.OK);
         }
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
       }
       catch (Exception e)
       {
-        e.printStackTrace();
+
         //hb_session.getTransaction().rollback();
         // Fehlermeldung an den Aufrufer weiterleiten
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
@@ -494,6 +596,48 @@ public class ListValueSetContents
     }
 
     return response;
+  }
+
+  private Object getItem(Object[] obj, int index)
+  {
+    if (obj[index] == null)
+      return null;
+    return obj[index];
+  }
+
+  private String getItemStr(Object[] obj, int index)
+  {
+    if (obj[index] == null)
+      return null;
+    return obj[index].toString();
+  }
+
+  private Long getItemLong(Object[] obj, int index)
+  {
+    if (obj[index] == null)
+      return null;
+    return (Long) obj[index];
+  }
+
+  private Integer getItemInt(Object[] obj, int index)
+  {
+    if (obj[index] == null)
+      return null;
+    return (Integer) obj[index];
+  }
+
+  private Date getItemDate(Object[] obj, int index)
+  {
+    if (obj[index] == null)
+      return null;
+    return (Date) obj[index];
+  }
+
+  private Boolean getItemBool(Object[] obj, int index)
+  {
+    if (obj[index] == null)
+      return null;
+    return (Boolean) obj[index];
   }
 
   private boolean validateParameter(ListValueSetContentsRequestType Request, ListValueSetContentsResponseType Response)

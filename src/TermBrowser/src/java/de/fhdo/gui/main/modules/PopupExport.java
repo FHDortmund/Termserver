@@ -16,6 +16,7 @@
  */
 package de.fhdo.gui.main.modules;
 
+import de.fhdo.gui.main.ContentCSVSDefault;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.terminologie.ws.administration.ExportCodeSystemContentRequestType;
@@ -26,8 +27,13 @@ import de.fhdo.terminologie.ws.administration.ExportValueSetContentRequestType;
 import de.fhdo.terminologie.ws.administration.ExportValueSetContentResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Filedownload;
@@ -241,5 +247,21 @@ public class PopupExport extends GenericForwardComposer
   public void onClick$bClose()
   {
     window.detach();
+  }
+  
+  public static void doModal(CodeSystemVersion selectedCSV, ValueSetVersion selectedVSV)
+  {
+    try
+    {
+      Map<String, Object> data = new HashMap<String, Object>();
+      data.put("CSV", selectedCSV);
+      data.put("VSV", selectedVSV);
+      Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupExport.zul", null, data);
+      w.doModal();
+    }
+    catch (Exception e)
+    {
+      Logger.getLogger(ContentCSVSDefault.class.getName()).log(Level.SEVERE, null, e);
+    }
   }
 }

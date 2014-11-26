@@ -26,6 +26,7 @@
                   <tab label="Reporting" id="tabReporting"/>
                   
                   <tab label="Taxonomie-Einordnung" id="tabTaxonomie"/>
+                  <tab label="Assoziationen" id="tabAssociations"/>
                   <!--<tab label="Datenbank" id="tabDatenbank"/>-->
                 </tabs>
                 <tabpanels id="tabbox_tabpanels">
@@ -50,6 +51,9 @@
 
                   <tabpanel>
                     <include id="incTaxonomie"/><!--<include src="/gui/admin/modules/codesysteme.zul"/>-->
+                  </tabpanel>
+                  <tabpanel>
+                    <include id="incAssociations"/>
                   </tabpanel>
                   <!--<tabpanel>
                     <include id="incDatenbank"/>

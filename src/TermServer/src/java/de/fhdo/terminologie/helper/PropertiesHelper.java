@@ -47,6 +47,10 @@ public class PropertiesHelper
 
   private String login_classname;
   
+  private char exportCsvQualifier;
+  private boolean exportCsvForceQualifier;
+  private char delimiter;
+  
   public static PropertiesHelper getInstance()
   {
     if (instance == null)
@@ -74,9 +78,30 @@ public class PropertiesHelper
 
       // load properties
       login_classname = config.getProperty("login.classname", "UsernamePasswordMethod");
+      
+      String qf = config.getProperty("export.csv.qualifier", "\"");
+      if(qf != null && qf.length() > 0)
+        exportCsvQualifier = qf.charAt(0);
+      else exportCsvQualifier = '"';
+      
+      qf = config.getProperty("export.csv.delimiter", ";");
+      if(qf != null && qf.length() > 0)
+        delimiter = qf.charAt(0);
+      else delimiter = ';';
+      
+      //
+      
+      qf = config.getProperty("export.csv.forceQualifier", "false");
+      if(qf != null && qf.length() > 0)
+        exportCsvForceQualifier = getBooleanValue(qf);
+      else exportCsvForceQualifier = false;
+      
       //login_classname = config.getProperty("login.classname", "kjshdf");
       
       logger.debug("login_classname: " + login_classname);
+      logger.debug("exportCsvQualifier: " + exportCsvQualifier);
+      logger.debug("delimiter: " + delimiter);
+      logger.debug("exportCsvForceQualifier: " + exportCsvForceQualifier);
     }
     catch (Exception e)
     {
@@ -108,6 +133,30 @@ public class PropertiesHelper
   public String getLoginClassname()
   {
     return login_classname;
+  }
+
+  /**
+   * @return the exportCsvQualifier
+   */
+  public char getExportCsvQualifier()
+  {
+    return exportCsvQualifier;
+  }
+
+  /**
+   * @return the exportCsvForceQualifier
+   */
+  public boolean isExportCsvForceQualifier()
+  {
+    return exportCsvForceQualifier;
+  }
+
+  /**
+   * @return the delimiter
+   */
+  public char getDelimiter()
+  {
+    return delimiter;
   }
 
 }

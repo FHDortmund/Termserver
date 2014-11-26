@@ -36,8 +36,8 @@
       </center>
       <south border="none" vflex="min" style="text-align:right">
         <div style="padding-top:5px; padding-right:8px; padding-bottom:4px;">
-          <button id="bExport" label="Exportieren" />
-          <button id="bClose" label="${labels.common.close}" />
+          <button id="bExport" label="Exportieren" autodisable="self"/>
+          <button id="bClose" label="${labels.common.close}" autodisable="self" />
         </div>         
       </south>
     </borderlayout>    

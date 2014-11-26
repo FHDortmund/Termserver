@@ -16,10 +16,12 @@
  */
 package de.fhdo.models.itemrenderer;
 
+import de.fhdo.Definitions;
 import de.fhdo.collaboration.helper.AssignTermHelper;
 import de.fhdo.gui.main.modules.ContentConcepts;
 import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.gui.main.modules.PopupWindow;
+import de.fhdo.helper.PropertiesHelper;
 import de.fhdo.helper.SendBackHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.UtilHelper;
@@ -149,11 +151,13 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
                   cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(csev_target);
                   cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId2(csev_source);
                   cseva.setLeftId(csev_target.getVersionId());
-                  cseva.setAssociationKind(3);    // 3 = Crossmapping
+                  
+                  cseva.setAssociationKind(Definitions.ASSOCIATION_KIND.CROSS_MAPPING.getCode());    // 3 = Crossmapping
 
                   // AssociationType
                   AssociationType at = new AssociationType();
-                  at.setCodeSystemEntityVersionId(29844L);
+                  //at.setCodeSystemEntityVersionId(29844L);
+                  at.setCodeSystemEntityVersionId(PropertiesHelper.getInstance().getAssociationCrossmappingDefaultVersionId());
                   cseva.setAssociationType(at);
                   parameter.setCodeSystemEntityVersionAssociation(cseva);
 
@@ -222,11 +226,11 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
                   cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(csev_target);
                   cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId2(csev_source);
                   cseva.setLeftId(csev_target.getVersionId());
-                  cseva.setAssociationKind(4);    // 4 fuer Einhaengen von Konzepten in andere Vokabulare
+                  cseva.setAssociationKind(Definitions.ASSOCIATION_KIND.LINK.getCode());    // 4 fuer Einhaengen von Konzepten in andere Vokabulare
 
                   // AssociationType
                   AssociationType at = new AssociationType();
-                  at.setCodeSystemEntityVersionId(294908L);
+                  at.setCodeSystemEntityVersionId(PropertiesHelper.getInstance().getAssociationLinkDefaultVersionId());
                   cseva.setAssociationType(at);
                   parameter.setCodeSystemEntityVersionAssociation(cseva);
 

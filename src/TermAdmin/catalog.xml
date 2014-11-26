@@ -40,6 +40,9 @@
     <system systemId="http://localhost:8080/TermServer/ConceptAssociations?wsdl" uri="src/conf/xml-resources/web-service-references/ConceptAssociations/wsdl/localhost_8080/TermServer/ConceptAssociations.wsdl"/>
     <system systemId="http://localhost:8080/TermServer/ConceptAssociations?xsd=1" uri="src/conf/xml-resources/web-service-references/ConceptAssociations/wsdl/localhost_8080/TermServer/ConceptAssociations.xsd_1.xsd"/>
     <system systemId="http://localhost:8080/TermServer/ConceptAssociations?xsd=2" uri="src/conf/xml-resources/web-service-references/ConceptAssociations/wsdl/localhost_8080/TermServer/ConceptAssociations.xsd_2.xsd"/>
+    <system systemId="http://localhost:8080/TermServer/Search?wsdl" uri="src/conf/xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.wsdl"/>
+    <system systemId="http://localhost:8080/TermServer/Search?xsd=1" uri="src/conf/xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/TermServer/Search?xsd=2" uri="src/conf/xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.xsd_2.xsd"/>
 </catalog>
 
 

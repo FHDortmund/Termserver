@@ -90,5 +90,21 @@
         <delete dir="${build.generated.sources.dir}/jax-ws/de/fhdo/terminologie/ws/conceptassociation"/>
         <delete dir="${build.generated.dir}/jax-wsCache/ConceptAssociations"/>
     </target>
-    <target name="wsimport-client-generate" depends="wsimport-client-Administration, wsimport-client-Authoring, wsimport-client-Authorization, wsimport-client-ConceptAssociations"/>
+    <target name="wsimport-client-Search" depends="wsimport-init">
+        <mkdir dir="${build.generated.dir}/jax-wsCache/Search"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/Search" destdir="${build.generated.dir}/jax-wsCache/Search" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.wsdl" catalog="catalog.xml" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/TermServer/Search?wsdl" xnocompile="true" xendorsed="true" target="2.1">
+            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.wsdl"/>
+            <produces dir="${build.generated.dir}/jax-wsCache/Search"/>
+        </wsimport>
+        <copy todir="${build.generated.sources.dir}/jax-ws">
+            <fileset dir="${build.generated.dir}/jax-wsCache/Search">
+                <include name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="wsimport-client-clean-Search" depends="-init-project">
+        <delete dir="${build.generated.sources.dir}/jax-ws/de/fhdo/terminologie/ws/search"/>
+        <delete dir="${build.generated.dir}/jax-wsCache/Search"/>
+    </target>
+    <target name="wsimport-client-generate" depends="wsimport-client-Administration, wsimport-client-Authoring, wsimport-client-Authorization, wsimport-client-ConceptAssociations, wsimport-client-Search"/>
 </project>

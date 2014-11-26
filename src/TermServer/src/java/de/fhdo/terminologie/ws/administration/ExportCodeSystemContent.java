@@ -16,7 +16,6 @@
  */
 package de.fhdo.terminologie.ws.administration;
 
-import de.fhdo.terminologie.helper.LoginHelper;
 import de.fhdo.terminologie.ws.administration._export.ExportCSV;
 import de.fhdo.terminologie.ws.administration._export.ExportClaml;
 import de.fhdo.terminologie.ws.administration._export.ExportCodeSystemSVS;
@@ -24,7 +23,6 @@ import de.fhdo.terminologie.ws.administration.types.ExportCodeSystemContentReque
 import de.fhdo.terminologie.ws.administration.types.ExportCodeSystemContentResponseType;
 import de.fhdo.terminologie.ws.authorization.Authorization;
 import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
-import de.fhdo.terminologie.ws.types.LoginInfoType;
 import de.fhdo.terminologie.ws.types.ReturnType;
 
 /**

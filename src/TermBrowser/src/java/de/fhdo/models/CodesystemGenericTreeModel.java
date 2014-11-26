@@ -60,6 +60,7 @@ public class CodesystemGenericTreeModel
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
   private boolean loaded = false;
   private List<DomainValue> listDV = new LinkedList();
+  private List<CodeSystem> listCS = new LinkedList();
   private String errorMessage;
   private int count = 0;
   //private ArrayList<CodeSystemVersion> csvList = new ArrayList<CodeSystemVersion>();
@@ -86,6 +87,7 @@ public class CodesystemGenericTreeModel
     try
     {
       //csvList.clear();
+      listCS = new LinkedList<CodeSystem>();
 
       ListCodeSystemsInTaxonomyRequestType parameter = new ListCodeSystemsInTaxonomyRequestType();
 
@@ -135,6 +137,7 @@ public class CodesystemGenericTreeModel
     // Daten erzeugen und der Liste hinzufügen
     //List<GenericTreeRowType> dataList = new LinkedList<GenericTreeRowType>();
     count = 0;
+    listCS = new LinkedList<CodeSystem>();
     List<GenericTreeRowType> dataList = createModel();
     
     // Liste initialisieren
@@ -214,6 +217,19 @@ public class CodesystemGenericTreeModel
       row.setData(cs);
       
       count++;
+      listCS.add(cs);
+      
+      Object o = SessionHelper.getValue("loadCS");
+      if(o != null)
+      {
+        long cs_id = Long.parseLong(o.toString());
+        if(cs_id == cs.getId())
+        {
+          logger.debug("load CS with id " + cs_id);
+          SessionHelper.setValue("selectedCS", cs);
+          SessionHelper.setValue("loadCS", null);
+        }
+      }
 
       /*// Kinder (CodeSystemVersions) suchen und dem CodeSystem hinzufügen            
       for (CodeSystemVersion csv : cs.getCodeSystemVersions())
@@ -277,6 +293,14 @@ public class CodesystemGenericTreeModel
   public List<DomainValue> getListDV()
   {
     return listDV;
+  }
+
+  /**
+   * @return the listCS
+   */
+  public List<CodeSystem> getListCS()
+  {
+    return listCS;
   }
   
   

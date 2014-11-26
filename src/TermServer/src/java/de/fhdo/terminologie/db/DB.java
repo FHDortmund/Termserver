@@ -38,7 +38,7 @@ public class DB
   // =================================================================
   // Die DB-Versionsnummer muss bei jeder Änderung hochgesetzt werden!
   // =================================================================
-  private static final int CURRENT_DB_VERSION = 2;
+  private static final int CURRENT_DB_VERSION = 3;
   // =================================================================
 
   /**
@@ -83,6 +83,14 @@ public class DB
 
           updated = true;
         }
+        
+        if (currentVersion < 3)
+        {
+          hb_session.createSQLQuery("ALTER TABLE value_set_version ADD COLUMN virtualCodeSystemVersionId BIGINT NULL DEFAULT NULL;").executeUpdate();
+          
+          updated = true;
+        }
+        
         // Änderungen speichern
         tx.commit();
       }

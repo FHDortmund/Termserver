@@ -890,7 +890,9 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
         logger.debug("to id: " + csevAssociatedVersionId);
 
         CreateConceptAssociationResponse.Return responseAssociation
-                = createAssociation(csevAssociatedVersionId, csev.getVersionId(), 2, 4);
+                = createAssociation(csevAssociatedVersionId, csev.getVersionId(), 
+                        Definitions.ASSOCIATION_KIND.TAXONOMY.getCode(),
+                        PropertiesHelper.getInstance().getAssociationTaxonomyDefaultVersionId());
 
         try
         {

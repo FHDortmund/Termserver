@@ -159,6 +159,10 @@ public class MaintainValueSet
             // Name setzen falls vorhanden
             if (vsv.getName() != null)
               vsvNew.setName(vsv.getName());
+            
+            // Virtual CSV-ID
+            if (vsv.getVirtualCodeSystemVersionId()!= null)
+              vsvNew.setVirtualCodeSystemVersionId(vsv.getVirtualCodeSystemVersionId());
 
             // In DB speichern damit vsvNew eine ID bekommt
             hb_session.save(vsvNew);
@@ -189,6 +193,10 @@ public class MaintainValueSet
             // Validity Range setzen falls vorhanden
             if (vsv.getValidityRange() != null)
               vsv_db.setValidityRange(vsv.getValidityRange());
+            
+            // Virtual CSV-ID
+            if (vsv.getVirtualCodeSystemVersionId()!= null)
+              vsv_db.setVirtualCodeSystemVersionId(vsv.getVirtualCodeSystemVersionId());
 
             // In DB speichern damit vsvNew eine ID bekommt
             hb_session.update(vsv_db);
