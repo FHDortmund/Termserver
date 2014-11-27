@@ -16,6 +16,7 @@
  */
 package de.fhdo.terminologie.ws.search;
 
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.Definitions;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.AssociationType;
@@ -44,8 +45,6 @@ import de.fhdo.terminologie.ws.types.PagingResultType;
 import de.fhdo.terminologie.ws.types.ReturnType;
 import de.fhdo.terminologie.ws.types.SortingType;
 import java.math.BigInteger;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -103,8 +102,6 @@ public class ListCodeSystemConcepts
       logger.debug("Benutzer ist eingeloggt: " + loggedIn);
       logger.debug("isLookForward: " + parameter.isLookForward());
     }
-    
-    
 
     int maxPageSizeUserSpecific = 10;
     //int maxPageSizeUserSpecific = 1;
@@ -135,7 +132,7 @@ public class ListCodeSystemConcepts
       }
       catch (Exception e)
       {
-        logger.error("Fehler bei SysParameter.instance().getStringValue(\"maxPageSize\", null, null): " + e.getLocalizedMessage());
+        LoggingOutput.outputException(e, this);
       }
     }
 
@@ -158,7 +155,7 @@ public class ListCodeSystemConcepts
           }
           catch (Exception e)
           {
-            logger.error("Fehler bei SysParameter.instance().getStringValue(\"maxPageSizeSearch\", null, null): " + e.getLocalizedMessage());
+            LoggingOutput.outputException(e, this);
           }
         }
       }
@@ -168,22 +165,30 @@ public class ListCodeSystemConcepts
     //maxPageSize = 2;
     logger.debug("maxPageSize: " + maxPageSizeSearch);
     logger.debug("maxPageSizeSearch: " + maxPageSizeSearch);
-    
+
     logger.debug("traverseConceptsToRoot: " + traverseConceptsToRoot);
 
     try
     {
       //List<CodeSystemConcept> conceptList = null;
 
+      String codeSystemVersionOid = "";
       long codeSystemVersionId = 0;
       if (parameter.getCodeSystem().getCodeSystemVersions() != null && parameter.getCodeSystem().getCodeSystemVersions().size() > 0)
       {
         CodeSystemVersion csv = (CodeSystemVersion) parameter.getCodeSystem().getCodeSystemVersions().toArray()[0];
-        codeSystemVersionId = csv.getVersionId();
+        if (csv.getVersionId() != null)
+          codeSystemVersionId = csv.getVersionId();
+        if (csv.getOid() != null)
+          codeSystemVersionOid = csv.getOid();
       }
 
       // Lizenzen prüfen
-      boolean validLicence = LicenceHelper.getInstance().userHasLicence(loginInfoType.getUserId(), codeSystemVersionId);
+      boolean validLicence = false;
+      if (codeSystemVersionOid != null && codeSystemVersionOid.length() > 0)
+        validLicence = LicenceHelper.getInstance().userHasLicence(loginInfoType.getUserId(), codeSystemVersionOid);
+      else
+        validLicence = LicenceHelper.getInstance().userHasLicence(loginInfoType.getUserId(), codeSystemVersionId);
 
       if (validLicence == false)
       {
@@ -214,13 +219,39 @@ public class ListCodeSystemConcepts
 
       try // 2. try-catch-Block zum Abfangen von Hibernate-Fehlern
       {
-        if (codeSystemVersionId == 0)
+        if (codeSystemVersionOid != null && codeSystemVersionOid.length() > 0)
+        {
+          logger.debug("get csv-id from oid");
+          // get csv-id from oid
+          String hql = "from CodeSystemVersion csv"
+                  + " where csv.oid=:oid";
+          Query q = hb_session.createQuery(hql);
+          q.setString("oid", codeSystemVersionOid);
+          List<CodeSystemVersion> csvList = q.list();
+          if (csvList != null && csvList.size() > 0)
+          {
+            codeSystemVersionId = csvList.get(0).getVersionId();
+            logger.debug("found versionId from oid: " + codeSystemVersionId);
+          }
+          else
+          {
+            response.setCodeSystemEntity(new LinkedList<CodeSystemEntity>());
+            response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
+            response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+            response.getReturnInfos().setMessage("Codesystem with given OID can't be found.");
+            response.getReturnInfos().setCount(0);
+            return response;
+          }
+        }
+
+        if (codeSystemVersionId == 0 && parameter.getCodeSystem().getId() != null)
         {
           // Aktuelle Version des Vokabulars ermitteln
           long codeSystemId = parameter.getCodeSystem().getId();
 
           CodeSystem cs = (CodeSystem) hb_session.get(CodeSystem.class, codeSystemId);
-          codeSystemVersionId = CodeSystemHelper.getCurrentVersionId(cs);
+          if (cs != null)
+            codeSystemVersionId = CodeSystemHelper.getCurrentVersionId(cs);
         }
 
         // HQL erstellen
@@ -352,10 +383,10 @@ public class ListCodeSystemConcepts
                 allEntries = true;
             }
 
-            if(parameter.getPagingParameter().getPageSize() != null)
+            if (parameter.getPagingParameter().getPageSize() != null)
               pageSize = Integer.valueOf(parameter.getPagingParameter().getPageSize());
-            if(parameter.getPagingParameter().getPageIndex() != null)
-            pageIndex = parameter.getPagingParameter().getPageIndex();
+            if (parameter.getPagingParameter().getPageIndex() != null)
+              pageIndex = parameter.getPagingParameter().getPageIndex();
           }
 
           // MaxResults mit Wert aus SysParam prüfen
@@ -457,7 +488,7 @@ public class ListCodeSystemConcepts
 
           q.addScalar("csc2.meaning", StandardBasicTypes.TEXT); //Index: 32
           q.addScalar("csc2.hints", StandardBasicTypes.TEXT);
-          
+
           q.addScalar("csc2.statusDeactivated", StandardBasicTypes.INTEGER); // Index: 34
           q.addScalar("csc2.statusDeactivatedDate", StandardBasicTypes.TIMESTAMP);
           q.addScalar("csc2.statusWorkflow", StandardBasicTypes.INTEGER);
@@ -550,7 +581,7 @@ public class ListCodeSystemConcepts
               csev.setStatusVisibilityDate(DateHelper.getDateFromObject(item[12]));
             if (item[13] != null)
               csev.setVersionId((Long) item[13]);
-            
+
             if (item[34] != null)
               csev.setStatusDeactivated((Integer) item[34]);
             if (item[35] != null)
@@ -610,19 +641,19 @@ public class ListCodeSystemConcepts
                 }
               }
             }
-            
-            if(parameter.isLoadMetadata() != null && parameter.isLoadMetadata().booleanValue())
+
+            if (parameter.isLoadMetadata() != null && parameter.isLoadMetadata().booleanValue())
             {
               String hql = "from CodeSystemMetadataValue mv "
                       + " join fetch mv.metadataParameter mp "
                       + " where codeSystemEntityVersionId=:csev_id";
-              
+
               Query query = hb_session.createQuery(hql);
               query.setLong("csev_id", csev.getVersionId());
               csev.setCodeSystemMetadataValues(new HashSet<CodeSystemMetadataValue>(query.list()));
-              
+
               // remove circle problems
-              for(CodeSystemMetadataValue mv : csev.getCodeSystemMetadataValues())
+              for (CodeSystemMetadataValue mv : csev.getCodeSystemMetadataValues())
               {
                 mv.setCodeSystemEntityVersion(null);
                 mv.getMetadataParameter().setCodeSystem(null);
@@ -1060,8 +1091,7 @@ public class ListCodeSystemConcepts
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         response.getReturnInfos().setMessage("Fehler bei 'ListCodeSystemConcepts', Hibernate: " + e.getLocalizedMessage());
 
-        logger.error("Fehler bei 'ListCodeSystemConcepts', Hibernate: " + e.getLocalizedMessage());
-        e.printStackTrace();
+        LoggingOutput.outputException(e, this);
       }
       finally
       {
@@ -1080,8 +1110,7 @@ public class ListCodeSystemConcepts
       response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
       response.getReturnInfos().setMessage("Fehler bei 'ListCodeSystemConcepts': " + e.getLocalizedMessage());
 
-      logger.error("Fehler bei 'ListCodeSystemConcepts': " + e.getLocalizedMessage());
-      e.printStackTrace();
+      LoggingOutput.outputException(e, this);
     }
 
     return response;
@@ -1142,7 +1171,7 @@ public class ListCodeSystemConcepts
       if (item[29] != null)
         cseva.setStatus((Integer) item[29]);
       if (item[30] != null)
-        cseva.setStatusDate(DateHelper.getDateFromObject( item[30]));
+        cseva.setStatusDate(DateHelper.getDateFromObject(item[30]));
       if (item[31] != null)
         cseva.setInsertTimestamp(DateHelper.getDateFromObject(item[31]));
 
@@ -1164,8 +1193,7 @@ public class ListCodeSystemConcepts
     }
     catch (Exception ex)
     {
-      logger.error("Fehler in addAssociationToEntityVersion(): " + ex.getLocalizedMessage());
-      ex.printStackTrace();
+      LoggingOutput.outputException(ex, this);
     }
 
     /*q.addScalar("cseva1.codeSystemEntityVersionId1", Hibernate.LONG); // Index: 24
@@ -1193,7 +1221,7 @@ public class ListCodeSystemConcepts
     CodeSystem codeSystem = Request.getCodeSystem();
     if (codeSystem == null)
     {
-      Response.getReturnInfos().setMessage("CodeSystem darf nicht leer sein!");
+      Response.getReturnInfos().setMessage("CodeSystem my not be empty!");
       erfolg = false;
     }
     else
@@ -1217,17 +1245,18 @@ public class ListCodeSystemConcepts
           if (csvSet.size() > 1)
           {
             Response.getReturnInfos().setMessage(
-                    "Die CodeSystem-Version-Liste darf maximal einen Eintrag haben!");
+                    "The codesystem version list must have exactly one entry!");
             erfolg = false;
           }
           else if (csvSet.size() == 1)
           {
             CodeSystemVersion csv = (CodeSystemVersion) csvSet.toArray()[0];
 
-            if (csv.getVersionId() == null || csv.getVersionId() == 0)
+            if ((csv.getVersionId() == null || csv.getVersionId() == 0)
+                    && (csv.getOid() == null || csv.getOid().length() == 0))
             {
               Response.getReturnInfos().setMessage(
-                      "Es muss eine ID für die CodeSystem-Version angegeben sein, wenn Sie ein Typ CodeSystemVersion mitgeben! Ansonsten setzen Sie die CodeSystemVersion auf NULL und es wird die aktuellste Version abgerufen.");
+                      "You have to specify the Version-ID or OID from the codesystem version!");
               erfolg = false;
             }
             else
@@ -1239,7 +1268,7 @@ public class ListCodeSystemConcepts
       if (csvId == false)
       {
         Response.getReturnInfos().setMessage(
-                "Es muss entweder eine ID für das CodeSystem oder die CodeSystem-Version angegeben sein.");
+                "You have to specify the Version-ID or OID from the codesystem version!");
         erfolg = false;
       }
     }

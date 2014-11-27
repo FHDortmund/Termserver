@@ -50,6 +50,31 @@ public class LicenceHelper
     licenceMap = new HashMap<String, LicencedUser>();
   }
 
+  public boolean userHasLicence(long userId, String codeSystemVersionOid)
+  {
+    boolean valid = false;
+    
+    // Versuchen Lizenz zu laden
+    org.hibernate.Session hb_session = HibernateUtil.getSessionFactory().openSession();
+    hb_session.getTransaction().begin();
+
+    try
+    {
+      valid = userHasLicence(userId, 0, codeSystemVersionOid, hb_session);
+      hb_session.getTransaction().commit();
+    }
+    catch (Exception e)
+    {
+      // Fehlermeldung an den Aufrufer weiterleiten
+      logger.error("Fehler bei 'userHasLicence' [LicenceHelper.java], Hibernate: " + e.getLocalizedMessage());
+    }
+    finally
+    {
+      hb_session.close();
+    }
+    
+    return valid;
+  }
   public boolean userHasLicence(long userId, long codeSystemVersionId)
   {
     boolean valid = false;
@@ -60,7 +85,7 @@ public class LicenceHelper
 
     try
     {
-      valid = userHasLicence(userId, codeSystemVersionId, hb_session);
+      valid = userHasLicence(userId, codeSystemVersionId, null, hb_session);
       hb_session.getTransaction().commit();
     }
     catch (Exception e)
@@ -76,20 +101,20 @@ public class LicenceHelper
     return valid;
   }
 
-  public boolean userHasLicence(long userId, long codeSystemVersionId, Session hb_session)
+  public boolean userHasLicence(long userId, long codeSystemVersionId, String codeSystemVersionOid, Session hb_session)
   {
     if(isCodeSystemVersionUnderLicence(codeSystemVersionId, hb_session) == false)
     {
       return true;
     }
     
-    if (codeSystemVersionId <= 0 || userId == 0)
+    if ((codeSystemVersionId <= 0 && codeSystemVersionOid == null && codeSystemVersionOid.length() == 0) || userId == 0)
     {
       logger.debug("codeSystemVersionId <= 0 oder login == null || login.getTermUser() == null");
       return false;
     }
     
-    String key = getMapKey(codeSystemVersionId, userId);
+    String key = getMapKey(codeSystemVersionId, codeSystemVersionOid, userId);
 
     if (licenceMap.containsKey(key))
     {
@@ -102,7 +127,10 @@ public class LicenceHelper
         // Lizenz entfernen und neue DB-Abfrage
         licenceMap.remove(key);
 
-        return userHasLicence(userId, codeSystemVersionId);
+        if(codeSystemVersionOid != null && codeSystemVersionOid.length() > 0)
+          return userHasLicence(userId, codeSystemVersionOid);
+        else 
+          return userHasLicence(userId, codeSystemVersionId);
       }
       else
       {
@@ -114,12 +142,18 @@ public class LicenceHelper
       boolean valid = false;
 
 
-      String hql = "from LicencedUser lu";
+      String hql = "select distinct lu from LicencedUser lu"
+              + " join fetch lu.codeSystemVersion csv";
 
       HQLParameterHelper parameterHelper = new HQLParameterHelper();
 
       parameterHelper.addParameter("", "userId", userId);
-      parameterHelper.addParameter("", "codeSystemVersionId", codeSystemVersionId);
+      //parameterHelper.addParameter("", "codeSystemVersionId", codeSystemVersionId);
+      
+      if(codeSystemVersionOid != null && codeSystemVersionOid.length() > 0)
+        parameterHelper.addParameter("csv.", "oid", codeSystemVersionOid);
+      else
+        parameterHelper.addParameter("csv.", "versionId", codeSystemVersionId);
 
       // Parameter hinzufügen (immer mit AND verbunden)
       hql += parameterHelper.getWhere("");
@@ -182,9 +216,10 @@ public class LicenceHelper
     return true; // Lizenz ist noch gültig
   }
 
-  private String getMapKey(long codeSystemVersionId, long userId)
+  private String getMapKey(long codeSystemVersionId, String codeSystemVersionOid, long userId)
   {
-    String s = codeSystemVersionId + "_" + userId;
-    return s;
+    if(codeSystemVersionOid != null && codeSystemVersionOid.length() > 0)
+      return codeSystemVersionOid + "_" + userId;
+    else return codeSystemVersionId + "_" + userId;
   }
 }

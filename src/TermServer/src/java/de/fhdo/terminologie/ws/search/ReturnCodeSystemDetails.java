@@ -16,6 +16,7 @@
  */
 package de.fhdo.terminologie.ws.search;
 
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.Definitions;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.CodeSystem;
@@ -117,7 +118,9 @@ public class ReturnCodeSystemDetails
           {
             CodeSystemVersion csv = (CodeSystemVersion) parameter.getCodeSystem().getCodeSystemVersions().toArray()[0];
 
-            parameterHelper.addParameter("csv.", "versionId", csv.getVersionId());
+            if(csv.getOid() != null && csv.getOid().length() > 0)
+              parameterHelper.addParameter("csv.", "oid", csv.getOid());
+            else parameterHelper.addParameter("csv.", "versionId", csv.getVersionId());
 
           }
         }
@@ -208,7 +211,7 @@ public class ReturnCodeSystemDetails
             // Status an den Aufrufer weitergeben
             response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
             response.getReturnInfos().setStatus(ReturnType.Status.OK);
-            response.getReturnInfos().setMessage("CodeSystemeDetails erfolgreich gelesen");
+            response.getReturnInfos().setMessage("CodeSystemeDetails read successfully");
             response.getReturnInfos().setCount(1);
           }
           else
@@ -216,7 +219,7 @@ public class ReturnCodeSystemDetails
             // Status an den Aufrufer weitergeben
             response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
             response.getReturnInfos().setStatus(ReturnType.Status.OK);
-            response.getReturnInfos().setMessage("Kein CodeSysteme gefunden. Bitte beachten Sie, dass Sie für Codesysteme, welche einen anderen Status als 1 haben, am Terminologieserver angemeldet sein müssen.");
+            response.getReturnInfos().setMessage("No codesystem found with given ID or OID. Please note, that you have to be logged in to see details from certain codesystems.");
             response.getReturnInfos().setCount(0);
           }
 
@@ -233,10 +236,9 @@ public class ReturnCodeSystemDetails
         // Fehlermeldung an den Aufrufer weiterleiten
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-        response.getReturnInfos().setMessage("Fehler bei 'ReturnCodeSystemDetails', Hibernate: " + e.getLocalizedMessage());
+        response.getReturnInfos().setMessage("Error at 'ReturnCodeSystemDetails', Hibernate: " + e.getLocalizedMessage());
 
-        logger.error("Fehler bei 'ReturnCodeSystemDetails', Hibernate: " + e.getLocalizedMessage());
-        e.printStackTrace();
+        LoggingOutput.outputException(e, this);
       }
       finally
       {
@@ -255,8 +257,7 @@ public class ReturnCodeSystemDetails
       response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
       response.getReturnInfos().setMessage("Fehler bei 'ListCodeSystems': " + e.getLocalizedMessage());
 
-      logger.error("Fehler bei 'ReturnCodeSystemDetails': " + e.getLocalizedMessage());
-      e.printStackTrace();
+      LoggingOutput.outputException(e, this);
     }
 
     return response;
@@ -296,10 +297,13 @@ public class ReturnCodeSystemDetails
         if (Request.getCodeSystem().getCodeSystemVersions().size() != 0)
         {
           CodeSystemVersion csv = (CodeSystemVersion) Request.getCodeSystem().getCodeSystemVersions().toArray()[0];
-          if (csv.getVersionId() == null || csv.getVersionId() <= 0)
+          
+          if ((csv.getVersionId() == null || csv.getVersionId() == 0)
+                 && (csv.getOid() == null || csv.getOid().length() == 0))
+          //if (csv.getVersionId() == null || csv.getVersionId() <= 0)
           {
             Response.getReturnInfos().setMessage(
-                    "Es muss eine ID für die CodeSystem-Version angegeben sein!");
+                    "You have to specify the Version-ID or OID from the codesystem version!");
             erfolg = false;
           }
 
@@ -307,97 +311,90 @@ public class ReturnCodeSystemDetails
           if (csv.getPreviousVersionId() != null)
           {
             Response.getReturnInfos().setMessage(
-                    "PreviousVersionId darf nicht angegeben sein!");
+                    "PreviousVersionId may not be set!");
             erfolg = false;
           }
 
           if (csv.getName() != null)
           {
             Response.getReturnInfos().setMessage(
-                    "Name darf nicht angegeben sein!");
+                    "Name may not be set!");
             erfolg = false;
           }
 
           if (csv.getStatus() != null)
           {
             Response.getReturnInfos().setMessage(
-                    "Status darf nicht angegeben sein!");
+                    "Status may not be set!");
             erfolg = false;
           }
 
           if (csv.getStatusDate() != null)
           {
             Response.getReturnInfos().setMessage(
-                    "StautsDate darf nicht angegeben sein!");
+                    "StautsDate may not be set!");
             erfolg = false;
           }
           if (csv.getReleaseDate() != null)
           {
             Response.getReturnInfos().setMessage(
-                    "ReleaseDate darf nicht angegeben sein!");
+                    "ReleaseDate may not be set!");
             erfolg = false;
           }
 
           if (csv.getExpirationDate() != null)
           {
             Response.getReturnInfos().setMessage(
-                    "ExpirationDate darf nicht angegeben sein!");
+                    "ExpirationDate may not be set!");
             erfolg = false;
           }
 
           if (csv.getSource() != null)
           {
             Response.getReturnInfos().setMessage(
-                    "Source darf nicht angegeben sein!");
+                    "Source may not be set!");
             erfolg = false;
           }
 
           if (csv.getDescription() != null)
           {
             Response.getReturnInfos().setMessage(
-                    "Description darf nicht angegeben sein!");
+                    "Description may not be set!");
             erfolg = false;
           }
 
           if (csv.getPreferredLanguageCd() != null)
           {
             Response.getReturnInfos().setMessage(
-                    "PreferredLanguageCd darf nicht angegeben sein!");
+                    "PreferredLanguageCd may not be set!");
             erfolg = false;
           }
 
           if (csv.getValidityRange() != null)
           {
             Response.getReturnInfos().setMessage(
-                    "ValidityRange darf nicht angegeben sein!");
-            erfolg = false;
-          }
-
-          if (csv.getOid() != null)
-          {
-            Response.getReturnInfos().setMessage(
-                    "Oid darf nicht angegeben sein!");
+                    "ValidityRange may not be set!");
             erfolg = false;
           }
 
           if (csv.getLicenceHolder() != null)
           {
             Response.getReturnInfos().setMessage(
-                    "LicenceHolde darf nicht angegeben sein!");
+                    "LicenceHolde may not be set!");
             erfolg = false;
           }
 
           if (csv.getUnderLicence() != null)
           {
             Response.getReturnInfos().setMessage(
-                    "UnderLicence darf nicht angegeben sein!");
+                    "UnderLicence may not be set!");
             erfolg = false;
           }
 
           if (csv.getInsertTimestamp() != null)
           {
             Response.getReturnInfos().setMessage(
-                    "InsertTimestamp darf nicht angegeben sein!");
+                    "InsertTimestamp may not be set!");
             erfolg = false;
           }
 
