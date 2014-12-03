@@ -216,11 +216,11 @@ public class Search
   /**
    * Web service operation
    */
-  @WebMethod(operationName = "ListValueSetContentsByTermOrCode")
+  /*@WebMethod(operationName = "ListValueSetContentsByTermOrCode")
   public ListValueSetContentsByTermOrCodeResponseType ListValueSetContentsByTermOrCode(@WebParam(name = "parameter") ListValueSetContentsByTermOrCodeRequestType parameter)
   {
     return new ListValueSetContentsByTermOrCode().ListValueSetContentsByTermOrCode(parameter, SecurityHelper.getIp(webServiceContext));
-  }
+  }*/
 
   /**
    * Web service operation

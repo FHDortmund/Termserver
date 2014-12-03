@@ -25,6 +25,7 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.OpenEvent;
+import org.zkoss.zul.Html;
 import org.zkoss.zul.Image;
 import org.zkoss.zul.Menuitem;
 import org.zkoss.zul.Menupopup;
@@ -50,10 +51,12 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
   ConceptsTree conceptsTree;
   EventListener noteListener = null;
+  private boolean searchResults;
 
-  public TreeitemRendererCSEV(ConceptsTree conceptsTree)
+  public TreeitemRendererCSEV(ConceptsTree conceptsTree, boolean search)
   {
     this.conceptsTree = conceptsTree;
+    this.searchResults = search;
     
     noteListener = new EventListener()
     {
@@ -91,7 +94,46 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       }
 
       // designation
-      Treecell cell = new Treecell(getString(csc.getTerm()));
+      Treecell cell = null;
+      
+      if(searchResults && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null && 
+              csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
+      {
+        // search result
+        CodeSystemEntityVersion csevTemp = csev;
+        int indent = 20;
+        String s = "";
+        s = "<div style=\"padding-left:"+ indent +"px; margin:0;\">" + "<b><font color=\"#000000\">" + getString(csc.getTerm()) + "</font></b>" + "</div>";
+        
+        while(csevTemp.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null && csevTemp.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
+        {
+          if(csevTemp.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().get(0).getCodeSystemEntityVersionByCodeSystemEntityVersionId1() == null)
+            break;
+          csevTemp = csevTemp.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().get(0).getCodeSystemEntityVersionByCodeSystemEntityVersionId1();
+          //if(s.length() > 0)
+          //  s += " -> ";
+          
+          if(csevTemp.getCodeSystemConcepts() != null && csevTemp.getCodeSystemConcepts().size() > 0)
+          {
+            s = s + "<div style=\"padding-left:"+ indent +"px; margin:0;\">" + csevTemp.getCodeSystemConcepts().get(0).getTerm() 
+                    + " (" + csevTemp.getCodeSystemConcepts().get(0).getCode() + ")</div>";
+          }
+            //s += csevTemp.getCodeSystemConcepts().get(0).getTerm();
+          
+          indent += 20;
+        }
+        
+        Html html = new Html(); 
+        html.setContent(s);
+        
+        //cell = new Treecell(getString(csc.getTerm() + " (" + s + ")"));
+        cell = new Treecell();
+        cell.appendChild(html);
+      }
+      else
+      {
+        cell = new Treecell(getString(csc.getTerm()));
+      }
       cell.setStyle(style);
       treeRow.appendChild(cell);
 
@@ -103,6 +145,12 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       // details
       cell = new Treecell();
       
+      if(csc.isIsPreferred() != null && csc.isIsPreferred().booleanValue() == false)
+      {
+        Image img = new Image("/rsc/img/symbols/tag_black_16x16.png");
+        img.setTooltiptext(Labels.getLabel("common.notPreferredTerm"));
+        cell.appendChild(img);
+      }
       if(csc.getDescription() != null && csc.getDescription().length() > 0)
       {
         Image img = new Image("/rsc/img/filetypes/note.png");
@@ -122,6 +170,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
         img.setTooltiptext(Labels.getLabel("common.deleted"));
         cell.appendChild(img);
       }
+      
       
       cell.setStyle(style);
       treeRow.appendChild(cell);
@@ -198,16 +247,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
               // set treeNode as selected in model for scrolling
               treeItem.setSelected(true);
               conceptsTree.onConceptSelect(true, false);
-
-              /*ArrayList<de.fhdo.models.TreeNode> list = new ArrayList<de.fhdo.models.TreeNode>();
-               list.add(treeNode);
-               treeNode.getModel().setSelection(list);
-
-               ((de.fhdo.gui.main.modules.ContentConcepts) parentWindow).onSelect();
-               ((de.fhdo.gui.main.modules.ContentConcepts) parentWindow).openNode(treeNode);*/
             }
-            //else
-//              ((de.fhdo.gui.main.modules.ContentConcepts) parentWindow).closeNode(treeNode);
           }
         }
         catch (Exception e)

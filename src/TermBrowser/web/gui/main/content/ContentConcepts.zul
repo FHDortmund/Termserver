@@ -1,40 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <zk xmlns="http://www.zkoss.org/2005/zul">
-  <window id="winConcepts" border="none" height="100%" width="100%" use="de.fhdo.gui.main.content.ContentConcepts">
-    <borderlayout>
+  <window id="winConcepts" border="none" height="100%" width="100%" use="de.fhdo.gui.main.content.ContentConcepts"
+          ctrlKeys="^f" onCtrlKey="winConcepts.onSwitchSearch()" >
+    <borderlayout vflex="true">
       <!-- specifies information about the cs/vs, defines filter, ... -->
-      <north border="0">
-        <!--<hbox style="margin-left: 8px; margin-top:8px; margin-bottom:8px;">-->
-        <!--<div>-->
-        <div style="margin-left: 8px; margin-top:8px; margin-bottom:8px; margin-right:8px;">
-          <div align="left" style="float:left; margin-bottom: 4px;">
-            <label value="${labels.common.version}: "/>
-            <combobox id="cbVersion" readonly="true" width="250px" onSelect="winConcepts.onVersionChanged()"/>
-            <button id="buttonNewVersion" 
-                    onClick="winConcepts.onNewVersionClicked()" 
-                    image="/rsc/img/list/add.png"    
-                    visible="false" />
-            <button id="buttonEditVersion" 
-                    onClick="winConcepts.onEditVersionClicked()" 
-                    image="/rsc/img/list/pencil.png" 
-                    autodisable="self"
-                    visible="false" 
-                    disabled="false"/>
+      <north border="0" flex="true" vflex="min">
+        <div style="margin-top:8px; margin-bottom:8px; ">
+          <div style="margin-left: 8px; margin-right:8px;">
+            <div align="left" style="float:left; margin-bottom: 4px;">
+              <label value="${labels.common.version}: "/>
+              <combobox id="cbVersion" readonly="true" width="250px" onSelect="winConcepts.onVersionChanged()"/>
+              <button id="buttonNewVersion" 
+                      onClick="winConcepts.onNewVersionClicked()" 
+                      image="/rsc/img/list/add.png"    
+                      visible="false" />
+              <button id="buttonEditVersion" 
+                      onClick="winConcepts.onEditVersionClicked()" 
+                      image="/rsc/img/list/pencil.png" 
+                      autodisable="self"
+                      visible="false" 
+                      disabled="false"/>
+            </div>
+          
+            <div align="right">
+              <button id="buttonExport" 
+                      label="${labels.treeitemRenderer_CS_VS_DV.exportCodeSystemVersion}..."
+                      onClick="winConcepts.onExportClicked()" 
+                      image="/rsc/img/symbols/export_16x16.png" 
+                      autodisable="self"
+              />
+              <button id="buttonSearch" 
+                      label="${labels.common.search}"
+                      onClick="winConcepts.onSwitchSearch()" 
+                      image="/rsc/img/symbols/search_blue_16x16.png" 
+                      autodisable="self"
+              />
+            </div>
           </div>
           
-          <div align="right">
-            <button id="buttonExport" 
-                    label="${labels.treeitemRenderer_CS_VS_DV.exportCodeSystemVersion}..."
-                    onClick="winConcepts.onExportClicked()" 
-                    image="/rsc/img/symbols/export_16x16.png" 
-                    autodisable="self"
-                    />
-          </div>
+          <groupbox id="searchContainer" mold="3d" width="100%" height="98px" visible="false"
+                    style="margin-top:8px; margin-bottom:4px; " closable="false">
+            <caption label="${labels.common.search}" >
+              <toolbar hflex="min" height="10px">
+                <toolbarbutton image="/rsc/img/symbols/close_16x16.png" onClick="winConcepts.onSwitchSearch()"/>
+              </toolbar>
+            </caption>
+
+            <hbox style="margin-left: 4px; margin-top:4px; margin-bottom: 4px">
+              <vbox>
+                <hbox>
+                  <div width="60px" style="margin-top:3px;">
+                    <label value="${labels.common.term}:" width="100px"/>
+                  </div>
+                  <textbox id="tbSearchTerm" width="200px" focus="true" onOK="winConcepts.onSearchClicked()"/>
+                </hbox>
+                <hbox>
+                  <div width="60px" style="margin-top:3px;">
+                    <label value="${labels.common.code}:" width="100px"/> 
+                  </div>
+                  <textbox id="tbSearchCode" width="200px" maxlength="99" onOK="winConcepts.onSearchClicked()"/>
+                </hbox>
+              </vbox>
+              
+              <div>
+                <button id="bSearch"  
+                        label="${labels.popupSearch.startSearch}" 
+                        height="46px"
+                        onClick="winConcepts.onSearchClicked()"
+                        image="/rsc/img/list/folder_magnify.png"
+                        autodisable="self"/> 
+              </div>
+              <!--              <div>
+                <radiogroup id="rgPreferred" orient="vertical">  
+                  <radio label="${labels.popupSearch.onlyPreferredTerms}" value="true"/> 
+                  <radio label="${labels.popupSearch.onlyNonPreferredTerms}" value="false"/>
+                  <radio label="${labels.popupSearch.showAllTerms}" value ="nomatter"/>                        
+                </radiogroup> 
+              </div>-->
+              
+              <div>
+                <label id="lHitsPerPage" value="${labels.popupSearch.hitsPerPage}:" style="margin-left:4px;"/>
+                <!--<label value=":"/>--> 
+                <textbox id="tbHitsPerPage" width="30px" value="@{pagingType.pageSize}"/>
+                <separator /> 
+                <checkbox id ="cbShowHierachyDetails" 
+                          label="${labels.popupSearch.showHierachyDetails}" 
+                          disabled="false" 
+                          checked="@{searchType.traverseConceptsToRoot}" 
+                          value="@{searchType.traverseConceptsToRoot}" /> 
+              </div>
+             
+            </hbox>
+          
+          </groupbox>
         </div>
-        <!--</hbox>-->
+
+        
+          
+     
       </north>
-      <center border="0">
+      <center border="0" flex="false" vflex="true">
         <div width="100%" height="100%">
           
           <paging id="paging" visible="false" onPaging="winConcepts.onPaging(event)" />

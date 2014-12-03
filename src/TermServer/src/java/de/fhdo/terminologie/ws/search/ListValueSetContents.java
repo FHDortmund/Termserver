@@ -20,6 +20,7 @@ import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.Definitions;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.CodeSystemConcept;
+import de.fhdo.terminologie.db.hibernate.CodeSystemConceptTranslation;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntity;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersion;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
@@ -185,6 +186,33 @@ public class ListValueSetContents
         if (virtualValueSet)
         {
           parameterHelper.addParameter("csv.", "versionId", vsv_db.getVirtualCodeSystemVersionId());
+        }
+
+        if (parameter.getCodeSystemEntity() != null && parameter.getCodeSystemEntity().getCodeSystemEntityVersions() != null
+                && parameter.getCodeSystemEntity().getCodeSystemEntityVersions().size() > 0)
+        {
+          CodeSystemEntityVersion csev = (CodeSystemEntityVersion) parameter.getCodeSystemEntity().getCodeSystemEntityVersions().toArray()[0];
+          parameterHelper.addParameter("csev.", "statusVisibilityDate", csev.getStatusVisibilityDate());
+
+          if (csev.getCodeSystemConcepts() != null && csev.getCodeSystemConcepts().size() > 0)
+          {
+            CodeSystemConcept csc = (CodeSystemConcept) csev.getCodeSystemConcepts().toArray()[0];
+            parameterHelper.addParameter("csc.", "code", csc.getCode());
+            parameterHelper.addParameter("csc.", "term", csc.getTerm());
+            parameterHelper.addParameter("csc.", "termAbbrevation", csc.getTermAbbrevation());
+            parameterHelper.addParameter("csc.", "isPreferred", csc.getIsPreferred());
+
+            /*if (csc.getCodeSystemConceptTranslations() != null && csc.getCodeSystemConceptTranslations().size() > 0)
+            {
+              CodeSystemConceptTranslation csct = (CodeSystemConceptTranslation) csc.getCodeSystemConceptTranslations().toArray()[0];
+              parameterHelper.addParameter("csct.", "term", csct.getTerm());
+              parameterHelper.addParameter("csct.", "termAbbrevation", csct.getTermAbbrevation());
+              if (csct.getLanguageCd() != null && csct.getLanguageCd().length() > 0)
+              {
+                languageCd = csct.getLanguageCd();
+              }
+            }*/
+          }
         }
 
         // Parameter hinzufügen (immer mit AND verbunden)
@@ -559,9 +587,10 @@ public class ListValueSetContents
         }
         else
         {
-          if(virtualValueSet)
+          if (virtualValueSet)
             response.getReturnInfos().setMessage(anzahl + " concepts successfully returned (Virtual Value Set).");
-          else response.getReturnInfos().setMessage(anzahl + " concepts successfully returned.");
+          else
+            response.getReturnInfos().setMessage(anzahl + " concepts successfully returned.");
           response.getReturnInfos().setStatus(ReturnType.Status.OK);
         }
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);

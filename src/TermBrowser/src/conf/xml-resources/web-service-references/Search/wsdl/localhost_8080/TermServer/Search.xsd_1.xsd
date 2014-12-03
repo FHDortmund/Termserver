@@ -40,10 +40,6 @@
 
 <xs:element name="ListValueSetContents" type="tns:ListValueSetContents" />
 
-<xs:element name="ListValueSetContentsByTermOrCode" type="tns:ListValueSetContentsByTermOrCode" />
-
-<xs:element name="ListValueSetContentsByTermOrCodeResponse" type="tns:ListValueSetContentsByTermOrCodeResponse" />
-
 <xs:element name="ListValueSetContentsResponse" type="tns:ListValueSetContentsResponse" />
 
 <xs:element name="ListValueSets" type="tns:ListValueSets" />
@@ -189,15 +185,6 @@
 <xs:sequence>
 <xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
 <xs:element name="metadataParameter" type="ns1:metadataParameter" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-</xs:sequence>
-</xs:complexType>
-</xs:element>
-
-<xs:element name="listValueSetContentsByTermOrCodeResponseType">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" nillable="true" minOccurs="0" maxOccurs="unbounded" />
 </xs:sequence>
 </xs:complexType>
 </xs:element>
@@ -385,6 +372,7 @@
 <xs:element name="loginToken" type="xs:string" minOccurs="0" />
 <xs:element name="valueSet" type="ns1:valueSet" />
 <xs:element name="sortingParameter" type="tns:sortingType" minOccurs="0" />
+<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" minOccurs="0" />
 <xs:element name="readMetadataLevel" type="xs:boolean" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
@@ -675,34 +663,6 @@
 <xs:sequence>
 <xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
 <xs:element name="metadataParameter" type="ns1:metadataParameter" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-</xs:sequence>
-</xs:complexType>
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ListValueSetContentsByTermOrCode">
-<xs:sequence>
-<xs:element name="parameter" type="tns:listValueSetContentsByTermOrCodeRequestType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="listValueSetContentsByTermOrCodeRequestType">
-<xs:sequence>
-<xs:element name="loginToken" type="xs:string" minOccurs="0" />
-<xs:element name="searchCode" type="xs:string" minOccurs="0" />
-<xs:element name="searchTerm" type="xs:string" minOccurs="0" />
-<xs:element name="valueSet" type="ns1:valueSet" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ListValueSetContentsByTermOrCodeResponse">
-<xs:sequence>
-<xs:element name="return" minOccurs="0">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" nillable="true" minOccurs="0" maxOccurs="unbounded" />
 </xs:sequence>
 </xs:complexType>
 </xs:element>

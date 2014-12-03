@@ -78,8 +78,6 @@ import de.fhdo.terminologie.ws.search.ListGloballySearchedConceptsRequestType;
 import de.fhdo.terminologie.ws.search.ListGloballySearchedConceptsResponse;
 import de.fhdo.terminologie.ws.search.ListMetadataParameterRequestType;
 import de.fhdo.terminologie.ws.search.ListMetadataParameterResponse;
-import de.fhdo.terminologie.ws.search.ListValueSetContentsByTermOrCodeRequestType;
-import de.fhdo.terminologie.ws.search.ListValueSetContentsByTermOrCodeResponse;
 import de.fhdo.terminologie.ws.search.ListValueSetContentsRequestType;
 import de.fhdo.terminologie.ws.search.ListValueSetContentsResponse;
 import de.fhdo.terminologie.ws.search.ListValueSetsRequestType;
@@ -997,36 +995,36 @@ public class WebServiceHelper
     return port.listValueSetContents(parameter);
   }
 
-  public static ListValueSetContentsByTermOrCodeResponse.Return listValueSetContentsByTermOrCode(ListValueSetContentsByTermOrCodeRequestType parameter)
-  {
-    return listValueSetContentsByTermOrCode(parameter, PropertiesHelper.getInstance().getTermserverUrl());
-  }
-
-  public static ListValueSetContentsByTermOrCodeResponse.Return listValueSetContentsByTermOrCode(ListValueSetContentsByTermOrCodeRequestType parameter, String urlHost)
-  {
-    return listValueSetContentsByTermOrCode(parameter, urlHost, PropertiesHelper.getInstance().getTermserverServiceName());
-  }
-
-  public static ListValueSetContentsByTermOrCodeResponse.Return listValueSetContentsByTermOrCode(ListValueSetContentsByTermOrCodeRequestType parameter, String urlHost, String urlService)
-  {
-    Search_Service service;
-    Search port;
-    try
-    {
-      // Service mit bestimmter URL ?ffnen
-      service = new Search_Service(new URL(optimizeUrl(urlHost) + urlService + "Search?wsdl"),
-              new QName("http://search.ws.terminologie.fhdo.de/", "Search"));
-    }
-    catch (Exception ex)
-    {
-      Logger.getLogger(WebServiceHelper.class.getName()).log(Level.SEVERE, null, ex);
-
-      // Standard Service ?ffnen
-      service = new Search_Service();
-    }
-    port = service.getSearchPort();
-    return port.listValueSetContentsByTermOrCode(parameter);
-  }
+//  public static ListValueSetContentsByTermOrCodeResponse.Return listValueSetContentsByTermOrCode(ListValueSetContentsByTermOrCodeRequestType parameter)
+//  {
+//    return listValueSetContentsByTermOrCode(parameter, PropertiesHelper.getInstance().getTermserverUrl());
+//  }
+//
+//  public static ListValueSetContentsByTermOrCodeResponse.Return listValueSetContentsByTermOrCode(ListValueSetContentsByTermOrCodeRequestType parameter, String urlHost)
+//  {
+//    return listValueSetContentsByTermOrCode(parameter, urlHost, PropertiesHelper.getInstance().getTermserverServiceName());
+//  }
+//
+//  public static ListValueSetContentsByTermOrCodeResponse.Return listValueSetContentsByTermOrCode(ListValueSetContentsByTermOrCodeRequestType parameter, String urlHost, String urlService)
+//  {
+//    Search_Service service;
+//    Search port;
+//    try
+//    {
+//      // Service mit bestimmter URL ?ffnen
+//      service = new Search_Service(new URL(optimizeUrl(urlHost) + urlService + "Search?wsdl"),
+//              new QName("http://search.ws.terminologie.fhdo.de/", "Search"));
+//    }
+//    catch (Exception ex)
+//    {
+//      Logger.getLogger(WebServiceHelper.class.getName()).log(Level.SEVERE, null, ex);
+//
+//      // Standard Service ?ffnen
+//      service = new Search_Service();
+//    }
+//    port = service.getSearchPort();
+//    return port.listValueSetContentsByTermOrCode(parameter);
+//  }
 
   public static ReturnCodeSystemDetailsResponse.Return returnCodeSystemDetails(ReturnCodeSystemDetailsRequestType parameter)
   {

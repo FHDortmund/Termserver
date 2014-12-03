@@ -26,8 +26,6 @@ import de.fhdo.terminologie.ws.conceptassociation.ListConceptAssociationsRequest
 import de.fhdo.terminologie.ws.conceptassociation.ListConceptAssociationsResponse;
 import de.fhdo.terminologie.ws.search.ListCodeSystemConceptsRequestType;
 import de.fhdo.terminologie.ws.search.ListCodeSystemConceptsResponse;
-import de.fhdo.terminologie.ws.search.ListValueSetContentsByTermOrCodeRequestType;
-import de.fhdo.terminologie.ws.search.ListValueSetContentsByTermOrCodeResponse;
 import de.fhdo.terminologie.ws.search.ListValueSetContentsRequestType;
 import de.fhdo.terminologie.ws.search.ListValueSetContentsResponse;
 import de.fhdo.terminologie.ws.search.PagingResultType;

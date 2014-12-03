@@ -27,19 +27,25 @@ import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.logging.LoggingOutput;
 import de.fhdo.models.CodesystemGenericTreeModel;
 import de.fhdo.models.comparators.ComparatorCodesystemVersions;
+import de.fhdo.terminologie.ws.search.SearchType;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.ComboitemRenderer;
 import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Tree;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.event.PagingEvent;
@@ -64,6 +70,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   private ValueSetVersion valueSetVersion;
 
   private ConceptsTree concepts = null;
+  private boolean searchActive = false;
 
   public ContentConcepts()
   {
@@ -390,7 +397,52 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       PopupExport.doModal(null, valueSetVersion);
     }
   }
+  
+  public void onSwitchSearch()
+  {
+    Component compSearch = getFellow("searchContainer");
+    compSearch.setVisible(!compSearch.isVisible());
+    
+    this.invalidate();
+    
+    if(compSearch.isVisible())
+    {
+      ((Textbox)getFellow("tbSearchTerm")).focus();
+    }
+    else
+    {
+      if(searchActive)
+      {
+        concepts.initData();
+        searchActive = false;
+      }
+    }
+  }
+  
+  public void onSearchClicked()
+  {
+    logger.debug("onSearchClicked()");
 
+    String code = ((Textbox)getFellow("tbSearchCode")).getText();
+    String term = ((Textbox)getFellow("tbSearchTerm")).getText();
+
+    // check mandatory fields
+    if(code.length() == 0 && term.length() == 0)
+    {
+      Messagebox.show(Labels.getLabel("popupSearch.mandatoryFields"));
+      return;
+    }
+    
+    // define search type
+    SearchType st = new SearchType();
+    st.setTraverseConceptsToRoot(((Checkbox)getFellow("cbShowHierachyDetails")).isChecked());
+    
+    // start search and display results
+    concepts.startSearch(code, term, st);
+    searchActive = true;
+  }
+  
+  
   /*public void onDeleteClicked()
    {
    if (SessionHelper.isUserLoggedIn())

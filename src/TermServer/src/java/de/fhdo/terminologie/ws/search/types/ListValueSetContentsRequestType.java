@@ -16,6 +16,7 @@
  */
 package de.fhdo.terminologie.ws.search.types;
 
+import de.fhdo.terminologie.db.hibernate.CodeSystemEntity;
 import de.fhdo.terminologie.db.hibernate.ValueSet;
 
 import de.fhdo.terminologie.ws.types.SortingType;
@@ -38,6 +39,9 @@ public class ListValueSetContentsRequestType
   
   @XmlElement(required = false)
   private SortingType sortingParameter;
+  
+  @XmlElement(required = false)
+  private CodeSystemEntity codeSystemEntity;
   
   @XmlElement(required = false)
   private Boolean readMetadataLevel;
@@ -105,5 +109,21 @@ public class ListValueSetContentsRequestType
   public void setReadMetadataLevel(Boolean readMetadataLevel)
   {
     this.readMetadataLevel = readMetadataLevel;
+  }
+
+  /**
+   * @return the codeSystemEntity
+   */
+  public CodeSystemEntity getCodeSystemEntity()
+  {
+    return codeSystemEntity;
+  }
+
+  /**
+   * @param codeSystemEntity the codeSystemEntity to set
+   */
+  public void setCodeSystemEntity(CodeSystemEntity codeSystemEntity)
+  {
+    this.codeSystemEntity = codeSystemEntity;
   }
 }

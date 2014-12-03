@@ -36,6 +36,7 @@ import de.fhdo.terminologie.ws.search.ListValueSetContentsRequestType;
 import de.fhdo.terminologie.ws.search.ListValueSetContentsResponse;
 import de.fhdo.terminologie.ws.search.PagingResultType;
 import de.fhdo.terminologie.ws.search.PagingType;
+import de.fhdo.terminologie.ws.search.SearchType;
 import de.fhdo.terminologie.ws.search.SortingType;
 import de.fhdo.terminologie.ws.search.Status;
 import java.util.ArrayList;
@@ -62,6 +63,7 @@ import org.zkoss.zul.Treeitem;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.event.PagingEvent;
 import types.termserver.fhdo.de.CodeSystem;
+import types.termserver.fhdo.de.CodeSystemConcept;
 import types.termserver.fhdo.de.CodeSystemEntity;
 import types.termserver.fhdo.de.CodeSystemEntityVersion;
 import types.termserver.fhdo.de.CodeSystemEntityVersionAssociation;
@@ -81,6 +83,9 @@ public class ConceptsTree implements IUpdateModal
   protected static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
   private Tree treeConcepts;
   private DefaultTreeModel treeModel;
+  private boolean searchActive = false;
+  private String searchTerm, searchCode;
+  private SearchType searchOptions;
 
   private enum DISPLAY_MODE
   {
@@ -124,6 +129,12 @@ public class ConceptsTree implements IUpdateModal
     logger.debug("ConceptsTree - initData()");
     msg = "";
 
+    // disable search
+    searchActive = false;
+    searchCode = "";
+    searchTerm = "";
+    searchOptions = null;
+
     currentPageIndex = 0;
 
     displayMode = DISPLAY_MODE.TREEVIEW;
@@ -132,6 +143,8 @@ public class ConceptsTree implements IUpdateModal
       contentType = CONTENT_TYPE.VALUESET;
     else
       contentType = CONTENT_TYPE.CODESYSTEM;
+
+    disablePaging();
 
     fillTree();
     loadMetadata();
@@ -171,28 +184,39 @@ public class ConceptsTree implements IUpdateModal
   {
     ComponentHelper.setVisible("treecolSource", valueSetVersionId > 0, conceptsWindow);
 
+    msg = "";
+    boolean search = false;
     List<CodeSystemEntity> cseList = null;
 
-    if (displayMode == DISPLAY_MODE.LARGEDATA)
+    if (searchActive == false)
     {
-      // load lists without main classes
-      cseList = createRootTreeNodesForModel(false);
-    }
-    else
-    {
-      // load root concepts, either from a code system or a value set
-      cseList = createRootTreeNodesForModel(true);
-
-      if (cseList != null && cseList.size() == 0)
+      if (displayMode == DISPLAY_MODE.LARGEDATA)
       {
         // load lists without main classes
         cseList = createRootTreeNodesForModel(false);
-        displayMode = DISPLAY_MODE.LARGEDATA;
       }
+      else
+      {
+        // load root concepts, either from a code system or a value set
+        cseList = createRootTreeNodesForModel(true);
+
+        if (cseList != null && cseList.size() == 0)
+        {
+          // load lists without main classes
+          cseList = createRootTreeNodesForModel(false);
+          displayMode = DISPLAY_MODE.LARGEDATA;
+        }
+      }
+    }
+    else
+    {
+      // do search
+      search = true;
+      cseList = createRootTreeNodesForModel(false);
     }
 
     treeModel = null;
-    if (cseList != null)
+    if (cseList != null && cseList.size() > 0)
     {
       logger.debug("CSE list found, count: " + cseList.size());
 
@@ -204,30 +228,18 @@ public class ConceptsTree implements IUpdateModal
     else
     {
       // TODO Fehlermeldung ausgeben (Ausrufezeichen mit Meldung)
-      //msg = 
+      if (search)
+        msg = Labels.getLabel("popupSearch.NoResults");
     }
 
     if (treeModel != null)
     {
       logger.debug("set model and renderer");
-      treeConcepts.setItemRenderer(new TreeitemRendererCSEV(this));
+      treeConcepts.setItemRenderer(new TreeitemRendererCSEV(this, searchActive));
       treeConcepts.setModel(treeModel);
     }
 
-    if (msg.length() == 0)
-    {
-      // no error, show tree
-      conceptsWindow.getFellow("message").setVisible(false);
-      conceptsWindow.getFellow("treeConcepts").setVisible(true);
-    }
-    else
-    {
-      // error, show message
-      conceptsWindow.getFellow("treeConcepts").setVisible(false);
-      conceptsWindow.getFellow("message").setVisible(true);
-
-      ((Label) conceptsWindow.getFellow("labelMessage")).setValue(msg);
-    }
+    showMessage(msg);
   }
 
   private List<CodeSystemEntity> createRootTreeNodesForModel(boolean onlyMainClasses)
@@ -550,8 +562,8 @@ public class ConceptsTree implements IUpdateModal
     CodeSystemEntityVersion csev = getSelection();
     if (csev != null)
     {
-      if(csev.getStatusVisibility() == Definitions.STATUS_VISIBILITY_VISIBLE && 
-         csev.getStatusDeactivated() <= Definitions.STATUS_DEACTIVATED_ACTIVE)
+      if (csev.getStatusVisibility() == Definitions.STATUS_VISIBILITY_VISIBLE
+              && csev.getStatusDeactivated() <= Definitions.STATUS_DEACTIVATED_ACTIVE)
       {
         maintainConcept(csev.getVersionId());
       }
@@ -805,6 +817,22 @@ public class ConceptsTree implements IUpdateModal
     // sort parameter
     parameter.setSortingParameter(createSortingParameter());
 
+    // search paramter
+    if (searchActive && (searchCode != null || searchTerm != null))
+    {
+      CodeSystemEntity cse = new CodeSystemEntity();
+      CodeSystemEntityVersion csev = new CodeSystemEntityVersion();
+      CodeSystemConcept csc = new CodeSystemConcept();
+
+      cse.getCodeSystemEntityVersions().add(csev);
+      csev.getCodeSystemConcepts().add(csc);
+      csc.setTerm(searchTerm);
+      csc.setCode(searchCode);
+      // TODO Muss noch als Parameter, der in der GUI mittels Checkbox/Radiogroup gesetzt werden kann, eingelesen werden
+      //csc.setIsPreferred(preferred);
+
+      parameter.setCodeSystemEntity(cse);
+    }
     return parameter;
   }
 
@@ -848,22 +876,23 @@ public class ConceptsTree implements IUpdateModal
     // TODO if (pagingTypeWS != null)
     //  parameter.setPagingParameter(pagingTypeWS);
     // SearchType: Parameter für die Suche nach Konzepten mit bestimmten "term"
-    /*TODO if (searchTypeWS != null && (searchTerm != null || searchCode != null))
-     {
-     parameter.setSearchParameter(searchTypeWS);
-     CodeSystemEntity cse = new CodeSystemEntity();
-     CodeSystemEntityVersion csev = new CodeSystemEntityVersion();
-     CodeSystemConcept csc = new CodeSystemConcept();
+    if (searchActive && (searchCode != null || searchTerm != null))
+    {
+      parameter.setSearchParameter(searchOptions);
+      CodeSystemEntity cse = new CodeSystemEntity();
+      CodeSystemEntityVersion csev = new CodeSystemEntityVersion();
+      CodeSystemConcept csc = new CodeSystemConcept();
 
-     cse.getCodeSystemEntityVersions().add(csev);
-     csev.getCodeSystemConcepts().add(csc);
-     csc.setTerm(searchTerm);
-     csc.setCode(searchCode);
-     // TODO Muss noch als Parameter, der in der GUI mittels Checkbox/Radiogroup gesetzt werden kann, eingelesen werden
-     csc.setIsPreferred(preferred);
+      cse.getCodeSystemEntityVersions().add(csev);
+      csev.getCodeSystemConcepts().add(csc);
+      csc.setTerm(searchTerm);
+      csc.setCode(searchCode);
+      // TODO Muss noch als Parameter, der in der GUI mittels Checkbox/Radiogroup gesetzt werden kann, eingelesen werden
+      //csc.setIsPreferred(preferred);
 
-     parameter.setCodeSystemEntity(cse);
-     }*/
+      parameter.setCodeSystemEntity(cse);
+    }
+
     // damit Linked Concepts gefunden werden (muss nach erstellung von SearchParameter erfolgen und false sein, falls traverse to root genutzt wird)    
     if (parameter.getSearchParameter() != null)
       parameter.setLookForward(!parameter.getSearchParameter().isTraverseConceptsToRoot());
@@ -1018,6 +1047,38 @@ public class ConceptsTree implements IUpdateModal
       }
 
       //treeModel = new DefaultTreeModel(tnRoot);
+    }
+  }
+
+  public void startSearch(String code, String term, SearchType searchOptions)
+  {
+    logger.debug("startSearch()");
+
+    searchActive = true;
+    searchCode = code;
+    searchTerm = term;
+    this.searchOptions = searchOptions;
+
+    //ComponentHelper.setVisible("treecolSource", valueSetVersionId > 0, conceptsWindow);
+    fillTree();
+
+  }
+
+  private void showMessage(String msg)
+  {
+    if (msg.length() == 0)
+    {
+      // no error, show tree
+      conceptsWindow.getFellow("message").setVisible(false);
+      conceptsWindow.getFellow("treeConcepts").setVisible(true);
+    }
+    else
+    {
+      // error, show message
+      conceptsWindow.getFellow("treeConcepts").setVisible(false);
+      conceptsWindow.getFellow("message").setVisible(true);
+
+      ((Label) conceptsWindow.getFellow("labelMessage")).setValue(msg);
     }
   }
 
