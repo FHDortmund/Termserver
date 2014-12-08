@@ -71,13 +71,7 @@
                         image="/rsc/img/list/folder_magnify.png"
                         autodisable="self"/> 
               </div>
-              <!--              <div>
-                <radiogroup id="rgPreferred" orient="vertical">  
-                  <radio label="${labels.popupSearch.onlyPreferredTerms}" value="true"/> 
-                  <radio label="${labels.popupSearch.onlyNonPreferredTerms}" value="false"/>
-                  <radio label="${labels.popupSearch.showAllTerms}" value ="nomatter"/>                        
-                </radiogroup> 
-              </div>-->
+              
               
               <div>
                 <label id="lHitsPerPage" value="${labels.popupSearch.hitsPerPage}:" style="margin-left:4px;"/>
@@ -89,6 +83,14 @@
                           disabled="false" 
                           checked="@{searchType.traverseConceptsToRoot}" 
                           value="@{searchType.traverseConceptsToRoot}" /> 
+              </div>
+              
+              <div style="margin-top:-6px; margin-left:8px;">
+                <radiogroup id="rgPreferred" orient="vertical">
+                  <radio label="${labels.popupSearch.onlyPreferredTerms}" value="true" selected="true"/>
+                  <radio label="${labels.popupSearch.onlyNonPreferredTerms}" value="false"/>
+                  <radio label="${labels.popupSearch.showAllTerms}" value ="nomatter" />
+                </radiogroup> 
               </div>
              
             </hbox>
@@ -105,7 +107,7 @@
           
           <paging id="paging" visible="false" onPaging="winConcepts.onPaging(event)" />
           <tree id="treeConcepts" vflex="true" width="100%" height="100%" zclass="z-tree" span="0" visible="true"
-                onSelect="winConcepts.onConceptSelect()"
+                onSelect="winConcepts.onConceptSelect(event)"
                 onPaging="winConcepts.onPaging(event)">
             <treecols sizable="true">
               <treecol label="${labels.common.designation}" sort="auto" id="tcTerm" hflex="min" />

@@ -36,6 +36,7 @@ import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.MouseEvent;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Button;
@@ -45,6 +46,7 @@ import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.ComboitemRenderer;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Radiogroup;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Tree;
 import org.zkoss.zul.Window;
@@ -302,8 +304,21 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
   }
 
-  public void onConceptSelect()
+  public void onConceptSelect(Event event)
   {
+    logger.debug("Event: " + event.getClass().getCanonicalName());
+    if (event != null && event instanceof org.zkoss.zk.ui.event.SelectEvent)
+    {
+      org.zkoss.zk.ui.event.SelectEvent selEvent = (org.zkoss.zk.ui.event.SelectEvent) event;
+      logger.debug("Keys: " + selEvent.getKeys());
+      
+      if(selEvent.getKeys() == MouseEvent.RIGHT_CLICK)
+      {
+        showButtons();
+        return;
+      }
+    }
+
     concepts.onConceptSelect(false, true);
     showButtons();
   }
@@ -382,67 +397,73 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     }
     //concepts..createConcept(PopupConcept.HIERARCHYMODE.ROOT, 0);
   }
-  
+
   public void onExportClicked()
   {
     logger.debug("onExportClicked()");
-    if(codeSystemVersion != null)
+    if (codeSystemVersion != null)
     {
       codeSystemVersion.setCodeSystem(codeSystem);
       PopupExport.doModal(codeSystemVersion, null);
     }
-    else if(valueSetVersion != null)
+    else if (valueSetVersion != null)
     {
       valueSetVersion.setValueSet(valueSet);
       PopupExport.doModal(null, valueSetVersion);
     }
   }
-  
+
   public void onSwitchSearch()
   {
     Component compSearch = getFellow("searchContainer");
     compSearch.setVisible(!compSearch.isVisible());
-    
+
     this.invalidate();
-    
-    if(compSearch.isVisible())
+
+    if (compSearch.isVisible())
     {
-      ((Textbox)getFellow("tbSearchTerm")).focus();
+      ((Textbox) getFellow("tbSearchTerm")).focus();
     }
     else
     {
-      if(searchActive)
+      if (searchActive)
       {
         concepts.initData();
         searchActive = false;
       }
     }
   }
-  
+
   public void onSearchClicked()
   {
     logger.debug("onSearchClicked()");
 
-    String code = ((Textbox)getFellow("tbSearchCode")).getText();
-    String term = ((Textbox)getFellow("tbSearchTerm")).getText();
+    String code = ((Textbox) getFellow("tbSearchCode")).getText();
+    String term = ((Textbox) getFellow("tbSearchTerm")).getText();
 
     // check mandatory fields
-    if(code.length() == 0 && term.length() == 0)
+    if (code.length() == 0 && term.length() == 0)
     {
       Messagebox.show(Labels.getLabel("popupSearch.mandatoryFields"));
       return;
     }
-    
+
     // define search type
     SearchType st = new SearchType();
-    st.setTraverseConceptsToRoot(((Checkbox)getFellow("cbShowHierachyDetails")).isChecked());
+    st.setTraverseConceptsToRoot(((Checkbox) getFellow("cbShowHierachyDetails")).isChecked());
     
+    Boolean preferred = null;
+    Radiogroup rgPreferred = (Radiogroup)getFellow("rgPreferred");
+    if(rgPreferred.getSelectedIndex() == 0)
+      preferred = true;
+    else if(rgPreferred.getSelectedIndex() == 1)
+      preferred = false;
+
     // start search and display results
-    concepts.startSearch(code, term, st);
+    concepts.startSearch(code, term, st, preferred);
     searchActive = true;
   }
-  
-  
+
   /*public void onDeleteClicked()
    {
    if (SessionHelper.isUserLoggedIn())

@@ -52,23 +52,26 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
   ConceptsTree conceptsTree;
   EventListener noteListener = null;
   private boolean searchResults;
+  private Menupopup contextMenu;
 
   public TreeitemRendererCSEV(ConceptsTree conceptsTree, boolean search)
   {
     this.conceptsTree = conceptsTree;
     this.searchResults = search;
-    
+
     noteListener = new EventListener()
     {
       public void onEvent(Event event) throws Exception
       {
-        if(event.getTarget() != null && event.getTarget() instanceof Image)
+        if (event.getTarget() != null && event.getTarget() instanceof Image)
         {
           Image img = (Image) event.getTarget();
           Messagebox.show(img.getTooltiptext());
         }
       }
     };
+
+    createContextMenu();
   }
 
   public void render(Treeitem treeItem, Object object, int i) throws Exception
@@ -87,45 +90,45 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       CodeSystemConcept csc = csev.getCodeSystemConcepts().get(0);
 
       String style = "color:#000000;";
-      
-      if(csev.getStatusVisibility() == Definitions.STATUS_VISIBILITY_INVISIBLE)
+
+      if (csev.getStatusVisibility() == Definitions.STATUS_VISIBILITY_INVISIBLE)
       {
         style = "color:#808080;";
       }
 
       // designation
       Treecell cell = null;
-      
-      if(searchResults && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null && 
-              csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
+
+      if (searchResults && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null
+              && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
       {
         // search result
         CodeSystemEntityVersion csevTemp = csev;
         int indent = 20;
         String s = "";
-        s = "<div style=\"padding-left:"+ indent +"px; margin:0;\">" + "<b><font color=\"#000000\">" + getString(csc.getTerm()) + "</font></b>" + "</div>";
-        
-        while(csevTemp.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null && csevTemp.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
+        s = "<div style=\"padding-left:" + indent + "px; margin:0;\">" + "<b><font color=\"#000000\">" + getString(csc.getTerm()) + "</font></b>" + "</div>";
+
+        while (csevTemp.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null && csevTemp.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
         {
-          if(csevTemp.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().get(0).getCodeSystemEntityVersionByCodeSystemEntityVersionId1() == null)
+          if (csevTemp.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().get(0).getCodeSystemEntityVersionByCodeSystemEntityVersionId1() == null)
             break;
           csevTemp = csevTemp.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().get(0).getCodeSystemEntityVersionByCodeSystemEntityVersionId1();
           //if(s.length() > 0)
           //  s += " -> ";
-          
-          if(csevTemp.getCodeSystemConcepts() != null && csevTemp.getCodeSystemConcepts().size() > 0)
+
+          if (csevTemp.getCodeSystemConcepts() != null && csevTemp.getCodeSystemConcepts().size() > 0)
           {
-            s = s + "<div style=\"padding-left:"+ indent +"px; margin:0;\">" + csevTemp.getCodeSystemConcepts().get(0).getTerm() 
+            s = s + "<div style=\"padding-left:" + indent + "px; margin:0;\">" + csevTemp.getCodeSystemConcepts().get(0).getTerm()
                     + " (" + csevTemp.getCodeSystemConcepts().get(0).getCode() + ")</div>";
           }
-            //s += csevTemp.getCodeSystemConcepts().get(0).getTerm();
-          
+          //s += csevTemp.getCodeSystemConcepts().get(0).getTerm();
+
           indent += 20;
         }
-        
-        Html html = new Html(); 
+
+        Html html = new Html();
         html.setContent(s);
-        
+
         //cell = new Treecell(getString(csc.getTerm() + " (" + s + ")"));
         cell = new Treecell();
         cell.appendChild(html);
@@ -141,40 +144,39 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       cell = new Treecell(getString(csc.getCode()));
       cell.setStyle(style);
       treeRow.appendChild(cell);
-      
+
       // details
       cell = new Treecell();
-      
-      if(csc.isIsPreferred() != null && csc.isIsPreferred().booleanValue() == false)
+
+      if (csc.isIsPreferred() != null && csc.isIsPreferred().booleanValue() == false)
       {
         Image img = new Image("/rsc/img/symbols/tag_black_16x16.png");
         img.setTooltiptext(Labels.getLabel("common.notPreferredTerm"));
         cell.appendChild(img);
       }
-      if(csc.getDescription() != null && csc.getDescription().length() > 0)
+      if (csc.getDescription() != null && csc.getDescription().length() > 0)
       {
         Image img = new Image("/rsc/img/filetypes/note.png");
         img.setTooltiptext(csc.getDescription());
         img.addEventListener(Events.ON_CLICK, noteListener);
         cell.appendChild(img);
       }
-      if(csev.getStatusVisibility() != null && csev.getStatusVisibility() == Definitions.STATUS_VISIBILITY_INVISIBLE)
+      if (csev.getStatusVisibility() != null && csev.getStatusVisibility() == Definitions.STATUS_VISIBILITY_INVISIBLE)
       {
         Image img = new Image("/rsc/img/symbols/hidden.png");
         img.setTooltiptext(Labels.getLabel("common.invisible"));
         cell.appendChild(img);
       }
-      if(csev.getStatusDeactivated() != null && csev.getStatusDeactivated() == Definitions.STATUS_DEACTIVATED_DELETED)
+      if (csev.getStatusDeactivated() != null && csev.getStatusDeactivated() == Definitions.STATUS_DEACTIVATED_DELETED)
       {
         Image img = new Image("/rsc/img/symbols/delete_12x12.png");
         img.setTooltiptext(Labels.getLabel("common.deleted"));
         cell.appendChild(img);
       }
-      
-      
+
       cell.setStyle(style);
       treeRow.appendChild(cell);
-      
+
       // source (if value set)
       if (conceptsTree.getContentType() == ConceptsTree.CONTENT_TYPE.VALUESET)
       {
@@ -195,7 +197,8 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
         }
       }
 
-      renderCSEVContextMenu(treeItem, treeRow, csev);
+      //renderCSEVContextMenu(treeItem, treeRow, csev);
+      treeRow.setContext(contextMenu);
     }
 
     treeRow.setParent(treeItem);
@@ -272,13 +275,16 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
 
   }
 
-  protected void renderCSEVContextMenu(final Treeitem ti, Treerow dataRow, final CodeSystemEntityVersion csev)
+  private void createContextMenu()
   {
-    logger.debug("renderCSEVContextMenu");
-    Menupopup contextMenu = new Menupopup();
+    if(contextMenu != null)
+      return;
+    
+    logger.debug("createContextMenu()");
+    
+    contextMenu = new Menupopup();
     contextMenu.setParent(conceptsTree.getConceptsWindow());
-    //contextMenu.setParent(conceptsTree);
-    dataRow.setContext(contextMenu);
+     //dataRow.setContext(contextMenu);
 
     // Contextmenu Items für Konzepte(CSEV)
     Menuitem miDetails = new Menuitem(Labels.getLabel("common.details"));
@@ -286,16 +292,14 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     // TODO Menuitem miStatus = new Menuitem(Labels.getLabel("treeitemRendererCSEV.editStatus"));
     Menuitem miNewSubConcept = new Menuitem(Labels.getLabel("treeitemRendererCSEV.newSubConcept"));
     Menuitem miNewRootConcept = new Menuitem(Labels.getLabel("treeitemRendererCSEV.newRootConcept"));
-    // TODO Menuitem miDeepLink = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miCreateDeepLink"));
+     // TODO Menuitem miDeepLink = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miCreateDeepLink"));
     //Menuitem miRemoveVS = null;// = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miRemoveFromVS"));
-    
+
     // set icons
     miDetails.setImage("/rsc/img/list/magnifier.png");
     miEdit.setImage("/rsc/img/list/pencil.png");
     miNewSubConcept.setImage("/rsc/img/list/add.png");
     miNewRootConcept.setImage("/rsc/img/list/add.png");
-    
-    
 
     if (conceptsTree.getContentType() == ConceptsTree.CONTENT_TYPE.VALUESET)
     {
@@ -309,6 +313,217 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
+        //logger.debug(event.getTarget().getClass().getCanonicalName()
+        conceptsTree.openConceptDetails(getCSEV_ID_fromSelection());
+        //((ContentConcepts) parentWindow).showPopupConcept(PopupConcept.EDITMODES.DETAILSONLY, null);
+      }
+    });
+
+    miEdit.addEventListener("onClick", new EventListener()
+    {
+      public void onEvent(Event event) throws Exception
+      {
+        conceptsTree.maintainConcept(getCSEV_ID_fromSelection());
+        //((ContentConcepts) parentWindow).showPopupConcept(PopupConcept.EDITMODES.MAINTAIN, null);
+      }
+    });
+
+     //    miStatus.addEventListener("onClick", new EventListener()
+    //    {
+    //      public void onEvent(Event event) throws Exception
+    //      {
+    //        // TODO ((ContentConcepts) parentWindow).showPopupConcept(PopupWindow.EDITMODE_UPDATESTATUS);
+    //      }
+    //    });
+    miNewSubConcept.addEventListener("onClick", new EventListener()
+    {
+      public void onEvent(Event event) throws Exception
+      {
+        conceptsTree.createConcept(PopupConcept.HIERARCHYMODE.SUB, getCSEV_ID_fromSelection());
+        //((ContentConcepts) parentWindow).showPopupConcept(PopupConcept.EDITMODES.CREATE, PopupConcept.HIERARCHYMODE.SUB);
+      }
+    });
+
+    miNewRootConcept.addEventListener("onClick", new EventListener()
+    {
+      public void onEvent(Event event) throws Exception
+      {
+        //((ContentConcepts) parentWindow).showPopupConcept(PopupConcept.EDITMODES.CREATE, PopupConcept.HIERARCHYMODE.ROOT);
+        conceptsTree.createConcept(PopupConcept.HIERARCHYMODE.ROOT, 0);
+      }
+    });
+
+     //    miDeepLink.addEventListener(Events.ON_CLICK, new EventListener()
+    //    {
+    //      public void onEvent(Event event) throws Exception
+    //      {
+    //        TreeNode tn2 = (TreeNode) ti.getValue();
+    //        tn2.showDeepLinkInMessagebox();
+    ////                tn2.getDeepLinkString("","",new ArrayList<String>());
+    ////                tn2.showDeepLinkInMessagebox("","",new ArrayList<String>());
+    //      }
+    //    });
+    //    miRemoveVS.addEventListener(Events.ON_CLICK, new EventListener()
+    //    {
+    //      public void onEvent(Event event) throws Exception
+    //      {
+    //        if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    //        {
+    //          ((ContentConcepts) parentWindow).removeFromVS();
+    //        }
+    //        else if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+    //        {
+    //
+    //          Messagebox.show("Hiermit löschen sie das Konzept und alle damit \nverknüpften ValueSet-Memberships!",
+    //                  "Konzept löschen", Messagebox.YES | Messagebox.NO, Messagebox.INFORMATION, new org.zkoss.zk.ui.event.EventListener()
+    //                  {
+    //                    public void onEvent(Event evt) throws InterruptedException
+    //                    {
+    //                      if (evt.getName().equals("onYes"))
+    //                      {
+    //                        ((ContentConcepts) parentWindow).removeCSEV();
+    //                      }
+    //                    }
+    //                  });
+    //        }
+    //      }
+    //    });
+    // Je nach Login Menu-items hinzufügen oder nicht
+    miDetails.setParent(contextMenu);
+    //    miDeepLink.setParent(contextMenu);
+
+    if (SessionHelper.isUserLoggedIn())
+    {
+      new Menuseparator().setParent(contextMenu);
+
+      if (conceptsTree.getContentType() == ConceptsTree.CONTENT_TYPE.CODESYSTEM)
+      {
+        miEdit.setParent(contextMenu);
+        //TODO miStatus.setParent(contextMenu);
+        new Menuseparator().setParent(contextMenu);
+        miNewRootConcept.setParent(contextMenu);
+        miNewSubConcept.setParent(contextMenu);
+      }
+
+     // Menü VS hinzufügen
+      //      Menu mAddToVS = new Menu(Labels.getLabel("treeitemRendererCSEV.addToValueSet"));
+      //      mAddToVS.setParent(contextMenu);
+      //      Menupopup mpAddToVS = new Menupopup();
+      //      mpAddToVS.setParent(mAddToVS);
+      //
+      //      for (TreeNode tnVS : (List<TreeNode>) TreeModelVS.getTreeModel(parentWindow.getDesktop()).get_root().getChildren())
+      //      {
+      //        final ValueSet vs = (ValueSet) tnVS.getData();
+      //
+      //        if (AssignTermHelper.isUserAllowed(vs))
+      //        {
+      //          Menupopup mpVS = new Menupopup();
+      //          Menu mVS = new Menu(vs.getName());
+      //          mVS.setParent(mpAddToVS);
+      //          mpVS.setParent(mVS);
+      //          for (final ValueSetVersion vsv : vs.getValueSetVersions())
+      //          {
+      //            Menuitem miVSV = new Menuitem(vsv.getName());
+      //            miVSV.addEventListener("onClick", new EventListener()
+      //            {
+      //              public void onEvent(Event event) throws Exception
+      //              {
+      //                CodeSystemEntityVersion csev = (CodeSystemEntityVersion) csev;
+      //                CodeSystemEntity cse = csev.getCodeSystemEntity();
+      //                ((ContentConcepts) parentWindow).addConceptToValueSet(cse.getId(), csev.getVersionId(), vs.getId(), vsv.getVersionId());
+      //              }
+      //            });
+      //            miVSV.setParent(mpVS);
+      //          }
+      //        }
+      //      }
+      //TODO new Menuseparator().setParent(contextMenu);
+      //TODO miRemoveVS.setParent(contextMenu);
+      //      if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+      //      {
+      //        //miRemoveVS.setParent(contextMenu);
+      //        miStatus.setDisabled(false);
+      //        miNewSubConcept.setDisabled(true);
+      //        miNewRootConcept.setDisabled(true);
+      //        miDeepLink.setDisabled(true);
+      //        mAddToVS.setVisible(false);
+      //      }
+    }
+  }
+
+  private long getCSEV_ID_fromSelection()
+  {
+    logger.debug("getCSEV_ID_fromEvent");
+
+    CodeSystemEntityVersion csev = conceptsTree.getSelection();
+    if (csev != null)
+    {
+      logger.debug("id: " + csev.getVersionId());
+      return csev.getVersionId();
+    }
+    return 0;
+
+    /*if(event != null && event.getTarget() != null)
+     {
+     if(event.getTarget() instanceof org.zkoss.zul.Menuitem)
+     {
+     logger.debug("is menuitem");
+     org.zkoss.zul.Menuitem mi = (org.zkoss.zul.Menuitem)event.getTarget();
+     Menupopup menu = (Menupopup) mi.getParent();
+     //menu.getParent()
+        
+        
+        
+     logger.debug("parent 1: " + mi.getParent().getClass().getCanonicalName());
+     logger.debug("parent 2: " + mi.getParent().getParent().getClass().getCanonicalName());
+     logger.debug("parent 3: " + mi.getParent().getParent().getParent().getClass().getCanonicalName());
+        
+     }
+     }
+     return 0;*/
+  }
+
+  protected void renderCSEVContextMenu(final Treeitem ti, Treerow dataRow, final CodeSystemEntityVersion csev)
+  {
+    logger.debug("renderCSEVContextMenu");
+    Menupopup contextMenu = new Menupopup();
+    contextMenu.setParent(conceptsTree.getConceptsWindow());
+    dataRow.setContext(contextMenu);
+
+    // Contextmenu Items für Konzepte(CSEV)
+    Menuitem miDetails = new Menuitem(Labels.getLabel("common.details"));
+    Menuitem miEdit = new Menuitem(Labels.getLabel("treeitemRendererCSEV.editConcept"));
+    // TODO Menuitem miStatus = new Menuitem(Labels.getLabel("treeitemRendererCSEV.editStatus"));
+    Menuitem miNewSubConcept = new Menuitem(Labels.getLabel("treeitemRendererCSEV.newSubConcept"));
+    Menuitem miNewRootConcept = new Menuitem(Labels.getLabel("treeitemRendererCSEV.newRootConcept"));
+    // TODO Menuitem miDeepLink = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miCreateDeepLink"));
+    //Menuitem miRemoveVS = null;// = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miRemoveFromVS"));
+
+    // set icons
+    miDetails.setImage("/rsc/img/list/magnifier.png");
+    miEdit.setImage("/rsc/img/list/pencil.png");
+    miNewSubConcept.setImage("/rsc/img/list/add.png");
+    miNewRootConcept.setImage("/rsc/img/list/add.png");
+
+    if (conceptsTree.getContentType() == ConceptsTree.CONTENT_TYPE.VALUESET)
+    {
+      // TODO miRemoveVS = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miRemoveFromVS"));
+    }
+    else if (conceptsTree.getContentType() == ConceptsTree.CONTENT_TYPE.CODESYSTEM)
+    {
+      // TODO miRemoveVS = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miRemoveCSEV"));
+    }
+    miDetails.addEventListener("onClick", new EventListener()
+    {
+      public void onEvent(Event event) throws Exception
+      {
+        //logger.debug("onClick: " + event.getClass().getCanonicalName());
+        //logger.debug("target: " + event.getTarget().getClass().getCanonicalName());
+
+        //long id = getCSEV_ID_fromEvent(event);
+
+//        08.12.2014 14:46:05 DEBUG: onClick: org.zkoss.zk.ui.event.MouseEvent
+//08.12.2014 14:46:05 DEBUG: target: org.zkoss.zul.Menuitem
         conceptsTree.openConceptDetails(csev.getVersionId());
         //((ContentConcepts) parentWindow).showPopupConcept(PopupConcept.EDITMODES.DETAILSONLY, null);
       }
@@ -500,7 +715,6 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
 //        }
 //      }
 //    }
-
 //    sendbackMenuitem(parentWindow, ti, contextMenu);
   }
 

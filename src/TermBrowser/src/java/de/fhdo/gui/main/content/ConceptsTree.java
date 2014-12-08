@@ -86,6 +86,7 @@ public class ConceptsTree implements IUpdateModal
   private boolean searchActive = false;
   private String searchTerm, searchCode;
   private SearchType searchOptions;
+  private Boolean searchPreferred = null;
 
   private enum DISPLAY_MODE
   {
@@ -116,6 +117,7 @@ public class ConceptsTree implements IUpdateModal
 
   public ConceptsTree()
   {
+    
   }
 
   public ConceptsTree(Tree treeConcepts, ContentConcepts concepsWindow)
@@ -257,7 +259,7 @@ public class ConceptsTree implements IUpdateModal
       if (response.getReturnInfos().getStatus() == Status.OK)
       {
         cseList = response.getCodeSystemEntity();
-
+        
         if (response.getPagingInfos() != null)
         {
           // Paging Parameter auswerten
@@ -681,7 +683,7 @@ public class ConceptsTree implements IUpdateModal
       parameter_ListCA.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev_ws);
 
       // Zusatzinformationen anfordern um anzuzeigen ob noch Kinder vorhanden sind oder nicht
-      parameter_ListCA.setLookForward(true);
+      parameter_ListCA.setLookForward(false);
       parameter_ListCA.setDirectionBoth(true);
 
       // call webservice
@@ -828,8 +830,7 @@ public class ConceptsTree implements IUpdateModal
       csev.getCodeSystemConcepts().add(csc);
       csc.setTerm(searchTerm);
       csc.setCode(searchCode);
-      // TODO Muss noch als Parameter, der in der GUI mittels Checkbox/Radiogroup gesetzt werden kann, eingelesen werden
-      //csc.setIsPreferred(preferred);
+      csc.setIsPreferred(searchPreferred);
 
       parameter.setCodeSystemEntity(cse);
     }
@@ -887,8 +888,8 @@ public class ConceptsTree implements IUpdateModal
       csev.getCodeSystemConcepts().add(csc);
       csc.setTerm(searchTerm);
       csc.setCode(searchCode);
-      // TODO Muss noch als Parameter, der in der GUI mittels Checkbox/Radiogroup gesetzt werden kann, eingelesen werden
-      //csc.setIsPreferred(preferred);
+      
+      csc.setIsPreferred(searchPreferred);
 
       parameter.setCodeSystemEntity(cse);
     }
@@ -1050,13 +1051,14 @@ public class ConceptsTree implements IUpdateModal
     }
   }
 
-  public void startSearch(String code, String term, SearchType searchOptions)
+  public void startSearch(String code, String term, SearchType searchOptions, Boolean preferred)
   {
     logger.debug("startSearch()");
 
     searchActive = true;
     searchCode = code;
     searchTerm = term;
+    searchPreferred = preferred;
     this.searchOptions = searchOptions;
 
     //ComponentHelper.setVisible("treecolSource", valueSetVersionId > 0, conceptsWindow);
