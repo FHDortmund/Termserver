@@ -18,7 +18,7 @@ package de.fhdo.models.itemrenderer;
 
 import de.fhdo.Definitions;
 import de.fhdo.collaboration.helper.AssignTermHelper;
-import de.fhdo.gui.main.modules.ContentConcepts;
+import de.fhdo.gui.main.modules.ContentConcepts_old;
 import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.gui.main.modules.PopupWindow;
 import de.fhdo.helper.PropertiesHelper;
@@ -74,14 +74,14 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
   protected boolean draggable = false;
   protected boolean droppable = false;
   protected int rootBond = -1;
-  protected ContentConcepts parentWindow = null;
+  protected ContentConcepts_old parentWindow = null;
   protected int contentMode = 0;
   protected int associationMode = 0;
 //  protected TreeNode tn;
   protected Object source;
 
   // Constructors
-  public TreeitemRendererCSEV(ContentConcepts parentWindow, boolean Draggable, boolean Droppable, int associationMode, Object source)
+  public TreeitemRendererCSEV(ContentConcepts_old parentWindow, boolean Draggable, boolean Droppable, int associationMode, Object source)
   {
     draggable = Draggable;
     droppable = Droppable;
@@ -90,7 +90,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     this.source = source;
   }
 
-  public TreeitemRendererCSEV(ContentConcepts parentWindow, boolean Draggable, boolean droppable, int associationMode, int bond, Object source)
+  public TreeitemRendererCSEV(ContentConcepts_old parentWindow, boolean Draggable, boolean droppable, int associationMode, int bond, Object source)
   {
     this(parentWindow, Draggable, droppable, associationMode, source);
     rootBond = bond;
@@ -102,7 +102,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     // DropEvents falls droppable
     if (droppable)
     {
-      if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+      if (contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
       {
         dataRow.addEventListener(Events.ON_DROP, new EventListener()
         {
@@ -180,7 +180,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
 
                   if (response.getReturnInfos().getOverallErrorCategory() == OverallErrorCategory.INFO)
                   {
-                    ((ContentConcepts) parentWindow).updateModel(true);
+                    ((ContentConcepts_old) parentWindow).updateModel(true);
                   }
                   else
                   {
@@ -259,7 +259,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
                     treeNode.getChildren().add(tnNew);
 
                     // TODO: Wenn der neue TN Kinder hat, müsste ein + beim öffnen des neu Assoziierten angezeigt werden
-                    ((ContentConcepts) parentWindow).updateModel(true);
+                    ((ContentConcepts_old) parentWindow).updateModel(true);
 
                   }
                   else
@@ -274,7 +274,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
           }
         });
       }
-      else if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+      else if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
       {
         // kein Drop auf CSEV, nur auf den Tree
       }
@@ -286,7 +286,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       @Override
       public void onEvent(Event event) throws Exception
       {
-        ((ContentConcepts) parentWindow).onSelect();
+        ((ContentConcepts_old) parentWindow).onSelect();
       // TODO  ((ContentConcepts) parentWindow).showPopupConcept(PopupWindow.EDITMODE_DETAILSONLY);
       }
     });
@@ -296,8 +296,8 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       @Override
       public void onEvent(Event event) throws Exception
       {
-        ((ContentConcepts) parentWindow).onSelect();
-        ((ContentConcepts) parentWindow).openNode(treeNode);
+        ((ContentConcepts_old) parentWindow).onSelect();
+        ((ContentConcepts_old) parentWindow).openNode(treeNode);
       }
     });
 
@@ -306,7 +306,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       @Override
       public void onEvent(Event event) throws Exception
       {
-        ((ContentConcepts) parentWindow).onSelect();
+        ((ContentConcepts_old) parentWindow).onSelect();
       }
     });
 
@@ -327,11 +327,11 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
               list.add(treeNode);
               treeNode.getModel().setSelection(list);
 
-              ((ContentConcepts) parentWindow).onSelect();
-              ((ContentConcepts) parentWindow).openNode(treeNode);
+              ((ContentConcepts_old) parentWindow).onSelect();
+              ((ContentConcepts_old) parentWindow).openNode(treeNode);
             }
             else
-              ((ContentConcepts) parentWindow).closeNode(treeNode);
+              ((ContentConcepts_old) parentWindow).closeNode(treeNode);
           }
         }
         catch (Exception e)
@@ -347,9 +347,9 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
             tcCode = new Treecell();
     CodeSystemEntityVersion csev = (CodeSystemEntityVersion) data;
     ConceptValueSetMembership cvsm = null;
-    if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
     {
-      ValueSetVersion vsv = (ValueSetVersion) ((ContentConcepts) parentWindow).getSource();
+      ValueSetVersion vsv = (ValueSetVersion) ((ContentConcepts_old) parentWindow).getSource();
 
       for (ConceptValueSetMembership cvsm2 : csev.getConceptValueSetMemberships())
       {
@@ -373,7 +373,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       CodeSystemConcept csc = csev.getCodeSystemConcepts().get(0);
       Label lCode = new Label();
 
-      if (contentMode == ContentConcepts.CONTENTMODE_VALUESET && cvsm != null)
+      if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET && cvsm != null)
       {
         if ((cvsm.getStatus()) == 1 && cvsm.isIsStructureEntry())
         {
@@ -394,7 +394,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       tcCode.appendChild(lCode);
 
       // Fuer VS noch das CS anzeigen    
-      if (parentWindow.getContentMode() == ContentConcepts.CONTENTMODE_VALUESET)
+      if (parentWindow.getContentMode() == ContentConcepts_old.CONTENTMODE_VALUESET)
       {
         try
         { // TODO: Geht bestimmt noch eleganter
@@ -443,7 +443,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
         lName.setStyle(lName.getStyle() + ";font-weight:bold");
       }
 
-      if (parentWindow.getContentMode() == ContentConcepts.CONTENTMODE_CODESYSTEM)
+      if (parentWindow.getContentMode() == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
       {
 
         if (csev.getStatusVisibility()!= 1) // TODO Status
@@ -537,11 +537,11 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     Menuitem miNewRootConcept = new Menuitem(Labels.getLabel("treeitemRendererCSEV.newRootConcept"));
     Menuitem miDeepLink = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miCreateDeepLink"));
     Menuitem miRemoveVS = null;// = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miRemoveFromVS"));
-    if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
     {
       miRemoveVS = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miRemoveFromVS"));
     }
-    else if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+    else if (contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
     {
       miRemoveVS = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miRemoveCSEV"));
     }
@@ -549,7 +549,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-        ((ContentConcepts) parentWindow).showPopupConcept(PopupConcept.EDITMODES.DETAILSONLY, null);
+        ((ContentConcepts_old) parentWindow).showPopupConcept(PopupConcept.EDITMODES.DETAILSONLY, null);
       }
     });
 
@@ -557,7 +557,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-        ((ContentConcepts) parentWindow).showPopupConcept(PopupConcept.EDITMODES.MAINTAIN, null);
+        ((ContentConcepts_old) parentWindow).showPopupConcept(PopupConcept.EDITMODES.MAINTAIN, null);
       }
     });
 
@@ -573,7 +573,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-        ((ContentConcepts) parentWindow).showPopupConcept(PopupConcept.EDITMODES.CREATE, PopupConcept.HIERARCHYMODE.SUB);
+        ((ContentConcepts_old) parentWindow).showPopupConcept(PopupConcept.EDITMODES.CREATE, PopupConcept.HIERARCHYMODE.SUB);
       }
     });
 
@@ -581,7 +581,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-        ((ContentConcepts) parentWindow).showPopupConcept(PopupConcept.EDITMODES.CREATE, PopupConcept.HIERARCHYMODE.ROOT);
+        ((ContentConcepts_old) parentWindow).showPopupConcept(PopupConcept.EDITMODES.CREATE, PopupConcept.HIERARCHYMODE.ROOT);
       }
     });
 
@@ -600,11 +600,11 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     {
       public void onEvent(Event event) throws Exception
       {
-        if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+        if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
         {
-          ((ContentConcepts) parentWindow).removeFromVS();
+          ((ContentConcepts_old) parentWindow).removeFromVS();
         }
-        else if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+        else if (contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
         {
 
           Messagebox.show("Hiermit löschen sie das Konzept und alle damit \nverknüpften ValueSet-Memberships!",
@@ -614,7 +614,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
                     {
                       if (evt.getName().equals("onYes"))
                       {
-                        ((ContentConcepts) parentWindow).removeCSEV();
+                        ((ContentConcepts_old) parentWindow).removeCSEV();
                       }
                     }
                   });
@@ -654,7 +654,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
               {
                 CodeSystemEntityVersion csev = (CodeSystemEntityVersion) data;
                 CodeSystemEntity cse = csev.getCodeSystemEntity();
-                ((ContentConcepts) parentWindow).addConceptToValueSet(cse.getId(), csev.getVersionId(), vs.getId(), vsv.getVersionId());
+                ((ContentConcepts_old) parentWindow).addConceptToValueSet(cse.getId(), csev.getVersionId(), vs.getId(), vsv.getVersionId());
               }
             });
             miVSV.setParent(mpVS);
@@ -686,7 +686,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
         new Menuseparator().setParent(contextMenu);
         miRemoveVS.setParent(contextMenu);
 
-        if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+        if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
         {
           //miRemoveVS.setParent(contextMenu);
           miStatus.setDisabled(false);
@@ -701,7 +701,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     if (SessionHelper.isCollaborationActive())
     {
       // Kollaborations-Menüitems hinzufügen
-      if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+      if (contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
       {
         if (AssignTermHelper.isAnyUserAssigned(((CodeSystemVersion) source).getCodeSystem().getId(), "CodeSystem"))
         {//Kein IV, kein Vorschlag
@@ -713,7 +713,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
           {
             public void onEvent(Event event) throws Exception
             {
-              ((ContentConcepts) parentWindow).proposeNewSubConcept((CodeSystemEntityVersion) data);
+              ((ContentConcepts_old) parentWindow).proposeNewSubConcept((CodeSystemEntityVersion) data);
             }
           });
 
@@ -726,7 +726,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
           {
             public void onEvent(Event event) throws Exception
             {
-              ((ContentConcepts) parentWindow).proposeForExistingConceptOrMembership();
+              ((ContentConcepts_old) parentWindow).proposeForExistingConceptOrMembership();
             }
           });
 
@@ -734,7 +734,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
         }
       }
 
-      if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+      if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
       {
         if (AssignTermHelper.isAnyUserAssigned(((ValueSetVersion) source).getValueSet().getId(), "ValueSet"))
         {//Kein IV, kein Vorschlag
@@ -745,7 +745,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
           {
             public void onEvent(Event event) throws Exception
             {
-              ((ContentConcepts) parentWindow).proposeForExistingConceptOrMembership();
+              ((ContentConcepts_old) parentWindow).proposeForExistingConceptOrMembership();
             }
           });
 
@@ -779,7 +779,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
         dataRow.setDraggable("true");
 
       // Nur fuer CS, da es fuer VS nicht vorgesehen ist, hierarchien aufzubauen
-      if (droppable && contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+      if (droppable && contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
         dataRow.setDroppable("true");
     }
     else

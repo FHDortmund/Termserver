@@ -16,7 +16,7 @@
  */
 package de.fhdo.helper;
 
-import de.fhdo.gui.main.modules.ContentConcepts;
+import de.fhdo.gui.main.modules.ContentConcepts_old;
 import de.fhdo.models.TreeNode;
 import java.util.Collection;
 import java.util.Iterator;
@@ -63,7 +63,7 @@ public class TreeHelper
       doCollapseExpandAll(component, aufklappen, null);
   }
   
-  public static void doCollapseExpandAll(Component component, boolean aufklappen, ContentConcepts window)
+  public static void doCollapseExpandAll(Component component, boolean aufklappen, ContentConcepts_old window)
   {
     if (component instanceof Treeitem)
     {

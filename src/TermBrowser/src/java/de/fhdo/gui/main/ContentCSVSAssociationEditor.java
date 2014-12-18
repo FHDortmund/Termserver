@@ -16,7 +16,7 @@
  */
 package de.fhdo.gui.main;
 
-import de.fhdo.gui.main.modules.ContentConcepts;
+import de.fhdo.gui.main.modules.ContentConcepts_old;
 import de.fhdo.helper.ValidityRangeHelper;
 import de.fhdo.models.TreeModelCSEV;
 import de.fhdo.models.TreeNode;

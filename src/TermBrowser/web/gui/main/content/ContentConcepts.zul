@@ -169,6 +169,12 @@
                     onClick="winConcepts.onDetailsClicked()" 
                     image="/rsc/img/list/magnifier.png"
                     disabled="true"/>
+            
+            <button id="buttonAssumeConcept"
+                    visible="false"
+                    label="${labels.common.assumeConcept}" 
+                    onClick="winConcepts.onAssumeConcept()" 
+                    disabled="true"/>
           </div>
           <div align="right">
             <!--            <button id="buttonDeleteVersion"

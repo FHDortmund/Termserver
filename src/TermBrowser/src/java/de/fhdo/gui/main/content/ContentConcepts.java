@@ -22,6 +22,8 @@ import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.gui.main.modules.PopupExport;
 import de.fhdo.gui.main.modules.PopupValueSet;
 import de.fhdo.helper.ComponentHelper;
+import de.fhdo.helper.ParameterHelper;
+import de.fhdo.helper.SendBackHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.logging.LoggingOutput;
@@ -74,9 +76,20 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   private ConceptsTree concepts = null;
   private boolean searchActive = false;
 
+  private TreeAndContent.LOADTYPE paramLoadType = TreeAndContent.LOADTYPE.NONE;
+  private String paramLoadName = "";
+  private String paramLoadOid = "";
+  private long paramLoadId = 0;
+  private boolean externMode = false;
+  private boolean paramSearch = false;
+
+  private boolean sendBack = false;
+
   public ContentConcepts()
   {
     logger.debug("ContentConcepts() - Konstruktor");
+
+    getURLParameter();
 
     // loading dynamic parameters
     codeSystem = (CodeSystem) Executions.getCurrent().getAttribute("codeSystem");
@@ -93,10 +106,15 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       Object o = SessionHelper.getValue("selectedCSV");
       if (o != null)
       {
+        logger.debug("selectedCSV is not null");
+
         codeSystemVersion = (CodeSystemVersion) o;
 
         if (codeSystemVersion.getCodeSystem() == null)
+        {
+          logger.debug("codesystem in codesyste version is null, so load default");
           codeSystemVersion = null;
+        }
         else
         {
 
@@ -189,7 +207,52 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
     showButtons();
 
+    if (paramSearch)
+      onSwitchSearch();
+
     Clients.clearBusy();
+  }
+
+  private void getURLParameter()
+  {
+    logger.debug("ContentConcepts.java - getURLParameter()");
+
+    paramSearch = ParameterHelper.getBoolean("search", false);
+    sendBack = ParameterHelper.getBoolean("sendBack", false);
+
+    String loadType = ParameterHelper.getString("loadType");
+    paramLoadName = ParameterHelper.getString("loadName");
+    paramLoadId = ParameterHelper.getLong("loadId");
+    paramLoadOid = ParameterHelper.getString("loadOID");
+
+    paramLoadType = TreeAndContent.LOADTYPE.NONE;
+    if (loadType != null)
+    {
+      if (loadType.equalsIgnoreCase("CodeSystem") || loadType.equalsIgnoreCase("CS"))
+      {
+        paramLoadType = TreeAndContent.LOADTYPE.CODESYSTEM;
+      }
+      else if (loadType.equalsIgnoreCase("ValueSet") || loadType.equalsIgnoreCase("VS"))
+      {
+        paramLoadType = TreeAndContent.LOADTYPE.VALUESET;
+      }
+    }
+
+    logger.debug("sendBack: " + sendBack);
+    logger.debug("paramSearch: " + paramSearch);
+    logger.debug("paramLoadType: " + paramLoadType);
+    logger.debug("paramLoadName: " + paramLoadName);
+    logger.debug("paramLoadId: " + paramLoadId);
+    logger.debug("paramLoadOid: " + paramLoadOid);
+
+    if (paramLoadId > 0
+            || (paramLoadType != null && paramLoadType != TreeAndContent.LOADTYPE.NONE)
+            || (paramLoadName != null && paramLoadName.length() > 0)
+            || (paramLoadOid != null && paramLoadOid.length() > 0))
+    {
+      externMode = true;
+    }
+    logger.debug("externMode: " + externMode);
   }
 
   private void fillVersionList()
@@ -198,6 +261,8 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
     final Combobox cbVersions = (Combobox) getFellow("cbVersion");
     long selectedVersionId = 0;
+
+    cbVersions.setDisabled(externMode);  // disable in extern mode (do not allow choosing)
 
     if (codeSystem != null)
     {
@@ -311,8 +376,8 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     {
       org.zkoss.zk.ui.event.SelectEvent selEvent = (org.zkoss.zk.ui.event.SelectEvent) event;
       logger.debug("Keys: " + selEvent.getKeys());
-      
-      if(selEvent.getKeys() == MouseEvent.RIGHT_CLICK)
+
+      if (selEvent.getKeys() == MouseEvent.RIGHT_CLICK)
       {
         showButtons();
         return;
@@ -451,12 +516,12 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     // define search type
     SearchType st = new SearchType();
     st.setTraverseConceptsToRoot(((Checkbox) getFellow("cbShowHierachyDetails")).isChecked());
-    
+
     Boolean preferred = null;
-    Radiogroup rgPreferred = (Radiogroup)getFellow("rgPreferred");
-    if(rgPreferred.getSelectedIndex() == 0)
+    Radiogroup rgPreferred = (Radiogroup) getFellow("rgPreferred");
+    if (rgPreferred.getSelectedIndex() == 0)
       preferred = true;
-    else if(rgPreferred.getSelectedIndex() == 1)
+    else if (rgPreferred.getSelectedIndex() == 1)
       preferred = false;
 
     // start search and display results
@@ -518,10 +583,34 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     ComponentHelper.setVisibleAndDisabled("buttonEdit", loggedIn, csev == null, this);
     ComponentHelper.setVisibleAndDisabled("buttonDelete", loggedIn, csev == null, this);
 
+    // show button, if concept can be send back
+    ComponentHelper.setVisibleAndDisabled("buttonAssumeConcept", sendBack, csev == null, this);
+
     ComponentHelper.setVisible("buttonEditVersion", loggedIn, this);
+
+    // hide buttons, when in SELECT-Mode
+    ComponentHelper.setVisible("buttonExport", externMode == false, this);
 
     //ComponentHelper.setVisible("buttonDeleteVersion", loggedIn, this);
     //ComponentHelper.setVisibleAndDisabled("buttonDeleteVersion", loggedIn, csev == null, this);
+  }
+
+  public void onAssumeConcept()
+  {
+    if (sendBack == false)
+      return;
+
+    SendBackHelper.sendBack(concepts.getSelection());
+    //CodeSystemEntityVersion csev = concepts.getSelection();
+    /*if (csev != null)
+    {
+      logger.debug("sendBack-postMethod:");
+      //String javaScript = "window.top.postMessage('test', '\\*')"; // Aus sicherheitsgruenden sollte * ersetzt werden durch die domain des TS. Auf der empf�ngerseite kann dann        
+      String javaScript = "window.top.postMessage('" + csev.getVersionId() + "', '\\*')"; // Aus sicherheitsgruenden sollte * ersetzt werden durch die domain des TS. Auf der empf�ngerseite kann dann        
+      logger.debug(javaScript);
+      Clients.evalJavaScript(javaScript);
+      
+    }*/
   }
 
   public void update(Object o, boolean edited)

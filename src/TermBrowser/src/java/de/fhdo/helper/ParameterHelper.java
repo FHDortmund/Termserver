@@ -28,37 +28,70 @@ public class ParameterHelper
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
 
   /*public static Object getObject(String ParameterName)
+   {
+   try
+   {
+   Object o = Executions.getCurrent().getAttribute(ParameterName);
+   //Executions.getCurrent().getAttribute(ParameterName)
+   return o;
+   }
+   catch (Exception e)
+   {
+   e.printStackTrace();
+   }
+
+   return null;
+   }*/
+  public static Boolean getBoolean(String ParameterName)
   {
+    Boolean b = null;
+    String s = Executions.getCurrent().getParameter(ParameterName);
     try
     {
-      Object o = Executions.getCurrent().getAttribute(ParameterName);
-      //Executions.getCurrent().getAttribute(ParameterName)
-      return o;
+      if (s.contains("true") || s.contains("1") || Integer.valueOf(s) > 0)
+        b = Boolean.TRUE;
     }
     catch (Exception e)
     {
-      e.printStackTrace();
     }
 
-    return null;
-  }*/
-  
-    public static Boolean getBoolean(String ParameterName){
-        Boolean b = null;
-        String s = Executions.getCurrent().getParameter(ParameterName);
-        try{                        
-            if(s.contains("true") || s.contains("1") || Integer.valueOf(s) > 0)
-                b = Boolean.TRUE;
-        } catch (Exception e) { }
-        
-        try{
-            if (s.contains("false") || s.contains("0") || Integer.valueOf(s) < 0)
-                b = Boolean.FALSE;                                            
-        } catch (Exception e) { }
-
-        return b;
+    try
+    {
+      if (s.contains("false") || s.contains("0") || Integer.valueOf(s) < 0)
+        b = Boolean.FALSE;
     }
-  
+    catch (Exception e)
+    {
+    }
+
+    return b;
+  }
+
+  public static Boolean getBoolean(String ParameterName, boolean defaultValue)
+  {
+    
+    String s = Executions.getCurrent().getParameter(ParameterName);
+    try
+    {
+      if (s.contains("true") || s.contains("1") || Integer.valueOf(s) > 0)
+        return true;
+    }
+    catch (Exception e)
+    {
+    }
+
+    try
+    {
+      if (s.contains("false") || s.contains("0") || Integer.valueOf(s) < 0)
+        return false;
+    }
+    catch (Exception e)
+    {
+    }
+
+    return defaultValue;
+  }
+
   public static String getString(String ParameterName)
   {
     String wert = "";

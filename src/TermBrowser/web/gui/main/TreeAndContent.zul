@@ -116,7 +116,7 @@
         </borderlayout>
       </west>
       <center title="${labels.common.contents}" border="none" id="center">        
-        <include id="incConcepts" mode="instant"/>
+        <include id="incConcepts" src="content/NoContent.zul"/>
       </center>
     </borderlayout>    
 

@@ -278,6 +278,39 @@ public class CodesystemGenericTreeModel
  
     return row;
   }
+  
+  public CodeSystem findCodeSystem(String Name, String OID, long CodesystemVersionId)
+  {
+    logger.debug("findCodeSystem()");
+    logger.debug("Name: " + Name);
+    logger.debug("OID: " + OID);
+    logger.debug("CodesystemVersionId: " + CodesystemVersionId);
+    List<CodeSystem> list = getListCS();
+    
+    for(CodeSystem cs : list)
+    {
+      for(CodeSystemVersion csv : cs.getCodeSystemVersions())
+      {
+        if((OID != null && OID.length() > 0 && OID.equalsIgnoreCase(csv.getOid())) ||
+           (CodesystemVersionId > 0 && csv.getVersionId() == CodesystemVersionId))
+        {
+          logger.debug("Found CS with id: " + cs.getId());
+          logger.debug("Found CSV with versionId: " + csv.getVersionId());
+          csv.setCodeSystem(cs);
+          SessionHelper.setValue("selectedCSV", csv);
+          return cs;
+        }
+      }
+      
+      if(Name != null && Name.length() > 0 && Name.equalsIgnoreCase(cs.getName()))
+      {
+        logger.debug("Found CS with id: " + cs.getId());
+        return cs;
+      }
+    }
+    
+    return null;
+  }
 
   /**
    * @return the errorMessage
@@ -300,6 +333,7 @@ public class CodesystemGenericTreeModel
    */
   public List<CodeSystem> getListCS()
   {
+    initData();
     return listCS;
   }
   

@@ -27,7 +27,7 @@ import org.zkoss.zul.event.PagingEvent;
  *
  * @author Becker
  */
-public class ContentConceptsHugeFlatData extends ContentConcepts{
+public class ContentConceptsHugeFlatData extends ContentConcepts_old{
     private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
     protected PagingType pagingTypeWS;
     

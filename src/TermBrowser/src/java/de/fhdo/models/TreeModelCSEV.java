@@ -18,7 +18,7 @@ package de.fhdo.models;
 
 import de.fhdo.collaboration.db.CollaborationSession;
 import de.fhdo.gui.main.ContentCSVSDefault;
-import de.fhdo.gui.main.modules.ContentConcepts;
+import de.fhdo.gui.main.modules.ContentConcepts_old;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.models.comparators.ComparatorOrderNr;
@@ -106,13 +106,13 @@ public class TreeModelCSEV
     {
       id = ((CodeSystemVersion) source).getCodeSystem().getId();
       versionId = ((CodeSystemVersion) source).getVersionId();
-      contentMode = ContentConcepts.CONTENTMODE_CODESYSTEM;
+      contentMode = ContentConcepts_old.CONTENTMODE_CODESYSTEM;
     }
     else if (source instanceof ValueSetVersion)
     {
       id = ((ValueSetVersion) source).getValueSet().getId();
       versionId = ((ValueSetVersion) source).getVersionId();
-      contentMode = ContentConcepts.CONTENTMODE_VALUESET;
+      contentMode = ContentConcepts_old.CONTENTMODE_VALUESET;
     }
 
     preferred = pref;
@@ -199,14 +199,14 @@ public class TreeModelCSEV
     List<CodeSystemEntity> listCSE = null;
     List<CodeSystemEntityVersion> listCSEV = new ArrayList<CodeSystemEntityVersion>();
     // CODE_SYSTEM
-    if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
     {
       de.fhdo.terminologie.ws.search.ListCodeSystemConceptsResponse.Return r = (de.fhdo.terminologie.ws.search.ListCodeSystemConceptsResponse.Return) response;
       listCSE = r.getCodeSystemEntity();
 
     }
     // VALUE_SET
-    else if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    else if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
     {
       if (popUpSearch)
       {
@@ -234,7 +234,7 @@ public class TreeModelCSEV
       }
 
       // sort listCSE for VS
-      if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+      if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
       {
         Collections.sort(listCSEV, new ComparatorOrderNr(true));
       }
@@ -261,7 +261,7 @@ public class TreeModelCSEV
         tn.setTreeModelCSEV(this);          // Fuer Deeplinks, damit sie wissen zu welchem CS/VS sie gehören                                            
 
         // CODE SYSTEMS
-        if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+        if (contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
         {
           // add node with csev to list
           treeNodesRoot.add(tn);
@@ -270,7 +270,7 @@ public class TreeModelCSEV
           addDummyToNodeForLinkedConcepts(tn);
         }
         // VALUE SETS
-        else if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+        else if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
         {
           int level = getLevel(csev);
 
@@ -362,7 +362,7 @@ public class TreeModelCSEV
       pagingTypeWS.setUserPaging(true);
 
     // get CodeSystemEntitys by web service calls
-    if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
     {
       // Request 
       ListCodeSystemConceptsRequestType parameter = createParameterForCodeSystems(OnlyMainClasses);
@@ -370,7 +370,7 @@ public class TreeModelCSEV
       // Response
       response = WebServiceHelper.listCodeSystemConcepts(parameter);
     }
-    else if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    else if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
     {
       if (popUpSearch)
       {
@@ -445,7 +445,7 @@ public class TreeModelCSEV
 
       CodeSystemEntityVersion csev = (CodeSystemEntityVersion) t.getData();
 
-      if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+      if (contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
       {
         // Check associations if there are children
         if (t.hasLinkedConcepts() || csev.isIsLeaf() == Boolean.FALSE)
@@ -471,11 +471,11 @@ public class TreeModelCSEV
     List<TreeNode> listRoot = new ArrayList<TreeNode>();
     listRoot.addAll(list);
 
-    if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
     {
 
     }
-    else if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+    else if (contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
     {
       // load-on-demand: add dummies to show "+" Symbols if neccessary (AssoKind 2 u. 4) to enable 
       addDummiesForChildren(listRoot);
@@ -508,7 +508,7 @@ public class TreeModelCSEV
     
     CodeSystemEntityVersion csevParent = (CodeSystemEntityVersion) tn_Parent.getData();
     // VS => load childs by parameter level
-    if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
     {
 //          int levelParent = getLevel(csevParent);
 //                    
@@ -531,7 +531,7 @@ public class TreeModelCSEV
 //          // check for childs children
 //          addDummiesForChildren(tn_Parent.getChildren());
     }
-    else if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+    else if (contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
     {
       // Parameter erzeugen und im folgenden zusammenbauen
       ListConceptAssociationsRequestType parameter_ListCA = new ListConceptAssociationsRequestType();
@@ -578,7 +578,7 @@ public class TreeModelCSEV
         }
         catch (Exception ex)
         {
-          Logger.getLogger(ContentConcepts.class.getName()).log(Level.SEVERE, null, ex);
+          Logger.getLogger(ContentConcepts_old.class.getName()).log(Level.SEVERE, null, ex);
         }
         return;
       }
@@ -651,7 +651,7 @@ public class TreeModelCSEV
   private void addDummyToNodeForLinkedConcepts(TreeNode tn)
   {
     CodeSystemEntityVersion csev = (CodeSystemEntityVersion) tn.getData();
-    if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
     {
       // check associations
       for (CodeSystemEntityVersionAssociation cseva : csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1())
@@ -663,7 +663,7 @@ public class TreeModelCSEV
         }
       }
     }
-    else if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    else if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
     {
       // check levels
     }

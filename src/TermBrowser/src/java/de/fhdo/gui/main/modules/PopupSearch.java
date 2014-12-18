@@ -85,13 +85,13 @@ public class PopupSearch extends GenericForwardComposer
     {
       id = ((CodeSystemVersion) source).getCodeSystem().getId();
       versionId = ((CodeSystemVersion) source).getVersionId();
-      contentMode = ContentConcepts.CONTENTMODE_CODESYSTEM;
+      contentMode = ContentConcepts_old.CONTENTMODE_CODESYSTEM;
     }
     else if (source instanceof ValueSetVersion)
     {
       id = ((ValueSetVersion) source).getValueSet().getId();
       versionId = ((ValueSetVersion) source).getVersionId();
-      contentMode = ContentConcepts.CONTENTMODE_VALUESET;
+      contentMode = ContentConcepts_old.CONTENTMODE_VALUESET;
       //not used by VS Search
       rgPreferred.setVisible(false);
       cbShowHierachyDetails.setVisible(false);
@@ -236,7 +236,7 @@ public class PopupSearch extends GenericForwardComposer
       }
       catch (Exception ex)
       {
-        Logger.getLogger(ContentConcepts.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(ContentConcepts_old.class.getName()).log(Level.SEVERE, null, ex);
       }
       finally
       {
@@ -264,7 +264,7 @@ public class PopupSearch extends GenericForwardComposer
       }
       catch (Exception e)
       {
-        Logger.getLogger(ContentConcepts.class.getName()).log(Level.SEVERE, null, e);
+        Logger.getLogger(ContentConcepts_old.class.getName()).log(Level.SEVERE, null, e);
       }
     }
   }

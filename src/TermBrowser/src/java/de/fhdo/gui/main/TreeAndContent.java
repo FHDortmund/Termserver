@@ -17,7 +17,6 @@
 package de.fhdo.gui.main;
 
 import de.fhdo.authorization.Authorization;
-import static de.fhdo.gui.main.ContentCSVSDefault.logger;
 import de.fhdo.gui.main.modules.PopupCodeSystem;
 import de.fhdo.gui.main.modules.PopupValueSet;
 import de.fhdo.helper.ArgumentHelper;
@@ -55,8 +54,6 @@ import org.zkoss.zul.North;
 import org.zkoss.zul.South;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabbox;
-import org.zkoss.zul.Tree;
-import org.zkoss.zul.TreeModel;
 import org.zkoss.zul.TreeNode;
 import org.zkoss.zul.Treeitem;
 import org.zkoss.zul.West;
@@ -76,8 +73,6 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
 
   protected static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
 
-  
-
   public enum MODE
   {
 
@@ -94,28 +89,47 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
 
   private boolean allowEditing = false;
 
+  private boolean externMode = false;
+
+  public enum LOADTYPE
+  {
+
+    NONE, CODESYSTEM, VALUESET
+  }
+  private LOADTYPE paramLoadType = LOADTYPE.NONE;
+  //private String paramLoadType = "";
+  private String paramLoadName = "";
+  private String paramLoadOid = "";
+  private long paramLoadId = 0;
+  private Boolean paramHideSelection = null;
+  private Boolean paramHideStatusbar = null;
+  private Boolean paramHideMenu = null;
+
   public TreeAndContent()
   {
     logger.debug("TreeAndContent() - Konstruktor");
 
     Clients.showBusy(Labels.getLabel("common.loading"));
 
+    // get window parameter
+    getURLParameter();
+
     // Lade Session-Werte
     mode = SessionHelper.getMainViewMode();
-    
+
     String username = ArgumentHelper.getWindowParameterString("usr");
     String password = ArgumentHelper.getWindowParameterString("pw");
-    
-    if(username.length() > 0 && password.length() > 0)
+
+    if (username.length() > 0 && password.length() > 0)
     {
       // try login
       logger.debug("Try login...");
-      
+
       Authorization.login(username, password);
       //WebServiceHelper.login(null)
-      
+
     }
-    
+
     allowEditing = SessionHelper.isUserLoggedIn();
 
   }
@@ -125,7 +139,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     logger.debug("afterCompose()");
 
     setActiveTab();
-    
+
     processURLParameter();
 
     Clients.clearBusy();
@@ -148,26 +162,145 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
       }
     }
   }
-  
+
+  private void getURLParameter()
+  {
+    logger.debug("TreeAndContent.java - getURLParameter()");
+
+    paramHideSelection = ParameterHelper.getBoolean("hideSelection");
+    paramHideMenu = ParameterHelper.getBoolean("hideMenu");
+    paramHideStatusbar = ParameterHelper.getBoolean("hideStatusbar");
+
+    String loadType = ParameterHelper.getString("loadType");
+    paramLoadName = ParameterHelper.getString("loadName");
+    paramLoadId = ParameterHelper.getLong("loadId");
+    paramLoadOid = ParameterHelper.getString("loadOID");
+
+    paramLoadType = LOADTYPE.NONE;
+    if (loadType != null)
+    {
+      if (loadType.equalsIgnoreCase("CodeSystem") || loadType.equalsIgnoreCase("CS"))
+      {
+        paramLoadType = LOADTYPE.CODESYSTEM;
+      }
+      else if (loadType.equalsIgnoreCase("ValueSet") || loadType.equalsIgnoreCase("VS"))
+      {
+        paramLoadType = LOADTYPE.VALUESET;
+      }
+    }
+
+    logger.debug("paramHideSelection: " + paramHideSelection);
+    logger.debug("paramHideMenu: " + paramHideMenu);
+    logger.debug("paramHideStatusbar: " + paramHideStatusbar);
+
+    logger.debug("paramLoadType: " + paramLoadType);
+    logger.debug("paramLoadName: " + paramLoadName);
+    logger.debug("paramLoadId: " + paramLoadId);
+    logger.debug("paramLoadOid: " + paramLoadOid);
+
+    if (paramLoadId > 0
+            || (paramLoadType != null && paramLoadType != LOADTYPE.NONE)
+            || (paramLoadName != null && paramLoadName.length() > 0)
+            || (paramLoadOid != null && paramLoadOid.length() > 0))
+    {
+      externMode = true;
+    }
+    logger.debug("externMode: " + externMode);
+  }
+
   private void processURLParameter()
   {
     logger.debug("processURLParameter()");
-    
-    // sendBackValues
-    SendBackHelper.getInstance().initialize();
 
-    // West Layout (Auswahl der CS, VS, DV) unsichtbar machen, falls gew?scht                
-    if (ParameterHelper.getBoolean("hideSelection") != null)
-      ((West) getFellow("westTreeCSVSDV")).setVisible(!ParameterHelper.getBoolean("hideSelection"));
+    // sendBackValues
+    //SendBackHelper.getInstance().initialize();
+
+    // West Layout (Auswahl der CS, VS, DV) unsichtbar machen, falls gewünscht
+    if (paramHideSelection != null)
+      ((West) getFellow("westTreeCSVSDV")).setVisible(!paramHideSelection);
 
     // Menue ausblenden
-    if (ParameterHelper.getBoolean("hideMenu") != null)
-      ((North) this.getRoot().getFellow("blMainNorth")).setVisible(!ParameterHelper.getBoolean("hideMenu"));
+    if (paramHideMenu != null)
+      ((North) this.getRoot().getFellow("blMainNorth")).setVisible(!paramHideMenu);
 
     // Statusleiste ausblenden
-    if (ParameterHelper.getBoolean("hideStatusbar") != null)
-      ((South) this.getRoot().getFellow("blMainSouth")).setVisible(!ParameterHelper.getBoolean("hideStatusbar"));
+    if (paramHideStatusbar != null)
+      ((South) this.getRoot().getFellow("blMainSouth")).setVisible(!paramHideStatusbar);
 
+    if (externMode)
+    {
+      // load codesystem/valueset and save in session
+      if(paramLoadType == LOADTYPE.CODESYSTEM)
+      {
+        // load codesystem
+        CodeSystem cs = CodesystemGenericTreeModel.getInstance().findCodeSystem(paramLoadName, paramLoadOid, paramLoadId);
+        SessionHelper.setValue("selectedCS", cs);
+      }
+      else if(paramLoadType == LOADTYPE.VALUESET)
+      {
+        // load valueset
+        // TODO load valueset
+      }
+    }
+
+    /*// Get Parameter by URL
+    
+
+     if (type == null || (name == null && loadId == null))
+     return;
+
+     logger.debug("expandTreeAndLoadConceptsByDeeplink");
+
+     Tree treeActive = null;
+
+     boolean isCodesystem = true;
+     if (type.equalsIgnoreCase("CodeSystem"))
+     {
+     tabboxFilter.setSelectedTab(tabCS);
+     treeActive = treeCS;
+     }
+     else if (type.equalsIgnoreCase("ValueSet"))
+     {
+     tabboxFilter.setSelectedTab(tabVS);
+     isCodesystem = false;
+     treeActive = treeVS;
+     }
+     else
+     return;
+
+     setActiveTab();
+
+     // DeepLink Map erstellen für Kapitel
+     // Muss vor selectTreeitemByName erstellt werden damit deepLinks im Konstruktor von ContetnConcepts verwendet werden kann
+     int i = 1;
+     String chapter = getDesktop().getExecution().getParameter("c" + i);
+     while (chapter != null && chapter.isEmpty() == false)
+     {
+     deepLinks.add(chapter);
+     i++;
+     chapter = getDesktop().getExecution().getParameter("c" + i);
+     }
+
+     if (isCodesystem)
+     expandTreeCS();
+     else
+     expandTreeVS();
+
+     if (name != null && name.length() > 0)
+     selectTreeitemByName(treeActive.getTreechildren(), name);
+     else if (loadId != null && loadId.length() > 0)
+     {
+     try
+     {
+     long id = 0;
+     id = Long.parseLong(loadId);
+     selectTreeitemById(treeActive.getTreechildren(), id);
+     }
+     catch (Exception ex)
+     {
+     logger.warn("Fehler beim Laden des Codesystems: " + ex.getLocalizedMessage());
+     }
+     }*/
     // Deep Links ausfuehren
     // TODO expandTreeAndLoadConceptsByDeeplink();
   }
@@ -223,7 +356,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
 
   private void createTabContent_CS()
   {
-    if (genericTreeCS != null)
+    if (genericTreeCS != null || externMode)
       return;
 
     logger.debug("createTabContent_CS()");
@@ -242,8 +375,6 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     genericTreeCS.setAutoExpandAll(count <= PropertiesHelper.getInstance().getExpandTreeAutoCount());
 
     genericTreeCS.removeCustomButtons();
-    
-    
 
     Button buttonDetails = new Button(Labels.getLabel("common.details"), "/rsc/img/list/magnifier.png");
     buttonDetails.addEventListener(Events.ON_CLICK, new EventListener<Event>()
@@ -299,7 +430,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
         }
       }
     });
-    
+
     miNew.addEventListener(Events.ON_CLICK, new EventListener<Event>()
     {
       public void onEvent(Event t) throws Exception
@@ -307,7 +438,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
         popupCodeSystem(null, PopupCodeSystem.EDITMODES.CREATE, true);
       }
     });
-    
+
     miEdit.addEventListener(Events.ON_CLICK, new EventListener<Event>()
     {
       public void onEvent(Event t) throws Exception
@@ -321,22 +452,22 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
         }
       }
     });
-    
-    if(CodesystemGenericTreeModel.getInstance().getErrorMessage() != null &&
-            CodesystemGenericTreeModel.getInstance().getErrorMessage().length() > 0)
+
+    if (CodesystemGenericTreeModel.getInstance().getErrorMessage() != null
+            && CodesystemGenericTreeModel.getInstance().getErrorMessage().length() > 0)
     {
       // show error message
       ComponentHelper.setVisible("incTreeCS", false, this);
       ComponentHelper.setVisible("message", true, this);
-      
-      ((Label)getFellow("labelMessage")).setValue(CodesystemGenericTreeModel.getInstance().getErrorMessage());
+
+      ((Label) getFellow("labelMessage")).setValue(CodesystemGenericTreeModel.getInstance().getErrorMessage());
     }
     else
     {
       ComponentHelper.setVisible("message", false, this);
       ComponentHelper.setVisible("incTreeCS", true, this);
     }
-    
+
 //    logger.debug("Count: " + count);
 //    logger.debug("Expand till: " + PropertiesHelper.getInstance().getExpandTreeAutoCount());
 //    
@@ -348,7 +479,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
 
   private void createTabContent_VS()
   {
-    if (genericTreeVS != null)
+    if (genericTreeVS != null || externMode)
       return;
 
     logger.debug("createTabContent_VS()");
@@ -375,7 +506,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
         if (row != null && row.getData() instanceof ValueSet)
         {
           ValueSet vs = (ValueSet) row.getData();
-          
+
           popupValueSet(vs, PopupValueSet.EDITMODES.DETAILSONLY, false);
         }
       }
@@ -412,7 +543,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
       public void onEvent(Event t) throws Exception
       {
         GenericTreeRowType row = (GenericTreeRowType) genericTreeVS.getSelection();
-        
+
         if (row != null && row.getData() instanceof ValueSet)
         {
           ValueSet vs = (ValueSet) row.getData();
@@ -420,7 +551,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
         }
       }
     });
-    
+
     miNew.addEventListener(Events.ON_CLICK, new EventListener<Event>()
     {
       public void onEvent(Event t) throws Exception
@@ -428,13 +559,13 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
         popupValueSet(null, PopupValueSet.EDITMODES.CREATE, true);
       }
     });
-    
+
     miEdit.addEventListener(Events.ON_CLICK, new EventListener<Event>()
     {
       public void onEvent(Event t) throws Exception
       {
         GenericTreeRowType row = (GenericTreeRowType) genericTreeVS.getSelection();
-        
+
         if (row != null && row.getData() instanceof ValueSet)
         {
           ValueSet vs = (ValueSet) row.getData();
@@ -443,32 +574,30 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
         }
       }
     });
-    
+
     /*if(CodesystemGenericTreeModel.getInstance().getErrorMessage() != null &&
-            CodesystemGenericTreeModel.getInstance().getErrorMessage().length() > 0)
-    {
-      // show error message
-      ComponentHelper.setVisible("incTreeCS", false, this);
-      ComponentHelper.setVisible("message", true, this);
+     CodesystemGenericTreeModel.getInstance().getErrorMessage().length() > 0)
+     {
+     // show error message
+     ComponentHelper.setVisible("incTreeCS", false, this);
+     ComponentHelper.setVisible("message", true, this);
       
-      ((Label)getFellow("labelMessage")).setValue(CodesystemGenericTreeModel.getInstance().getErrorMessage());
-    }
-    else
-    {
-      ComponentHelper.setVisible("message", false, this);
-      ComponentHelper.setVisible("incTreeCS", true, this);
-    }*/
-    
+     ((Label)getFellow("labelMessage")).setValue(CodesystemGenericTreeModel.getInstance().getErrorMessage());
+     }
+     else
+     {
+     ComponentHelper.setVisible("message", false, this);
+     ComponentHelper.setVisible("incTreeCS", true, this);
+     }*/
 //    if(count <= PropertiesHelper.getInstance().getExpandTreeAutoCount())
 //    {
 //      genericTreeVS.expandAll();
 //    }
-    
   }
 
   private void createTabContent_Search()
   {
-//    if (genericListSearch != null)
+//    if (genericListSearch != null || externMode)
 //      return;
 //
 //    logger.debug("createTabContent_Search()");
@@ -515,12 +644,12 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     }
 
   }
-  
+
   public void onTreeRefresh(String id)
   {
     if (id == null)
       return;
-    
+
     if (id.equals("codesystems"))
     {
       genericTreeCS = null;
@@ -723,7 +852,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
       LoggingOutput.outputException(e, this);
     }
   }
-  
+
   public void popupValueSet(ValueSet valueSet, PopupValueSet.EDITMODES mode, boolean showVersion)
   {
     logger.debug("popupValueSet, mode: " + mode + ", showVersion: " + showVersion);

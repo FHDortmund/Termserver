@@ -17,7 +17,7 @@
 package de.fhdo.models.itemrenderer;
 
 import de.fhdo.collaboration.helper.AssignTermHelper;
-import de.fhdo.gui.main.modules.ContentConcepts;
+import de.fhdo.gui.main.modules.ContentConcepts_old;
 import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.gui.main.modules.PopupSearch;
 import de.fhdo.gui.main.modules.PopupWindow;
@@ -84,7 +84,7 @@ public class TreeitemRendererCSEVSearch extends TreeitemRendererCSEV{
                  tcCode = new Treecell();
         CodeSystemEntityVersion csev = (CodeSystemEntityVersion) data;
         ConceptValueSetMembership cvsm = null;
-        if(contMode == ContentConcepts.CONTENTMODE_VALUESET){
+        if(contMode == ContentConcepts_old.CONTENTMODE_VALUESET){
             
             for(ConceptValueSetMembership cvsm2:csev.getConceptValueSetMemberships()){
                 if(cvsm2.getId().getValuesetVersionId() == vsvVersionId){
@@ -103,7 +103,7 @@ public class TreeitemRendererCSEVSearch extends TreeitemRendererCSEV{
             CodeSystemConcept csc = csev.getCodeSystemConcepts().get(0);
             Label lCode = new Label();
       
-            if(contMode == ContentConcepts.CONTENTMODE_VALUESET){
+            if(contMode == ContentConcepts_old.CONTENTMODE_VALUESET){
                 if((cvsm.getStatus()) == 1 && cvsm.isIsStructureEntry()){
                     lCode.setValue("");
                 }else{

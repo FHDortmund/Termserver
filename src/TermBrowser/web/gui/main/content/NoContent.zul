@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  
+    <hbox style="margin-left: 8px; margin-top:8px; margin-bottom:8px;">
+      <image src="/rsc/img/symbols/warning_32x32.png"/>
+      <div style="margin-left: 8px; margin-top:8px;">
+        <label id="labelMessage" value="${labels.menu.noSelection}" />
+      </div>
+    </hbox>
+  
+</zk>

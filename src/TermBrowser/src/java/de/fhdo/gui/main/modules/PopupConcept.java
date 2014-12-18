@@ -53,6 +53,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.ext.AfterCompose;
+import org.zkoss.zul.Button;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Datebox;
@@ -417,31 +418,14 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
     ComponentHelper.setVisible("rowMainAxis", guiConceptMinimalVisible, this);
     ComponentHelper.setVisible("rowLeaf", guiConceptMinimalVisible, this);
 
-//    ComponentHelper.setVisible("rowDescriptionEng", guiCodesystemMinimalVisible, this);
-//
-//    // code system version
-//    ComponentHelper.setVisible("rowValidityRange", guiCodesystemVersionMinimalVisible, this);
-//    ComponentHelper.setVisible("rowDateFrom", guiCodesystemVersionMinimalVisible, this);
-//    ComponentHelper.setVisible("rowDateTo", guiCodesystemVersionMinimalVisible, this);
-//    ComponentHelper.setVisible("rowCSVStatus", guiCodesystemVersionMinimalVisible, this);
-//    ComponentHelper.setVisible("rowCSVPrefLang", guiCodesystemVersionMinimalVisible, this);
-//    ComponentHelper.setVisible("rowCSVLicence", guiCodesystemVersionMinimalVisible, this);
-//
-//    ComponentHelper.setVisible("buttonExpandCSV", guiCodesystemVersionExpandableVisible, this);
-//
-//    Button buttonExpandCS = (Button) getFellow("buttonExpandCS");
-//    Button buttonExpandCSV = (Button) getFellow("buttonExpandCSV");
-//
-//    // Buttons
-//    if (guiCodesystemMinimalVisible)
-//      buttonExpandCS.setImage("/rsc/img/symbols/collapse_16x16.png");
-//    else
-//      buttonExpandCS.setImage("/rsc/img/symbols/expand_16x16.png");
-//
-//    if (guiCodesystemVersionMinimalVisible)
-//      buttonExpandCSV.setImage("/rsc/img/symbols/collapse_16x16.png");
-//    else
-//      buttonExpandCSV.setImage("/rsc/img/symbols/expand_16x16.png");
+    
+    // Buttons
+    Button buttonExpandConcept = (Button) getFellow("buttonExpand");
+    
+    if (guiConceptMinimalVisible)
+      buttonExpandConcept.setImage("/rsc/img/symbols/collapse_16x16.png");
+    else
+      buttonExpandConcept.setImage("/rsc/img/symbols/expand_16x16.png");
   }
 
   public void onClickExpand()

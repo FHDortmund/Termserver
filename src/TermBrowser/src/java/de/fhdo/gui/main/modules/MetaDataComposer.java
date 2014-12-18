@@ -16,7 +16,7 @@
  */
 package de.fhdo.gui.main.modules;
 
-import de.fhdo.gui.main.modules.ContentConcepts;
+import de.fhdo.gui.main.modules.ContentConcepts_old;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.models.comparators.ComparatorCsMetadata;
@@ -195,7 +195,7 @@ public class MetaDataComposer extends SelectorComposer<Tabpanel>
     int contentMode = (Integer) listMetadata.getAttribute("contentMode");
     Long versionId = (Long) listMetadata.getAttribute("versionId");
 
-    if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
     {
 
       if (valueSetMetadataValue == null)
@@ -244,7 +244,7 @@ public class MetaDataComposer extends SelectorComposer<Tabpanel>
       }
     }
 
-    if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
     {
 
       if (codeSystemMetadataValue == null)

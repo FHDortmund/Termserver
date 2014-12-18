@@ -399,7 +399,7 @@ public class PopupConcept_old extends PopupWindow
       cse.getCodeSystemVersionEntityMemberships().add(csvem);
     }
 
-    if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
     {
       ReturnValueSetConceptMetadataRequestType para = new ReturnValueSetConceptMetadataRequestType();
       para.setCodeSystemEntityVersionId(csev.getVersionId());
@@ -445,7 +445,7 @@ public class PopupConcept_old extends PopupWindow
     
     //csev.getStatusVisibility()
             
-    if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
     {
 
       for (ConceptValueSetMembership cvsmL : csev.getConceptValueSetMemberships())
@@ -582,7 +582,7 @@ public class PopupConcept_old extends PopupWindow
     bTranslationNew.setDisabled(true);
     tbHints.setReadonly(true);
     tbMeaning.setReadonly(true);
-    if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
     {
       cbStructureEntry.setDisabled(true);
       tbOrderNr.setReadonly(true);
@@ -668,7 +668,7 @@ public class PopupConcept_old extends PopupWindow
     versioning = new VersioningType();
     versioning.setCreateNewVersion(Boolean.FALSE); // TODO: Probleme mit Assoziationen bei neuen Versionen; Vorerst keine neuen Versionen erstellbar                
 
-    if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
     {
       cbAxis.setDisabled(true);
       cbMainClass.setDisabled(true);
@@ -809,7 +809,7 @@ public class PopupConcept_old extends PopupWindow
     listMetadata.setDisabled(true);
     listTranslations.setDisabled(true);
 
-    if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
     {
 
       cbStructureEntry.setDisabled(true);
@@ -862,7 +862,7 @@ public class PopupConcept_old extends PopupWindow
     }
 
     // CodeSystem + CodeSystemVersion
-    if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
     {
       CreateConceptRequestType parameterCSC = new CreateConceptRequestType();
       CreateConceptResponse.Return responseCreateConcept = null;
@@ -905,7 +905,7 @@ public class PopupConcept_old extends PopupWindow
       cse.setId(responseCreateConcept.getCodeSystemEntity().getId());
       cse.setCurrentVersionId(csev.getVersionId());
     }
-    else if (contentMode == ContentConcepts.CONTENTMODE_VALUESET)
+    else if (contentMode == ContentConcepts_old.CONTENTMODE_VALUESET)
     { // ValueSets; Es werden nur Verknüpfungen zu CSE(V)s erstellt und keine neuen Konzepte angelegt
       // siehe ganz unten
     }
@@ -949,7 +949,7 @@ public class PopupConcept_old extends PopupWindow
         Logger.getLogger(PopupConcept.class.getName()).log(Level.SEVERE, null, ex);
       }
     }
-    ((ContentConcepts) windowParent).updateModel(true);
+    ((ContentConcepts_old) windowParent).updateModel(true);
     window.detach();
   }
 
@@ -969,7 +969,7 @@ public class PopupConcept_old extends PopupWindow
   protected void maintainVersionEdit()
   {
 
-    if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
     {
       MaintainConceptRequestType parameter = new MaintainConceptRequestType();
       parameter.setCodeSystemVersionId(versionId);
@@ -1020,7 +1020,7 @@ public class PopupConcept_old extends PopupWindow
           Messagebox.show(Labels.getLabel("common.error") + "\n" + Labels.getLabel("popupConcept.conceptNotCreated") + "\n\n" + response.getReturnInfos().getMessage());
 
         window.detach();
-        ((ContentConcepts) windowParent).updateModel(true);
+        ((ContentConcepts_old) windowParent).updateModel(true);
       }
       catch (Exception ex)
       {
@@ -1062,7 +1062,7 @@ public class PopupConcept_old extends PopupWindow
       {
         if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
           Messagebox.show(Labels.getLabel("popupConcept.editConceptSuccessfully"));
-        ((ContentConcepts) windowParent).updateModel(true);
+        ((ContentConcepts_old) windowParent).updateModel(true);
         window.detach();
         cvsm.setStatus(Integer.valueOf(DomainHelper.getInstance().getComboboxCd(cbStatus)));
         cvsm.setIsStructureEntry(cbStructureEntry.isChecked());
@@ -1083,7 +1083,7 @@ public class PopupConcept_old extends PopupWindow
   protected void updateStatus()
   {
 
-    if (contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+    if (contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
     {
 
       UpdateConceptStatusRequestType parameter = new UpdateConceptStatusRequestType();
@@ -1110,7 +1110,7 @@ public class PopupConcept_old extends PopupWindow
         if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
         {
           Messagebox.show(Labels.getLabel("popupConcept.editStatusSuccessfully"));
-          ((ContentConcepts) windowParent).updateModel(true);
+          ((ContentConcepts_old) windowParent).updateModel(true);
           window.detach();
         }
         else
@@ -1149,7 +1149,7 @@ public class PopupConcept_old extends PopupWindow
         if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
         {
           Messagebox.show(Labels.getLabel("popupConcept.editStatusSuccessfully"));
-          ((ContentConcepts) windowParent).updateModel(true);
+          ((ContentConcepts_old) windowParent).updateModel(true);
           window.detach();
           cvsm.setStatus(Integer.valueOf(DomainHelper.getInstance().getComboboxCd(cbStatus)));
         }

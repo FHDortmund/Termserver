@@ -18,7 +18,7 @@ package de.fhdo.gui.main;
 
 import de.fhdo.Definitions;
 import de.fhdo.collaboration.helper.AssignTermHelper;
-import de.fhdo.gui.main.modules.ContentConcepts;
+import de.fhdo.gui.main.modules.ContentConcepts_old;
 import de.fhdo.gui.main.modules.PopupCodeSystem;
 import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.gui.main.modules.PopupValueSet;
@@ -103,7 +103,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
           treeCS,
           treeSearch;
   //treeActive;
-  protected ContentConcepts windowContentConcepts;
+  protected ContentConcepts_old windowContentConcepts;
   protected Button bNewCS,
           bNewCSV, bEditCSV, bDetailsCSV,
           bNewVS, bNewVSV, bEditVSV, bDetailsVSV,
@@ -182,7 +182,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     logger.debug("processURLParameter()");
     
     // sendBackValues
-    SendBackHelper.getInstance().initialize();
+    //SendBackHelper.getInstance().initialize();
 
     // West Layout (Auswahl der CS, VS, DV) unsichtbar machen, falls gew?scht                
     if (ParameterHelper.getBoolean("hideSelection") != null)
@@ -875,7 +875,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     // Parameter zum laden des Content angeben
     if (source instanceof CodeSystemVersion)
     {
-      contentMode = ContentConcepts.CONTENTMODE_CODESYSTEM;
+      contentMode = ContentConcepts_old.CONTENTMODE_CODESYSTEM;
       id = selectedCSV.getCodeSystem().getId();
       versionId = selectedCSV.getVersionId();
       name = selectedCSV.getCodeSystem().getName();
@@ -885,7 +885,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     }
     else if (source instanceof ValueSetVersion)
     {
-      contentMode = ContentConcepts.CONTENTMODE_VALUESET;
+      contentMode = ContentConcepts_old.CONTENTMODE_VALUESET;
       id = selectedVSV.getValueSet().getId();
       versionId = selectedVSV.getVersionId();
       name = selectedVSV.getValueSet().getName();
@@ -935,7 +935,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
       // HugeFlatData oder Baum?
       String src;
 
-      if (treeModel.getTotalSize() > 100 && contentMode == ContentConcepts.CONTENTMODE_CODESYSTEM)
+      if (treeModel.getTotalSize() > 100 && contentMode == ContentConcepts_old.CONTENTMODE_CODESYSTEM)
       {
         src = "modules/ContentConceptsHugeFlatData.zul";
       }
@@ -946,7 +946,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
       }
 
       inc.setSrc(src);
-      windowContentConcepts = (ContentConcepts) inc.getFellow("windowConcepts"); // geht nur im instant mode
+      windowContentConcepts = (ContentConcepts_old) inc.getFellow("windowConcepts"); // geht nur im instant mode
     }
     catch (Exception e)
     {
@@ -1417,12 +1417,12 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     setActiveButtons(false, false, true, false);
   }
 
-  public ContentConcepts getWindowContentConcepts()
+  public ContentConcepts_old getWindowContentConcepts()
   {
     return windowContentConcepts;
   }
 
-  public void setWindowContentConcepts(ContentConcepts windowContentConcepts)
+  public void setWindowContentConcepts(ContentConcepts_old windowContentConcepts)
   {
     this.windowContentConcepts = windowContentConcepts;
   }
