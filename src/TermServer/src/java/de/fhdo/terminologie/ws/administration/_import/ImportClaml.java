@@ -547,6 +547,7 @@ public class ImportClaml
     codeSystemVersion.setDescription(description);
     codeSystemVersion.setSource(authority);
     codeSystemVersion.setReleaseDate(date);
+    codeSystemVersion.setOid(uid);
 
     request.getCodeSystem().setCodeSystemVersions(new HashSet<CodeSystemVersion>());
     request.getCodeSystem().getCodeSystemVersions().add(codeSystemVersion);
@@ -567,53 +568,20 @@ public class ImportClaml
 
     logger.debug("Neue CodeSystem-ID: " + resp.getCodeSystem().getId());
     logger.debug("Neue CodeSystemVersion-ID: " + ((CodeSystemVersion) resp.getCodeSystem().getCodeSystemVersions().toArray()[0]).getVersionId());
-
-    /*logger.info("[ImportClaml.java] Neues Code System anlegen");
-     // logger.debug(title+" "+ uid + " "+ versionName+ " "+authority);
-     //this.auth = new Authoring();
-     CreateCodeSystemsRequestType req = new CreateCodeSystemsRequestType();
     
-     //neuer VocabularyType
-     this.codeSystem = new CodeSystem();
-     codeSystem.setName(title);
-     codeSystem.setDescription(title);
-     //TODO OID wurde aus dem Codesystem in das Codesystem Version verlegt
-     //codeSystem.Oid(uid);
+    // Read existing metadata and add to map to avoid double entries
+    String hql = "select distinct mp from MetadataParameter mp "
+            + " where codeSystemId=" + resp.getCodeSystem().getId();
+    List<MetadataParameter> md_list = hb_session.createQuery(hql).list();
     
-     //TODO Ob das wohl richtig ist?
-     Set<CodeSystemVersion> csvList = codeSystem.getCodeSystemVersions();
-     Iterator csvIter = csvList.iterator();
-     while (csvIter.hasNext())
-     {
-     CodeSystemVersion csvItem = (CodeSystemVersion) csvIter.next();
-     //Wenns die aktuellste Version ist, dann
-     csvItem.setOid(uid);
-     }
-    
-     //neue VocabularyVersionType (Liste)
-     CodeSystemVersion codeSystemVersion = new CodeSystemVersion();
-     codeSystemVersion.setName(title);
-     codeSystemVersion.setDescription(title);
-     codeSystemVersion.setSource(authority);
-     //vvtype.setValidFrom(new Date(2010, 01, 01));//todo:Titledate?
-     //vvtype.setValidTo(new Date(2010, 01, 01));//todo:?
-     Set<CodeSystemVersion> alist = codeSystem.getCodeSystemVersions();
-     alist.add(codeSystemVersion);
-     codeSystem.setCodeSystemVersions(alist);
-    
-     req.setCodeSystem(codeSystem);
-     req.setLogin(login);
+    for(MetadataParameter mp : md_list)
+    {
+      metaDataMap.put(mp.getParamName(), mp.getId());
+      
+      logger.debug("found metadata: " + mp.getParamName() + " with id: " + mp.getId());
+    }
     
     
-     //Code System erstellen
-     CreateCodeSystemsResponseType resp = authoring.CreateCodeSystem(req);
-     logger.debug(resp.getReturnInfos().getMessage());
-     if (resp.getReturnInfos().getStatus() != ReturnType.Status.OK)
-     {
-     throw new Exception();
-     }
-     this.codeSystem = resp.getCodeSystem();
-     */
   }
 
   public AssociationType CreateAssociationType(String forwardName, String reverseName)
