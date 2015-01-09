@@ -32,7 +32,6 @@ import de.fhdo.helper.TreeHelper;
 import de.fhdo.logging.LoggingOutput;
 import de.fhdo.models.TreeModel;
 import de.fhdo.models.TreeModelCS;
-import de.fhdo.models.TreeModelCSEV;
 import de.fhdo.models.TreeModelVS;
 import de.fhdo.models.TreeNode;
 import de.fhdo.models.comparators.ComparatorCsvVsv;
@@ -909,7 +908,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
     try
     {
       //String validityRangeDT = ValidityRangeHelper.getValidityRangeNameById(validityRange);// Lade Range of Validity
-      String validityRangeDT = DomainHelper.getInstance().getDomainValueDisplayText(Definitions.DOMAINID_CODESYSTEMVERSION_VALIDITYRANGE, "" + validityRange);
+      /*String validityRangeDT = DomainHelper.getInstance().getDomainValueDisplayText(Definitions.DOMAINID_CODESYSTEMVERSION_VALIDITYRANGE, "" + validityRange);
 
       Include inc = (Include) getFellow("incConcepts");    // lade Concepts in include@ComponentTreeAndContent         
       TreeModelCSEV treeModel = new TreeModelCSEV(source, this);
@@ -946,7 +945,7 @@ public class ContentCSVSDefault extends Window implements AfterCompose
       }
 
       inc.setSrc(src);
-      windowContentConcepts = (ContentConcepts_old) inc.getFellow("windowConcepts"); // geht nur im instant mode
+      windowContentConcepts = (ContentConcepts_old) inc.getFellow("windowConcepts"); // geht nur im instant mode*/
     }
     catch (Exception e)
     {

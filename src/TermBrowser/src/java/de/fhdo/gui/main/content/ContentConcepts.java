@@ -333,6 +333,11 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       SessionHelper.setValue("selectedVSV", null);
 
       logger.debug("CSV selected: " + csv.getVersionId());
+      //codeSystem = csv.getCodeSystem();
+      codeSystemVersion = csv;
+      
+      logger.debug("CS-ID: " + codeSystem.getId());
+      logger.debug("CSV-ID: " + codeSystemVersion.getVersionId());
     }
     else if (o instanceof ValueSetVersion)
     {
@@ -341,6 +346,8 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       SessionHelper.setValue("selectedCSV", null);
 
       logger.debug("VSV selected: " + vsv.getVersionId());
+      //valueSet = vsv.getValueSet();
+      valueSetVersion = vsv;
     }
 
     loadConcepts();
@@ -429,6 +436,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       {
         if (codeSystem != null)
         {
+          logger.debug("show codeSystem version");
           Map<String, Object> data = new HashMap<String, Object>();
           data.put("CS", codeSystem);
           data.put("CSV", codeSystemVersion);
@@ -440,6 +448,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
         }
         else if (valueSet != null)
         {
+          logger.debug("show valueSet version");
           Map<String, Object> data = new HashMap<String, Object>();
           data.put("VS", valueSet);
           data.put("VSV", valueSetVersion);
@@ -448,6 +457,10 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
           Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupValueSet.zul", this, data);
           ((PopupValueSet) w).setUpdateListener(this);
           w.doModal();
+        }
+        else
+        {
+          logger.debug("codeSystem and valueSet are null");
         }
       }
       catch (Exception e)

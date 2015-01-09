@@ -12,9 +12,9 @@
             <tab id="tabDetails" label="${labels.common.details}" />
             <tab id="tabMetadata" label="${labels.common.metadata}"/>
             <tab id="tabTranslations" label="${labels.common.translations}"/>
-            <tab id="tabCrossmapping" label="${labels.popupConcept.crossmappings}"  visible="false" />
-            <tab id="tabLinkedConcepts" label="${labels.popupConcept.linkedConcepts}" visible="false" />
-            <tab id="tabOntologies" label="${labels.popupConcept.ontologies}" visible="false" />
+            <tab id="tabCrossmapping" label="${labels.popupConcept.crossmappings}"  visible="true" />
+            <tab id="tabLinkedConcepts" label="${labels.popupConcept.linkedConcepts}" visible="true" />
+            <tab id="tabOntologies" label="${labels.popupConcept.ontologies}" visible="true" />
           </tabs>
           <tabpanels>
             <tabpanel id="tabpanelDetails">
@@ -184,19 +184,13 @@
               </grid>-->
             </tabpanel>
             <tabpanel id="tabpanelCrossmappings">
-              <listbox id="listCrossmappings" vflex="true" height="99%" width="99%" >
-                <listhead></listhead>
-              </listbox>
+              <include id="incListCrossmappings" src="/gui/templates/GenericList.zul"/>
             </tabpanel>
             <tabpanel id="tabpanelLinkedConcepts">
-              <listbox id="listLinkedConcepts" vflex="true" height="99%" width="99%" >
-                <listhead></listhead>
-              </listbox>
+              <include id="incListLinkedConcepts" src="/gui/templates/GenericList.zul"/>
             </tabpanel>
             <tabpanel id="tabpanelOntologies">
-              <listbox id="listOntologies" vflex="true" height="99%" width="99%" >
-                <listhead></listhead>
-              </listbox>
+              <include id="incListOntologies" src="/gui/templates/GenericList.zul"/>
             </tabpanel>
           </tabpanels>
         </tabbox>

@@ -27,6 +27,7 @@ import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.OpenEvent;
 import org.zkoss.zul.Html;
 import org.zkoss.zul.Image;
+import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Menuitem;
 import org.zkoss.zul.Menupopup;
 import org.zkoss.zul.Menuseparator;
@@ -50,7 +51,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
 
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
   ConceptsTree conceptsTree;
-  EventListener noteListener = null;
+  static EventListener noteListener = null;
   private boolean searchResults;
   private Menupopup contextMenu;
 
@@ -58,18 +59,6 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
   {
     this.conceptsTree = conceptsTree;
     this.searchResults = search;
-
-    noteListener = new EventListener()
-    {
-      public void onEvent(Event event) throws Exception
-      {
-        if (event.getTarget() != null && event.getTarget() instanceof Image)
-        {
-          Image img = (Image) event.getTarget();
-          Messagebox.show(img.getTooltiptext());
-        }
-      }
-    };
 
     createContextMenu();
   }
@@ -146,37 +135,40 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       treeRow.appendChild(cell);
 
       // details
-      cell = new Treecell();
-
-      if (csc.isIsPreferred() != null && csc.isIsPreferred().booleanValue() == false)
-      {
-        Image img = new Image("/rsc/img/symbols/tag_black_16x16.png");
-        img.setTooltiptext(Labels.getLabel("common.notPreferredTerm"));
-        cell.appendChild(img);
-      }
-      if (csc.getDescription() != null && csc.getDescription().length() > 0)
-      {
-        Image img = new Image("/rsc/img/filetypes/note.png");
-        img.setTooltiptext(csc.getDescription());
-        img.addEventListener(Events.ON_CLICK, noteListener);
-        cell.appendChild(img);
-      }
-      if (csev.getStatusVisibility() != null && csev.getStatusVisibility() == Definitions.STATUS_VISIBILITY_INVISIBLE)
-      {
-        Image img = new Image("/rsc/img/symbols/hidden.png");
-        img.setTooltiptext(Labels.getLabel("common.invisible"));
-        cell.appendChild(img);
-      }
-      if (csev.getStatusDeactivated() != null && csev.getStatusDeactivated() == Definitions.STATUS_DEACTIVATED_DELETED)
-      {
-        Image img = new Image("/rsc/img/symbols/delete_12x12.png");
-        img.setTooltiptext(Labels.getLabel("common.deleted"));
-        cell.appendChild(img);
-      }
-
+      cell = new Treecell("");
+      fillDetailsCell(null, cell, csev, csc);
       cell.setStyle(style);
       treeRow.appendChild(cell);
+      /*cell = new Treecell();
 
+       if (csc.isIsPreferred() != null && csc.isIsPreferred().booleanValue() == false)
+       {
+       Image img = new Image("/rsc/img/symbols/tag_black_16x16.png");
+       img.setTooltiptext(Labels.getLabel("common.notPreferredTerm"));
+       cell.appendChild(img);
+       }
+       if (csc.getDescription() != null && csc.getDescription().length() > 0)
+       {
+       Image img = new Image("/rsc/img/filetypes/note.png");
+       img.setTooltiptext(csc.getDescription());
+       img.addEventListener(Events.ON_CLICK, noteListener);
+       cell.appendChild(img);
+       }
+       if (csev.getStatusVisibility() != null && csev.getStatusVisibility() == Definitions.STATUS_VISIBILITY_INVISIBLE)
+       {
+       Image img = new Image("/rsc/img/symbols/hidden.png");
+       img.setTooltiptext(Labels.getLabel("common.invisible"));
+       cell.appendChild(img);
+       }
+       if (csev.getStatusDeactivated() != null && csev.getStatusDeactivated() == Definitions.STATUS_DEACTIVATED_DELETED)
+       {
+       Image img = new Image("/rsc/img/symbols/delete_12x12.png");
+       img.setTooltiptext(Labels.getLabel("common.deleted"));
+       cell.appendChild(img);
+       }
+
+       cell.setStyle(style);
+       treeRow.appendChild(cell);*/
       // source (if value set)
       if (conceptsTree.getContentType() == ConceptsTree.CONTENT_TYPE.VALUESET)
       {
@@ -231,6 +223,66 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
      }*/
   }
 
+  public static void fillDetailsCell(Listcell listcell, Treecell treecell, CodeSystemEntityVersion csev, CodeSystemConcept csc)
+  {
+    //Listcell cell = new Listcell("");
+
+    if (csc.isIsPreferred() != null && csc.isIsPreferred().booleanValue() == false)
+    {
+      Image img = new Image("/rsc/img/symbols/tag_black_16x16.png");
+      img.setTooltiptext(Labels.getLabel("common.notPreferredTerm"));
+      
+      if(listcell != null)
+        listcell.appendChild(img);
+      if(treecell != null)
+        treecell.appendChild(img);
+    }
+    if (csc.getDescription() != null && csc.getDescription().length() > 0)
+    {
+      if (noteListener == null)
+      {
+        noteListener = new EventListener()
+        {
+          public void onEvent(Event event) throws Exception
+          {
+            if (event.getTarget() != null && event.getTarget() instanceof Image)
+            {
+              Image img = (Image) event.getTarget();
+              Messagebox.show(img.getTooltiptext());
+            }
+          }
+        };
+      }
+
+      Image img = new Image("/rsc/img/filetypes/note.png");
+      img.setTooltiptext(csc.getDescription());
+      img.addEventListener(Events.ON_CLICK, noteListener);
+      if(listcell != null)
+        listcell.appendChild(img);
+      if(treecell != null)
+        treecell.appendChild(img);
+    }
+    if (csev.getStatusVisibility() != null && csev.getStatusVisibility() == Definitions.STATUS_VISIBILITY_INVISIBLE)
+    {
+      Image img = new Image("/rsc/img/symbols/hidden.png");
+      img.setTooltiptext(Labels.getLabel("common.invisible"));
+      if(listcell != null)
+        listcell.appendChild(img);
+      if(treecell != null)
+        treecell.appendChild(img);
+    }
+    if (csev.getStatusDeactivated() != null && csev.getStatusDeactivated() == Definitions.STATUS_DEACTIVATED_DELETED)
+    {
+      Image img = new Image("/rsc/img/symbols/delete_12x12.png");
+      img.setTooltiptext(Labels.getLabel("common.deleted"));
+      if(listcell != null)
+        listcell.appendChild(img);
+      if(treecell != null)
+        treecell.appendChild(img);
+    }
+
+  }
+
   private void appendListener(final Treeitem treeItem, final TreeNode treeNode)
   {
     // Eventlistener fuer + und - Symbole der TreeItems
@@ -277,11 +329,11 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
 
   private void createContextMenu()
   {
-    if(contextMenu != null)
+    if (contextMenu != null)
       return;
-    
+
     logger.debug("createContextMenu()");
-    
+
     contextMenu = new Menupopup();
     contextMenu.setParent(conceptsTree.getConceptsWindow());
      //dataRow.setContext(contextMenu);
@@ -328,7 +380,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       }
     });
 
-     //    miStatus.addEventListener("onClick", new EventListener()
+    //    miStatus.addEventListener("onClick", new EventListener()
     //    {
     //      public void onEvent(Event event) throws Exception
     //      {
@@ -353,7 +405,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       }
     });
 
-     //    miDeepLink.addEventListener(Events.ON_CLICK, new EventListener()
+    //    miDeepLink.addEventListener(Events.ON_CLICK, new EventListener()
     //    {
     //      public void onEvent(Event event) throws Exception
     //      {
@@ -405,7 +457,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
         miNewSubConcept.setParent(contextMenu);
       }
 
-     // Menü VS hinzufügen
+      // Menü VS hinzufügen
       //      Menu mAddToVS = new Menu(Labels.getLabel("treeitemRendererCSEV.addToValueSet"));
       //      mAddToVS.setParent(contextMenu);
       //      Menupopup mpAddToVS = new Menupopup();
@@ -521,7 +573,6 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
         //logger.debug("target: " + event.getTarget().getClass().getCanonicalName());
 
         //long id = getCSEV_ID_fromEvent(event);
-
 //        08.12.2014 14:46:05 DEBUG: onClick: org.zkoss.zk.ui.event.MouseEvent
 //08.12.2014 14:46:05 DEBUG: target: org.zkoss.zul.Menuitem
         conceptsTree.openConceptDetails(csev.getVersionId());
