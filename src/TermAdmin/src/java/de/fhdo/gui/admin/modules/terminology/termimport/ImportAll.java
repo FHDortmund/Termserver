@@ -237,7 +237,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
 
         if (cd.equals(TYPE_CSV))
         {
-          importClass = new ImportCS_CSV(formatId);
+          importClass = new ImportCS_CSV(formatId, this);
         }
         else if (cd.equals(TYPE_CLAML))
         {

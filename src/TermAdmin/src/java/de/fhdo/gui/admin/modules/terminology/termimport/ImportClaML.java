@@ -31,7 +31,6 @@ import de.fhdo.terminologie.ws.administration.ImportType;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.xml.ws.Response;
-import javax.xml.ws.soap.MTOMFeature;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -53,6 +52,7 @@ public class ImportClaML implements IImport, javax.xml.ws.AsyncHandler<ImportCod
   Timer timer;
   boolean importRunning = false;
   Window window;
+  int lastValue = -1;
 
   public ImportClaML(long FormatId, Window win)
   {
@@ -66,7 +66,7 @@ public class ImportClaML implements IImport, javax.xml.ws.AsyncHandler<ImportCod
 
   public boolean startImport(byte[] bytes, final Progressmeter progress, Label labelInfo, CodeSystem codeSystem, ValueSet valueSet)
   {
-
+    lastValue = -1;
     progress.setVisible(true);
 
     // Login
@@ -139,6 +139,18 @@ public class ImportClaML implements IImport, javax.xml.ws.AsyncHandler<ImportCod
                 progress.setValue(0);
                 msg = index + "/unbekannt";
               }
+              
+              if(lastValue > 0)
+              {
+                int diff = index - lastValue;
+                int countPerMinutes = diff * 6;
+                if(countPerMinutes > 0)
+                {
+                  msg += " (" + countPerMinutes + "/min)";
+                }
+              }
+              
+              lastValue = index;
 
               Executions.schedule(desktop, el, new Event("updateStatus", null, msg));
             }
