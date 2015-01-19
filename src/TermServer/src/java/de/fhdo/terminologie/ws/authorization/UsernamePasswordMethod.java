@@ -24,6 +24,7 @@ import de.fhdo.terminologie.db.hibernate.TermUser;
 import de.fhdo.terminologie.helper.HQLParameterHelper;
 import de.fhdo.terminologie.helper.Password;
 import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
+import de.fhdo.terminologie.ws.authorization.types.ChangePasswordResponseType;
 import de.fhdo.terminologie.ws.authorization.types.LoginResponseType;
 import de.fhdo.terminologie.ws.authorization.types.LogoutResponseType;
 import de.fhdo.terminologie.ws.types.ReturnType;
@@ -151,7 +152,6 @@ public class UsernamePasswordMethod implements IAuthorization
           response.getReturnInfos().setStatus(ReturnType.Status.OK);
           response.getReturnInfos().setMessage("Login successful");
 
-          
           //hb_session.getTransaction().commit();
         }
         else
@@ -313,6 +313,142 @@ public class UsernamePasswordMethod implements IAuthorization
     return response;
   }
 
+  public ChangePasswordResponseType ChangePassword(String IP, List<String> parameterList)
+  {
+    if (logger.isInfoEnabled())
+      logger.info("====== UsernamePasswordMethod - Login started ======");
+
+    // create return infos
+    ChangePasswordResponseType response = new ChangePasswordResponseType();
+    response.setReturnInfos(new ReturnType());
+
+    // check parameters
+    if (validateChangePasswordParameter(parameterList, response) == false)
+    {
+      return response; // error, so return
+    }
+
+    try
+    {
+      java.util.List<TermUser> list = null;
+
+      // hibernate block, open session
+      org.hibernate.Session hb_session = HibernateUtil.getSessionFactory().openSession();
+      org.hibernate.Transaction tx = hb_session.beginTransaction();
+
+      try // 2. try-catch-block to catch hibernate errors
+      {
+        // create HQL
+        String hql = "select u from TermUser u";
+
+        // use hql parameter helper to set where part
+        HQLParameterHelper parameterHelper = new HQLParameterHelper();
+
+        logger.debug("parameterList: " + parameterList);
+        if (parameterList != null)
+          logger.debug("parameterList size: " + parameterList.size());
+
+        String username = "";
+        String old_password_hash = "";
+        String new_password_hash = "";
+        
+        if (parameterList != null && parameterList.size() >= 2)
+        {
+          username = parameterList.get(0);
+          old_password_hash = parameterList.get(1);
+          new_password_hash = parameterList.get(2);
+
+          parameterHelper.addParameter("u.", "name", username);
+        }
+
+        logger.debug("username: " + username);
+        //logger.debug("password_hash: " + new_password_hash);
+
+        // add parameter with "and"
+        hql += parameterHelper.getWhere("");
+
+        // create query
+        org.hibernate.Query q = hb_session.createQuery(hql);
+
+        // set parameter in query
+        parameterHelper.applyParameter(q);
+
+        // do database query
+        list = (java.util.List<TermUser>) q.list();
+
+        boolean loginCorrect = false;
+
+        TermUser termUser = null;
+        String salt = "";
+
+        if (username.length() > 0 && old_password_hash.length() > 0
+                && list != null && list.size() > 0)
+        {
+          termUser = list.get(0);
+          salt = termUser.getSalt();
+
+          if (salt == null || salt.length() == 0)
+          {
+            // kein Salt vorhanden
+            logger.warn("no salt value available for user");
+            loginCorrect = false;
+          }
+          else
+          {
+            // Passwort prüfen (Hash + Salt)
+            String passwordSalted = Password.getSaltedPassword(old_password_hash, salt, username, ITERATION_COUNT);
+            loginCorrect = passwordSalted.equals(termUser.getPassw());
+          }
+        }
+
+        if (loginCorrect)
+        {
+          // Login successful, change password now
+          String newPasswordSalted = Password.getSaltedPassword(new_password_hash, salt, username, ITERATION_COUNT);
+          termUser.setPassw(newPasswordSalted);
+          hb_session.update(termUser);
+
+          response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
+          response.getReturnInfos().setStatus(ReturnType.Status.OK);
+          response.getReturnInfos().setMessage("Password successfully changed");
+        }
+        else
+        {
+          response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
+          response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+          response.getReturnInfos().setMessage("Username or password wrong");
+        }
+        // close transaction and commit changes (session-infos changed)
+        tx.commit();
+      }
+      catch (Exception e)
+      {
+        tx.rollback();
+
+        response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
+        response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+        response.getReturnInfos().setMessage("Error at 'ChangePassword', Hibernate: " + e.getLocalizedMessage());
+
+        logger.error("Error at 'ChangePassword', Hibernate: " + e.getLocalizedMessage());
+        LoggingOutput.outputException(e, this);
+      }
+      finally
+      {
+        hb_session.close();
+      }
+    }
+    catch (Exception e)
+    {
+      response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
+      response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+      response.getReturnInfos().setMessage("Error at 'ChangePassword': " + e.getLocalizedMessage());
+
+      LoggingOutput.outputException(e, this);
+    }
+
+    return response;
+  }
+
   public AuthenticateInfos Authenticate(String IP, String loginToken)
   {
     AuthenticateInfos response = new AuthenticateInfos();
@@ -422,6 +558,47 @@ public class UsernamePasswordMethod implements IAuthorization
         if (Request.get(0).trim().length() != 36)
         {
           Response.getReturnInfos().setMessage("The session id must have a length of 36 characters!");
+          erfolg = false;
+        }
+      }
+    }
+
+    if (erfolg == false)
+    {
+      Response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
+      Response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+    }
+    return erfolg;
+  }
+
+  private boolean validateChangePasswordParameter(
+          List<String> Request,
+          ChangePasswordResponseType Response)
+  {
+    boolean erfolg = true;
+
+    if (Request == null)
+    {
+      Response.getReturnInfos().setMessage("Parameter list may not be empty!");
+      erfolg = false;
+    }
+    else
+    {
+      if (Request.size() != 3)
+      {
+        Response.getReturnInfos().setMessage("The parameter list must have 3 entries: (1) username, (2) md5-hashed old password, (3) md5-hashed new password");
+        erfolg = false;
+      }
+      else
+      {
+        if (Request.get(1).trim().length() != 32)
+        {
+          Response.getReturnInfos().setMessage("The md5-hashed password (old) must have a length of 32 characters!");
+          erfolg = false;
+        }
+        else if (Request.get(2).trim().length() != 32)
+        {
+          Response.getReturnInfos().setMessage("The md5-hashed password (new) must have a length of 32 characters!");
           erfolg = false;
         }
       }

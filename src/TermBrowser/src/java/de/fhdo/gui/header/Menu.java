@@ -19,6 +19,7 @@ package de.fhdo.gui.header;
 import de.fhdo.authorization.Authorization;
 import de.fhdo.gui.main.modules.PopupWindow;
 import de.fhdo.helper.PropertiesHelper;
+import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.ViewHelper;
 import de.fhdo.logging.LoggingOutput;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Include;
+import org.zkoss.zul.Menuitem;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
@@ -146,8 +148,19 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
       ((Toolbarbutton) getFellow("tbb_Vorschlag")).setVisible(false);
     }*/
     
-    // TODO Sichtbarkeiten Login-Status
-
+    // Sichtbarkeiten Login-Status
+    //String user = SessionHelper.getUserName();
+    boolean loggedIn = SessionHelper.isUserLoggedIn();
+    
+    ((Menuitem)getFellow("menuitemAnmelden")).setDisabled(loggedIn);
+    ((Menuitem)getFellow("menuitemAbmelden")).setDisabled(!loggedIn);
+    ((Menuitem)getFellow("menuitemChangePassword")).setDisabled(!loggedIn);
+    
+    /*<menuitem id="menuitemAnmelden" label="${labels.common.doLogin}"  onClick="win.login()" image="/rsc/img/symbols/lock_16x16.png"></menuitem>
+          <menuitem id="menuitemAbmelden" label="${labels.common.doLogoff}" onClick="win.logout()" image="/rsc/img/symbols/unlock_16x16.png"></menuitem>
+          <menuitem id="menuitemChangePassword" label="${labels.common.changePassword}" onClick="win.changePassword()" image="/rsc/img/symbols/key_16x16.png"></menuitem>
+        </*/
+    
     getFellow("menuCollaboration").setVisible(PropertiesHelper.getInstance().isCollaborationActive());
   }
 
@@ -412,10 +425,6 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
     }
   }
 
-  /*public void login()
-   {
-   LoginHelper.getInstance().openLoginWindow();
-   }*/
   public void login()
   {
     Authorization.login();
@@ -424,15 +433,11 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
   public void logout()
   {
     Authorization.logout();
-    /*if (DortmundHelper.getInstance().isFhDortmund())
-     {
-     de.fhdo.dortmund.LoginHelper.getInstance().logout();
-     }
-     else*/
-    
-//      de.fhdo.helper.LoginHelper.getInstance().logout();
-//      Executions.sendRedirect("../../../TermAdmin/gui/admin/logout.zul");
-//    
+  }
+  
+  public void changePassword()
+  {
+    Authorization.changePassword();
   }
 
   public void showUADetails()

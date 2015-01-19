@@ -18,12 +18,12 @@
           </toolbarbutton>
           <toolbarbutton id="tb_user" image="/rsc/img/symbols/user_16x16.png" label="-" onClick='win.onUserClicked()'
                          tooltiptext="${labels.statusBar.userLoggedIn}" visible="false"/>
+          <toolbarbutton id="tb_logout" image="/rsc/img/symbols/unlock_16x16.png" label="${labels.common.logoff}" onClick='win.onLogoutClicked()'
+                         visible="false"/>
           
           <!--<toolbarbutton id="tb_loginInfo" image="/rsc/img/symbols/info16_16.png" label="" tooltiptext="${labels.statusBar.userLoggedInInfo}" visible="false"/>-->
       
       
-          <!--<toolbarbutton id="tb_logout" image="/rsc/img/symbols/unlock_16x16.png" label="${labels.common.logoffKollab}" onClick='win.onLogoutClicked()'
-          tooltiptext="${labels.statusBar.tooltipLogoffKollab}" visible="false"/>--> <!--Ist jetzt im menu.zul--> 
           <toolbarbutton id="tb_termadmin" image="/rsc/img/symbols/settings_16x16.png" label="Verwaltungsbereich" onClick='win.onCallAdminClicked()'
                          tooltiptext="Wechselt zum Verwaltungsbereich"/>
       

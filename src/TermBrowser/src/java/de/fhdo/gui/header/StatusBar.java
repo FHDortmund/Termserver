@@ -21,11 +21,6 @@ import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.PropertiesHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.VersionHelper;
-import de.fhdo.logging.LoggingOutput;
-import java.util.HashMap;
-import java.util.Map;
-import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Label;
@@ -60,7 +55,8 @@ public class StatusBar extends Window implements AfterCompose
     if (user.length() > 0)
     {
       Toolbarbutton tbUser = (Toolbarbutton) getFellow("tb_user");
-      tbUser.setLabel(user + " | " + Labels.getLabel("common.doLogoff"));
+      //tbUser.setLabel(user + " | " + Labels.getLabel("common.doLogoff"));
+      tbUser.setLabel(user);
 
       if (isAdmin)
         tbUser.setImage("/rsc/img/symbols/user_admin_16x16.png");
@@ -74,7 +70,7 @@ public class StatusBar extends Window implements AfterCompose
      ComponentHelper.setVisible("tb_termadmin", user.length() > 0 && collaboration == false && SessionHelper.isAdmin() == true, this);
      */
     ComponentHelper.setVisible("tb_user", user.length() > 0, this);
-    //ComponentHelper.setVisible("tb_logout", user.length() > 0 && collaboration == true, this);
+    ComponentHelper.setVisible("tb_logout", user.length() > 0, this);
     ComponentHelper.setVisible("tb_termadmin", isAdmin, this);
 
     /*if (user.length() > 0)
@@ -129,7 +125,8 @@ public class StatusBar extends Window implements AfterCompose
 
   public void onUserClicked()
   {
-    Authorization.logout();
+    //Authorization.logout();
+    Authorization.changePassword();
     // User-Details öffnen
     /*if (collaboration)
      {
@@ -150,5 +147,10 @@ public class StatusBar extends Window implements AfterCompose
      LoggingOutput.outputException(ex, this);
      }
      }*/
+  }
+  
+  public void onLogoutClicked()
+  {
+    Authorization.logout();
   }
 }

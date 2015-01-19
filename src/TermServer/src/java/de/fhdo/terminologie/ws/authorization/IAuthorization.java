@@ -17,6 +17,7 @@
 package de.fhdo.terminologie.ws.authorization;
 
 import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
+import de.fhdo.terminologie.ws.authorization.types.ChangePasswordResponseType;
 import de.fhdo.terminologie.ws.authorization.types.LoginResponseType;
 import de.fhdo.terminologie.ws.authorization.types.LogoutResponseType;
 import java.util.List;
@@ -51,10 +52,19 @@ public interface IAuthorization
    * Checks wheter a user is logged in or not. Is used in various services.
    * 
    * @param IP
-   * @param parameterList
+   * @param loginToken
    * @return true, if user is logged in
    */
   public AuthenticateInfos Authenticate(String IP, String loginToken);
+  
+  /**
+   * Changes the user password
+   * 
+   * @param IP
+   * @param parameterList List of parameters
+   * @return true, if successful
+   */
+  public ChangePasswordResponseType ChangePassword(String IP, List<String> parameterList);
   
   //public boolean HasRights(); // TODO
 }

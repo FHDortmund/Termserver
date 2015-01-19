@@ -27,6 +27,7 @@
         <menupopup>
           <menuitem id="menuitemAnmelden" label="${labels.common.doLogin}"  onClick="win.login()" image="/rsc/img/symbols/lock_16x16.png"></menuitem>
           <menuitem id="menuitemAbmelden" label="${labels.common.doLogoff}" onClick="win.logout()" image="/rsc/img/symbols/unlock_16x16.png"></menuitem>
+          <menuitem id="menuitemChangePassword" label="${labels.common.changePassword}" onClick="win.changePassword()" image="/rsc/img/symbols/key_16x16.png"></menuitem>
         </menupopup>
       </menu>
       

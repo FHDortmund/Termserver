@@ -17,7 +17,7 @@
 package de.fhdo.authorization;
 
 import de.fhdo.gui.admin.Login;
-import de.fhdo.helper.CookieHelper;
+import de.fhdo.gui.admin.PasswordDialog;
 import de.fhdo.helper.MD5;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
@@ -27,12 +27,9 @@ import de.fhdo.terminologie.ws.authorization.LogoutResponseType;
 import de.fhdo.terminologie.ws.authorization.Status;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
-import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
@@ -126,6 +123,28 @@ public class UsernamePasswordMethod implements IAuthorization
       {
         LoggingOutput.outputException(ex, this);
       }
+    }
+    return false;
+  }
+
+  public boolean doChangePassword()
+  {
+    logger.debug("[UsernamePasswordMethod] doChangePassword()");
+
+    // open login window
+    try
+    {
+      Window win = (Window) Executions.createComponents("/gui/admin/passwordDialog.zul", null, null);
+      win.doModal();
+
+      if (((PasswordDialog) win).isErfolg())
+      {
+        return true;
+      }
+    }
+    catch (SuspendNotAllowedException ex)
+    {
+      LoggingOutput.outputException(ex, this);
     }
     return false;
   }

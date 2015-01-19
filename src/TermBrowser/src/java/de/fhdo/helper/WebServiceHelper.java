@@ -57,6 +57,8 @@ import de.fhdo.terminologie.ws.authoring.UpdateValueSetStatusRequestType;
 import de.fhdo.terminologie.ws.authoring.UpdateValueSetStatusResponse;
 import de.fhdo.terminologie.ws.authorization.Authorization;
 import de.fhdo.terminologie.ws.authorization.Authorization_Service;
+import de.fhdo.terminologie.ws.authorization.ChangePassword;
+import de.fhdo.terminologie.ws.authorization.ChangePasswordResponseType;
 import de.fhdo.terminologie.ws.authorization.LoginResponse;
 import de.fhdo.terminologie.ws.authorization.LogoutResponseType;
 import de.fhdo.terminologie.ws.conceptassociation.ConceptAssociations;
@@ -680,6 +682,39 @@ public class WebServiceHelper
     port = service.getAuthorizationPort();
     return port.logout(parameter);
   }
+  
+  
+  public static ChangePasswordResponseType changePassword(List<String> parameter)
+  {
+    return changePassword(parameter, PropertiesHelper.getInstance().getTermserverUrl());
+  }
+
+  public static ChangePasswordResponseType changePassword(List<String> parameter, String urlHost)
+  {
+    return changePassword(parameter, urlHost, PropertiesHelper.getInstance().getTermserverServiceName());
+  }
+
+  public static ChangePasswordResponseType changePassword(List<String> parameter, String urlHost, String urlService)
+  {
+    Authorization_Service service;
+    Authorization port;
+    try
+    {
+      // Service mit bestimmter URL ?ffnen
+      service = new Authorization_Service(new URL(optimizeUrl(urlHost) + urlService + "Authorization?wsdl"),
+              new QName("http://authorization.ws.terminologie.fhdo.de/", "Authorization"));
+    }
+    catch (Exception ex)
+    {
+      Logger.getLogger(WebServiceHelper.class.getName()).log(Level.SEVERE, null, ex);
+
+      // Standard Service ?ffnen
+      service = new Authorization_Service();
+    }
+    port = service.getAuthorizationPort();
+    return port.changePassword(parameter);
+  }
+  
 
   // ConceptAssociations  ////////////////////////////////////////////////////  
   public static ListConceptAssociationsResponse.Return listConceptAssociations(ListConceptAssociationsRequestType parameter)

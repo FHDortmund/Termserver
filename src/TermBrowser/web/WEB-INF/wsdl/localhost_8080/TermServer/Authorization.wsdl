@@ -4,30 +4,49 @@
 <xsd:import namespace="http://authorization.ws.terminologie.fhdo.de/" schemaLocation="http://localhost:8080/TermServer/Authorization?xsd=1" />
 </xsd:schema>
 </types>
-<message name="Logout">
-<part name="parameters" element="tns:Logout" />
-</message>
-<message name="LogoutResponse">
-<part name="parameters" element="tns:LogoutResponse" />
-</message>
 <message name="Login">
 <part name="parameters" element="tns:Login" />
 </message>
 <message name="LoginResponse">
 <part name="parameters" element="tns:LoginResponse" />
 </message>
+<message name="Logout">
+<part name="parameters" element="tns:Logout" />
+</message>
+<message name="LogoutResponse">
+<part name="parameters" element="tns:LogoutResponse" />
+</message>
+<message name="ChangePassword">
+<part name="parameters" element="tns:ChangePassword" />
+</message>
+<message name="ChangePasswordResponse">
+<part name="parameters" element="tns:ChangePasswordResponse" />
+</message>
 <portType name="Authorization">
-<operation name="Logout">
-<input wsam:Action="http://authorization.ws.terminologie.fhdo.de/Authorization/LogoutRequest" message="tns:Logout" />
-<output wsam:Action="http://authorization.ws.terminologie.fhdo.de/Authorization/LogoutResponse" message="tns:LogoutResponse" />
-</operation>
 <operation name="Login">
 <input wsam:Action="http://authorization.ws.terminologie.fhdo.de/Authorization/LoginRequest" message="tns:Login" />
 <output wsam:Action="http://authorization.ws.terminologie.fhdo.de/Authorization/LoginResponse" message="tns:LoginResponse" />
 </operation>
+<operation name="Logout">
+<input wsam:Action="http://authorization.ws.terminologie.fhdo.de/Authorization/LogoutRequest" message="tns:Logout" />
+<output wsam:Action="http://authorization.ws.terminologie.fhdo.de/Authorization/LogoutResponse" message="tns:LogoutResponse" />
+</operation>
+<operation name="ChangePassword">
+<input wsam:Action="http://authorization.ws.terminologie.fhdo.de/Authorization/ChangePasswordRequest" message="tns:ChangePassword" />
+<output wsam:Action="http://authorization.ws.terminologie.fhdo.de/Authorization/ChangePasswordResponse" message="tns:ChangePasswordResponse" />
+</operation>
 </portType>
 <binding name="AuthorizationPortBinding" type="tns:Authorization">
 <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+<operation name="Login">
+<soap:operation soapAction="" />
+<input>
+<soap:body use="literal" />
+</input>
+<output>
+<soap:body use="literal" />
+</output>
+</operation>
 <operation name="Logout">
 <soap:operation soapAction="" />
 <input>
@@ -37,7 +56,7 @@
 <soap:body use="literal" />
 </output>
 </operation>
-<operation name="Login">
+<operation name="ChangePassword">
 <soap:operation soapAction="" />
 <input>
 <soap:body use="literal" />

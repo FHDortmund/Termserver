@@ -1,4 +1,4 @@
-/* 
+/*
  * CTS2 based Terminology Server and Terminology Browser
  * Copyright (C) 2014 FH Dortmund: Peter Haas, Robert Muetzner
  *
@@ -14,20 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.fhdo.authorization;
+package de.fhdo.terminologie.ws.authorization.types;
 
-import java.util.List;
+import de.fhdo.terminologie.ws.types.ReturnType;
 
 /**
  *
  * @author Robert Mützner <robert.muetzner@fh-dortmund.de>
  */
-public interface IAuthorization
+public class ChangePasswordResponseType
 {
-  public boolean doLogin();
-  public boolean doLogin(String username, String password);
-  public boolean doLogout();
-  public boolean doChangePassword();
+  private ReturnType returnInfos;
+
+  /**
+   * @return the returnInfos
+   */
+  public ReturnType getReturnInfos()
+  {
+    return returnInfos;
+  }
+
+  /**
+   * @param returnInfos the returnInfos to set
+   */
+  public void setReturnInfos(ReturnType returnInfos)
+  {
+    this.returnInfos = returnInfos;
+  }
   
   
 }

@@ -20,6 +20,7 @@ import com.sun.xml.ws.developer.SchemaValidation;
 import de.fhdo.terminologie.helper.PropertiesHelper;
 import de.fhdo.terminologie.helper.SecurityHelper;
 import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
+import de.fhdo.terminologie.ws.authorization.types.ChangePasswordResponseType;
 import de.fhdo.terminologie.ws.authorization.types.LoginResponseType;
 import de.fhdo.terminologie.ws.authorization.types.LogoutResponseType;
 import de.fhdo.terminologie.ws.types.ReturnType;
@@ -113,5 +114,26 @@ public class Authorization
       return auth.Authenticate(ip, loginToken);
     
     return null;
+  }
+  
+  
+  public ChangePasswordResponseType ChangePassword(@WebParam(name = "parameter") List<String> parameterList)
+  {
+    //SecurityHelper.applyIPAdress(parameter.getLogin(), webServiceContext);
+    IAuthorization auth = getAuthorizationClass();
+
+    if(auth != null)
+      return auth.ChangePassword(SecurityHelper.getIp(webServiceContext), parameterList);
+    else
+    {
+      ChangePasswordResponseType response = new ChangePasswordResponseType();
+      response.setReturnInfos(new ReturnType());
+      response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
+      response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+      response.getReturnInfos().setMessage("No Authorization class found, please specify a class name in the termserver.properties file located in tomcat/conf. Please see the documentation for more information.");
+      return response;
+    }
+    //Login login = new Login();
+    //return login.Login(parameter);
   }
 }

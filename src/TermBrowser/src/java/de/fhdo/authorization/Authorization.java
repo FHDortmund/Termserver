@@ -83,4 +83,16 @@ public class Authorization
       }
     }
   }
+  public static void changePassword()
+  {
+    IAuthorization auth = getAuthorizationClass();
+    
+    if(auth != null)
+    {
+      if(auth.doChangePassword())
+      {
+        logger.debug("changePassword successful");
+      }
+    }
+  }
 }
