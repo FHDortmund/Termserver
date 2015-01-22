@@ -25,7 +25,7 @@ public class ExportType
     private Long formatId;
     private byte[] filecontent;
     private String url;
-    private boolean updateCheck = false;
+    //private boolean updateCheck = false;
 
     /**
      * @return the formatId
@@ -69,11 +69,11 @@ public class ExportType
         this.url = url;
     }
 
-    public boolean isUpdateCheck() {
-        return updateCheck;
-    }
-
-    public void setUpdateCheck(boolean updateCheck) {
-        this.updateCheck = updateCheck;
-    }
+//    public boolean isUpdateCheck() {
+//        return updateCheck;
+//    }
+//
+//    public void setUpdateCheck(boolean updateCheck) {
+//        this.updateCheck = updateCheck;
+//    }
 }

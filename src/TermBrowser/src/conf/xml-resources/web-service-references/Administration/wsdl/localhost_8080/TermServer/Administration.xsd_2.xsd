@@ -2,39 +2,6 @@
 
 <xs:import namespace="http://administration.ws.terminologie.fhdo.de/" schemaLocation="http://localhost:8080/TermServer/Administration?xsd=1" />
 
-<xs:complexType name="domain">
-<xs:sequence>
-<xs:element name="defaultValue" type="xs:string" minOccurs="0" />
-<xs:element name="description" type="xs:string" minOccurs="0" />
-<xs:element name="displayOrder" type="xs:long" minOccurs="0" />
-<xs:element name="displayText" type="xs:string" minOccurs="0" />
-<xs:element name="domainId" type="xs:long" minOccurs="0" />
-<xs:element name="domainName" type="xs:string" minOccurs="0" />
-<xs:element name="domainOid" type="xs:string" minOccurs="0" />
-<xs:element name="domainType" type="xs:string" minOccurs="0" />
-<xs:element name="domainValues" type="tns:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="isOptional" type="xs:boolean" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="domainValue">
-<xs:sequence>
-<xs:element name="attribut1classname" type="xs:string" minOccurs="0" />
-<xs:element name="attribut1value" type="xs:string" minOccurs="0" />
-<xs:element name="codeSystems" type="tns:codeSystem" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="domain" type="tns:domain" minOccurs="0" />
-<xs:element name="domainCode" type="xs:string" minOccurs="0" />
-<xs:element name="domainDisplay" type="xs:string" minOccurs="0" />
-<xs:element name="domainValueId" type="xs:long" minOccurs="0" />
-<xs:element name="domainValuesForDomainValueId1" type="tns:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="domainValuesForDomainValueId2" type="tns:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="imageFile" type="xs:string" minOccurs="0" />
-<xs:element name="orderNo" type="xs:int" minOccurs="0" />
-<xs:element name="sysParamsForModifyLevel" type="tns:sysParam" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="sysParamsForValidityDomain" type="tns:sysParam" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-</xs:sequence>
-</xs:complexType>
-
 <xs:complexType name="codeSystem">
 <xs:sequence>
 <xs:element name="codeSystemType" type="xs:string" minOccurs="0" />
@@ -187,11 +154,14 @@
 <xs:sequence>
 <xs:element name="codeSystem" type="tns:codeSystem" minOccurs="0" />
 <xs:element name="codeSystemMetadataValues" type="tns:codeSystemMetadataValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="description" type="xs:string" minOccurs="0" />
 <xs:element name="id" type="xs:long" minOccurs="0" />
 <xs:element name="languageCd" type="xs:string" minOccurs="0" />
+<xs:element name="maxLength" type="xs:int" minOccurs="0" />
 <xs:element name="metadataParameterType" type="xs:string" minOccurs="0" />
 <xs:element name="paramDatatype" type="xs:string" minOccurs="0" />
 <xs:element name="paramName" type="xs:string" minOccurs="0" />
+<xs:element name="paramNameDisplay" type="xs:string" minOccurs="0" />
 <xs:element name="valueSet" type="tns:valueSet" minOccurs="0" />
 <xs:element name="valueSetMetadataValues" type="tns:valueSetMetadataValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
 </xs:sequence>
@@ -227,6 +197,7 @@
 <xs:element name="validityRange" type="xs:long" minOccurs="0" />
 <xs:element name="valueSet" type="tns:valueSet" minOccurs="0" />
 <xs:element name="versionId" type="xs:long" minOccurs="0" />
+<xs:element name="virtualCodeSystemVersionId" type="xs:long" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
@@ -321,6 +292,39 @@
 <xs:element name="lastTimestamp" type="xs:dateTime" minOccurs="0" />
 <xs:element name="sessionId" type="xs:string" minOccurs="0" />
 <xs:element name="termUser" type="tns:termUser" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="domainValue">
+<xs:sequence>
+<xs:element name="attribut1classname" type="xs:string" minOccurs="0" />
+<xs:element name="attribut1value" type="xs:string" minOccurs="0" />
+<xs:element name="codeSystems" type="tns:codeSystem" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="domain" type="tns:domain" minOccurs="0" />
+<xs:element name="domainCode" type="xs:string" minOccurs="0" />
+<xs:element name="domainDisplay" type="xs:string" minOccurs="0" />
+<xs:element name="domainValueId" type="xs:long" minOccurs="0" />
+<xs:element name="domainValuesForDomainValueId1" type="tns:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="domainValuesForDomainValueId2" type="tns:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="imageFile" type="xs:string" minOccurs="0" />
+<xs:element name="orderNo" type="xs:int" minOccurs="0" />
+<xs:element name="sysParamsForModifyLevel" type="tns:sysParam" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="sysParamsForValidityDomain" type="tns:sysParam" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="domain">
+<xs:sequence>
+<xs:element name="defaultValue" type="xs:string" minOccurs="0" />
+<xs:element name="description" type="xs:string" minOccurs="0" />
+<xs:element name="displayOrder" type="xs:long" minOccurs="0" />
+<xs:element name="displayText" type="xs:string" minOccurs="0" />
+<xs:element name="domainId" type="xs:long" minOccurs="0" />
+<xs:element name="domainName" type="xs:string" minOccurs="0" />
+<xs:element name="domainOid" type="xs:string" minOccurs="0" />
+<xs:element name="domainType" type="xs:string" minOccurs="0" />
+<xs:element name="domainValues" type="tns:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="isOptional" type="xs:boolean" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 

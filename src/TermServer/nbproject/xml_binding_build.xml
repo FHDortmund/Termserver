@@ -11,20 +11,6 @@
     <target name="jaxb-code-generation" depends="xjc-typedef-target,-do-init,-init-macrodef-javac">
         <mkdir dir="${build.generated.sources.dir}/jaxb" xmlns:s="http://xml.netbeans.org/schema/JAXBWizConfig"/>
         <mkdir dir="build/generated/jaxbCache" xmlns:s="http://xml.netbeans.org/schema/JAXBWizConfig"/>
-        <mkdir dir="build/generated/jaxbCache/clamlBindingXSD"/>
-        <xjc package="clamlBindingXSD" destdir="build/generated/jaxbCache/clamlBindingXSD" catalog="catalog.xml">
-            <classpath>
-                <pathelement location="${src.dir}"/>
-                <pathelement path="${jaxbwiz.xjcrun.classpath}"/>
-            </classpath>
-            <arg value="-xmlschema"/>
-            <schema file="src/conf/xml-resources/jaxb/clamlBindingXSD/claml_Schema.xsd"/>
-            <depends file="src/conf/xml-resources/jaxb/clamlBindingXSD/claml_Schema.xsd"/>
-            <produces dir="build/generated/jaxbCache/clamlBindingXSD"/>
-        </xjc>
-        <copy todir="${build.generated.sources.dir}/jaxb">
-            <fileset dir="build/generated/jaxbCache/clamlBindingXSD"/>
-        </copy>
         <mkdir dir="build/generated/jaxbCache/kbvKeytabs"/>
         <xjc destdir="build/generated/jaxbCache/kbvKeytabs" catalog="catalog.xml">
             <classpath>
@@ -38,6 +24,20 @@
         </xjc>
         <copy todir="${build.generated.sources.dir}/jaxb">
             <fileset dir="build/generated/jaxbCache/kbvKeytabs"/>
+        </copy>
+        <mkdir dir="build/generated/jaxbCache/clamlBindingXSD"/>
+        <xjc package="clamlBindingXSD" destdir="build/generated/jaxbCache/clamlBindingXSD" catalog="catalog.xml">
+            <classpath>
+                <pathelement location="${src.dir}"/>
+                <pathelement path="${jaxbwiz.xjcrun.classpath}"/>
+            </classpath>
+            <arg value="-dtd"/>
+            <schema file="src/conf/xml-resources/jaxb/clamlBindingXSD/EN14463-2007.dtd"/>
+            <depends file="src/conf/xml-resources/jaxb/clamlBindingXSD/EN14463-2007.dtd"/>
+            <produces dir="build/generated/jaxbCache/clamlBindingXSD"/>
+        </xjc>
+        <copy todir="${build.generated.sources.dir}/jaxb">
+            <fileset dir="build/generated/jaxbCache/clamlBindingXSD"/>
         </copy>
         <!--*** Web project javac macro does not support sourcepath attribute, so do not pass "sourcepath=${src.dir}"-->
     </target>

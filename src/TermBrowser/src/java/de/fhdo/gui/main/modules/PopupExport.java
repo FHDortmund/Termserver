@@ -113,7 +113,7 @@ public class PopupExport extends GenericForwardComposer
       // Export Tyep
       ExportType eType = new ExportType();
       eType.setFormatId(formatId);            // TODO 193 = ClaML, 194 = CSV, 195 SVS
-      eType.setUpdateCheck(false);
+      //eType.setUpdateCheck(false);
       parameter.setExportInfos(eType);
 
       // Optional: ExportParameter
@@ -168,7 +168,7 @@ public class PopupExport extends GenericForwardComposer
       // Export Type
       ExportType eType = new ExportType();
       eType.setFormatId(formatId);            // TODO 193 = ClaML, 194 = CSV, 195 = SVS
-      eType.setUpdateCheck(false);
+      //eType.setUpdateCheck(false);
       parameter.setExportInfos(eType);
 
       // Optional: ExportParameter

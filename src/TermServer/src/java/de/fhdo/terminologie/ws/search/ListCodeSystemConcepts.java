@@ -284,6 +284,7 @@ public class ListCodeSystemConcepts
                 + " JOIN code_system_entity cse ON csev.codeSystemEntityId=cse.id"
                 + " JOIN code_system_version_entity_membership csvem ON cse.id=csvem.codeSystemEntityId"
                 + " LEFT JOIN code_system_concept_translation csct ON csct.codeSystemEntityVersionId=csc.codeSystemEntityVersionId AND languageCd=:languageCd"
+                //+ " LEFT JOIN code_system_concept_translation csct ON csct.codeSystemEntityVersionId=csc.codeSystemEntityVersionId AND_LANGUAGE_TERM"
                 + " WHERE_TEIL) csc2"
                 //+ " LEFT JOIN code_system_concept_translation csct ON csct.codeSystemEntityVersionId=csc2.codeSystemEntityVersionId";
                 + " LEFT JOIN code_system_entity_version_association cseva1 ON cseva1.codeSystemEntityVersionId1=csc2.versionId"
@@ -346,6 +347,11 @@ public class ListCodeSystemConcepts
             }
           }
         }
+        
+        /*if(languageCd.length() == 0)
+          sql = sql.replaceAll("AND_LANGUAGE_TERM", "");
+        else 
+          sql = sql.replaceAll("AND_LANGUAGE_TERM", "AND languageCd=:languageCd");*/
 
         if (loggedIn == false)
         {
@@ -495,6 +501,7 @@ public class ListCodeSystemConcepts
           q.addScalar("csc2.statusWorkflowDate", StandardBasicTypes.TIMESTAMP);
 
           parameterHelper.applySQLParameter(q);
+          //if(languageCd.length() > 0)
           q.setString("languageCd", languageCd);
 
           response.setCodeSystemEntity(new LinkedList<CodeSystemEntity>());
@@ -662,6 +669,23 @@ public class ListCodeSystemConcepts
                 mv.getMetadataParameter().setCodeSystemMetadataValues(null);
                 mv.getMetadataParameter().setDescription(null);
                 mv.getMetadataParameter().setMetadataParameterType(null);
+              }
+            }
+            
+            if (parameter.isLoadTranslation() != null && parameter.isLoadTranslation().booleanValue())
+            {
+              String hql = "from CodeSystemConceptTranslation csct "
+                      + " where codeSystemEntityVersionId=:csev_id";
+                      //+ " order by csct.languageCd";
+
+              Query query = hb_session.createQuery(hql);
+              query.setLong("csev_id", csev.getVersionId());
+              csc.setCodeSystemConceptTranslations(new HashSet<CodeSystemConceptTranslation>(query.list()));
+
+              // remove circle problems
+              for (CodeSystemConceptTranslation trans : csc.getCodeSystemConceptTranslations())
+              {
+                trans.setCodeSystemConcept(null);
               }
             }
 
@@ -1118,12 +1142,18 @@ public class ListCodeSystemConcepts
 
   private void addTranslationToConcept(CodeSystemConcept csc, Object[] item)
   {
+    //logger.debug("addTranslationToConcept...");
     if (item[19] == null)  // Term muss angegeben sein
+    {
+      //logger.debug("item[19] ist null");
       return;
+    }
 
     if (csc.getCodeSystemConceptTranslations() == null)
       csc.setCodeSystemConceptTranslations(new HashSet<CodeSystemConceptTranslation>());
 
+    //logger.debug("term: " + item[19].toString());
+    
     CodeSystemConceptTranslation csct = new CodeSystemConceptTranslation();
     csct.setTerm(item[19].toString());
     if (item[20] != null)

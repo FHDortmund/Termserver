@@ -360,7 +360,8 @@ public class ImportClaml
             event = eventReader.nextEvent();
             //if(event.isCharacters()){
             clamlBindingXSD.Label l = new clamlBindingXSD.Label();
-            l.getContent().add(event.asCharacters().getData());
+            //l.getContent().add(event.asCharacters().getData());
+            l.setvalue(event.asCharacters().getData());
             rubi.getLabel().add(l);
             continue;
             //}
@@ -378,7 +379,8 @@ public class ImportClaml
               if(event.isEndElement() == false)
               {
                 clamlBindingXSD.Label l = new clamlBindingXSD.Label();
-                l.getContent().add(event.asCharacters().getData());
+                //l.getContent().add(event.asCharacters().getData());
+                l.setvalue(event.asCharacters().getData());
                 rubi.getLabel().add(l);
               }
               else logger.debug("kein Text, da End-Element");
@@ -701,7 +703,8 @@ public class ImportClaml
     while (itRubric.hasNext())
     {
       Label label = (Label) itRubric.next();
-      List contentList = label.getContent();
+      returnString = returnString + label.getvalue();
+      /*List contentList = label.getContent();
       Iterator itContent = contentList.iterator();
       while (itContent.hasNext())
       {
@@ -716,6 +719,7 @@ public class ImportClaml
           if (o instanceof Fragment)
           {
             Fragment fragment = (Fragment) o;
+            returnString = returnString + fragment.getvalue();
             List fragmentListe = fragment.getContent();
             Iterator itFragmentContent = fragmentListe.iterator();
             while (itFragmentContent.hasNext())
@@ -744,10 +748,11 @@ public class ImportClaml
 
                 }
               }
+              returnString = returnString + para.getvalue();
             }
           }
         }
-      }
+      }*/
     }
     return returnString;
   }

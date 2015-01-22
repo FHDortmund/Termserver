@@ -82,7 +82,7 @@ public class ExportCodeSystemSVS
       try
       {
 
-        if(parameter.getExportInfos().isUpdateCheck()){
+        /*if(parameter.getExportInfos().isUpdateCheck()){
             //Request-Parameter für ReturnValueSetDetails erstellen
             if (logger.isInfoEnabled())
               logger.info("[ExportSVs] Erstelle Request-Parameter für ReturnCodeSystemDetails");
@@ -105,7 +105,7 @@ public class ExportCodeSystemSVS
                     ((CodeSystemVersion)parameter.getCodeSystem().getCodeSystemVersions().toArray()[0]).setVersionId(responseCodeSystemDetails.getCodeSystem().getCurrentVersionId());
                 }
             }
-        }  
+        } */ 
           
         String hql = "select distinct csv from CodeSystemVersion csv join csv.codeSystem cs"
                     + " where cs.id=:id and"

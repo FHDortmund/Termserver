@@ -31,6 +31,7 @@ import de.fhdo.terminologie.Definitions;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.CodeSystem;
 import de.fhdo.terminologie.db.hibernate.CodeSystemConcept;
+import de.fhdo.terminologie.db.hibernate.CodeSystemConceptTranslation;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntity;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersion;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersionAssociation;
@@ -65,6 +66,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -148,160 +150,173 @@ public class ExportClaml
       if (rcsdResponse.getReturnInfos().getStatus() == ReturnType.Status.OK)
       {
         //hb_session = HibernateUtil.getSessionFactory().openSession();
-        if (request.getExportInfos().isUpdateCheck())
+        /*if (request.getExportInfos().isUpdateCheck())
+         {
+
+         if (!rcsdResponse.getCodeSystem().getCurrentVersionId().equals(codeSystem.getCodeSystemVersions().iterator().next().getVersionId()))
+         {
+         request.getCodeSystem().getCodeSystemVersions().iterator().next().setVersionId(rcsdResponse.getCodeSystem().getCurrentVersionId());
+         codeSystem = this.request.getCodeSystem();
+         // CodeSystem-Details lesen
+         rcsdRequest = new ReturnCodeSystemDetailsRequestType();
+         rcsdRequest.setCodeSystem(codeSystem);
+
+         rcsdResponse = new ReturnCodeSystemDetails().ReturnCodeSystemDetails(rcsdRequest, "");
+         }
+         }*/
+
+        //if (rcsdResponse.getReturnInfos().getStatus() == ReturnType.Status.OK)
+        // Codesystem aus Webservice-Antwort übernehmen
+        codeSystem = rcsdResponse.getCodeSystem();
+
+        if (codeSystem != null)
         {
+          logger.debug("Codesystem geladen: " + codeSystem.getName());
+          logger.debug("Codesystem-Versionen: " + codeSystem.getCodeSystemVersions().size());
+          codeSystemVersion = codeSystem.getCodeSystemVersions().iterator().next();
+          logger.debug("Codesystem-Version geladen: " + codeSystemVersion.getName());
 
-          if (!rcsdResponse.getCodeSystem().getCurrentVersionId().equals(codeSystem.getCodeSystemVersions().iterator().next().getVersionId()))
-          {
-            request.getCodeSystem().getCodeSystemVersions().iterator().next().setVersionId(rcsdResponse.getCodeSystem().getCurrentVersionId());
-            codeSystem = this.request.getCodeSystem();
-            // CodeSystem-Details lesen
-            rcsdRequest = new ReturnCodeSystemDetailsRequestType();
-            rcsdRequest.setCodeSystem(codeSystem);
+          // Hilfsvariablen
+          rubricKinds = new HashMap<String, RubricKind>();
 
-            rcsdResponse = new ReturnCodeSystemDetails().ReturnCodeSystemDetails(rcsdRequest, "");
-          }
-        }
-
-        if (rcsdResponse.getReturnInfos().getStatus() == ReturnType.Status.OK)
-        {
-          // Codesystem aus Webservice-Antwort übernehmen
-          codeSystem = rcsdResponse.getCodeSystem();
-
-          if (codeSystem != null)
-          {
-            logger.debug("Codesystem geladen: " + codeSystem.getName());
-            logger.debug("Codesystem-Versionen: " + codeSystem.getCodeSystemVersions().size());
-            codeSystemVersion = codeSystem.getCodeSystemVersions().iterator().next();
-            logger.debug("Codesystem-Version geladen: " + codeSystemVersion.getName());
-
-            // Hilfsvariablen
-            rubricKinds = new HashMap<String, RubricKind>();
-
-            // ClaML-Details
-            claml.setVersion("2.0.0");
+          // ClaML-Details
+          claml.setVersion("2.0.0");
 
             //Keine direkte Abhängigkeit: VokabularyType aus der Response vorhanden
-            //Concepte können auch gefunden werden falls Details fehlschlägt
-            // Identifier
-            Identifier ident = new Identifier();
-            // Herausgeber und OID übernehmen
-            ident.setUid(codeSystemVersion.getOid());
-            ident.setAuthority(codeSystemVersion.getSource());
-            this.claml.getIdentifier().add(ident);
+          //Concepte können auch gefunden werden falls Details fehlschlägt
+          // Identifier
+          Identifier ident = new Identifier();
+          // Herausgeber und OID übernehmen
+          ident.setUid(codeSystemVersion.getOid());
+          ident.setAuthority(codeSystemVersion.getSource());
+          this.claml.getIdentifier().add(ident);
 
-            // Title
-            Title title = new Title();
-            title.setName(codeSystem.getName());
-            title.setDate(sdfEN.format(codeSystem.getInsertTimestamp()));
-            title.setContent(codeSystem.getDescription());
-            title.setVersion(getClamlVersionFromCS(codeSystem));
+          // Title
+          Title title = new Title();
+          title.setName(codeSystem.getName());
+          title.setDate(sdfEN.format(codeSystem.getInsertTimestamp()));
+          title.setvalue(codeSystem.getDescription());
+          //title.setContent(codeSystem.getDescription());
+          title.setVersion(getClamlVersionFromCS(codeSystem));
 
-            claml.setTitle(title);
+          claml.setTitle(title);
 
-            // Metadaten zu einem Codesystem
-            claml.getMeta().add(createClaMLMetadata("description",codeSystem.getDescription()));
-            claml.getMeta().add(createClaMLMetadata("description_eng",codeSystem.getDescriptionEng()));
-            claml.getMeta().add(createClaMLMetadata("website",codeSystem.getWebsite()));
-            
-            claml.getMeta().add(createClaMLMetadata("version_description",codeSystemVersion.getDescription()));
-            if(codeSystemVersion.getInsertTimestamp() != null){
-                claml.getMeta().add(createClaMLMetadata("insert_ts", codeSystemVersion.getInsertTimestamp().toString()));
-            }else{
-                claml.getMeta().add(createClaMLMetadata("insert_ts", ""));
-            }
-            if(codeSystemVersion.getStatusDate() != null){
-                claml.getMeta().add(createClaMLMetadata("status_date", codeSystemVersion.getStatusDate().toString()));
-            }else{
-                claml.getMeta().add(createClaMLMetadata("status_date", ""));
-            }
-            if(codeSystemVersion.getExpirationDate() != null){
-                claml.getMeta().add(createClaMLMetadata("expiration_date", codeSystemVersion.getExpirationDate().toString()));
-            }else{
-                claml.getMeta().add(createClaMLMetadata("expiration_date", ""));
-            }
-            if(codeSystemVersion.getLastChangeDate() != null){
-                claml.getMeta().add(createClaMLMetadata("last_change_date", codeSystemVersion.getLastChangeDate().toString()));
-            }else{
-                claml.getMeta().add(createClaMLMetadata("last_change_date", ""));
-            }
-            // Konzepte erstellen
-            this.createConcepts();
+          // Metadaten zu einem Codesystem
+          if(codeSystemVersion.getPreferredLanguageCd() != null && codeSystemVersion.getPreferredLanguageCd().length() > 0)
+            claml.getMeta().add(createClaMLMetadata("lang", codeSystemVersion.getPreferredLanguageCd()));
+          
+          if(codeSystem.getDescription() != null && codeSystem.getDescription().length() > 0)
+            claml.getMeta().add(createClaMLMetadata("description", codeSystem.getDescription()));
+          
+          if(codeSystem.getDescriptionEng() != null && codeSystem.getDescriptionEng().length() > 0)
+            claml.getMeta().add(createClaMLMetadata("description_eng", codeSystem.getDescriptionEng()));
+          
+          if(codeSystem.getWebsite() != null && codeSystem.getWebsite().length() > 0)
+            claml.getMeta().add(createClaMLMetadata("website", codeSystem.getWebsite()));
 
-            // RubricKinds (werden bei createConcepts in Map hinzugefügt)
-            claml.setRubricKinds(new RubricKinds());
-            claml.getRubricKinds().getRubricKind().addAll(rubricKinds.values());
-
-            Marshaller m = jc.createMarshaller();
-            //  m.marshal(this.claml, new File("D:/Users/Michael/Documents/Masterprojekt1/x1gex2009/Klassifikationsdateien/exportICD.xml"));
-            //ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-            // ClaML-Datei aus Klassen im Speicher erstellen
-            m.marshal(this.claml, bos);
-
-            long diff = (new Date().getTime() - timeStart) / 1000;
-            logger.debug("ClaML-Export-Dauer: " + diff);
-
-            try
-            {
-              DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-              DocumentBuilder builder = null;
-              Document doc = null;
-
-              builder = builderFactory.newDocumentBuilder();
-              doc = builder.parse(new ByteArrayInputStream(bos.toByteArray()));
-              TransformerFactory tf = TransformerFactory.newInstance();
-              Transformer trans = tf.newTransformer();
-              trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-              StringWriter writer = new StringWriter();
-              trans.transform(new DOMSource(doc), new StreamResult(writer));
-              String output = writer.getBuffer().toString().replaceAll("\n|\r", "");
-              XMLFormatter formatter = new XMLFormatter();
-              String formattedXml = formatter.format(output);
-              formattedXml = formattedXml.replace("\"", "'");
-              formattedXml = formattedXml.replace("&quot;", "\"");
-              formattedXml = formattedXml.replace("&amp;", "&");
-              formattedXml = formattedXml.replace("&lt;", "<");
-              formattedXml = formattedXml.replace("&gt;", ">");
-              formattedXml = formattedXml.replace("&apos;", "'");
-
-              // Rückgabe erstellen
-              returnInfos.getExportInfos().setFilecontent(formattedXml.getBytes("UTF-8"));
-            }
-            catch (Exception exi)
-            {
-              // Rückgabe erstellen
-              returnInfos.getExportInfos().setFilecontent(bos.toByteArray());
-            }
-
-            returnInfos.getExportInfos().setFormatId(ExportCodeSystemContentRequestType.EXPORT_CLAML_ID);
-
-            returnInfos.getReturnInfos().setCount(countExported);
-            returnInfos.getReturnInfos().setMessage(countExported + " Klassen erfolgreich exportiert, Dauer (s): " + diff);
-
-            //returnInfos.setImportInformations(importtype);
-            currentTask = "";
-            percentageComplete = 0.0;
-
-            returnInfos.getReturnInfos().setStatus(Status.OK);
+          claml.getMeta().add(createClaMLMetadata("version_description", codeSystemVersion.getDescription()));
+          if (codeSystemVersion.getInsertTimestamp() != null)
+          {
+            claml.getMeta().add(createClaMLMetadata("insert_ts", codeSystemVersion.getInsertTimestamp().toString()));
           }
           else
           {
-            logger.debug("[ExportClaml.java] Vokabular nicht gefunden");
-            returnInfos.getReturnInfos().setStatus(Status.FAILURE);
-            returnInfos.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
-            returnInfos.getReturnInfos().setMessage("Codesystem konnte nicht gefunden werden!");
+            claml.getMeta().add(createClaMLMetadata("insert_ts", ""));
           }
+          if (codeSystemVersion.getStatusDate() != null)
+          {
+            claml.getMeta().add(createClaMLMetadata("status_date", codeSystemVersion.getStatusDate().toString()));
+          }
+          else
+          {
+            claml.getMeta().add(createClaMLMetadata("status_date", ""));
+          }
+          if (codeSystemVersion.getExpirationDate() != null)
+          {
+            claml.getMeta().add(createClaMLMetadata("expiration_date", codeSystemVersion.getExpirationDate().toString()));
+          }
+          else
+          {
+            claml.getMeta().add(createClaMLMetadata("expiration_date", ""));
+          }
+          if (codeSystemVersion.getLastChangeDate() != null)
+          {
+            claml.getMeta().add(createClaMLMetadata("last_change_date", codeSystemVersion.getLastChangeDate().toString()));
+          }
+          else
+          {
+            claml.getMeta().add(createClaMLMetadata("last_change_date", ""));
+          }
+          // Konzepte erstellen
+          this.createConcepts();
+
+          // RubricKinds (werden bei createConcepts in Map hinzugefügt)
+          claml.setRubricKinds(new RubricKinds());
+          claml.getRubricKinds().getRubricKind().addAll(rubricKinds.values());
+
+          Marshaller m = jc.createMarshaller();
+            //  m.marshal(this.claml, new File("D:/Users/Michael/Documents/Masterprojekt1/x1gex2009/Klassifikationsdateien/exportICD.xml"));
+          //ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+          ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+          // ClaML-Datei aus Klassen im Speicher erstellen
+          m.marshal(this.claml, bos);
+
+          long diff = (new Date().getTime() - timeStart) / 1000;
+          logger.debug("ClaML-Export-Dauer: " + diff);
+
+          try
+          {
+            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = null;
+            Document doc = null;
+
+            builder = builderFactory.newDocumentBuilder();
+            doc = builder.parse(new ByteArrayInputStream(bos.toByteArray()));
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer trans = tf.newTransformer();
+            trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            StringWriter writer = new StringWriter();
+            trans.transform(new DOMSource(doc), new StreamResult(writer));
+            String output = writer.getBuffer().toString().replaceAll("\n|\r", "");
+            XMLFormatter formatter = new XMLFormatter();
+            String formattedXml = formatter.format(output);
+            formattedXml = formattedXml.replace("\"", "'");
+            formattedXml = formattedXml.replace("&quot;", "\"");
+            formattedXml = formattedXml.replace("&amp;", "&");
+            formattedXml = formattedXml.replace("&lt;", "<");
+            formattedXml = formattedXml.replace("&gt;", ">");
+            formattedXml = formattedXml.replace("&apos;", "'");
+
+            // Rückgabe erstellen
+            returnInfos.getExportInfos().setFilecontent(formattedXml.getBytes("UTF-8"));
+          }
+          catch (Exception exi)
+          {
+            // Rückgabe erstellen
+            returnInfos.getExportInfos().setFilecontent(bos.toByteArray());
+          }
+
+          returnInfos.getExportInfos().setFormatId(ExportCodeSystemContentRequestType.EXPORT_CLAML_ID);
+
+          returnInfos.getReturnInfos().setCount(countExported);
+          returnInfos.getReturnInfos().setMessage(countExported + " Klassen erfolgreich exportiert, Dauer (s): " + diff);
+
+          //returnInfos.setImportInformations(importtype);
+          currentTask = "";
+          percentageComplete = 0.0;
+
+          returnInfos.getReturnInfos().setStatus(Status.OK);
         }
         else
         {
-          // Fehler: Codesystem kann nicht geladen bzw. gefunden werden
+          logger.debug("[ExportClaml.java] Codesystem nicht gefunden");
           returnInfos.getReturnInfos().setStatus(Status.FAILURE);
-          returnInfos.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
-          returnInfos.getReturnInfos().setMessage(rcsdResponse.getReturnInfos().getMessage());
+          returnInfos.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
+          returnInfos.getReturnInfos().setMessage("Codesystem konnte nicht gefunden werden!");
         }
+
       }
       else
       {
@@ -389,6 +404,7 @@ public class ExportClaml
     ListCodeSystemConceptsRequestType conceptsReq = new ListCodeSystemConceptsRequestType();
     conceptsReq.setCodeSystem(this.codeSystem);
     conceptsReq.setLoginToken(this.request.getLoginToken());
+    conceptsReq.setLoadTranslation(true);
 
     if (request.getExportParameter() != null && request.getExportParameter().getDateFrom() != null)
     {
@@ -482,11 +498,11 @@ public class ExportClaml
                  }
                  clazz.getRubric().add(rubric);*/
                 if (csc.getIsPreferred())
-                  addRubricElement(RUBRICKINDS.preferred, csc.getTerm(), clazz);
+                  addRubricElement(RUBRICKINDS.preferred, csc.getTerm(), clazz, csc.getCodeSystemConceptTranslations());
                 else
-                  addRubricElement(null, csc.getTerm(), clazz);
+                  addRubricElement(null, csc.getTerm(), clazz, csc.getCodeSystemConceptTranslations());
 
-                addRubricElement(RUBRICKINDS.note, csc.getDescription(), clazz);
+                addRubricElement(RUBRICKINDS.note, csc.getDescription(), clazz, csc.getCodeSystemConceptTranslations());
 
                 // Weitere Attribute in Metadaten speichern
                 createMetadata(METADATA_ATTRIBUTES.hints.getCode(), csc.getHints(), clazz);
@@ -538,15 +554,32 @@ public class ExportClaml
     }
   }
 
-  private void addRubricElement(RUBRICKINDS kind, String value, clamlBindingXSD.Class clazz)
+  private void addRubricElement(RUBRICKINDS kind, String value, clamlBindingXSD.Class clazz, Set<CodeSystemConceptTranslation> translations)
   {
     if (value != null && value.length() > 0)
     {
       Rubric rubric = new Rubric();
       Label label = new Label();
-      label.getContent().add(value);
+      //label.getContent().add(value);
+      label.setvalue(value);
+      if(codeSystemVersion.getPreferredLanguageCd() != null && codeSystemVersion.getPreferredLanguageCd().length() > 0)
+      {
+        label.setXmlLang(codeSystemVersion.getPreferredLanguageCd());
+      }
       rubric.getLabel().add(label);
-
+      
+      // add translation labels
+      if(translations != null)
+      {
+        for(CodeSystemConceptTranslation translation : translations)
+        {
+          label = new Label();
+          label.setvalue(translation.getTerm());
+          label.setXmlLang(translation.getLanguageCd());
+          rubric.getLabel().add(label);
+        }
+      }
+      
       if (kind != null)
       {
         RubricKind rk = new RubricKind();

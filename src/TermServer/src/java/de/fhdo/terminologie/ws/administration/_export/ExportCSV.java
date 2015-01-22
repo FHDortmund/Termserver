@@ -115,7 +115,7 @@ public class ExportCSV
         if (logger.isInfoEnabled())
           logger.info("[ExportCSV] ReturnCodeSystemDetails abgerufen");
 
-        if (parameter.getExportInfos().isUpdateCheck())
+        /*if (parameter.getExportInfos().isUpdateCheck())
         {
           if (responseCodeSystemDetails.getReturnInfos().getStatus() == Status.OK
                   && responseCodeSystemDetails.getCodeSystem() != null)
@@ -136,7 +136,7 @@ public class ExportCSV
                 logger.info("[ExportCSV] ReturnCodeSystemDetails abgerufen");
             }
           }
-        }
+        }*/
 
         //Request-Parameter für ListCodeSystemConcepts erstellen
         if (logger.isInfoEnabled())

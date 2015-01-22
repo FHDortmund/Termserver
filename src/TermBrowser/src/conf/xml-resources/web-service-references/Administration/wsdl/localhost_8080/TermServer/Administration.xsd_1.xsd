@@ -154,65 +154,6 @@
 
 <xs:element name="valueSetVersion" type="ns1:valueSetVersion" />
 
-<xs:complexType name="MaintainDomain">
-<xs:sequence>
-<xs:element name="parameter" type="tns:maintainDomainRequestType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="maintainDomainRequestType">
-<xs:sequence>
-<xs:element name="domain" type="ns1:domain" minOccurs="0" />
-<xs:element name="loginToken" type="xs:string" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<xs:complexType name="MaintainDomainResponse">
-<xs:sequence>
-<xs:element name="return" minOccurs="0">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="returnType">
-<xs:sequence>
-<xs:element name="count" type="xs:int" />
-<xs:element name="message" type="xs:string" minOccurs="0" />
-<xs:element name="overallErrorCategory" type="tns:overallErrorCategory" minOccurs="0" />
-<xs:element name="status" type="tns:status" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
 <xs:complexType name="ImportCodeSystem">
 <xs:sequence>
 <xs:element name="parameter" type="tns:importCodeSystemRequestType" minOccurs="0" />
@@ -226,6 +167,31 @@
 <xs:element name="loginToken" type="xs:string" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <xs:complexType name="importType">
 <xs:sequence>
@@ -250,6 +216,40 @@
 <xs:sequence>
 <xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
 <xs:element name="codeSystem" type="ns1:codeSystem" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="returnType">
+<xs:sequence>
+<xs:element name="count" type="xs:int" />
+<xs:element name="message" type="xs:string" minOccurs="0" />
+<xs:element name="overallErrorCategory" type="tns:overallErrorCategory" minOccurs="0" />
+<xs:element name="status" type="tns:status" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="MaintainDomain">
+<xs:sequence>
+<xs:element name="parameter" type="tns:maintainDomainRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="maintainDomainRequestType">
+<xs:sequence>
+<xs:element name="domain" type="ns1:domain" minOccurs="0" />
+<xs:element name="loginToken" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="MaintainDomainResponse">
+<xs:sequence>
+<xs:element name="return" minOccurs="0">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 </xs:element>
@@ -299,7 +299,6 @@
 <xs:sequence>
 <xs:element name="filecontent" type="xs:base64Binary" minOccurs="0" />
 <xs:element name="formatId" type="xs:long" minOccurs="0" />
-<xs:element name="updateCheck" type="xs:boolean" />
 <xs:element name="url" type="xs:string" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>

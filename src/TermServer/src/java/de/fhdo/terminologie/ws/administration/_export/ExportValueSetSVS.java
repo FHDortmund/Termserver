@@ -97,7 +97,7 @@ public class ExportValueSetSVS
       //Transformer transformer = transformerFactory.newTransformer();
       //DOMSource source = new DOMSource(doc);
 
-      if (parameter.getExportInfos().isUpdateCheck())
+      /*if (parameter.getExportInfos().isUpdateCheck())
       {
         //Request-Parameter für ReturnValueSetDetails erstellen
         if (logger.isInfoEnabled())
@@ -122,7 +122,7 @@ public class ExportValueSetSVS
             ((ValueSetVersion) parameter.getValueSet().getValueSetVersions().toArray()[0]).setVersionId(responseValueSetDetails.getValueSet().getCurrentVersionId());
           }
         }
-      }
+      }*/
 
       // Hibernate-Block, Session öffnen
       org.hibernate.Session hb_session = HibernateUtil.getSessionFactory().openSession();

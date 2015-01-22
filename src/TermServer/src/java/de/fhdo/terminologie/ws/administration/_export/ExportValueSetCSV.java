@@ -99,7 +99,7 @@ public class ExportValueSetCSV
         if (logger.isInfoEnabled())
           logger.info("[ExportCSV] ReturnValueSetDetails abgerufen");
 
-        if (parameter.getExportInfos().isUpdateCheck())
+        /*if (parameter.getExportInfos().isUpdateCheck())
         {
           if (responseValueSetDetails.getReturnInfos().getStatus() == ReturnType.Status.OK
                   && responseValueSetDetails.getValueSet() != null)
@@ -109,7 +109,7 @@ public class ExportValueSetCSV
               ((ValueSetVersion) parameter.getValueSet().getValueSetVersions().toArray()[0]).setVersionId(responseValueSetDetails.getValueSet().getCurrentVersionId());
             }
           }
-        }
+        }*/
         
         
 
