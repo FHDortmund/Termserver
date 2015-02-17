@@ -5,9 +5,10 @@
   <window id="winConceptDetails" use="de.fhdo.gui.main.modules.PopupConcept" width="950px"
           closable="true" border="normal" sizable="true" title="-" >
     
-    <borderlayout vflex="min">
+    <borderlayout vflex="min" id="borderlayout">
+    <!--<borderlayout>--> 
       <center border="none" >
-        <tabbox id="tabboxFilter" vflex="min" onSelect="winConceptDetails.tabSelected()">  <!--//onSelect="windowCSVS.setActiveTab()" Bei Konzeptdetails notwendig?-->
+        <tabbox id="tabboxFilter" vflex="min" onSelect="winConceptDetails.tabSelected()">
           <tabs>
             <tab id="tabDetails" label="${labels.common.details}" />
             <tab id="tabMetadata" label="${labels.common.metadata}"/>
@@ -141,8 +142,16 @@
               <!--<listbox id="listMetadata" vflex="true" height="65%" width="99%" >
                 <listhead></listhead>
               </listbox>-->
-              <include id="incListMetadata" src="/gui/templates/GenericList.zul"/>
-              
+              <borderlayout>
+                <center border="0">
+                  <include id="incListMetadata" src="/gui/templates/GenericList.zul"/>
+                </center>
+                <south border="0" >
+                  <div style="margin-top:8px; margin-bottom:4px;">
+                    <checkbox id="cbMetadataShowAll" checked="@{winConceptDetails.showAllMetadata}" disabled="false" label="${labels.common.showall}" onCheck="winConceptDetails.showAllMetadata()"/>
+                  </div>
+                </south>
+              </borderlayout>
               <!--<div style="padding-top:5px; margin-right:4px; margin-bottom:4px;">
                 <button id="bMetaParaChange" label="${labels.common.changeMetaPara}" />
               </div>-->

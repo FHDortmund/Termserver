@@ -120,22 +120,22 @@ public class UsernamePasswordLogin extends Window implements org.zkoss.zk.ui.ext
 
     loadInfo();
 
-    Session hb_session = HibernateUtil.getSessionFactory().openSession();
-
-    // DB vorbereiten
-    try
-    {
-      org.hibernate.Transaction tx = hb_session.beginTransaction();
-      tx.commit();
-    }
-    catch (Exception e)
-    {
-      LoggingOutput.outputException(e, this);
-    }
-    finally
-    {
-      hb_session.close();
-    }
+//    Session hb_session = HibernateUtil.getSessionFactory().openSession();
+//
+//    // DB vorbereiten
+//    try
+//    {
+//      org.hibernate.Transaction tx = hb_session.beginTransaction();
+//      tx.commit();
+//    }
+//    catch (Exception e)
+//    {
+//      LoggingOutput.outputException(e, this);
+//    }
+//    finally
+//    {
+//      hb_session.close();
+//    }
 
     // Wartemeldung entfernen
     Clients.clearBusy();

@@ -348,7 +348,7 @@ public class ImportICDBMGAT
 
             // Dienst aufrufen (Konzept einfügen)
             CreateConcept cc = new CreateConcept();
-            CreateConceptResponseType response = cc.CreateConcept(request, hb_session, "");
+            CreateConceptResponseType response = cc.CreateConcept(request, hb_session, null);
 
             if (response.getReturnInfos().getStatus() == ReturnType.Status.OK)
             {   //Auf gar keinen Fall csc.getCode() hier!
@@ -423,7 +423,7 @@ public class ImportICDBMGAT
 
             // Dienst aufrufen (Konzept einfügen)
             CreateConcept cc = new CreateConcept();
-            CreateConceptResponseType response = cc.CreateConcept(request, hb_session, "");
+            CreateConceptResponseType response = cc.CreateConcept(request, hb_session, null);
 
             if (response.getReturnInfos().getStatus() == ReturnType.Status.OK)
             {
@@ -519,7 +519,7 @@ public class ImportICDBMGAT
 
             // Dienst aufrufen (Konzept einfügen)
             CreateConcept cc = new CreateConcept();
-            CreateConceptResponseType response = cc.CreateConcept(request, hb_session, "");
+            CreateConceptResponseType response = cc.CreateConcept(request, hb_session, null);
 
             if (response.getReturnInfos().getStatus() == ReturnType.Status.OK)
             {
@@ -631,7 +631,7 @@ public class ImportICDBMGAT
 
               // Dienst aufrufen (Konzept einfügen)
               CreateConcept cc = new CreateConcept();
-              CreateConceptResponseType response = cc.CreateConcept(request, hb_session, "");
+              CreateConceptResponseType response = cc.CreateConcept(request, hb_session, null);
 
               if (response.getReturnInfos().getStatus() == ReturnType.Status.OK)
               {

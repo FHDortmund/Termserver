@@ -58,6 +58,8 @@ import de.fhdo.terminologie.ws.authoring.types.UpdateConceptValueSetMembershipSt
 import de.fhdo.terminologie.ws.authoring.types.UpdateConceptValueSetMembershipStatusResponseType;
 import de.fhdo.terminologie.ws.authoring.types.UpdateValueSetStatusRequestType;
 import de.fhdo.terminologie.ws.authoring.types.UpdateValueSetStatusResponseType;
+import de.fhdo.terminologie.ws.authorization.Authorization;
+import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
 import javax.annotation.Resource;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
@@ -80,7 +82,7 @@ public class Authoring
   @WebMethod(operationName = "CreateCodeSystem")
   public CreateCodeSystemResponseType CreateCodeSystem(@WebParam(name = "parameter") CreateCodeSystemRequestType parameter)
   {
-    
+
     CreateCodeSystem ccs = new CreateCodeSystem();
     return ccs.CreateCodeSystem(parameter, SecurityHelper.getIp(webServiceContext));
   }
@@ -91,7 +93,7 @@ public class Authoring
   @WebMethod(operationName = "CreateValueSet")
   public CreateValueSetResponseType CreateValueSet(@WebParam(name = "parameter") CreateValueSetRequestType parameter)
   {
-    
+
     return new CreateValueSet().CreateValueSet(parameter, SecurityHelper.getIp(webServiceContext));
   }
 
@@ -101,15 +103,15 @@ public class Authoring
   @WebMethod(operationName = "MaintainValueSet")
   public MaintainValueSetResponseType MaintainValueSet(@WebParam(name = "parameter") MaintainValueSetRequestType parameter)
   {
-    
+
     return new MaintainValueSet().MaintainValueSet(parameter, SecurityHelper.getIp(webServiceContext));
   }
 
   @WebMethod(operationName = "CreateConcept")
   public CreateConceptResponseType CreateConcept(@WebParam(name = "parameter") CreateConceptRequestType parameter)
   {
-    
-    return new CreateConcept().CreateConcept(parameter, SecurityHelper.getIp(webServiceContext));
+    AuthenticateInfos authenticateInfos = authorize(parameter != null ? parameter.getLoginToken() : "");
+    return new CreateConcept().CreateConcept(parameter, authenticateInfos);
   }
 
   /**
@@ -118,8 +120,8 @@ public class Authoring
   @WebMethod(operationName = "CreateConceptAssociationType")
   public CreateConceptAssociationTypeResponseType CreateConceptAssociationType(@WebParam(name = "parameter") CreateConceptAssociationTypeRequestType parameter)
   {
-    
-    return new CreateConceptAssociationType().CreateConceptAssociationType(parameter, SecurityHelper.getIp(webServiceContext));
+    AuthenticateInfos authenticateInfos = authorize(parameter != null ? parameter.getLoginToken() : "");
+    return new CreateConceptAssociationType().CreateConceptAssociationType(parameter, authenticateInfos);
   }
 
   /**
@@ -128,7 +130,7 @@ public class Authoring
   @WebMethod(operationName = "CreateValueSetContent")
   public CreateValueSetContentResponseType CreateValueSetContent(@WebParam(name = "parameter") CreateValueSetContentRequestType parameter)
   {
-    
+
     return new CreateValueSetContent().CreateValueSetContent(parameter, SecurityHelper.getIp(webServiceContext));
   }
 
@@ -138,7 +140,7 @@ public class Authoring
   @WebMethod(operationName = "UpdateCodeSystemVersionStatus")
   public UpdateCodeSystemVersionStatusResponseType UpdateCodeSystemVersionStatus(@WebParam(name = "parameter") UpdateCodeSystemVersionStatusRequestType parameter)
   {
-    
+
     return new UpdateCodeSystemVersionStatus().UpdateCodeSystemVersionStatus(parameter, SecurityHelper.getIp(webServiceContext));
   }
 
@@ -148,7 +150,7 @@ public class Authoring
   @WebMethod(operationName = "UpdateConceptStatus")
   public UpdateConceptStatusResponseType UpdateConceptStatus(@WebParam(name = "parameter") UpdateConceptStatusRequestType parameter)
   {
-    
+
     return new UpdateConceptStatus().UpdateConceptStatus(parameter, SecurityHelper.getIp(webServiceContext));
   }
 
@@ -158,7 +160,7 @@ public class Authoring
   @WebMethod(operationName = "UpdateValueSetStatus")
   public UpdateValueSetStatusResponseType UpdateValueSetStatus(@WebParam(name = "parameter") UpdateValueSetStatusRequestType parameter)
   {
-    
+
     return new UpdateValueSetStatus().updateValueSetStatus(parameter, SecurityHelper.getIp(webServiceContext));
   }
 
@@ -168,7 +170,7 @@ public class Authoring
   @WebMethod(operationName = "MaintainCodeSystemVersion")
   public MaintainCodeSystemVersionResponseType MaintainCodeSystemVersion(@WebParam(name = "parameter") MaintainCodeSystemVersionRequestType parameter)
   {
-    
+
     return new MaintainCodeSystemVersion().MaintainCodeSystemVersion(parameter, SecurityHelper.getIp(webServiceContext));
   }
 
@@ -178,7 +180,7 @@ public class Authoring
   @WebMethod(operationName = "MaintainConceptAssociationType")
   public MaintainConceptAssociationTypeResponseType MaintainConceptAssociationType(@WebParam(name = "parameter") MaintainConceptAssociationTypeRequestType parameter)
   {
-    
+
     return new MaintainConceptAssociationType().MaintainConceptAssociationType(parameter, SecurityHelper.getIp(webServiceContext));
   }
 
@@ -188,80 +190,99 @@ public class Authoring
   @WebMethod(operationName = "MaintainConcept")
   public MaintainConceptResponseType MaintainConcept(@WebParam(name = "parameter") MaintainConceptRequestType parameter)
   {
-    
+
     return new MaintainConcept().MaintainConcept(parameter, SecurityHelper.getIp(webServiceContext));
   }
-  
+
   /**
    * Web service operation
    */
   @WebMethod(operationName = "RemoveValueSetContent")
   public RemoveValueSetContentResponseType RemoveValueSetContent(@WebParam(name = "parameter") RemoveValueSetContentRequestType parameter)
   {
-    
+
     return new RemoveValueSetContent().RemoveValueSetContent(parameter, SecurityHelper.getIp(webServiceContext));
   }
 
-    /**
-     * Web service operation
-     */
-    @WebMethod(operationName = "CreateValueSetConceptMetadataValue")
-    public CreateValueSetConceptMetadataValueResponseType CreateValueSetConceptMetadataValue(@WebParam(name = "parameter") CreateValueSetConceptMetadataValueRequestType parameter) {
-        
-        return new CreateValueSetConceptMetadataValue().CreateValueSetConceptMetadataValue(parameter, SecurityHelper.getIp(webServiceContext));
-    }
+  /**
+   * Web service operation
+   */
+  @WebMethod(operationName = "CreateValueSetConceptMetadataValue")
+  public CreateValueSetConceptMetadataValueResponseType CreateValueSetConceptMetadataValue(@WebParam(name = "parameter") CreateValueSetConceptMetadataValueRequestType parameter)
+  {
 
-    /**
-     * Web service operation
-     */
-    @WebMethod(operationName = "DeleteValueSetConceptMetadataValue")
-    public DeleteValueSetConceptMetadataValueResponseType DeleteValueSetConceptMetadataValue(@WebParam(name = "parameter") DeleteValueSetConceptMetadataValueRequestType parameter) {
-        
-        return new DeleteValueSetConceptMetadataValue().DeleteValueSetConceptMetadataValue(parameter, SecurityHelper.getIp(webServiceContext));
-    }
+    return new CreateValueSetConceptMetadataValue().CreateValueSetConceptMetadataValue(parameter, SecurityHelper.getIp(webServiceContext));
+  }
 
-    /**
-     * Web service operation
-     */
-    @WebMethod(operationName = "MaintainValueSetConceptMetadataValue")
-    public MaintainValueSetConceptMetadataValueResponseType MaintainValueSetConceptMetadataValue(@WebParam(name = "parameter") MaintainValueSetConceptMetadataValueRequestType parameter) {
-        
-        return new MaintainValueSetConceptMetadataValue().MaintainValueSetConceptMetadataValue(parameter, SecurityHelper.getIp(webServiceContext));
-    }
+  /**
+   * Web service operation
+   */
+  @WebMethod(operationName = "DeleteValueSetConceptMetadataValue")
+  public DeleteValueSetConceptMetadataValueResponseType DeleteValueSetConceptMetadataValue(@WebParam(name = "parameter") DeleteValueSetConceptMetadataValueRequestType parameter)
+  {
 
-    /**
-     * Web service operation
-     */
-    @WebMethod(operationName = "MaintainCodeSystemConceptMetadataValue")
-    public MaintainCodeSystemConceptMetadataValueResponseType MaintainCodeSystemConceptMetadataValue(@WebParam(name = "parameter") MaintainCodeSystemConceptMetadataValueRequestType parameter) {
-        
-        return new MaintainCodeSystemConceptMetadataValue().MaintainCodeSystemConceptMetadataValue(parameter, SecurityHelper.getIp(webServiceContext));
-    }
+    return new DeleteValueSetConceptMetadataValue().DeleteValueSetConceptMetadataValue(parameter, SecurityHelper.getIp(webServiceContext));
+  }
 
-    /**
-     * Web service operation
-     */
-    @WebMethod(operationName = "UpdateConceptValueSetMembershipStatus")
-    public UpdateConceptValueSetMembershipStatusResponseType UpdateConceptValueSetMembershipStatus(@WebParam(name = "parameter") UpdateConceptValueSetMembershipStatusRequestType parameter) {
-        
-        return new UpdateConceptValueSetMembershipStatus().UpdateConceptValueSetMembershipStatus(parameter, SecurityHelper.getIp(webServiceContext));
-    }
+  /**
+   * Web service operation
+   */
+  @WebMethod(operationName = "MaintainValueSetConceptMetadataValue")
+  public MaintainValueSetConceptMetadataValueResponseType MaintainValueSetConceptMetadataValue(@WebParam(name = "parameter") MaintainValueSetConceptMetadataValueRequestType parameter)
+  {
 
-    /**
-     * Web service operation
-     */
-    @WebMethod(operationName = "MaintainConceptValueSetMembership")
-    public MaintainConceptValueSetMembershipResponseType MaintainConceptValueSetMembership(@WebParam(name = "parameter") MaintainConceptValueSetMembershipRequestType parameter) {
-        
-        return new MaintainConceptValueSetMembership().MaintainConceptValueSetMembership(parameter, SecurityHelper.getIp(webServiceContext));
-    }
+    return new MaintainValueSetConceptMetadataValue().MaintainValueSetConceptMetadataValue(parameter, SecurityHelper.getIp(webServiceContext));
+  }
 
-    /**
-     * Web service operation
-     */
-    @WebMethod(operationName = "RemoveTerminologyOrConcept")
-    public RemoveTerminologyOrConceptResponseType RemoveTerminologyOrConcept(@WebParam(name = "parameter") RemoveTerminologyOrConceptRequestType parameter) {
-        
-        return new RemoveTerminologyOrConcept().RemoveTerminologyOrConcept(parameter, SecurityHelper.getIp(webServiceContext));
+  /**
+   * Web service operation
+   */
+  @WebMethod(operationName = "MaintainCodeSystemConceptMetadataValue")
+  public MaintainCodeSystemConceptMetadataValueResponseType MaintainCodeSystemConceptMetadataValue(@WebParam(name = "parameter") MaintainCodeSystemConceptMetadataValueRequestType parameter)
+  {
+
+    return new MaintainCodeSystemConceptMetadataValue().MaintainCodeSystemConceptMetadataValue(parameter, SecurityHelper.getIp(webServiceContext));
+  }
+
+  /**
+   * Web service operation
+   */
+  @WebMethod(operationName = "UpdateConceptValueSetMembershipStatus")
+  public UpdateConceptValueSetMembershipStatusResponseType UpdateConceptValueSetMembershipStatus(@WebParam(name = "parameter") UpdateConceptValueSetMembershipStatusRequestType parameter)
+  {
+
+    return new UpdateConceptValueSetMembershipStatus().UpdateConceptValueSetMembershipStatus(parameter, SecurityHelper.getIp(webServiceContext));
+  }
+
+  /**
+   * Web service operation
+   */
+  @WebMethod(operationName = "MaintainConceptValueSetMembership")
+  public MaintainConceptValueSetMembershipResponseType MaintainConceptValueSetMembership(@WebParam(name = "parameter") MaintainConceptValueSetMembershipRequestType parameter)
+  {
+
+    return new MaintainConceptValueSetMembership().MaintainConceptValueSetMembership(parameter, SecurityHelper.getIp(webServiceContext));
+  }
+
+  /**
+   * Web service operation
+   */
+  @WebMethod(operationName = "RemoveTerminologyOrConcept")
+  public RemoveTerminologyOrConceptResponseType RemoveTerminologyOrConcept(@WebParam(name = "parameter") RemoveTerminologyOrConceptRequestType parameter)
+  {
+
+    return new RemoveTerminologyOrConcept().RemoveTerminologyOrConcept(parameter, SecurityHelper.getIp(webServiceContext));
+  }
+
+  private AuthenticateInfos authorize(String loginToken)
+  {
+    String ipAddress = SecurityHelper.getIp(webServiceContext);
+
+    AuthenticateInfos loginInfoType = null;
+    if (loginToken != null)
+    {
+      return Authorization.authenticate(ipAddress, loginToken);
     }
+    return null;
+  }
 }

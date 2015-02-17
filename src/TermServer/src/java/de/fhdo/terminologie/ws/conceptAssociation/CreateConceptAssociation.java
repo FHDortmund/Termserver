@@ -21,12 +21,10 @@ import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.AssociationType;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersion;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersionAssociation;
-import de.fhdo.terminologie.helper.LoginHelper;
 import de.fhdo.terminologie.ws.authorization.Authorization;
 import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
 import de.fhdo.terminologie.ws.conceptAssociation.types.CreateConceptAssociationRequestType;
 import de.fhdo.terminologie.ws.conceptAssociation.types.CreateConceptAssociationResponseType;
-import de.fhdo.terminologie.ws.types.LoginInfoType;
 import de.fhdo.terminologie.ws.types.ReturnType;
 import java.util.Date;
 
@@ -39,9 +37,9 @@ public class CreateConceptAssociation
 
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
 
-  public CreateConceptAssociationResponseType CreateConceptAssociation(CreateConceptAssociationRequestType parameter, String ipAddress)
+  public CreateConceptAssociationResponseType CreateConceptAssociation(CreateConceptAssociationRequestType parameter, AuthenticateInfos loginInfoType)
   {
-    return CreateConceptAssociation(parameter, null, ipAddress);
+    return CreateConceptAssociation(parameter, null, loginInfoType);
   }
 
   /**
@@ -51,7 +49,7 @@ public class CreateConceptAssociation
    * @param parameter
    * @return
    */
-  public CreateConceptAssociationResponseType CreateConceptAssociation(CreateConceptAssociationRequestType parameter, org.hibernate.Session session, String ipAddress)
+  public CreateConceptAssociationResponseType CreateConceptAssociation(CreateConceptAssociationRequestType parameter, org.hibernate.Session session, AuthenticateInfos loginInfoType)
   {
     if (logger.isInfoEnabled())
     {
@@ -62,6 +60,7 @@ public class CreateConceptAssociation
     response.setReturnInfos(new ReturnType());
 
     boolean createHibernateSession = (session == null);
+    logger.debug("createHibernateSession: " + createHibernateSession);
 
     // Parameter prüfen
     if (validateParameter(parameter, response) == false)
@@ -70,13 +69,7 @@ public class CreateConceptAssociation
     }
 
     // Login-Informationen auswerten (gilt für jeden Webservice)
-    boolean loggedIn = false;
-    AuthenticateInfos loginInfoType = null;
-    if (parameter != null && parameter.getLoginToken() != null)
-    {
-      loginInfoType = Authorization.authenticate(ipAddress, parameter.getLoginToken());
-      loggedIn = loginInfoType != null;
-    }
+    boolean loggedIn = loginInfoType != null;
 
     if (logger.isDebugEnabled())
     {

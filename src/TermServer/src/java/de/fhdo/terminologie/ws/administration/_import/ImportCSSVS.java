@@ -31,6 +31,7 @@ import de.fhdo.terminologie.ws.authoring.types.CreateConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptResponseType;
 import de.fhdo.terminologie.ws.authoring.types.MaintainCodeSystemVersionRequestType;
 import de.fhdo.terminologie.ws.authoring.types.MaintainCodeSystemVersionResponseType;
+import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
 import de.fhdo.terminologie.ws.types.ReturnType;
 import de.fhdo.terminologie.ws.types.VersioningType;
 import java.io.ByteArrayInputStream;
@@ -62,13 +63,15 @@ public class ImportCSSVS
   private Long csId = 0L;
   private Long csvId = 0L;
   private String resultStr = "";
+  AuthenticateInfos loginInfoType;
   
-  public ImportCSSVS(ImportCodeSystemRequestType _parameter)
+  public ImportCSSVS(ImportCodeSystemRequestType _parameter, AuthenticateInfos _loginInfoType)
   {
     if (logger.isInfoEnabled())
       logger.info("====== ImportCS SVS gestartet ======");
 
     parameter = _parameter;
+    loginInfoType = _loginInfoType;
   }
 
   /**
@@ -353,7 +356,7 @@ public class ImportCSSVS
 
             // Dienst aufrufen (Konzept einfügen)
             CreateConcept cc = new CreateConcept();
-            CreateConceptResponseType response = cc.CreateConcept(request, hb_session, "");
+            CreateConceptResponseType response = cc.CreateConcept(request, hb_session, loginInfoType);
 
             if (response.getReturnInfos().getStatus() == ReturnType.Status.OK)
             {

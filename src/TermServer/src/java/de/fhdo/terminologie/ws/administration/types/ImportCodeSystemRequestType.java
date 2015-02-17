@@ -44,6 +44,7 @@ public class ImportCodeSystemRequestType
   public static final long IMPORT_LeiKat_ID = 7;
   public static final long IMPORT_KAL_ID = 9;
   public static final long IMPORT_ICD_BMG_ID = 6;
+  public static final long IMPORT_MESH_XML_ID = 10;
 
   public static String getPossibleFormats()
   {

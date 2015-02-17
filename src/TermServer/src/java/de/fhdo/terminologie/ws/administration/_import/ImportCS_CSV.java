@@ -30,6 +30,7 @@ import de.fhdo.terminologie.ws.authoring.types.CreateCodeSystemRequestType;
 import de.fhdo.terminologie.ws.authoring.types.CreateCodeSystemResponseType;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptResponseType;
+import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
 import de.fhdo.terminologie.ws.conceptAssociation.CreateConceptAssociation;
 import de.fhdo.terminologie.ws.conceptAssociation.types.CreateConceptAssociationRequestType;
 import de.fhdo.terminologie.ws.conceptAssociation.types.CreateConceptAssociationResponseType;
@@ -55,13 +56,15 @@ public class ImportCS_CSV
   ImportCodeSystemRequestType parameter;
   private int countImported = 0;
   private HashMap metaDataMap;
+  private AuthenticateInfos loginInfoType;
 
-  public ImportCS_CSV(ImportCodeSystemRequestType _parameter)
+  public ImportCS_CSV(ImportCodeSystemRequestType _parameter, AuthenticateInfos _loginInfoType)
   {
     if (logger.isInfoEnabled())
       logger.info("====== ImportCSV - FH Dortmund - gestartet ======");
 
     parameter = _parameter;
+    loginInfoType = _loginInfoType;
 
     this.metaDataMap = new HashMap();
   }
@@ -420,7 +423,7 @@ public class ImportCS_CSV
 
             // Dienst aufrufen (Konzept einfügen)
             CreateConcept cc = new CreateConcept();
-            CreateConceptResponseType response = cc.CreateConcept(request, hb_session, "");
+            CreateConceptResponseType response = cc.CreateConcept(request, hb_session, loginInfoType);
 
             if (response.getReturnInfos().getStatus() == ReturnType.Status.OK)
             {
@@ -445,7 +448,7 @@ public class ImportCS_CSV
 
                 // Dienst aufrufen (Beziehung erstellen)
                 CreateConceptAssociation cca = new CreateConceptAssociation();
-                CreateConceptAssociationResponseType responseAssociation = cca.CreateConceptAssociation(requestAssociation, hb_session, ipAddress);
+                CreateConceptAssociationResponseType responseAssociation = cca.CreateConceptAssociation(requestAssociation, hb_session, loginInfoType);
 
                 if (responseAssociation.getReturnInfos().getStatus() == ReturnType.Status.OK)
                 {

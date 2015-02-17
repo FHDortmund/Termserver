@@ -85,6 +85,7 @@ public class HibernateUtil
 
   public static SessionFactory getSessionFactory()
   {
+    logger.debug("HIBERNATE, getSessionFactory");
     if(sessionFactory == null)
     {
       sessionFactory = buildSessionFactory();

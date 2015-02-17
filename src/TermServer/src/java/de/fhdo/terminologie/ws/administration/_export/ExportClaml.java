@@ -255,6 +255,8 @@ public class ExportClaml
           claml.getRubricKinds().getRubricKind().addAll(rubricKinds.values());
 
           Marshaller m = jc.createMarshaller();
+          
+          //m.setProperty("jaxb.encoding", "Unicode");
             //  m.marshal(this.claml, new File("D:/Users/Michael/Documents/Masterprojekt1/x1gex2009/Klassifikationsdateien/exportICD.xml"));
           //ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -279,7 +281,7 @@ public class ExportClaml
             trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
             StringWriter writer = new StringWriter();
             trans.transform(new DOMSource(doc), new StreamResult(writer));
-            String output = writer.getBuffer().toString().replaceAll("\n|\r", "");
+            /*String output = writer.getBuffer().toString().replaceAll("\n|\r", "");
             XMLFormatter formatter = new XMLFormatter();
             String formattedXml = formatter.format(output);
             formattedXml = formattedXml.replace("\"", "'");
@@ -287,7 +289,11 @@ public class ExportClaml
             formattedXml = formattedXml.replace("&amp;", "&");
             formattedXml = formattedXml.replace("&lt;", "<");
             formattedXml = formattedXml.replace("&gt;", ">");
-            formattedXml = formattedXml.replace("&apos;", "'");
+            formattedXml = formattedXml.replace("&apos;", "'");*/
+            
+            String output = writer.getBuffer().toString();
+            XMLFormatter formatter = new XMLFormatter();
+            String formattedXml = formatter.format(output);
 
             // Rückgabe erstellen
             returnInfos.getExportInfos().setFilecontent(formattedXml.getBytes("UTF-8"));

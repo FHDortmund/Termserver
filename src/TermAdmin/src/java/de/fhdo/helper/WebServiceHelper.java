@@ -51,7 +51,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.namespace.QName;
 import javax.xml.ws.AsyncHandler;
+import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Response;
+import javax.xml.ws.soap.SOAPBinding;
 
 /**
  *
@@ -59,6 +61,7 @@ import javax.xml.ws.Response;
  */
 public class WebServiceHelper
 {
+
   private static String optimizeUrl(String url)
   {
     if (url.startsWith("http://") == false)
@@ -67,11 +70,10 @@ public class WebServiceHelper
       return url + "/";
     if (url.startsWith("/"))
       return url.substring(1);
-    
+
     return url;
   }
-  
-  
+
   public static LoginResponse.Return login(List<String> parameter)
   {
     return login(parameter, PropertiesHelper.getInstance().getTermserverUrl());
@@ -102,9 +104,7 @@ public class WebServiceHelper
     port = service.getAuthorizationPort();
     return port.login(parameter);
   }
-  
-  
-  
+
   public static LogoutResponseType logout(List<String> parameter)
   {
     return logout(parameter, PropertiesHelper.getInstance().getTermserverUrl());
@@ -135,9 +135,7 @@ public class WebServiceHelper
     port = service.getAuthorizationPort();
     return port.logout(parameter);
   }
-  
-  
-  
+
   public static ImportValueSetResponse.Return importValueSet(ImportValueSetRequestType parameter)
   {
     return importValueSet(parameter, PropertiesHelper.getInstance().getTermserverUrl());
@@ -168,8 +166,7 @@ public class WebServiceHelper
     port = service.getAdministrationPort();
     return port.importValueSet(parameter);
   }
-  
-  
+
   public static ImportCodeSystemResponse.Return importCodeSystem(ImportCodeSystemRequestType parameter)
   {
     return importCodeSystem(parameter, PropertiesHelper.getInstance().getTermserverUrl());
@@ -200,8 +197,7 @@ public class WebServiceHelper
     port = service.getAdministrationPort();
     return port.importCodeSystem(parameter);
   }
-  
-  
+
   public static Response<ImportCodeSystemResponse> importCodeSystemAsync(ImportCodeSystemRequestType parameter, AsyncHandler<ImportCodeSystemResponse> handler)
   {
     return importCodeSystemAsync(parameter, handler, PropertiesHelper.getInstance().getTermserverUrl());
@@ -231,10 +227,15 @@ public class WebServiceHelper
       service = new Administration_Service();
     }
     port = service.getAdministrationPort();
+
+    //enable MTOM in client
+    BindingProvider bp = (BindingProvider) port;
+    SOAPBinding binding = (SOAPBinding) bp.getBinding();
+    binding.setMTOMEnabled(true);
+
     return (Response<ImportCodeSystemResponse>) port.importCodeSystemAsync(parameter, handler);
   }
-  
-  
+
   public static ImportCodeSystemStatusResponse.Return importCodeSystemStatus(ImportCodeSystemStatusRequestType parameter)
   {
     return importCodeSystemStatus(parameter, PropertiesHelper.getInstance().getTermserverUrl());
@@ -265,8 +266,7 @@ public class WebServiceHelper
     port = service.getAdministrationPort();
     return port.importCodeSystemStatus(parameter);
   }
-  
-  
+
   public static ImportCodeSystemCancelResponseType importCodeSystemCancel(ImportCodeSystemCancelRequestType parameter)
   {
     return importCodeSystemCancel(parameter, PropertiesHelper.getInstance().getTermserverUrl());
@@ -297,8 +297,7 @@ public class WebServiceHelper
     port = service.getAdministrationPort();
     return port.importCodeSystemCancel(parameter);
   }
-  
-  
+
   public static CreateConceptAssociationTypeResponse.Return createConceptAssociationType(CreateConceptAssociationTypeRequestType parameter)
   {
     return createConceptAssociationType(parameter, PropertiesHelper.getInstance().getTermserverUrl());
@@ -328,8 +327,7 @@ public class WebServiceHelper
     port = service.getAuthoringPort();
     return port.createConceptAssociationType(parameter);
   }
-  
-  
+
   public static MaintainConceptAssociationTypeResponse.Return maintainConceptAssociationType(MaintainConceptAssociationTypeRequestType parameter)
   {
     return maintainConceptAssociationType(parameter, PropertiesHelper.getInstance().getTermserverUrl());
@@ -359,8 +357,7 @@ public class WebServiceHelper
     port = service.getAuthoringPort();
     return port.maintainConceptAssociationType(parameter);
   }
-  
-  
+
   public static ReturnConceptAssociationTypeDetailsResponse.Return returnConceptAssociationTypeDetails(ReturnConceptAssociationTypeDetailsRequestType parameter)
   {
     return returnConceptAssociationTypeDetails(parameter, PropertiesHelper.getInstance().getTermserverUrl());

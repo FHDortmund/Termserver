@@ -291,6 +291,19 @@ public class SessionHelper
     else
       return null;
   }
+  
+  public static boolean getBoolValue(String Name, boolean Default)
+  {
+    org.zkoss.zk.ui.Session session = Sessions.getCurrent();
+    if (session != null)
+    {
+      Object o = session.getAttribute(Name);
+      if(o != null)
+        return (Boolean)o;
+    }
+    
+    return Default;
+  }
 
   public static Object getValue(String Name, HttpSession httpSession)
   {

@@ -31,6 +31,7 @@ import de.fhdo.terminologie.ws.authoring.types.CreateCodeSystemRequestType;
 import de.fhdo.terminologie.ws.authoring.types.CreateCodeSystemResponseType;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptResponseType;
+import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
 import de.fhdo.terminologie.ws.types.ReturnType;
 import ehd._001.KeytabsTyp;
 import java.io.ByteArrayInputStream;
@@ -52,13 +53,15 @@ public class ImportKBV
   private static Logger logger = Logger4j.getInstance().getLogger();
   ImportCodeSystemRequestType parameter;
   private int countImported = 0;
+  private AuthenticateInfos loginInfoType;
 
-  public ImportKBV(ImportCodeSystemRequestType _parameter)
+  public ImportKBV(ImportCodeSystemRequestType _parameter, AuthenticateInfos _loginInfoType)
   {
     if (logger.isInfoEnabled())
       logger.info("====== ImportKBV gestartet ======");
 
     parameter = _parameter;
+    loginInfoType = _loginInfoType;
   }
 
   public String importXML(ImportCodeSystemResponseType reponse)
@@ -138,7 +141,7 @@ public class ImportKBV
 
             // Dienst aufrufen (Konzept einfügen)
             CreateConcept cc = new CreateConcept();
-            CreateConceptResponseType response = cc.CreateConcept(request, hb_session, "");
+            CreateConceptResponseType response = cc.CreateConcept(request, hb_session, loginInfoType);
 
             if (response.getReturnInfos().getStatus() == ReturnType.Status.OK)
             {

@@ -16,6 +16,7 @@
  */
 package de.fhdo.terminologie.ws.administration;
 
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.ws.administration._import.ImportCSSVS;
 import de.fhdo.terminologie.ws.administration._import.ImportCS_CSV;
 import de.fhdo.terminologie.ws.administration._import.ImportClaml;
@@ -24,6 +25,7 @@ import de.fhdo.terminologie.ws.administration._import.ImportKAL;
 import de.fhdo.terminologie.ws.administration._import.ImportKBV;
 import de.fhdo.terminologie.ws.administration._import.ImportLOINC;
 import de.fhdo.terminologie.ws.administration._import.ImportLeiKatAt;
+import de.fhdo.terminologie.ws.administration._import.ImportMeSH;
 import de.fhdo.terminologie.ws.administration.types.ImportCodeSystemRequestType;
 import de.fhdo.terminologie.ws.administration.types.ImportCodeSystemResponseType;
 import de.fhdo.terminologie.ws.authorization.Authorization;
@@ -91,7 +93,7 @@ public class ImportCodeSystem
       try
       {
         StaticStatus.importRunning = true;
-        ImportClaml importClaml = new ImportClaml();
+        ImportClaml importClaml = new ImportClaml(loginInfoType);
         importClaml.startImport(parameter);
 
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
@@ -117,7 +119,7 @@ public class ImportCodeSystem
         String s = "";
         int countImported = 0;
 
-        ImportCS_CSV importCSV = new ImportCS_CSV(parameter);
+        ImportCS_CSV importCSV = new ImportCS_CSV(parameter, loginInfoType);
 
         s = importCSV.importCSV(response, ipAddress);
         countImported = importCSV.getCountImported();
@@ -141,7 +143,7 @@ public class ImportCodeSystem
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         response.getReturnInfos().setMessage("Error at CSV import: " + e.getLocalizedMessage());
 
-        e.printStackTrace();
+        LoggingOutput.outputException(e, this);
       }
     }
     else if (formatId == ImportCodeSystemRequestType.IMPORT_LOINC_ID)
@@ -149,7 +151,7 @@ public class ImportCodeSystem
       try
       {
         StaticStatus.importRunning = true;
-        ImportLOINC importLOINC = new ImportLOINC(parameter);
+        ImportLOINC importLOINC = new ImportLOINC(parameter, loginInfoType);
 
         String s = importLOINC.importLOINC(response);
 
@@ -173,7 +175,7 @@ public class ImportCodeSystem
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         response.getReturnInfos().setMessage("Error at LOINC import: " + e.getLocalizedMessage());
 
-        e.printStackTrace();
+        LoggingOutput.outputException(e, this);
       }
     }
     else if (formatId == ImportCodeSystemRequestType.IMPORT_LOINC_RELATIONS_ID)
@@ -181,7 +183,7 @@ public class ImportCodeSystem
       try
       {
         StaticStatus.importRunning = true;
-        ImportLOINC importLOINC = new ImportLOINC(parameter);
+        ImportLOINC importLOINC = new ImportLOINC(parameter, loginInfoType);
 
         String s = importLOINC.importLOINC_Associations(response);
 
@@ -205,7 +207,7 @@ public class ImportCodeSystem
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         response.getReturnInfos().setMessage("Error at LOINC relationship import: " + e.getLocalizedMessage());
 
-        e.printStackTrace();
+        LoggingOutput.outputException(e, this);
       }
     }
     else if (formatId == ImportCodeSystemRequestType.IMPORT_KBV_KEYTABS_ID)
@@ -213,7 +215,7 @@ public class ImportCodeSystem
       try
       {
         //StaticStatus.importRunning = true;
-        ImportKBV importKBV = new ImportKBV(parameter);
+        ImportKBV importKBV = new ImportKBV(parameter, loginInfoType);
 
         String s = importKBV.importXML(response);
 
@@ -237,7 +239,7 @@ public class ImportCodeSystem
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         response.getReturnInfos().setMessage("Error at KBV import: " + e.getLocalizedMessage());
 
-        e.printStackTrace();
+        LoggingOutput.outputException(e, this);
       }
     }
     else if (formatId == ImportCodeSystemRequestType.IMPORT_SVS_ID)
@@ -246,7 +248,7 @@ public class ImportCodeSystem
       try
       {
         StaticStatus.importRunning = true;
-        ImportCSSVS importCS_SVS = new ImportCSSVS(parameter);
+        ImportCSSVS importCS_SVS = new ImportCSSVS(parameter, loginInfoType);
         String s = importCS_SVS.importSVS(response, ipAddress);
 
         if (s.length() == 0)
@@ -269,7 +271,7 @@ public class ImportCodeSystem
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         response.getReturnInfos().setMessage("Error at SVS import: " + e.getLocalizedMessage());
 
-        e.printStackTrace();
+        LoggingOutput.outputException(e, this);
       }
 
     }
@@ -302,7 +304,7 @@ public class ImportCodeSystem
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         response.getReturnInfos().setMessage("Error at import: " + e.getLocalizedMessage());
 
-        e.printStackTrace();
+        LoggingOutput.outputException(e, this);
       }
 
     }
@@ -312,7 +314,7 @@ public class ImportCodeSystem
       try
       {
         StaticStatus.importRunning = true;
-        ImportKAL importKAL = new ImportKAL(parameter);
+        ImportKAL importKAL = new ImportKAL(parameter, loginInfoType);
         String s = importKAL.importKAL(response);
 
         if (s.length() == 0)
@@ -335,7 +337,7 @@ public class ImportCodeSystem
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         response.getReturnInfos().setMessage("Error at import: " + e.getLocalizedMessage());
 
-        e.printStackTrace();
+        LoggingOutput.outputException(e, this);
       }
 
     }
@@ -368,7 +370,40 @@ public class ImportCodeSystem
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         response.getReturnInfos().setMessage("Fehler beim Import: " + e.getLocalizedMessage());
 
-        e.printStackTrace();
+        LoggingOutput.outputException(e, this);
+      }
+
+    }
+    else if (formatId == ImportCodeSystemRequestType.IMPORT_MESH_XML_ID)
+    {
+      try
+      {
+        StaticStatus.importRunning = true;
+        ImportMeSH importMeSH = new ImportMeSH(loginInfoType);
+        importMeSH.startImport(parameter);
+
+        response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
+        response.getReturnInfos().setStatus(ReturnType.Status.OK);
+        if (StaticStatus.cancel)
+          response.getReturnInfos().setMessage("Import cancelled.");
+        else
+          response.getReturnInfos().setMessage("Import completed.");
+        response.getReturnInfos().setCount(importMeSH.getCountImported());
+      }
+      catch (Exception e)
+      {
+        response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
+        response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+        String msg = e.getLocalizedMessage();
+        if(msg == null || msg.length() == 0)
+        {
+          if(e.getCause() != null)
+            msg = e.getCause().getLocalizedMessage();
+        }
+          
+        response.getReturnInfos().setMessage("Error at import: " + msg);
+
+        LoggingOutput.outputException(e, this);
       }
 
     }

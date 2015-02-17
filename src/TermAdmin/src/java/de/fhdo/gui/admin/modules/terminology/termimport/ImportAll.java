@@ -123,7 +123,9 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
                 || media.getContentType().equals("application/vnd.ms-excel")
                 || media.getContentType().contains("excel")
                 || media.getContentType().contains("csv")
-                || media.getContentType().contains("text/plain"))
+                || media.getContentType().contains("text/plain")
+                || media.getContentType().equals("application/x-zip-compressed")
+                || media.getContentType().contains("zip"))
         {
           if (media.isBinary())
           {
@@ -234,6 +236,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
         final String TYPE_KBV = "5";
         final String TYPE_ICD_AUSTRIA = "6";
         final String TYPE_LEITLINIEN_AUSTRIA = "7";
+        final String TYPE_MESH = "10";
 
         if (cd.equals(TYPE_CSV))
         {
@@ -255,6 +258,10 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
         else if (cd.equals(TYPE_KBV))
         {
           importClass = new ImportCS_KBV(formatId);
+        }
+        else if (cd.equals(TYPE_MESH))
+        {
+          importClass = new ImportMeSH(formatId, this);
         }
       }
       else if (kind == KIND_VALUESET)
@@ -556,7 +563,10 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
 
       final Progressmeter progress = (Progressmeter) getFellow("progress");
       final Label label = (Label) getFellow("labelStatus");
+      label.setValue("...");
       progress.setVisible(true);
+      
+      ((Label) getFellow("labelStatus")).setValue("...");
 
       if (importClass.startImport(bytes, progress, label, selectedCS, selectedVS) == false)
       {

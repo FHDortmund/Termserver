@@ -37,6 +37,7 @@ import de.fhdo.terminologie.ws.authoring.types.CreateConceptAssociationTypeReque
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptAssociationTypeResponseType;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptResponseType;
+import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
 import de.fhdo.terminologie.ws.conceptAssociation.CreateConceptAssociation;
 import de.fhdo.terminologie.ws.conceptAssociation.types.CreateConceptAssociationRequestType;
 import de.fhdo.terminologie.ws.conceptAssociation.types.CreateConceptAssociationResponseType;
@@ -117,13 +118,15 @@ public class ImportLOINC
   private static Logger logger = Logger4j.getInstance().getLogger();
   ImportCodeSystemRequestType parameter;
   private int countImported = 0;
+  private AuthenticateInfos loginInfoType;
 
-  public ImportLOINC(ImportCodeSystemRequestType _parameter)
+  public ImportLOINC(ImportCodeSystemRequestType _parameter, AuthenticateInfos _loginInfoType)
   {
     if (logger.isInfoEnabled())
       logger.info("====== ImportLOINC gestartet ======");
 
     parameter = _parameter;
+    loginInfoType = _loginInfoType;
 
   }
 
@@ -262,7 +265,7 @@ public class ImportLOINC
                 
                 CreateConceptAssociationType ccat = new CreateConceptAssociationType();
                 CreateConceptAssociationTypeResponseType responseAssociation =
-                  ccat.CreateConceptAssociationType(requestAssociation, hb_session, "");
+                  ccat.CreateConceptAssociationType(requestAssociation, hb_session, loginInfoType);
                 
                 if(responseAssociation.getReturnInfos().getStatus() == ReturnType.Status.OK)
                 {
@@ -291,7 +294,7 @@ public class ImportLOINC
             // Dienst aufrufen (Konzept einfügen)
             //logger.warn(new Date().getTime() + ", Assoziation in DB einfügen...");
             CreateConceptAssociation cca = new CreateConceptAssociation();
-            CreateConceptAssociationResponseType responseCCA = cca.CreateConceptAssociation(request, hb_session, "");
+            CreateConceptAssociationResponseType responseCCA = cca.CreateConceptAssociation(request, hb_session, loginInfoType);
             
             if (responseCCA.getReturnInfos().getStatus() == ReturnType.Status.OK)
             {
@@ -546,7 +549,7 @@ public class ImportLOINC
             request.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev);
 
             // Dienst aufrufen (Konzept einfügen)
-            CreateConceptResponseType responseCC = cc.CreateConcept(request, hb_session, "");
+            CreateConceptResponseType responseCC = cc.CreateConcept(request, hb_session, loginInfoType);
 
             if (responseCC.getReturnInfos().getStatus() == ReturnType.Status.OK)
             {

@@ -52,6 +52,7 @@ import de.fhdo.terminologie.ws.authoring.types.CreateConceptAssociationTypeReque
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptAssociationTypeResponseType;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptResponseType;
+import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
 import de.fhdo.terminologie.ws.conceptAssociation.CreateConceptAssociation;
 import de.fhdo.terminologie.ws.conceptAssociation.types.CreateConceptAssociationRequestType;
 import de.fhdo.terminologie.ws.conceptAssociation.types.CreateConceptAssociationResponseType;
@@ -103,12 +104,14 @@ public class ImportClaml
   private int aktCount = 0;
   private org.hibernate.Session hb_session;
   private int countImported = 0;
+  private AuthenticateInfos loginInfoType;
 
-  public ImportClaml()
+  public ImportClaml(AuthenticateInfos _loginInfoType)
   {
     if (logger.isInfoEnabled())
       logger.info("====== ImportClaml Constructor ======");
 
+    loginInfoType = _loginInfoType;
   }
 
   /**
@@ -627,7 +630,7 @@ public class ImportClaml
     ccatrt.setLoginToken(loginToken);
 
     CreateConceptAssociationType ccat = new CreateConceptAssociationType();
-    this.ccatrespt = ccat.CreateConceptAssociationType(ccatrt, hb_session, "");
+    this.ccatrespt = ccat.CreateConceptAssociationType(ccatrt, hb_session, loginInfoType);
 
     return assoctype;
 
@@ -854,7 +857,7 @@ public class ImportClaml
 
     //Konzept erstellen
     CreateConcept cc = new CreateConcept();
-    this.ccsResponse = cc.CreateConcept(request, hb_session, "");
+    this.ccsResponse = cc.CreateConcept(request, hb_session, loginInfoType);
 
     logger.info("[ImportClaml.java]" + ccsResponse.getReturnInfos().getMessage());
     if (ccsResponse.getReturnInfos().getStatus() == ReturnType.Status.OK)
@@ -922,7 +925,7 @@ public class ImportClaml
 
     //Konzept erstellen
     CreateConcept cc = new CreateConcept();
-    this.ccsResponse = cc.CreateConcept(request, hb_session, "");
+    this.ccsResponse = cc.CreateConcept(request, hb_session, loginInfoType);
 
     logger.info("[ImportClaml.java]" + ccsResponse.getReturnInfos().getMessage());
     if (ccsResponse.getReturnInfos().getStatus() == ReturnType.Status.OK)
@@ -979,7 +982,7 @@ public class ImportClaml
     ccar.setLoginToken(loginToken);
 
     CreateConceptAssociation cca = new CreateConceptAssociation();
-    CreateConceptAssociationResponseType ccaresp = cca.CreateConceptAssociation(ccar, hb_session, "");
+    CreateConceptAssociationResponseType ccaresp = cca.CreateConceptAssociation(ccar, hb_session, loginInfoType);
     //System.out.println("test11");
     logger.info("[ImportClaml.java]" + ccaresp.getReturnInfos().getMessage());
     if (ccaresp.getReturnInfos().getStatus() == ReturnType.Status.OK)
@@ -1040,7 +1043,7 @@ public class ImportClaml
     CreateConceptAssociation cca = new CreateConceptAssociation();
     //TODO cca.CreateConceptAssociation( ist noch nicht implementiert
 
-    CreateConceptAssociationResponseType ccaresp = cca.CreateConceptAssociation(ccar, hb_session, "");
+    CreateConceptAssociationResponseType ccaresp = cca.CreateConceptAssociation(ccar, hb_session, loginInfoType);
 
     logger.info("[ImportClaml.java]" + ccaresp.getReturnInfos().getMessage());
     if (ccaresp.getReturnInfos().getStatus() == ReturnType.Status.OK)

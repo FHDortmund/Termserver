@@ -11,4 +11,5 @@
     <system systemId="file:/C:/FH/FH/FH/Standards/IHE/HPD%20(Health%20Provider%20Directory)/WSDL/ihe-profiles/src/schema/HL7V3/NE2008/coreschemas/voc.xsd" uri="src/conf/xml-resources/web-services/SVS_ValueSetRepository/schema/HL7V3/NE2008/coreschemas/voc.xsd"/>
     <system systemId="file:/C:/FH/FH/FH/Standards/IHE/HPD%20(Health%20Provider%20Directory)/WSDL/ihe-profiles/src/schema/HL7V3/NE2008/coreschemas/datatypes.xsd" uri="src/conf/xml-resources/web-services/SVS_ValueSetRepository/schema/HL7V3/NE2008/coreschemas/datatypes.xsd"/>-->
     <system systemId="file:/C:/FH/FH_Projekte/Terminologieserver_GitHub/Termserver/src/TermServer/schemes/EN14463-2007.dtd" uri="src/conf/xml-resources/jaxb/clamlBindingXSD/EN14463-2007.dtd"/>
+    <system systemId="file:/C:/FH/FH_Projekte/Terminologieserver_GitHub/Termserver/src/TermServer/schemes/desc2015.dtd" uri="src/conf/xml-resources/jaxb/MeSH/desc2015.dtd"/>
 </catalog>

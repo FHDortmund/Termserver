@@ -41,11 +41,13 @@ import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.soap.MTOM;
 
 /**
  *
  * @author Bernhard Rimatzki
  */
+@MTOM
 @WebService(serviceName = "Administration")
 @SchemaValidation
 public class Administration

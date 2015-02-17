@@ -20,4 +20,14 @@
 		</bindings>
 		<catalog/>
 	</schema>
+	<schema type='-dtd' package='mesh' name='MeSH'>
+		<xjc-options>
+		</xjc-options>
+		<schema-sources>
+			<schema-source location='src/conf/xml-resources/jaxb/MeSH/desc2015.dtd' origLocation='schemes/desc2015.dtd'/>
+		</schema-sources>
+		<bindings>
+		</bindings>
+		<catalog/>
+	</schema>
 </schemas>

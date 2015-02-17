@@ -39,6 +39,20 @@
         <copy todir="${build.generated.sources.dir}/jaxb">
             <fileset dir="build/generated/jaxbCache/clamlBindingXSD"/>
         </copy>
+        <mkdir dir="build/generated/jaxbCache/MeSH"/>
+        <xjc package="mesh" destdir="build/generated/jaxbCache/MeSH" catalog="catalog.xml">
+            <classpath>
+                <pathelement location="${src.dir}"/>
+                <pathelement path="${jaxbwiz.xjcrun.classpath}"/>
+            </classpath>
+            <arg value="-dtd"/>
+            <schema file="src/conf/xml-resources/jaxb/MeSH/desc2015.dtd"/>
+            <depends file="src/conf/xml-resources/jaxb/MeSH/desc2015.dtd"/>
+            <produces dir="build/generated/jaxbCache/MeSH"/>
+        </xjc>
+        <copy todir="${build.generated.sources.dir}/jaxb">
+            <fileset dir="build/generated/jaxbCache/MeSH"/>
+        </copy>
         <!--*** Web project javac macro does not support sourcepath attribute, so do not pass "sourcepath=${src.dir}"-->
     </target>
 </project>

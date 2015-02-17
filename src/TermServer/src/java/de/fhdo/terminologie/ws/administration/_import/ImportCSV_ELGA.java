@@ -282,7 +282,7 @@ public class ImportCSV_ELGA
 
             // Dienst aufrufen (Konzept einfügen)
             CreateConcept cc = new CreateConcept();
-            CreateConceptResponseType response = cc.CreateConcept(request, hb_session, "");
+            CreateConceptResponseType response = cc.CreateConcept(request, hb_session, null);
 
             if (response.getReturnInfos().getStatus() == ReturnType.Status.OK)
             {

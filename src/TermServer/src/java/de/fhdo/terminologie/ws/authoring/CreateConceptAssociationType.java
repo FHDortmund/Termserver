@@ -24,6 +24,7 @@ import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptAssociationTypeRequestType;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptAssociationTypeResponseType;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptResponseType;
+import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
 
 import de.fhdo.terminologie.ws.types.ReturnType;
 import java.util.Iterator;
@@ -40,13 +41,13 @@ public class CreateConceptAssociationType
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
 
   public CreateConceptAssociationTypeResponseType CreateConceptAssociationType(
-    CreateConceptAssociationTypeRequestType parameter, String ipAddress)
+    CreateConceptAssociationTypeRequestType parameter, AuthenticateInfos loginInfoType)
   {
-    return CreateConceptAssociationType(parameter, null, ipAddress);
+    return CreateConceptAssociationType(parameter, null, loginInfoType);
   }
   
   public CreateConceptAssociationTypeResponseType CreateConceptAssociationType(
-    CreateConceptAssociationTypeRequestType parameter, org.hibernate.Session session, String ipAddress)
+    CreateConceptAssociationTypeRequestType parameter, org.hibernate.Session session, AuthenticateInfos loginInfoType)
   {
     if (logger.isInfoEnabled())
       logger.info("====== CreateConceptAssociationType gestartet ======");
@@ -75,7 +76,7 @@ public class CreateConceptAssociationType
       paramCodeSystemEntity = parameter.getCodeSystemEntity();
     }
     
-    cc.CreateConceptOrAssociationType(responseCC, parameter.getLoginToken(), paramCodeSystem, paramCodeSystemEntity, session, ipAddress);
+    cc.CreateConceptOrAssociationType(responseCC, parameter.getLoginToken(), paramCodeSystem, paramCodeSystemEntity, session, loginInfoType);
     
     response.setReturnInfos(responseCC.getReturnInfos());
     response.setCodeSystemEntity(responseCC.getCodeSystemEntity());

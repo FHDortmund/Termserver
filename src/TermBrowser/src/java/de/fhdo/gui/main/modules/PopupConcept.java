@@ -55,7 +55,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
+import org.zkoss.zul.Borderlayout;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
@@ -89,6 +93,22 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
 {
 
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
+
+  /**
+   * @return the showAllMetadata
+   */
+  public boolean isShowAllMetadata()
+  {
+    return showAllMetadata;
+  }
+
+  /**
+   * @param showAllMetadata the showAllMetadata to set
+   */
+  public void setShowAllMetadata(boolean showAllMetadata)
+  {
+    this.showAllMetadata = showAllMetadata;
+  }
 
   public static enum EDITMODES
   {
@@ -137,6 +157,8 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
   private List<CodeSystemEntityVersion> listOntologies;
 
   private IUpdateModal updateListener = null;
+  
+  private boolean showAllMetadata = false;
 
   public PopupConcept()
   {
@@ -189,6 +211,8 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
 
     csevAssociatedVersionId = ArgumentHelper.getWindowArgumentLong("CSEVAssociated"); // für assoziationen   
 
+    showAllMetadata = SessionHelper.getBoolValue("ShowAllMetadata", false);
+    
     initData();
   }
 
@@ -217,6 +241,21 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
     initListMetadata();
 
     showComponents();
+    
+    // change size when resizing window
+    this.addEventListener(Events.ON_SIZE, new EventListener<Event>()
+    {
+      public void onEvent(Event t) throws Exception
+      {
+        logger.debug("ON_SIZE");
+        
+        ((Borderlayout)getFellow("borderlayout")).setVflex("100%");
+        ((Tabbox)getFellow("tabboxFilter")).setVflex("100%");
+        
+        invalidate();
+      }
+    });
+    
   }
 
   private void showComponents()
@@ -464,8 +503,24 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
 
   }
 
+  public void showAllMetadata()
+  {
+    showAllMetadata = ((Checkbox)getFellow("cbMetadataShowAll")).isChecked();
+    SessionHelper.setValue("ShowAllMetadata", showAllMetadata);
+    
+    // reload list
+    listMetadataValuesCS = null;
+    listMetadataValuesVS = null;
+    initListMetadata();
+  }
+  
   private void initListMetadata()
   {
+    if(listMetadataValuesCS != null && listMetadataValuesVS != null)
+      return;  // already initialized
+    
+    logger.debug("initListMetadata(), showAllMetadata: " + showAllMetadata);
+    
     listMetadataValuesCS = new LinkedList<CodeSystemMetadataValue>();
     listMetadataValuesVS = new LinkedList<ValueSetMetadataValue>();
 
@@ -474,6 +529,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
     header.add(new GenericListHeaderType(Labels.getLabel("common.metadata"), 160, "", true, "String", true, true, false, false));
     header.add(new GenericListHeaderType(Labels.getLabel("common.value"), 0, "", true, "String", true, true, editMode == EDITMODES.CREATE || editMode == EDITMODES.CREATE_NEW_VERSION || editMode == EDITMODES.MAINTAIN, false));
     header.add(new GenericListHeaderType(Labels.getLabel("common.language"), 100, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("common.datatype"), 80, "", true, "String", true, true, false, false));
 
     List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
 
@@ -492,7 +548,9 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
             value = meta.getParameterValue();
             listMetadataValuesVS.add(meta);
             gefunden = true;
-            break;
+            logger.debug("VS Metadata found: " + meta.getMetadataParameter().getParamName() + ", value: " + value);
+            dataList.add(createRowFromMetadataParameter(value, mp));
+            //break;
           }
         }
       }
@@ -505,12 +563,14 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
             value = meta.getParameterValue();
             listMetadataValuesCS.add(meta);
             gefunden = true;
-            break;
+            logger.debug("CS Metadata found: " + meta.getMetadataParameter().getParamName() + ", value: " + value);
+            dataList.add(createRowFromMetadataParameter(value, mp));
+            //break;
           }
         }
       }
 
-      if (gefunden == false)
+      if (gefunden == false && showAllMetadata)
       {
         if (contentMode == CONTENTMODE.VALUESET)
         {
@@ -526,27 +586,10 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
           meta.setMetadataParameter(mp);
           listMetadataValuesCS.add(meta);
         }
+        
+        dataList.add(createRowFromMetadataParameter(value, mp));
       }
-
-      GenericListRowType row = createRowFromMetadataParameter(value, mp);
-      dataList.add(row);
     }
-    /*if (contentMode == CONTENTMODE.VALUESET)
-     {
-     for (ValueSetMetadataValue meta : csev.getValueSetMetadataValues())
-     {
-     GenericListRowType row = createRowFromMetadataParameter(meta.getParameterValue(), meta.getMetadataParameter());
-     dataList.add(row);
-     }
-     }
-     else
-     {
-     for (CodeSystemMetadataValue meta : csev.getCodeSystemMetadataValues())
-     {
-     GenericListRowType row = createRowFromMetadataParameter(meta.getParameterValue(), meta.getMetadataParameter());
-     dataList.add(row);
-     }
-     }*/
 
     // Liste initialisieren
     Include inc = (Include) getFellow("incListMetadata");
@@ -571,10 +614,11 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
   {
     GenericListRowType row = new GenericListRowType();
 
-    GenericListCellType[] cells = new GenericListCellType[3];
+    GenericListCellType[] cells = new GenericListCellType[4];
     cells[0] = new GenericListCellType(meta.getParamName(), false, "");
     cells[1] = new GenericListCellType(value, false, "");
     cells[2] = new GenericListCellType(DomainHelper.getInstance().getDomainValueDisplayText(Definitions.DOMAINID_LANGUAGECODES, meta.getLanguageCd()), false, "");
+    cells[3] = new GenericListCellType(meta.getParamDatatype(), false, "");
 
     row.setData(meta);
     row.setCells(cells);
@@ -1056,9 +1100,10 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
     if(showCodeSystemName)
       header.add(new GenericListHeaderType(Labels.getLabel("common.codeSystem"), 240, "", showFilter, "String", true, true, false, false));
     header.add(new GenericListHeaderType(Labels.getLabel("common.preferred"), 78, "", showFilter, "Boolean", true, true, false, true));
-    header.add(new GenericListHeaderType(Labels.getLabel("common.code"), 160, "", showFilter, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("common.code"), 150, "", showFilter, "String", true, true, false, false));
     header.add(new GenericListHeaderType(Labels.getLabel("common.term"), 0, "", showFilter, "String", true, true, false, false));
-    header.add(new GenericListHeaderType(Labels.getLabel("common.details"), 100, "", false, "String", true, false, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("common.association"), 150, "", showFilter, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("common.details"), 80, "", false, "String", true, false, false, false));
 
     List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
 
@@ -1093,7 +1138,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
     
     int index = 0;
 
-    GenericListCellType[] cells = new GenericListCellType[showCodeSystemName ? 5 : 4];
+    GenericListCellType[] cells = new GenericListCellType[showCodeSystemName ? 6 : 5];
     
     if(showCodeSystemName)
     {
@@ -1104,13 +1149,16 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
     cells[index++] = new GenericListCellType(csc2.getCode(), false, "");
     cells[index++] = new GenericListCellType(csc2.getTerm(), false, "");
     
+    String association = "";
+    if(csev.getAssociationTypes().size() > 0)
+      association = csev.getAssociationTypes().get(0).getForwardName();
+    
+    cells[index++] = new GenericListCellType(association, false, "");
+    
     Listcell lc = new Listcell("");
     TreeitemRendererCSEV.fillDetailsCell(lc, null, csev, csc2);
     cells[index++] = new GenericListCellType(lc, false, "");
-    /*if(tc == null)
-      cells[index++] = new GenericListCellType("", false, "");
-    else cells[index++] = new GenericListCellType(tc, false, "");*/
-
+    
     row.setData(csev);
     row.setCells(cells);
 
@@ -1230,11 +1278,13 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
                   && ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId2().getVersionId().longValue() != codeSystemEntityVersionId)
           {
             linkedConcept = ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId2();
+            linkedConcept.getAssociationTypes().add(ass.getAssociationType());
           }
           else if (ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId1() != null
                   && ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().getVersionId().longValue() != codeSystemEntityVersionId)
           {
             linkedConcept = ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId1();
+            linkedConcept.getAssociationTypes().add(ass.getAssociationType());
           }
 
           if (linkedConcept != null)

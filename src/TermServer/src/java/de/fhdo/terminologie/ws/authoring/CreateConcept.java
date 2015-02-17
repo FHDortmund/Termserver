@@ -50,12 +50,12 @@ public class CreateConcept
 
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
 
-  public CreateConceptResponseType CreateConcept(CreateConceptRequestType parameter, String ipAddress)
+  public CreateConceptResponseType CreateConcept(CreateConceptRequestType parameter, AuthenticateInfos loginInfoType)
   {
-    return CreateConcept(parameter, null, ipAddress);
+    return CreateConcept(parameter, null, loginInfoType);
   }
 
-  public CreateConceptResponseType CreateConcept(CreateConceptRequestType parameter, org.hibernate.Session session, String ipAddress)
+  public CreateConceptResponseType CreateConcept(CreateConceptRequestType parameter, org.hibernate.Session session, AuthenticateInfos loginInfoType)
   {
     if (logger.isInfoEnabled())
       logger.info("====== CreateConcept gestartet ======");
@@ -79,7 +79,7 @@ public class CreateConcept
       paramCodeSystemEntity = parameter.getCodeSystemEntity();
     }
 
-    CreateConceptOrAssociationType(response, parameter.getLoginToken(), paramCodeSystem, paramCodeSystemEntity, session, ipAddress);
+    CreateConceptOrAssociationType(response, parameter.getLoginToken(), paramCodeSystem, paramCodeSystemEntity, session, loginInfoType);
 
     return response;
   }
@@ -87,18 +87,12 @@ public class CreateConcept
   public void CreateConceptOrAssociationType(CreateConceptResponseType response,
           String loginToken, CodeSystem paramCodeSystem,
           CodeSystemEntity paramCodeSystemEntity,
-          org.hibernate.Session session, String ipAddress)
+          org.hibernate.Session session, AuthenticateInfos loginInfoType)
   {
     boolean createHibernateSession = (session == null);
 
     // Login-Informationen auswerten (gilt für jeden Webservice)
-    boolean loggedIn = false;
-    AuthenticateInfos loginInfoType = null;
-    if (loginToken != null)
-    {
-      loginInfoType = Authorization.authenticate(ipAddress, loginToken);
-      loggedIn = loginInfoType != null;
-    }
+    boolean loggedIn = loginInfoType != null;
 
     if (logger.isDebugEnabled())
       logger.debug("Benutzer ist eingeloggt: " + loggedIn);

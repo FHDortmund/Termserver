@@ -18,6 +18,8 @@ package de.fhdo.terminologie.ws.conceptAssociation;
 
 import com.sun.xml.ws.developer.SchemaValidation;
 import de.fhdo.terminologie.helper.SecurityHelper;
+import de.fhdo.terminologie.ws.authorization.Authorization;
+import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
 import de.fhdo.terminologie.ws.conceptAssociation.types.CreateConceptAssociationRequestType;
 import de.fhdo.terminologie.ws.conceptAssociation.types.CreateConceptAssociationResponseType;
 import de.fhdo.terminologie.ws.conceptAssociation.types.ListConceptAssociationsRequestType;
@@ -56,7 +58,15 @@ public class ConceptAssociations
   @WebMethod(operationName = "CreateConceptAssociation")
   public CreateConceptAssociationResponseType CreateConceptAssociation(@WebParam(name = "parameter") CreateConceptAssociationRequestType parameter)
   {
-    return new CreateConceptAssociation().CreateConceptAssociation(parameter, SecurityHelper.getIp(webServiceContext));
+    String ipAddress = SecurityHelper.getIp(webServiceContext);
+    
+    AuthenticateInfos loginInfoType = null;
+    if (parameter != null && parameter.getLoginToken() != null)
+    {
+      loginInfoType = Authorization.authenticate(ipAddress, parameter.getLoginToken());
+    }
+    
+    return new CreateConceptAssociation().CreateConceptAssociation(parameter, loginInfoType);
   }
 
   /**
