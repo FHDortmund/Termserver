@@ -16,9 +16,9 @@
  */
 package de.fhdo.gui.main.modules;
 
-import de.fhdo.gui.main.ContentCSVSDefault;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.ws.administration.ExportCodeSystemContentRequestType;
 import de.fhdo.terminologie.ws.administration.ExportCodeSystemContentResponse.Return;
 import de.fhdo.terminologie.ws.administration.ExportParameterType;
@@ -261,7 +261,7 @@ public class PopupExport extends GenericForwardComposer
     }
     catch (Exception e)
     {
-      Logger.getLogger(ContentCSVSDefault.class.getName()).log(Level.SEVERE, null, e);
+      LoggingOutput.outputException(e, PopupExport.class);
     }
   }
 }

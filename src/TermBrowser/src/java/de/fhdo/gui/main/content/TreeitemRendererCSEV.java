@@ -316,6 +316,11 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
      }*/
   }
 
+  public static void fillDetailsCell(Listcell listcell, Treecell treecell, CodeSystemEntityVersion csev, CodeSystemConcept csc)
+  {
+    fillDetailsCell(listcell, treecell, csev, csc, false);
+  }
+  
   public static void fillDetailsCell(Listcell listcell, Treecell treecell, CodeSystemEntityVersion csev, CodeSystemConcept csc, boolean hasAssociation)
   {
     //Listcell cell = new Listcell("");

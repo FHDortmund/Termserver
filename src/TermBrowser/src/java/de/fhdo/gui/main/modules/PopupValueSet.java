@@ -18,7 +18,6 @@ package de.fhdo.gui.main.modules;
 
 import de.fhdo.Definitions;
 import de.fhdo.collaboration.helper.AssignTermHelper;
-import de.fhdo.gui.main.ContentCSVSDefault;
 import de.fhdo.helper.ArgumentHelper;
 import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.DateTimeHelper;

@@ -18,13 +18,9 @@ package de.fhdo.helper;
 
 import de.fhdo.collaboration.db.HibernateUtil;
 import de.fhdo.collaboration.db.classes.Collaborationuser;
-import de.fhdo.gui.main.ContentCSVSDefault;
 import de.fhdo.gui.main.TreeAndContent;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Properties;
 import javax.servlet.http.HttpSession;
 import org.hibernate.Session;
 import org.zkoss.zk.ui.Sessions;
@@ -448,20 +444,6 @@ public class SessionHelper
       hb_session.close();
     }
     return role;
-  }
-  
-  public static ContentCSVSDefault.MODE getViewMode()
-  {
-    Object o = getValue("VIEW_MODE");
-    if(o != null)
-      return (ContentCSVSDefault.MODE) o;
-    
-    return ContentCSVSDefault.MODE.CODESYSTEMS;
-  }
-  
-  public static void setViewMode(ContentCSVSDefault.MODE mode)
-  {
-    setValue("VIEW_MODE", mode);
   }
   
   public static TreeAndContent.MODE getMainViewMode()

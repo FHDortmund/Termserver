@@ -18,7 +18,6 @@ package de.fhdo.gui.main.modules;
 
 import de.fhdo.Definitions;
 import de.fhdo.collaboration.helper.AssignTermHelper;
-import de.fhdo.gui.main.ContentCSVSDefault;
 import de.fhdo.helper.ArgumentHelper;
 import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.DateTimeHelper;
@@ -49,10 +48,8 @@ import de.fhdo.tree.GenericTreeHeaderType;
 import de.fhdo.tree.GenericTreeRowType;
 import de.fhdo.tree.IUpdateData;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import org.hibernate.Session;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Button;

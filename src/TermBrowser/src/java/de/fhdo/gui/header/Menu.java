@@ -17,14 +17,11 @@
 package de.fhdo.gui.header;
 
 import de.fhdo.authorization.Authorization;
-import de.fhdo.gui.main.modules.PopupWindow;
 import de.fhdo.helper.PropertiesHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.ViewHelper;
 import de.fhdo.logging.LoggingOutput;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.zkoss.zk.ui.event.EventListener;
 import java.util.Map;
 import org.zkoss.util.resource.Labels;
@@ -32,7 +29,6 @@ import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.util.Clients;
-import org.zkoss.zul.Include;
 import org.zkoss.zul.Menuitem;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;

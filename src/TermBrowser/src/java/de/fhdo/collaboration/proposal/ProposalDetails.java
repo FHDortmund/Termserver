@@ -25,13 +25,10 @@ import de.fhdo.helper.DateTimeHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.interfaces.IUpdateModal;
-import de.fhdo.models.TreeNode;
 import de.fhdo.terminologie.ws.search.ListCodeSystemsInTaxonomyRequestType;
 import de.fhdo.terminologie.ws.search.ListCodeSystemsInTaxonomyResponse;
 import de.fhdo.terminologie.ws.search.ListValueSetsRequestType;
 import de.fhdo.terminologie.ws.search.ListValueSetsResponse;
-import de.fhdo.terminologie.ws.search.Search;
-import de.fhdo.terminologie.ws.search.Search_Service;
 import de.fhdo.terminologie.ws.search.Status;
 import java.util.Date;
 import java.util.HashSet;
@@ -253,10 +250,11 @@ public class ProposalDetails extends Window implements AfterCompose
         
         ((Row) getFellow("rOriginalCodeSystem")).setVisible(true);
         
-        TreeNode treeNode = (TreeNode)ArgumentHelper.getWindowArgument("TreeNode");
-        String sSource = treeNode.getSourceCSV().getName();
-            if (treeNode.getSourceCSV().getOid() != null && treeNode.getSourceCSV().getOid().length() > 0)
-              sSource += " (" + treeNode.getSourceCSV().getOid() + ")";
+        String sSource = ""; // TODO
+        //TreeNode treeNode = (TreeNode)ArgumentHelper.getWindowArgument("TreeNode");
+//        String sSource = treeNode.getSourceCSV().getName();
+//            if (treeNode.getSourceCSV().getOid() != null && treeNode.getSourceCSV().getOid().length() > 0)
+//              sSource += " (" + treeNode.getSourceCSV().getOid() + ")";
         
         ((Label) getFellow("lOriginalCodeSystem")).setValue(sSource);
         

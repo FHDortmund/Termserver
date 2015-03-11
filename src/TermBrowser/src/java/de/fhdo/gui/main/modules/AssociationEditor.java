@@ -263,14 +263,13 @@ public class AssociationEditor extends Window implements AfterCompose, IUpdate, 
       final org.zkoss.zk.ui.Desktop desktop = Executions.getCurrent().getDesktop();
       if (desktop.isServerPushEnabled() == false)
         desktop.enableServerPush(true);
-      //final EventListener el = this;
 
       Clients.showBusy(Labels.getLabel("loginHelper.working"));
 
       final CodeSystem cs1 = (CodeSystem) SessionHelper.getValue("selectedCS1");
       final CodeSystem cs2 = (CodeSystem) SessionHelper.getValue("selectedCS2");
 
-      // Import durchführen
+      // start timer to enable busy message
       Timer timer = new Timer();
       timer.schedule(new TimerTask()
       {
