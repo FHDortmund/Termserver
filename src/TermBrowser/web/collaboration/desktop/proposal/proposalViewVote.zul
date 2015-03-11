@@ -98,7 +98,7 @@
           <center title="Benutzer" margins="5,0,0,0">
             
             
-            <include id="incList" src="/gui/templates/GenericList.zul"/>
+            <include id="incList" src="~./zul/pages/GenericList.zul"/>
           </center>
         </borderlayout>
       </center>

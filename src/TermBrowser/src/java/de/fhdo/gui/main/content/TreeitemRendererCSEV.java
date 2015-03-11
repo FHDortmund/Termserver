@@ -19,8 +19,11 @@ package de.fhdo.gui.main.content;
 import de.fhdo.Definitions;
 import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.helper.SessionHelper;
+import de.fhdo.interfaces.IUpdate;
 import java.text.SimpleDateFormat;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.DropEvent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -40,6 +43,7 @@ import org.zkoss.zul.Treerow;
 import types.termserver.fhdo.de.CodeSystemConcept;
 import types.termserver.fhdo.de.CodeSystemEntity;
 import types.termserver.fhdo.de.CodeSystemEntityVersion;
+import types.termserver.fhdo.de.CodeSystemEntityVersionAssociation;
 import types.termserver.fhdo.de.CodeSystemVersionEntityMembership;
 
 /**
@@ -53,12 +57,18 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
   ConceptsTree conceptsTree;
   static EventListener noteListener = null;
   private boolean searchResults;
+  private boolean dragAndDrop;
   private Menupopup contextMenu;
+  private IUpdate updateDropListener = null;
 
-  public TreeitemRendererCSEV(ConceptsTree conceptsTree, boolean search)
+  public TreeitemRendererCSEV(ConceptsTree conceptsTree, boolean search, boolean dragAndDrop, IUpdate updateDropListener)
   {
     this.conceptsTree = conceptsTree;
     this.searchResults = search;
+    this.dragAndDrop = dragAndDrop;
+    this.updateDropListener = updateDropListener;
+
+    logger.debug("updateDropListener: " + updateDropListener);
 
     createContextMenu();
   }
@@ -85,11 +95,52 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
         style = "color:#808080;";
       }
 
+      boolean hasAssociation = false;
+      boolean hasCrossMapping = false;
+      boolean hasLink = false;
+      boolean hasOntology = false;
+      boolean hasHierachical = false;
+
+      if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null)
+      {
+        for (CodeSystemEntityVersionAssociation cseva : csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1())
+        {
+          if (hasCrossMapping == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.CROSS_MAPPING.getCode())
+            hasCrossMapping = true;
+          else if (hasLink == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.LINK.getCode())
+            hasLink = true;
+          else if (hasOntology == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.ONTOLOGY.getCode())
+            hasOntology = true;
+          else if (hasHierachical == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.TAXONOMY.getCode())
+            hasHierachical = true;
+        }
+      }
+      if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2() != null)
+      {
+        for (CodeSystemEntityVersionAssociation cseva : csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2())
+        {
+          if (hasCrossMapping == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.CROSS_MAPPING.getCode())
+            hasCrossMapping = true;
+          else if (hasLink == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.LINK.getCode())
+            hasLink = true;
+          else if (hasOntology == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.ONTOLOGY.getCode())
+            hasOntology = true;
+          else if (hasHierachical == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.TAXONOMY.getCode())
+            hasHierachical = true;
+        }
+      }
+
+      if (hasCrossMapping || hasOntology || hasLink)
+      {
+        style = "color:#2374DB;";
+        hasAssociation = true;
+      }
+
       // designation
       Treecell cell = null;
 
       if (searchResults && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null
-              && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
+          && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
       {
         // search result
         CodeSystemEntityVersion csevTemp = csev;
@@ -108,7 +159,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
           if (csevTemp.getCodeSystemConcepts() != null && csevTemp.getCodeSystemConcepts().size() > 0)
           {
             s = s + "<div style=\"padding-left:" + indent + "px; margin:0;\">" + csevTemp.getCodeSystemConcepts().get(0).getTerm()
-                    + " (" + csevTemp.getCodeSystemConcepts().get(0).getCode() + ")</div>";
+                + " (" + csevTemp.getCodeSystemConcepts().get(0).getCode() + ")</div>";
           }
           //s += csevTemp.getCodeSystemConcepts().get(0).getTerm();
 
@@ -136,7 +187,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
 
       // details
       cell = new Treecell("");
-      fillDetailsCell(null, cell, csev, csc);
+      fillDetailsCell(null, cell, csev, csc, hasAssociation);
       cell.setStyle(style);
       treeRow.appendChild(cell);
       /*cell = new Treecell();
@@ -191,6 +242,48 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
 
       //renderCSEVContextMenu(treeItem, treeRow, csev);
       treeRow.setContext(contextMenu);
+
+      if (dragAndDrop)
+      {
+        treeRow.setDraggable("true");
+        treeRow.setDroppable("true");
+
+        treeRow.addEventListener(Events.ON_DROP, new EventListener<DropEvent>()
+        {
+          public void onEvent(DropEvent event) throws Exception
+          {
+            if (updateDropListener != null)
+            {
+              if (event.getDragged() instanceof Treerow)
+              {
+                Treerow row = (Treerow) event.getDragged();
+                if (row.getParent() instanceof Treeitem)
+                {
+                  CodeSystemEntityVersion csev = ((Treeitem) row.getParent()).getValue();
+
+                  Treeitem tiTarget = (Treeitem) ((Treerow) event.getTarget()).getParent();
+                  CodeSystemEntityVersion csevTarget = tiTarget.getValue();
+
+                  logger.debug("ON_DROP with csev: " + csev.getVersionId() + " to " + csevTarget.getVersionId());
+
+                  // add mapping
+                  CodeSystemEntityVersionAssociation cseva = new CodeSystemEntityVersionAssociation();
+                  cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(csev);
+                  //cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setVersionId(csev.getVersionId());
+
+                  cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId2(csevTarget);
+                  //cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId2().setVersionId(csevTarget.getVersionId());
+
+                  updateDropListener.update(cseva);
+                }
+              }
+            }
+            else
+              logger.debug("Dropped, but updateListener not set");
+
+          }
+        });
+      }
     }
 
     treeRow.setParent(treeItem);
@@ -223,7 +316,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
      }*/
   }
 
-  public static void fillDetailsCell(Listcell listcell, Treecell treecell, CodeSystemEntityVersion csev, CodeSystemConcept csc)
+  public static void fillDetailsCell(Listcell listcell, Treecell treecell, CodeSystemEntityVersion csev, CodeSystemConcept csc, boolean hasAssociation)
   {
     //Listcell cell = new Listcell("");
 
@@ -231,10 +324,10 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     {
       Image img = new Image("/rsc/img/symbols/tag_black_16x16.png");
       img.setTooltiptext(Labels.getLabel("common.notPreferredTerm"));
-      
-      if(listcell != null)
+
+      if (listcell != null)
         listcell.appendChild(img);
-      if(treecell != null)
+      if (treecell != null)
         treecell.appendChild(img);
     }
     if (csc.getDescription() != null && csc.getDescription().length() > 0)
@@ -257,30 +350,83 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       Image img = new Image("/rsc/img/filetypes/note.png");
       img.setTooltiptext(csc.getDescription());
       img.addEventListener(Events.ON_CLICK, noteListener);
-      if(listcell != null)
+      if (listcell != null)
         listcell.appendChild(img);
-      if(treecell != null)
+      if (treecell != null)
         treecell.appendChild(img);
     }
     if (csev.getStatusVisibility() != null && csev.getStatusVisibility() == Definitions.STATUS_VISIBILITY_INVISIBLE)
     {
       Image img = new Image("/rsc/img/symbols/hidden.png");
       img.setTooltiptext(Labels.getLabel("common.invisible"));
-      if(listcell != null)
+      if (listcell != null)
         listcell.appendChild(img);
-      if(treecell != null)
+      if (treecell != null)
         treecell.appendChild(img);
     }
     if (csev.getStatusDeactivated() != null && csev.getStatusDeactivated() == Definitions.STATUS_DEACTIVATED_DELETED)
     {
       Image img = new Image("/rsc/img/symbols/delete_12x12.png");
       img.setTooltiptext(Labels.getLabel("common.deleted"));
-      if(listcell != null)
+      if (listcell != null)
         listcell.appendChild(img);
-      if(treecell != null)
+      if (treecell != null)
         treecell.appendChild(img);
     }
 
+    if (hasAssociation)
+    {
+      if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null)
+      {
+        for (CodeSystemEntityVersionAssociation cseva : csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1())
+        {
+          createImageCellFromAssociation(listcell, treecell, csev.getVersionId(), cseva);
+        }
+      }
+      if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2() != null)
+      {
+        for (CodeSystemEntityVersionAssociation cseva : csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2())
+        {
+          createImageCellFromAssociation(listcell, treecell, csev.getVersionId(), cseva);
+        }
+      }
+    }
+
+  }
+
+  private static void createImageCellFromAssociation(Listcell listcell, Treecell treecell, long cseVersionId, CodeSystemEntityVersionAssociation cseva)
+  {
+    String s_img = "";
+    String tooltip = "";
+    
+    if(cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.CROSS_MAPPING.getCode())
+    {
+      s_img = Definitions.ASSOCIATION_KIND.CROSS_MAPPING.getImg();
+      tooltip = Labels.getLabel("associationEditor.crossmapping");
+    }
+    else if(cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.LINK.getCode())
+    {
+      s_img = Definitions.ASSOCIATION_KIND.LINK.getImg();
+      tooltip = Labels.getLabel("associationEditor.link");
+    }
+    else if(cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.ONTOLOGY.getCode())
+    {
+      s_img = Definitions.ASSOCIATION_KIND.ONTOLOGY.getImg();
+      tooltip = Labels.getLabel("popupConcept.ontology");
+    }
+    else if(cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.TAXONOMY.getCode())
+    {
+      s_img = Definitions.ASSOCIATION_KIND.TAXONOMY.getImg();
+      tooltip = Labels.getLabel("common.taxonomy");
+    }
+    else return; // unknown format
+    
+    Image img = new Image(s_img);
+    img.setTooltiptext(tooltip);
+    if (listcell != null)
+      listcell.appendChild(img);
+    if (treecell != null)
+      treecell.appendChild(img);
   }
 
   private void appendListener(final Treeitem treeItem, final TreeNode treeNode)
@@ -325,6 +471,17 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       }
     });
 
+    /*dataRow.addEventListener(Events.ON_DROP, new EventListener()
+     {
+     @Override
+     public void onEvent(Event event) throws Exception
+     {
+     Treerow trSource = (Treerow) ((DropEvent) event).getDragged();
+     Object sourceObject = (CodeSystemEntityVersion) (trSource).getAttribute("object"),
+     targetObject = ((DropEvent) event).getTarget();
+     Tree tree_target = null;
+     CodeSystemEntityVersion csev_source = null,
+     csev_target = null;*/
   }
 
   private void createContextMenu()

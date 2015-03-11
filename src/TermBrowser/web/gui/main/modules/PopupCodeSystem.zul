@@ -136,7 +136,7 @@
               </groupbox>
             </tabpanel>
             <tabpanel id="tabpanelMetaparameter" >
-              <include id="incList" src="/gui/templates/GenericList.zul"/>
+              <include id="incList" src="~./zul/pages/GenericList.zul"/>
 <!--              <listbox id="listMetadataParameter" vflex="true" height="99%" hflex="true" >
                 <listhead></listhead>
               </listbox>-->

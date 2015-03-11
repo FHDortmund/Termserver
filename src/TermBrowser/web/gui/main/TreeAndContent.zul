@@ -76,7 +76,7 @@
                   </div>-->
                 </tabpanel>   
                 <!--                <tabpanel id="tabpanelSearch">
-                  <include id="incListSearch" src="/gui/templates/GenericList.zul"/>
+                  <include id="incListSearch" src="~./zul/pages/GenericList.zul"/>
                   <toolbar width="100%">
                     <hbox>
                       <div style="margin-top:-2px;">

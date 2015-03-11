@@ -6,7 +6,7 @@
     <!--<style src="/rsc/style/ophEPA.css"/>-->
     <borderlayout>
       <center border="none" flex="false">
-        <include id="incListActualProceedings" src="/gui/templates/GenericList.zul"/>
+        <include id="incListActualProceedings" src="~./zul/pages/GenericList.zul"/>
       </center>
       <south>
           <div style="float:right;">

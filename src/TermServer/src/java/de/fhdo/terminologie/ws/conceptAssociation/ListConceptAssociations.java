@@ -122,6 +122,7 @@ public class ListConceptAssociations
 
         //Hibernate Query Language erstellen
         String hql = "select distinct term from CodeSystemConcept term";
+        //String hql = "select term from CodeSystemConcept term";
         hql += " join fetch term.codeSystemEntityVersion csev";
 
         hql += " join fetch csev.codeSystemEntity cse";
@@ -167,10 +168,10 @@ public class ListConceptAssociations
         // Parameter hinzufügen (immer mit AND verbunden)
         hql += parameterHelper.getWhere("");
 
+        
+        
         if (logger.isDebugEnabled())
-        {
           logger.debug("HQL: " + hql);
-        }
 
         // Query erstellen
         org.hibernate.Query q = hb_session.createQuery(hql);
@@ -180,20 +181,23 @@ public class ListConceptAssociations
 
         // Datenbank-Aufruf durchführen
         list = (java.util.List<CodeSystemConcept>) q.list();
+        
+        if (logger.isDebugEnabled())
+          logger.debug("size: " + list.size());
 
         List<CodeSystemEntityVersionAssociation> returnList = new LinkedList<CodeSystemEntityVersionAssociation>();
 
         //if (createHibernateSession)
         //  tx.commit();
         // Ergebnisliste befüllen
-        Iterator<CodeSystemConcept> it = list.iterator();
-        while (it.hasNext())
+        //Iterator<CodeSystemConcept> it = list.iterator();
+        //while (it.hasNext())
+        for(CodeSystemConcept term : list)
         {
-          // CodeSystemConcept holen
-          CodeSystemConcept term = it.next();
-
           // CodeSystemEntityVersion lesen
           CodeSystemEntityVersion csev = term.getCodeSystemEntityVersion();
+          
+          logger.debug("term found: " + term.getCode());
 
           if (csev != null)
           {
@@ -287,7 +291,7 @@ public class ListConceptAssociations
             if (parameter.getReverse())
             {
               if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null
-                      && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() == 1)
+                      && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
               {
                 CodeSystemEntityVersionAssociation association = (CodeSystemEntityVersionAssociation) csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().toArray()[0];
 
@@ -319,8 +323,10 @@ public class ListConceptAssociations
             }
             else
             {
+              //logger.debug("ass size: " + csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2().size());
+              
               if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2() != null
-                      && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2().size() == 1)
+                      && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2().size() > 0)
               {
                 CodeSystemEntityVersionAssociation association = (CodeSystemEntityVersionAssociation) csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2().toArray()[0];
 
@@ -343,6 +349,7 @@ public class ListConceptAssociations
         {
           // Hibernate Query Language erstellen
           hql = "select distinct term from CodeSystemConcept term";
+          //hql = "select term from CodeSystemConcept term";
           hql += " join fetch term.codeSystemEntityVersion csev";
           hql += " join fetch csev.codeSystemEntity cse";
           hql += " join fetch csev.codeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1 cseva";
@@ -376,6 +383,8 @@ public class ListConceptAssociations
 
           // Die Parameter können erst hier gesetzt werden (übernimmt Helper)
           parameterHelper.applyParameter(q2);
+          
+          logger.debug("SQL: " + q2.getQueryString());
 
           // Datenbank-Aufruf durchführen
           java.util.List<CodeSystemConcept> list2 = (java.util.List<CodeSystemConcept>) q2.list();
@@ -410,7 +419,7 @@ public class ListConceptAssociations
 
               // Assoziation lesen und Verbindungen auf null setzen
               if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null
-                      && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() == 1)
+                      && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
               {
                 //CodeSystemEntityVersionAssociation association = 
                 //(CodeSystemEntityVersionAssociation) csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().toArray()[0];

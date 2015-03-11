@@ -293,20 +293,7 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
 
   public void viewAssociationEditor()
   {
-    try
-    {
-//            if(SessionHelper.isUserLoggedIn()){
-      Include inc = (Include) getRoot().getFellow("mainWindowCenter");
-      inc.setSrc("/gui/main/modules/AssociationEditor.zul");
-//            }
-//            else{
-//                Messagebox.show(Labels.getLabel("menu.loginRequiredForAssociationEditor"));
-//            }
-    }
-    catch (Exception e)
-    {
-      Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, e);
-    }
+    redirect("/gui/main/modules/AssociationEditor.zul", Labels.getLabel("menu.pleaseWait"), null);
   }
 
   private void redirect(String Src, String WaitText, String Parameter)

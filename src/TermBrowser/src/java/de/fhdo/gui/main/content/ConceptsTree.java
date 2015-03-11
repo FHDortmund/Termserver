@@ -22,6 +22,7 @@ import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.DateTimeHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
+import de.fhdo.interfaces.IUpdate;
 import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.ws.authoring.UpdateConceptStatusRequestType;
@@ -87,6 +88,8 @@ public class ConceptsTree implements IUpdateModal
   private String searchTerm, searchCode;
   private SearchType searchOptions;
   private Boolean searchPreferred = null;
+  private boolean dragAndDrop = false;
+  private IUpdate updateDropListener = null;
 
   private enum DISPLAY_MODE
   {
@@ -117,7 +120,7 @@ public class ConceptsTree implements IUpdateModal
 
   public ConceptsTree()
   {
-    
+
   }
 
   public ConceptsTree(Tree treeConcepts, ContentConcepts concepsWindow)
@@ -237,7 +240,7 @@ public class ConceptsTree implements IUpdateModal
     if (treeModel != null)
     {
       logger.debug("set model and renderer");
-      treeConcepts.setItemRenderer(new TreeitemRendererCSEV(this, searchActive));
+      treeConcepts.setItemRenderer(new TreeitemRendererCSEV(this, searchActive, dragAndDrop, updateDropListener));
       treeConcepts.setModel(treeModel);
     }
 
@@ -259,7 +262,7 @@ public class ConceptsTree implements IUpdateModal
       if (response.getReturnInfos().getStatus() == Status.OK)
       {
         cseList = response.getCodeSystemEntity();
-        
+
         if (response.getPagingInfos() != null)
         {
           // Paging Parameter auswerten
@@ -369,7 +372,7 @@ public class ConceptsTree implements IUpdateModal
       csev.setCodeSystemEntity(cse);
 
       if ((csev.isIsLeaf() != null && csev.isIsLeaf().booleanValue())
-              || contentType == CONTENT_TYPE.VALUESET)
+          || contentType == CONTENT_TYPE.VALUESET)
       {
         // end element (leaf)
         list.add(new DefaultTreeNode(csev));
@@ -510,7 +513,7 @@ public class ConceptsTree implements IUpdateModal
     logger.debug("deleteConcept, csev-id: " + csev_id);
 
     if (Messagebox.show(Labels.getLabel("common.deleteConcept"), Labels.getLabel("common.delete"), Messagebox.YES | Messagebox.NO, Messagebox.QUESTION)
-            == Messagebox.YES)
+        == Messagebox.YES)
     {
       UpdateConceptStatusRequestType request = new UpdateConceptStatusRequestType();
       request.setLoginToken(SessionHelper.getSessionId());
@@ -565,7 +568,7 @@ public class ConceptsTree implements IUpdateModal
     if (csev != null)
     {
       if (csev.getStatusVisibility() == Definitions.STATUS_VISIBILITY_VISIBLE
-              && csev.getStatusDeactivated() <= Definitions.STATUS_DEACTIVATED_ACTIVE)
+          && csev.getStatusDeactivated() <= Definitions.STATUS_DEACTIVATED_ACTIVE)
       {
         maintainConcept(csev.getVersionId());
       }
@@ -888,17 +891,24 @@ public class ConceptsTree implements IUpdateModal
       csev.getCodeSystemConcepts().add(csc);
       csc.setTerm(searchTerm);
       csc.setCode(searchCode);
-      
+
       csc.setIsPreferred(searchPreferred);
 
       parameter.setCodeSystemEntity(cse);
     }
 
-    // damit Linked Concepts gefunden werden (muss nach erstellung von SearchParameter erfolgen und false sein, falls traverse to root genutzt wird)    
-    if (parameter.getSearchParameter() != null)
-      parameter.setLookForward(!parameter.getSearchParameter().isTraverseConceptsToRoot());
+    if (conceptsWindow.isLookForward())
+    {
+      // damit Linked Concepts gefunden werden (muss nach erstellung von SearchParameter erfolgen und false sein, falls traverse to root genutzt wird)    
+      if (parameter.getSearchParameter() != null)
+        parameter.setLookForward(!parameter.getSearchParameter().isTraverseConceptsToRoot());
+      else
+        parameter.setLookForward(true);
+    }
     else
-      parameter.setLookForward(true);
+    {
+      parameter.setLookForward(false);
+    }
 
     // sort parameter
     parameter.setSortingParameter(createSortingParameter());
@@ -1003,7 +1013,7 @@ public class ConceptsTree implements IUpdateModal
       else
       {
         if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null
-                && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
+            && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
         {
           // new sub concept
           Treeitem treeItem = treeConcepts.getSelectedItem();
@@ -1154,5 +1164,29 @@ public class ConceptsTree implements IUpdateModal
   public void setValueSetId(long valueSetId)
   {
     this.valueSetId = valueSetId;
+  }
+
+  /**
+   * @return the dragAndDrop
+   */
+  public boolean isDragAndDrop()
+  {
+    return dragAndDrop;
+  }
+
+  /**
+   * @param dragAndDrop the dragAndDrop to set
+   */
+  public void setDragAndDrop(boolean dragAndDrop)
+  {
+    this.dragAndDrop = dragAndDrop;
+  }
+
+  /**
+   * @param updateDropListener the updateDropListener to set
+   */
+  public void setUpdateDropListener(IUpdate updateDropListener)
+  {
+    this.updateDropListener = updateDropListener;
   }
 }

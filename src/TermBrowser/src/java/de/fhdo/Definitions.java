@@ -57,7 +57,8 @@ public class Definitions
   public static enum ASSOCIATION_KIND
   {
     ONTOLOGY(1), TAXONOMY(2), CROSS_MAPPING(3), LINK(4);
-    private int code;
+    private int code = -1;
+    private String img = "";
 
     private ASSOCIATION_KIND(int c)
     {
@@ -67,6 +68,35 @@ public class Definitions
     public int getCode()
     {
       return code;
+    }
+
+    /**
+     * @return the img
+     */
+    public String getImg()
+    {
+      return getImg("16");
+    }
+    
+    public String getImg(String scale)
+    {
+      if(code == ASSOCIATION_KIND.ONTOLOGY.code)
+      {
+        return "/rsc/img/design/ontology_" + scale + "x" + scale +".png";
+      }
+      else if(code == ASSOCIATION_KIND.TAXONOMY.code)
+      {
+        return "/rsc/img/design/hierarchical_" + scale + "x" + scale +".png";
+      }
+      else if(code == ASSOCIATION_KIND.CROSS_MAPPING.code)
+      {
+        return "/rsc/img/design/cross_" + scale + "x" + scale +".png";
+      }
+      else if(code == ASSOCIATION_KIND.LINK.code)
+      {
+        return "/rsc/img/design/link_" + scale + "x" + scale +".png";
+      }
+      return "";
     }
   }
 

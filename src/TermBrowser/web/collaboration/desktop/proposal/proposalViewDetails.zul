@@ -64,7 +64,7 @@
                 
               </center>
               <south title="Zugehörige Konzepte/Objekte" margins="5,0,0,0" height="150px">
-                <include id="incListObjects" src="/gui/templates/GenericList.zul"/>
+                <include id="incListObjects" src="~./zul/pages/GenericList.zul"/>
               </south>
 
             </borderlayout>
@@ -72,10 +72,10 @@
           <east border="0" width="600px" flex="true" splittable="true" collapsible="true">
             <borderlayout>
               <center title="Verlauf" >
-                <include id="incListVerlauf" src="/gui/templates/GenericList.zul"/>
+                <include id="incListVerlauf" src="~./zul/pages/GenericList.zul"/>
               </center>
               <south title="Diskussionsteilnehmer" height="50%">
-                <include id="incListPrivilegien" src="/gui/templates/GenericList.zul"/>
+                <include id="incListPrivilegien" src="~./zul/pages/GenericList.zul"/>
               </south>
 
             </borderlayout>

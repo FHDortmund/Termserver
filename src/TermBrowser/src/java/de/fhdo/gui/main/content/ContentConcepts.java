@@ -17,14 +17,17 @@
 package de.fhdo.gui.main.content;
 
 import de.fhdo.gui.main.TreeAndContent;
+import de.fhdo.gui.main.modules.AssociationEditor;
 import de.fhdo.gui.main.modules.PopupCodeSystem;
 import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.gui.main.modules.PopupExport;
 import de.fhdo.gui.main.modules.PopupValueSet;
+import de.fhdo.helper.ArgumentHelper;
 import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.ParameterHelper;
 import de.fhdo.helper.SendBackHelper;
 import de.fhdo.helper.SessionHelper;
+import de.fhdo.interfaces.IUpdate;
 import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.logging.LoggingOutput;
 import de.fhdo.models.CodesystemGenericTreeModel;
@@ -82,18 +85,47 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   private long paramLoadId = 0;
   private boolean externMode = false;
   private boolean paramSearch = false;
+  private boolean lookForward = false;
 
   private boolean sendBack = false;
+  private boolean dragAndDrop = false;
+
+  private IUpdate updateListener = null;
+  private AssociationEditor associationEditor;
 
   public ContentConcepts()
   {
     logger.debug("ContentConcepts() - Konstruktor");
+
+    Executions.getCurrent().setAttribute("instance", this);
 
     getURLParameter();
 
     // loading dynamic parameters
     codeSystem = (CodeSystem) Executions.getCurrent().getAttribute("codeSystem");
     valueSet = (ValueSet) Executions.getCurrent().getAttribute("valueSet");
+
+    String windowId = ArgumentHelper.getWindowParameterString("id");
+
+    if (Executions.getCurrent().hasAttribute("updateListener"))
+    {
+      updateListener = (IUpdate) Executions.getCurrent().getAttribute("updateListener");
+      logger.debug("[ContentConcepts.java] UpdateListener found");
+    }
+
+    if (Executions.getCurrent().hasAttribute("associationEditor"))
+    {
+      associationEditor = (AssociationEditor) Executions.getCurrent().getAttribute("associationEditor");
+      logger.debug("[ContentConcepts.java] AssociationEditor found");
+
+      if (windowId != null)
+      {
+        if (windowId.equals("1"))
+          associationEditor.setContentConcepts1(this);
+        else
+          associationEditor.setContentConcepts2(this);
+      }
+    }
 
     codeSystemVersion = null;
     valueSetVersion = null;
@@ -220,6 +252,8 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     paramSearch = ParameterHelper.getBoolean("search", false);
     sendBack = ParameterHelper.getBoolean("sendBack", false);
 
+    lookForward = ParameterHelper.getBoolean("lookForward", false);
+
     String loadType = ParameterHelper.getString("loadType");
     paramLoadName = ParameterHelper.getString("loadName");
     paramLoadId = ParameterHelper.getLong("loadId");
@@ -238,6 +272,8 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       }
     }
 
+    dragAndDrop = ParameterHelper.getBoolean("dragAndDrop", false);
+
     logger.debug("sendBack: " + sendBack);
     logger.debug("paramSearch: " + paramSearch);
     logger.debug("paramLoadType: " + paramLoadType);
@@ -246,9 +282,9 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     logger.debug("paramLoadOid: " + paramLoadOid);
 
     if (paramLoadId > 0
-            || (paramLoadType != null && paramLoadType != TreeAndContent.LOADTYPE.NONE)
-            || (paramLoadName != null && paramLoadName.length() > 0)
-            || (paramLoadOid != null && paramLoadOid.length() > 0))
+        || (paramLoadType != null && paramLoadType != TreeAndContent.LOADTYPE.NONE)
+        || (paramLoadName != null && paramLoadName.length() > 0)
+        || (paramLoadOid != null && paramLoadOid.length() > 0))
     {
       externMode = true;
     }
@@ -335,7 +371,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       logger.debug("CSV selected: " + csv.getVersionId());
       //codeSystem = csv.getCodeSystem();
       codeSystemVersion = csv;
-      
+
       logger.debug("CS-ID: " + codeSystem.getId());
       logger.debug("CSV-ID: " + codeSystemVersion.getVersionId());
     }
@@ -361,18 +397,20 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
     //if(concepts == null)
     concepts = new ConceptsTree(treeConcepts, this);
+    getConcepts().setDragAndDrop(dragAndDrop);
+    getConcepts().setUpdateDropListener(updateListener);
 
     if (codeSystem != null)
-      concepts.setCodeSystemId(codeSystem.getId());
+      getConcepts().setCodeSystemId(codeSystem.getId());
     else if (valueSet != null)
-      concepts.setValueSetId(valueSet.getId());
+      getConcepts().setValueSetId(valueSet.getId());
 
     if (codeSystemVersion != null)
-      concepts.setCodeSystemVersionId(codeSystemVersion.getVersionId());
+      getConcepts().setCodeSystemVersionId(codeSystemVersion.getVersionId());
     else if (valueSetVersion != null)
-      concepts.setValueSetVersionId(valueSetVersion.getVersionId());
+      getConcepts().setValueSetVersionId(valueSetVersion.getVersionId());
 
-    concepts.initData();
+    getConcepts().initData();
 
   }
 
@@ -391,41 +429,41 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       }
     }
 
-    concepts.onConceptSelect(false, true);
+    getConcepts().onConceptSelect(false, true);
     showButtons();
   }
 
   public void onNewClicked()
   {
     if (SessionHelper.isUserLoggedIn())
-      concepts.createConcept(PopupConcept.HIERARCHYMODE.ROOT, 0);
+      getConcepts().createConcept(PopupConcept.HIERARCHYMODE.ROOT, 0);
   }
 
   public void onNewSubClicked()
   {
     if (SessionHelper.isUserLoggedIn())
     {
-      CodeSystemEntityVersion csev = concepts.getSelection();
+      CodeSystemEntityVersion csev = getConcepts().getSelection();
       if (csev != null)
-        concepts.createConcept(PopupConcept.HIERARCHYMODE.SUB, csev.getVersionId());
+        getConcepts().createConcept(PopupConcept.HIERARCHYMODE.SUB, csev.getVersionId());
     }
   }
 
   public void onEditClicked()
   {
     if (SessionHelper.isUserLoggedIn())
-      concepts.maintainConcept();
+      getConcepts().maintainConcept();
   }
 
   public void onDetailsClicked()
   {
-    concepts.openConceptDetails();
+    getConcepts().openConceptDetails();
   }
 
   public void onDeleteClicked()
   {
     if (SessionHelper.isUserLoggedIn())
-      concepts.deleteConcept();
+      getConcepts().deleteConcept();
   }
 
   public void onEditVersionClicked()
@@ -506,7 +544,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     {
       if (searchActive)
       {
-        concepts.initData();
+        getConcepts().initData();
         searchActive = false;
       }
     }
@@ -538,7 +576,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       preferred = false;
 
     // start search and display results
-    concepts.startSearch(code, term, st, preferred);
+    getConcepts().startSearch(code, term, st, preferred);
     searchActive = true;
   }
 
@@ -581,12 +619,12 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
    }*/
   public void onPaging(Event event)
   {
-    concepts.onPaging((PagingEvent) event);
+    getConcepts().onPaging((PagingEvent) event);
   }
 
   private void showButtons()
   {
-    CodeSystemEntityVersion csev = concepts.getSelection();
+    CodeSystemEntityVersion csev = getConcepts().getSelection();
     ((Button) getFellow("buttonDetails")).setDisabled(csev == null);
 
     // edit, new, ...
@@ -613,17 +651,17 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     if (sendBack == false)
       return;
 
-    SendBackHelper.sendBack(concepts.getSelection());
+    SendBackHelper.sendBack(getConcepts().getSelection());
     //CodeSystemEntityVersion csev = concepts.getSelection();
     /*if (csev != null)
-    {
-      logger.debug("sendBack-postMethod:");
-      //String javaScript = "window.top.postMessage('test', '\\*')"; // Aus sicherheitsgruenden sollte * ersetzt werden durch die domain des TS. Auf der empf�ngerseite kann dann        
-      String javaScript = "window.top.postMessage('" + csev.getVersionId() + "', '\\*')"; // Aus sicherheitsgruenden sollte * ersetzt werden durch die domain des TS. Auf der empf�ngerseite kann dann        
-      logger.debug(javaScript);
-      Clients.evalJavaScript(javaScript);
+     {
+     logger.debug("sendBack-postMethod:");
+     //String javaScript = "window.top.postMessage('test', '\\*')"; // Aus sicherheitsgruenden sollte * ersetzt werden durch die domain des TS. Auf der empf�ngerseite kann dann        
+     String javaScript = "window.top.postMessage('" + csev.getVersionId() + "', '\\*')"; // Aus sicherheitsgruenden sollte * ersetzt werden durch die domain des TS. Auf der empf�ngerseite kann dann        
+     logger.debug(javaScript);
+     Clients.evalJavaScript(javaScript);
       
-    }*/
+     }*/
   }
 
   public void update(Object o, boolean edited)
@@ -652,6 +690,22 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       Executions.sendRedirect(null);  // page reload
     }
 
+  }
+
+  /**
+   * @return the lookForward
+   */
+  public boolean isLookForward()
+  {
+    return lookForward;
+  }
+
+  /**
+   * @return the concepts
+   */
+  public ConceptsTree getConcepts()
+  {
+    return concepts;
   }
 
 }

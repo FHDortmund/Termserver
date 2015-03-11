@@ -300,7 +300,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
 
       csc.setIsPreferred(Boolean.TRUE);
       csev.getCodeSystemConcepts().add(csc);
-      csev.setStatusVisibility(1); // TODO: 1 durch Konstante ersetzen
+      csev.setStatusVisibility(Definitions.STATUS_VISIBILITY_VISIBLE);
       csev.setIsLeaf(Boolean.TRUE);
       csvem.setIsAxis(Boolean.FALSE);
 

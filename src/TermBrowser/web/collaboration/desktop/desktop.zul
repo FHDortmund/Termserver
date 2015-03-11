@@ -6,11 +6,11 @@
           use="de.fhdo.collaboration.desktop.Desktop">
     <borderlayout>     
       <west id="westId" title="Vorschläge" collapsible="false" flex="true" >
-        <include id="incList" src="/gui/templates/GenericList.zul"/>
+        <include id="incList" src="~./zul/pages/GenericList.zul"/>
       </west>
       <east id= "eastId" title="Meine Terminologien" size="20%" 
             collapsible="false" flex="true" > 
-        <include id="incListMyTerm" src="/gui/templates/GenericList.zul"/>
+        <include id="incListMyTerm" src="~./zul/pages/GenericList.zul"/>
       </east>
     </borderlayout>
   </window>

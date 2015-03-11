@@ -11,7 +11,7 @@
     <borderlayout>
       
       <center border="0">
-        <include id="incList" src="/gui/templates/GenericList.zul"/>
+        <include id="incList" src="~./zul/pages/GenericList.zul"/>
         <!--<grid>
           <columns>
             <column value="Test" />

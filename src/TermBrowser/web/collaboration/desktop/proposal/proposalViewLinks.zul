@@ -6,7 +6,7 @@
           id="winProposalViewLinks" 
           use="de.fhdo.collaboration.desktop.proposal.ProposalViewLinks">
     
-    <include id="incList" src="/gui/templates/GenericList.zul"/>
+    <include id="incList" src="~./zul/pages/GenericList.zul"/>
     <!--<borderlayout>
       <center border="0">
         

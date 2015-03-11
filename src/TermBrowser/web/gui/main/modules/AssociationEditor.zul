@@ -1,24 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<zk xmlns="http://www.zkoss.org/2005/zul">    
-    <window use="de.fhdo.gui.main.modules.AssociationEditor"  border="none" height="100%" width="100%">                          
+<zk xmlns="http://www.zkoss.org/2005/zul">       
+  <window use="de.fhdo.gui.main.modules.AssociationEditor"  border="none" height="100%" width="100%" id="winAssociationEditor">
+   
+    <borderlayout>  
+      <north id="blMainNorth">
+        <include src="/gui/header/menu.zul" />                               
+      </north>
+            
+      <south id="blMainSouth" height="26px">
+        <include src="/gui/header/statusBar.zul" />
+      </south> 
+                        
+      <!--muss ganz zum schluss stehe, da sonst auf north, south,etc, nicht zugegriffen werden kann-->
+      <center id="blMainCenter" border="0">
         <borderlayout>
-            <west width="49%">
-                <include id="incInhalteLinks"/>
-            </west>            
-            <east width="49%">  
-                <include id="incInhalteRechts"/>
-            </east>       
-            <south title="${labels.associationEditor.assoMode}">
-                <div>
-                    <radiogroup id="rgMode" orient="vertical">
-                        <radio id="rb1" label="${labels.associationEditor.crossmapping}" value="1" radiogroup="rgMode" />
-                        <radio id="rb2" label="${labels.associationEditor.link}"  value="2" radiogroup="rgMode" selected="true"/>
-<!--                        <radio id="rb3" label="Hierarchie"   value="3" radiogroup="rgMode"/>-->
-                    </radiogroup>
-                </div>
-            </south>
-        </borderlayout>             
-        
-    </window>        
+          <west width="40%" flex="true" collapsible="true" splittable="true">
+            <include id="incContentLeft" />
+          </west>
+          <center flex="true" border="0" title="${labels.common.mapping}">
+            <div width="150px" style="margin-left:4px;margin-right:4px;margin-top:4px;">
+              <groupbox mold="3d" width="100%" closable="false">
+                <caption label="${labels.common.type}" />
+                <radiogroup onCheck="" orient="vertical" id="rgAssociationKind">
+                  <radio label="Ontologisch" />
+                  <radio label="Taxonomisch"/>
+                  <radio label="Cross-Mapping" selected="true"/>
+                  <radio label="Link"/>
+                </radiogroup>
+              </groupbox>
+              <separator />
+              
+              <groupbox mold="3d" width="100%" closable="false">
+                <caption label="${labels.common.relation}" />
+                <combobox id="cbRelation" width="100%" readonly="true"/>
+                <separator />
+                <button label="${labels.common.new2}..." onClick="winAssociationEditor.newAssociationConcept()"/>
+              </groupbox>
+              <separator />
+              
+              <groupbox mold="3d" width="100%" closable="false" vflex="true">
+                <caption label="${labels.common.newRelations}" />
+                
+                <include id="incList" src="~./zul/pages/GenericList.zul" width="100%" height="100%"/>
+              </groupbox>
+              
+              
+            </div>
+          </center>
+          <east width="40%" flex="true" collapsible="true" splittable="true">
+            <include id="incContentRight" />
+          </east>
+          
+          <south title="${labels.associationEditor.assoMode}" visible="false">
+            <div>
+              <radiogroup id="rgMode" orient="vertical">
+                <radio id="rb1" label="${labels.associationEditor.crossmapping}" value="1" radiogroup="rgMode" />
+                <radio id="rb2" label="${labels.associationEditor.link}"  value="2" radiogroup="rgMode" selected="true"/>
+                <!--                        <radio id="rb3" label="Hierarchie"   value="3" radiogroup="rgMode"/>-->
+              </radiogroup>
+            </div>
+          </south>
+        </borderlayout>
+      </center>    
+    </borderlayout>
+  </window>
 </zk>

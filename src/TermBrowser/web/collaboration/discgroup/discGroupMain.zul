@@ -6,10 +6,10 @@
           use="de.fhdo.collaboration.discgroup.DiscGroupMain">
         <borderlayout>
           <west id="leadingId" title="Leitende Funktion" size="50%" collapsible="false" flex="true" >
-            <include id="incList" src="/gui/templates/GenericList.zul"/>
+            <include id="incList" src="~./zul/pages/GenericList.zul"/>
           </west>
           <east id="participatingId" title="Teilnehmende Funktion" size="50%" collapsible="false" flex="true" >
-            <include id="incListR" src="/gui/templates/GenericList.zul"/>
+            <include id="incListR" src="~./zul/pages/GenericList.zul"/>
           </east>
         </borderlayout>
   </window>

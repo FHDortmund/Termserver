@@ -29,6 +29,8 @@ import de.fhdo.terminologie.ws.authoring.Authoring;
 import de.fhdo.terminologie.ws.authoring.Authoring_Service;
 import de.fhdo.terminologie.ws.authoring.CreateCodeSystemRequestType;
 import de.fhdo.terminologie.ws.authoring.CreateCodeSystemResponse;
+import de.fhdo.terminologie.ws.authoring.CreateConceptAssociationTypeRequestType;
+import de.fhdo.terminologie.ws.authoring.CreateConceptAssociationTypeResponse;
 import de.fhdo.terminologie.ws.authoring.CreateConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.CreateConceptResponse;
 import de.fhdo.terminologie.ws.authoring.CreateValueSetContentRequestType;
@@ -37,6 +39,9 @@ import de.fhdo.terminologie.ws.authoring.CreateValueSetRequestType;
 import de.fhdo.terminologie.ws.authoring.CreateValueSetResponse;
 import de.fhdo.terminologie.ws.authoring.MaintainCodeSystemVersionRequestType;
 import de.fhdo.terminologie.ws.authoring.MaintainCodeSystemVersionResponse;
+import de.fhdo.terminologie.ws.authoring.MaintainConceptAssociationTypeRequestType;
+import de.fhdo.terminologie.ws.authoring.MaintainConceptAssociationTypeResponse;
+import de.fhdo.terminologie.ws.authoring.MaintainConceptAssociationTypeResponseType;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptResponseType;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptValueSetMembershipRequestType;
@@ -74,6 +79,8 @@ import de.fhdo.terminologie.ws.search.ListCodeSystemsInTaxonomyRequestType;
 import de.fhdo.terminologie.ws.search.ListCodeSystemsInTaxonomyResponse;
 import de.fhdo.terminologie.ws.search.ListCodeSystemsRequestType;
 import de.fhdo.terminologie.ws.search.ListCodeSystemsResponse;
+import de.fhdo.terminologie.ws.search.ListConceptAssociationTypesRequestType;
+import de.fhdo.terminologie.ws.search.ListConceptAssociationTypesResponse;
 import de.fhdo.terminologie.ws.search.ListDomainValuesRequestType;
 import de.fhdo.terminologie.ws.search.ListDomainValuesResponse;
 import de.fhdo.terminologie.ws.search.ListGloballySearchedConceptsRequestType;
@@ -86,6 +93,8 @@ import de.fhdo.terminologie.ws.search.ListValueSetsRequestType;
 import de.fhdo.terminologie.ws.search.ListValueSetsResponse;
 import de.fhdo.terminologie.ws.search.ReturnCodeSystemDetailsRequestType;
 import de.fhdo.terminologie.ws.search.ReturnCodeSystemDetailsResponse;
+import de.fhdo.terminologie.ws.search.ReturnConceptAssociationTypeDetailsRequestType;
+import de.fhdo.terminologie.ws.search.ReturnConceptAssociationTypeDetailsResponse;
 import de.fhdo.terminologie.ws.search.ReturnConceptDetailsRequestType;
 import de.fhdo.terminologie.ws.search.ReturnConceptDetailsResponse;
 import de.fhdo.terminologie.ws.search.ReturnConceptValueSetMembershipRequestType;
@@ -101,6 +110,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.namespace.QName;
+import types.termserver.fhdo.de.CodeSystem;
+import types.termserver.fhdo.de.CodeSystemVersion;
 
 /**
  *
@@ -904,6 +915,17 @@ public class WebServiceHelper
     return port.listValueSets(parameter);
   }
 
+  public static ListCodeSystemConceptsResponse.Return listCodeSystemConcepts(long codeSystemVersionId)
+  {
+    ListCodeSystemConceptsRequestType request = new ListCodeSystemConceptsRequestType();
+    request.setLoginToken(SessionHelper.getSessionId());
+    request.setCodeSystem(new CodeSystem());
+    CodeSystemVersion csv = new CodeSystemVersion();
+    csv.setVersionId(codeSystemVersionId);
+    request.getCodeSystem().getCodeSystemVersions().add(csv);
+    return listCodeSystemConcepts(request, PropertiesHelper.getInstance().getTermserverUrl());
+  }
+  
   public static ListCodeSystemConceptsResponse.Return listCodeSystemConcepts(ListCodeSystemConceptsRequestType parameter)
   {
     return listCodeSystemConcepts(parameter, PropertiesHelper.getInstance().getTermserverUrl());
@@ -1272,4 +1294,129 @@ public class WebServiceHelper
   }
   
 
+  public static ListConceptAssociationTypesResponse.Return listConceptAssociationTypes(ListConceptAssociationTypesRequestType parameter)
+  {
+    return listConceptAssociationTypes(parameter, PropertiesHelper.getInstance().getTermserverUrl());
+  }
+
+  public static ListConceptAssociationTypesResponse.Return listConceptAssociationTypes(ListConceptAssociationTypesRequestType parameter, String urlHost)
+  {
+    return listConceptAssociationTypes(parameter, urlHost, PropertiesHelper.getInstance().getTermserverServiceName());
+  }
+
+  public static ListConceptAssociationTypesResponse.Return listConceptAssociationTypes(ListConceptAssociationTypesRequestType parameter, String urlHost, String urlService)
+  {
+    Search_Service service;
+    Search port;
+    try
+    {
+      // Service mit bestimmter URL ?ffnen
+      service = new Search_Service(new URL(optimizeUrl(urlHost) + urlService + "Search?wsdl"),
+              new QName("http://search.ws.terminologie.fhdo.de/", "Search"));
+    }
+    catch (Exception ex)
+    {
+      Logger.getLogger(WebServiceHelper.class.getName()).log(Level.SEVERE, null, ex);
+
+      // Standard Service ?ffnen
+      service = new Search_Service();
+    }
+    port = service.getSearchPort();
+    return port.listConceptAssociationTypes(parameter);
+  }
+  
+  
+  public static ReturnConceptAssociationTypeDetailsResponse.Return returnConceptAssociationTypeDetails(ReturnConceptAssociationTypeDetailsRequestType parameter)
+  {
+    return returnConceptAssociationTypeDetails(parameter, PropertiesHelper.getInstance().getTermserverUrl());
+  }
+
+  public static ReturnConceptAssociationTypeDetailsResponse.Return returnConceptAssociationTypeDetails(ReturnConceptAssociationTypeDetailsRequestType parameter, String urlHost)
+  {
+    return returnConceptAssociationTypeDetails(parameter, urlHost, PropertiesHelper.getInstance().getTermserverServiceName());
+  }
+
+  public static ReturnConceptAssociationTypeDetailsResponse.Return returnConceptAssociationTypeDetails(ReturnConceptAssociationTypeDetailsRequestType parameter, String urlHost, String urlService)
+  {
+    Search_Service service;
+    Search port;
+    try
+    {
+      // Service mit bestimmter URL ?ffnen
+      service = new Search_Service(new URL(optimizeUrl(urlHost) + urlService + "Search?wsdl"),
+              new QName("http://search.ws.terminologie.fhdo.de/", "Search"));
+    }
+    catch (Exception ex)
+    {
+      Logger.getLogger(WebServiceHelper.class.getName()).log(Level.SEVERE, null, ex);
+
+      // Standard Service ?ffnen
+      service = new Search_Service();
+    }
+    port = service.getSearchPort();
+    return port.returnConceptAssociationTypeDetails(parameter);
+  }
+  
+  
+  public static CreateConceptAssociationTypeResponse.Return createConceptAssociationType(CreateConceptAssociationTypeRequestType parameter)
+  {
+    return createConceptAssociationType(parameter, PropertiesHelper.getInstance().getTermserverUrl());
+  }
+
+  public static CreateConceptAssociationTypeResponse.Return createConceptAssociationType(CreateConceptAssociationTypeRequestType parameter, String urlHost)
+  {
+    return createConceptAssociationType(parameter, urlHost, PropertiesHelper.getInstance().getTermserverServiceName());
+  }
+
+  public static CreateConceptAssociationTypeResponse.Return createConceptAssociationType(CreateConceptAssociationTypeRequestType parameter, String urlHost, String urlService)
+  {
+    Authoring_Service service;
+    Authoring port;
+    try
+    {
+      // Service mit bestimmter URL ?ffnen
+      service = new Authoring_Service(new URL(optimizeUrl(urlHost) + urlService + "Authoring?wsdl"),
+              new QName("http://authoring.ws.terminologie.fhdo.de/", "Authoring"));
+    }
+    catch (Exception ex)
+    {
+      Logger.getLogger(WebServiceHelper.class.getName()).log(Level.SEVERE, null, ex);
+
+      // Standard Service ?ffnen
+      service = new Authoring_Service();
+    }
+    port = service.getAuthoringPort();
+    return port.createConceptAssociationType(parameter);
+  }
+  
+  public static MaintainConceptAssociationTypeResponse.Return maintainConceptAssociationType(MaintainConceptAssociationTypeRequestType parameter)
+  {
+    return maintainConceptAssociationType(parameter, PropertiesHelper.getInstance().getTermserverUrl());
+  }
+
+  public static MaintainConceptAssociationTypeResponse.Return maintainConceptAssociationType(MaintainConceptAssociationTypeRequestType parameter, String urlHost)
+  {
+    return maintainConceptAssociationType(parameter, urlHost, PropertiesHelper.getInstance().getTermserverServiceName());
+  }
+
+  public static MaintainConceptAssociationTypeResponse.Return maintainConceptAssociationType(MaintainConceptAssociationTypeRequestType parameter, String urlHost, String urlService)
+  {
+    Authoring_Service service;
+    Authoring port;
+    try
+    {
+      // Service mit bestimmter URL ?ffnen
+      service = new Authoring_Service(new URL(optimizeUrl(urlHost) + urlService + "Authoring?wsdl"),
+              new QName("http://authoring.ws.terminologie.fhdo.de/", "Authoring"));
+    }
+    catch (Exception ex)
+    {
+      Logger.getLogger(WebServiceHelper.class.getName()).log(Level.SEVERE, null, ex);
+
+      // Standard Service ?ffnen
+      service = new Authoring_Service();
+    }
+    port = service.getAuthoringPort();
+    return port.maintainConceptAssociationType(parameter);
+  }
 }
