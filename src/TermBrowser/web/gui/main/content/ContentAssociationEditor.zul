@@ -6,7 +6,7 @@
     <borderlayout>
       <north title="${labels.common.codeSystem}/${labels.common.valueSet}" border="0">
         <div style="margin-top:8px; margin-left:8px; margin-bottom:8px;">
-          <button label="" onClick="winAss.open()" image="/rsc/img/symbols/open_16x16.png"/>
+          <button label="" onClick="winAss.open()" image="/rsc/img/design/open_16x16.png"/>
         </div>
       </north>
       <center id="center" title="" border="0">

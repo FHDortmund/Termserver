@@ -16,20 +16,29 @@
        
       <menu label="${labels.common.terminologyBrowser}">
         <menupopup>
-          <menuitem label="${labels.common.mainview}"          onClick="win.gotoMainView()"  image="/rsc/img/symbols/home_16x16.png"></menuitem>
-          <menuitem label="${labels.common.associationEditor}" onClick="win.viewAssociationEditor()"  image="/rsc/img/symbols/refresh.png" ></menuitem>
+          <menuitem label="${labels.common.mainview}"          onClick="win.gotoMainView()"  image="/rsc/img/design/house_16x16.png"></menuitem>
+          <menuitem label="${labels.common.associationEditor}" onClick="win.viewAssociationEditor()"  image="/rsc/img/design/reload_16x16.png" ></menuitem>
           <menuseparator/>
-          <menuitem id="menuitemAdminSettings"  label="${labels.menu.admin}" onClick="win.callAdmin()" image="/rsc/img/symbols/settings_16x16.png"></menuitem>
+          <menuitem id="menuitemAdminSettings"  label="${labels.menu.admin}" onClick="win.callAdmin()" image="/rsc/img/design/tools_16x16.png"></menuitem>
           <menuitem id="menuitemDetails"  label="${labels.menu.showUserDetails}" onClick="win.showUADetails()" image="/rsc/img/symbols/user_16x16.png" visible ="false" ></menuitem>
         </menupopup>
       </menu>
       <menu label="${labels.common.user}">
         <menupopup>
-          <menuitem id="menuitemAnmelden" label="${labels.common.doLogin}"  onClick="win.login()" image="/rsc/img/symbols/lock_16x16.png"></menuitem>
-          <menuitem id="menuitemAbmelden" label="${labels.common.doLogoff}" onClick="win.logout()" image="/rsc/img/symbols/unlock_16x16.png"></menuitem>
-          <menuitem id="menuitemChangePassword" label="${labels.common.changePassword}" onClick="win.changePassword()" image="/rsc/img/symbols/key_16x16.png"></menuitem>
+          <menuitem id="menuitemAnmelden" label="${labels.common.doLogin}"  onClick="win.login()" image="/rsc/img/design/login_16x16.png"></menuitem>
+          <menuitem id="menuitemAbmelden" label="${labels.common.doLogoff}" onClick="win.logout()" image="/rsc/img/design/logout_16x16.png"></menuitem>
+          <menuitem id="menuitemChangePassword" label="${labels.common.changePassword}" onClick="win.changePassword()" image="/rsc/img/design/key_16x16.png"></menuitem>
         </menupopup>
       </menu>
+      
+      <menu label="${labels.common.view}" id="menuView">
+        <menupopup>
+          <menuitem id="menuitemVisibleConcepts" label="${labels.common.showInvisbleConcept}" onClick="win.changeShowVisibleConcepts()" 
+                    checkmark="true">
+          </menuitem>
+        </menupopup>
+      </menu>
+      
       
       <menu label="${labels.collab.collaboration}" id="menuCollaboration">
         <menupopup>
@@ -47,12 +56,12 @@
         <menupopup>
           <!--<menuitem label="${labels.menu.enquiry}" onClick="win.callEnquiry()"></menuitem>
           <menuseparator/>-->
-          <menuitem label="${labels.menu.manual}" image="/rsc/img/filetypes/acrobat.png">
+          <menuitem label="${labels.menu.manual}" image="/rsc/img/design/file_acrobat_16x16.png">
             <attribute name="onClick">
               <![CDATA[ Filedownload.save("/rsc/Benutzerhandbuch_PublikationsumgebungV1.1.pdf", null);]]>
             </attribute>
           </menuitem>
-          <menuitem label="${labels.menu.manualKollab}" image="/rsc/img/filetypes/acrobat.png" visible="@{win.isCollaboration}">
+          <menuitem label="${labels.menu.manualKollab}" image="/rsc/img/design/file_acrobat_16x16.png" visible="@{win.isCollaboration}">
             <attribute name="onClick">
               <![CDATA[ Filedownload.save("/rsc/Benutzerhandbuch_KollaborationsplattformV1.1.pdf", null);]]>
             </attribute>
@@ -60,7 +69,7 @@
           <!--<menuitem id="menuitemEnquiry" label="${labels.menu.enquiry}" onClick="win.callEnquiry()" image="/rsc/img/symbols/help_16x16.png"></menuitem>-->
           <!--<menuseparator></menuseparator>-->
           <!--<menuitem id="menuitemOIDPortal" label="${labels.menu.oidRegister}" onClick="win.callOidRegister()" image="/rsc/img/symbols/info16_16.png"></menuitem>-->
-          <menuitem label="${labels.menu.aboutTB}" onClick="win.onUeberClicked()" image="/rsc/img/symbols/info16_16.png"></menuitem>
+          <menuitem label="${labels.menu.aboutTB}" onClick="win.onUeberClicked()" image="/rsc/img/design/about_16x16.png"></menuitem>
         </menupopup>
       </menu>
       <!--<menuitem label="${labels.common.impressum}" onClick="win.onImpressumClicked()"></menuitem>-->
@@ -72,7 +81,7 @@
           <toolbar height="60px" style="margin-top:-4px;" >
             <toolbarbutton id="tbb_GlobalSearch" 
                            label="${labels.common.searchGlob}"
-                           image="/rsc/img/symbols/Search2_32x32.png" orient="vertical"
+                           image="/rsc/img/design/search_start_32x32.png" orient="vertical"
                            onClick="win.onGlobalSearch()"/>
             
             <toolbarbutton id="tbb_Vorschlag" label="Vorschlag..."
@@ -100,7 +109,7 @@
         </column>
         <column width="60px" height="60px" align="center">
           <toolbar height="60px" style="margin-top:-4px;">
-            <toolbarbutton tooltiptext="info" image="/rsc/img/symbols/info32_32.png" onClick="win.onUeberClicked()" />
+            <toolbarbutton tooltiptext="info" image="/rsc/img/design/info_32x32.png" onClick="win.onUeberClicked()" />
           </toolbar>
           
         </column>

@@ -16,9 +16,9 @@
            win.doModal();
           ]]></attribute>
           </toolbarbutton>
-          <toolbarbutton id="tb_user" image="/rsc/img/symbols/user_16x16.png" label="-" onClick='win.onUserClicked()'
+          <toolbarbutton id="tb_user" image="/rsc/img/design/user_16x16.png" label="-" onClick='win.onUserClicked()'
                          tooltiptext="${labels.statusBar.userLoggedIn}" visible="false"/>
-          <toolbarbutton id="tb_logout" image="/rsc/img/symbols/unlock_16x16.png" label="${labels.common.logoff}" onClick='win.onLogoutClicked()'
+          <toolbarbutton id="tb_logout" image="/rsc/img/design/logout_16x16.png" label="${labels.common.logoff}" onClick='win.onLogoutClicked()'
                          visible="false"/>
           
           <!--<toolbarbutton id="tb_loginInfo" image="/rsc/img/symbols/info16_16.png" label="" tooltiptext="${labels.statusBar.userLoggedInInfo}" visible="false"/>-->

@@ -64,6 +64,9 @@ public class PropertiesHelper
   private long associationCrossmappingDefaultVersionId = 0;
   private long associationLinkDefaultVersionId = 0;
   
+  private boolean guiShowOnlyVisibleConcepts;
+  private boolean guiAllowShowingInvisibleConcepts;
+  
   public static PropertiesHelper getInstance()
   {
     if (instance == null)
@@ -109,11 +112,17 @@ public class PropertiesHelper
       
       expandTreeAutoCount = getIntValue("gui.tree.expandTreeAutoCount", 50);
       
+      guiShowOnlyVisibleConcepts = getBooleanValue(config.getProperty("gui.showOnlyVisibleConcepts", "true"));
+      guiAllowShowingInvisibleConcepts = getBooleanValue(config.getProperty("gui.allowShowingInvisibleConcepts", "false"));
+      
       logger.debug("login_classname: " + login_classname);
       logger.debug("termserverUrl: " + termserverUrl);
       logger.debug("termserverServiceName: " + termserverServiceName);
       logger.debug("collaborationActive: " + collaborationActive);
       logger.debug("expandTreeAutoCount: " + expandTreeAutoCount);
+      
+      logger.debug("guiShowOnlyVisibleConcepts: " + guiShowOnlyVisibleConcepts);
+      logger.debug("guiAllowShowingInvisibleConcepts: " + guiAllowShowingInvisibleConcepts);
     }
     catch (Exception e)
     {
@@ -319,6 +328,22 @@ public class PropertiesHelper
   public void setAssociationLinkDefaultVersionId(long associationLinkDefaultVersionId)
   {
     this.associationLinkDefaultVersionId = associationLinkDefaultVersionId;
+  }
+
+  /**
+   * @return the guiShowOnlyVisibleConcepts
+   */
+  public boolean isGuiShowOnlyVisibleConcepts()
+  {
+    return guiShowOnlyVisibleConcepts;
+  }
+
+  /**
+   * @return the guiAllowShowingInvisibleConcepts
+   */
+  public boolean isGuiAllowShowingInvisibleConcepts()
+  {
+    return guiAllowShowingInvisibleConcepts;
   }
 
 }

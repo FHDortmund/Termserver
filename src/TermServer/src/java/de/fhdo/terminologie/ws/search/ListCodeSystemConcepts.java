@@ -325,6 +325,7 @@ public class ListCodeSystemConcepts
           {
             CodeSystemEntityVersion csev = (CodeSystemEntityVersion) parameter.getCodeSystemEntity().getCodeSystemEntityVersions().toArray()[0];
             parameterHelper.addParameter("csev.", "statusVisibilityDate", csev.getStatusVisibilityDate());
+            parameterHelper.addParameter("csev.", "statusVisibility", csev.getStatusVisibility());
 
             if (csev.getCodeSystemConcepts() != null && csev.getCodeSystemConcepts().size() > 0)
             {

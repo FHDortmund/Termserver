@@ -374,7 +374,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
 
     genericTreeCS.removeCustomButtons();
 
-    Button buttonDetails = new Button(Labels.getLabel("common.details"), "/rsc/img/list/magnifier.png");
+    Button buttonDetails = new Button(Labels.getLabel("common.details"), "/rsc/img/design/details_16x16.png");
     buttonDetails.addEventListener(Events.ON_CLICK, new EventListener<Event>()
     {
       public void onEvent(Event t) throws Exception
@@ -401,9 +401,9 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     //Menuitem miRemoveVS = null;// = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miRemoveFromVS"));
 
     // set icons
-    miDetails.setImage("/rsc/img/list/magnifier.png");
-    miEdit.setImage("/rsc/img/list/pencil.png");
-    miNew.setImage("/rsc/img/list/add.png");
+    miDetails.setImage("/rsc/img/design/details_16x16.png");
+    miEdit.setImage("/rsc/img/design/edit_16x16.png");
+    miNew.setImage("/rsc/img/design/add_16x16.png");
 
     miDetails.setParent(menu);
 
@@ -495,7 +495,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
 
     genericTreeVS.removeCustomButtons();
 
-    Button buttonDetails = new Button(Labels.getLabel("common.details"), "/rsc/img/list/magnifier.png");
+    Button buttonDetails = new Button(Labels.getLabel("common.details"), "/rsc/img/design/details_16x16.png");
     buttonDetails.addEventListener(Events.ON_CLICK, new EventListener<Event>()
     {
       public void onEvent(Event t) throws Exception
@@ -521,9 +521,9 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     Menuitem miNew = new Menuitem(Labels.getLabel("contentCSVSDefault.newValueSet"));
 
     // set icons
-    miDetails.setImage("/rsc/img/list/magnifier.png");
+    miDetails.setImage("/rsc/img/design/details_16x16.png");
     miEdit.setImage("/rsc/img/list/pencil.png");
-    miNew.setImage("/rsc/img/list/add.png");
+    miNew.setImage("/rsc/img/design/add_16x16.png");
 
     miDetails.setParent(menu);
 

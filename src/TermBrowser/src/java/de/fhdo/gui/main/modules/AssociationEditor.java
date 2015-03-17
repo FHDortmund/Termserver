@@ -21,6 +21,7 @@ import de.fhdo.gui.main.content.ContentAssociationEditor;
 import de.fhdo.gui.main.content.ContentConcepts;
 import de.fhdo.helper.DomainHelper;
 import de.fhdo.helper.SessionHelper;
+import de.fhdo.helper.ViewHelper;
 import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.interfaces.IUpdate;
 import de.fhdo.interfaces.IUpdateModal;
@@ -92,9 +93,12 @@ public class AssociationEditor extends Window implements AfterCompose, IUpdate, 
 
   public AssociationEditor()
   {
-
+    if(SessionHelper.isUserLoggedIn() == false)
+      ViewHelper.gotoMain();
+      //Executions.
+      
     // TODO remove
-    CodeSystem cs = new CodeSystem();
+    /*CodeSystem cs = new CodeSystem();
     cs.setId(5l);
     cs.setCurrentVersionId(6l);
     cs.setName("authorSpeciality");
@@ -113,7 +117,7 @@ public class AssociationEditor extends Window implements AfterCompose, IUpdate, 
     csv.setVersionId(7l);
     csv.setName("practiceSettingCode");
     cs.getCodeSystemVersions().add(csv);
-    SessionHelper.setValue("selectedCS2", cs);
+    SessionHelper.setValue("selectedCS2", cs);*/
   }
 
   public void afterCompose()

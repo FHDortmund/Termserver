@@ -138,7 +138,8 @@
                 </grid>
               </groupbox>
             </tabpanel>
-            <tabpanel id="tabpanelMetadata" apply="de.fhdo.gui.main.modules.MetaDataComposer">
+<!--            <tabpanel id="tabpanelMetadata" apply="de.fhdo.gui.main.modules.MetaDataComposer">-->
+            <tabpanel id="tabpanelMetadata" >
               <!--<listbox id="listMetadata" vflex="true" height="65%" width="99%" >
                 <listhead></listhead>
               </listbox>-->
@@ -157,7 +158,8 @@
               </div>-->
               
             </tabpanel>
-            <tabpanel id="tabpanelTranslations" apply="de.fhdo.gui.main.modules.TranslationComposer">
+<!--            <tabpanel id="tabpanelTranslations" apply="de.fhdo.gui.main.modules.TranslationComposer">-->
+            <tabpanel id="tabpanelTranslations" >
               <include id="incListTranslation" src="~./zul/pages/GenericList.zul"/>
               <!--              <borderlayout>
                 <center border="0">

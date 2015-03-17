@@ -13,11 +13,11 @@
               <combobox id="cbVersion" readonly="true" width="250px" onSelect="winConcepts.onVersionChanged()"/>
               <button id="buttonNewVersion" 
                       onClick="winConcepts.onNewVersionClicked()" 
-                      image="/rsc/img/list/add.png"    
+                      image="/rsc/img/design/add_16x16.png"    
                       visible="false" />
               <button id="buttonEditVersion" 
                       onClick="winConcepts.onEditVersionClicked()" 
-                      image="/rsc/img/list/pencil.png" 
+                      image="/rsc/img/design/edit_16x16.png" 
                       autodisable="self"
                       visible="false" 
                       disabled="false"/>
@@ -27,13 +27,13 @@
               <button id="buttonExport" 
                       label="${labels.treeitemRenderer_CS_VS_DV.exportCodeSystemVersion}..."
                       onClick="winConcepts.onExportClicked()" 
-                      image="/rsc/img/symbols/export_16x16.png" 
+                      image="/rsc/img/design/export_16x16.png" 
                       autodisable="self"
               />
               <button id="buttonSearch" 
                       label="${labels.common.search}"
                       onClick="winConcepts.onSwitchSearch()" 
-                      image="/rsc/img/symbols/search_blue_16x16.png" 
+                      image="/rsc/img/design/search_16x16.png" 
                       autodisable="self"
               />
             </div>
@@ -43,7 +43,7 @@
                     style="margin-top:8px; margin-bottom:4px; " closable="false">
             <caption label="${labels.common.search}" >
               <toolbar hflex="min" height="10px">
-                <toolbarbutton image="/rsc/img/symbols/close_16x16.png" onClick="winConcepts.onSwitchSearch()"/>
+                <toolbarbutton image="/rsc/img/design/close_16x16.png" onClick="winConcepts.onSwitchSearch()"/>
               </toolbar>
             </caption>
 
@@ -68,7 +68,7 @@
                         label="${labels.popupSearch.startSearch}" 
                         height="46px"
                         onClick="winConcepts.onSearchClicked()"
-                        image="/rsc/img/list/folder_magnify.png"
+                        image="/rsc/img/design/search_start_16x16.png"
                         autodisable="self"/> 
               </div>
               
@@ -120,7 +120,7 @@
           
           
           <hbox id="message" visible="false" style="margin-left: 8px; margin-top:8px; margin-bottom:8px;">
-            <image src="/rsc/img/symbols/warning_32x32.png"/>
+            <image src="/rsc/img/design/warning_32x32.png"/>
             <div style="margin-left: 8px; margin-top:8px;">
               <label id="labelMessage" value="" />
             </div>
@@ -141,12 +141,12 @@
             <button id="buttonNew" 
                     label="${labels.contentConcepts.newRootConcept}"
                     onClick="winConcepts.onNewClicked()" 
-                    image="/rsc/img/list/add.png"    
+                    image="/rsc/img/design/add_16x16.png"    
                     visible="false" />
             <button id="buttonNewSub" 
                     label="${labels.popupConcept.createSubconcept}"
                     onClick="winConcepts.onNewSubClicked()" 
-                    image="/rsc/img/list/add.png"    
+                    image="/rsc/img/design/add_16x16.png"    
                     visible="false" />
             <button id="buttonEdit" 
                     label="${labels.common.edit}"
@@ -184,7 +184,7 @@
             disabled="false"/>-->
             
             <!--            <label value="${labels.contentConcepts.moreFunctions}" style="color:gray"/>
-            <button id="bNew" label="${labels.contentConcepts.newConcept}" onClick="windowConcepts.onClickedNewRootConcept()" image="/rsc/img/list/add.png"    visible="false" />
+            <button id="bNew" label="${labels.contentConcepts.newConcept}" onClick="windowConcepts.onClickedNewRootConcept()" image="/rsc/img/design/add_16x16.png"    visible="false" />
             <button id="bEdit" label="${labels.common.edit}" onClick="windowConcepts.onClickedEditConcept()" image="/rsc/img/list/pencil.png" visible="false" disabled="true"/>
             <button id="bSearch" label="${labels.common.search}" onClick="windowConcepts.showPopupConceptSearch()" image="/rsc/img/list/folder_magnify.png"/>
             <button id="bDetails" label="${labels.common.details}" onClick="windowConcepts.onClickedShowConcept()" image="/rsc/img/list/magnifier.png"              disabled="true"/>             -->

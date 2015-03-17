@@ -67,7 +67,7 @@ Die Initialisierung der Liste geschieht über GenericList.java
       </south>
     </borderlayout>
     <!--<menupopup id="listPopup">
-      <menuitem label="Neuer Eintrag..." image="/rsc/img/list/add.png" onClick="winContent.navigationFrame.onNew()"/>
+      <menuitem label="Neuer Eintrag..." image="/rsc/img/design/add_16x16.png" onClick="winContent.navigationFrame.onNew()"/>
       <menuseparator/>
       <menuitem label="Eintrag bearbeiten..." image="/rsc/img/list/pencil.png" onClick="winContent.navigationFrame.onEdit()"/>
       <menuitem label="Eintrag löschen" image="/rsc/img/list/delete.png" onClick="winContent.navigationFrame.onDelete()"/>

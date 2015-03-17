@@ -3,7 +3,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul">
   
     <hbox style="margin-left: 8px; margin-top:8px; margin-bottom:8px;">
-      <image src="/rsc/img/symbols/warning_32x32.png"/>
+      <image src="/rsc/img/design/warning_32x32.png"/>
       <div style="margin-left: 8px; margin-top:8px;">
         <label id="labelMessage" value="${labels.menu.noSelection}" />
       </div>

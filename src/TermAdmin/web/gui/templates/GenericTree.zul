@@ -108,21 +108,21 @@ Die Initialisierung des Baumes geschieht über GenericTree.java
       </south>
     </borderlayout>
     <menupopup id="treePopupItem">
-      <menuitem label="Neuer Untereintrag..." image="/rsc/img/list/add.png" onClick="winGenericTree.onNewSubentry()"/>
+      <menuitem label="Neuer Untereintrag..." image="/rsc/img/design/add_16x16.png" onClick="winGenericTree.onNewSubentry()"/>
       <menuseparator/>
       <menuitem label="Eintrag bearbeiten..." image="/rsc/img/list/pencil.png" onClick="winGenericTree.onEdit()"/>
       <menuitem label="Eintrag löschen" image="/rsc/img/list/delete.png" onClick="winGenericTree.onDelete()"/>
     </menupopup>
     
     <!--<menupopup id="treePopupItem">
-      <menuitem label="Neuer Eintrag..." image="/rsc/img/list/add.png" onClick="winContent.navigationFrame.onNew()"/>
+      <menuitem label="Neuer Eintrag..." image="/rsc/img/design/add_16x16.png" onClick="winContent.navigationFrame.onNew()"/>
       <menuseparator/>
       <menuitem label="Eintrag bearbeiten..." image="/rsc/img/list/pencil.png" onClick="winContent.navigationFrame.onEdit()"/>
       <menuitem label="Eintrag löschen" image="/rsc/img/list/delete.png" onClick="winContent.navigationFrame.onDelete()"/>
     </menupopup>-->
     
     <!--<menupopup id="listPopup">
-      <menuitem label="Neuer Eintrag..." image="/rsc/img/list/add.png" onClick="winContent.navigationFrame.onNew()"/>
+      <menuitem label="Neuer Eintrag..." image="/rsc/img/design/add_16x16.png" onClick="winContent.navigationFrame.onNew()"/>
       <menuseparator/>
       <menuitem label="Eintrag bearbeiten..." image="/rsc/img/list/pencil.png" onClick="winContent.navigationFrame.onEdit()"/>
       <menuitem label="Eintrag löschen" image="/rsc/img/list/delete.png" onClick="winContent.navigationFrame.onDelete()"/>

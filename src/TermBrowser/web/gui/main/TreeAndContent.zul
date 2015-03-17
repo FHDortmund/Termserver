@@ -16,7 +16,7 @@
                 <tabpanel id="tabpanelCS">
                   <div width="100%" height="100%">
                     <hbox id="message" visible="false" style="margin-left: 8px; margin-top:8px; margin-bottom:8px;">
-                      <image src="/rsc/img/symbols/warning_32x32.png"/>
+                      <image src="/rsc/img/design/warning_32x32.png"/>
                       <div style="margin-left: 8px; margin-top:0px;">
                         <label id="labelMessage" value="" />
                       </div>
@@ -43,8 +43,8 @@
                     </treecols>
                   </tree>
                   <div style="text-align:right;margin-top:4px;">
-                    <button id="bNewCS" label="${labels.common.codeSystem}" onClick='window.onClickedNewCS()' image="/rsc/img/list/add.png" disabled="false"/>
-                    <button id="bNewCSV" label="${labels.common.version}" onClick='window.onClickedNewVersionCS()' image="/rsc/img/list/add.png"       disabled="true"/>
+                    <button id="bNewCS" label="${labels.common.codeSystem}" onClick='window.onClickedNewCS()' image="/rsc/img/design/add_16x16.png" disabled="false"/>
+                    <button id="bNewCSV" label="${labels.common.version}" onClick='window.onClickedNewVersionCS()' image="/rsc/img/design/add_16x16.png"       disabled="true"/>
                     <button id="bEditCSV" label="${labels.common.edit}" onClick='window.onClickedEditCS()' image="/rsc/img/list/pencil.png"    disabled="true"/>
                     <button id="bDetailsCSV" label="${labels.common.details}" onClick="window.onClickedDetailsCS()" image="/rsc/img/list/magnifier.png" disabled="true"/>
                   </div>-->
@@ -69,8 +69,8 @@
                     </treecols>
                   </tree>
                   <div style="text-align:right;margin-top:4px;">
-                    <button id="bNewVS" label="${labels.common.valueSet}" onClick='window.onClickedNewVS()' image="/rsc/img/list/add.png" disabled="false" autodisable="self"/>
-                    <button id="bNewVSV" label="${labels.common.version}" onClick='window.onClickedNewVersionVS()' image="/rsc/img/list/add.png" disabled="true" autodisable="self"/>
+                    <button id="bNewVS" label="${labels.common.valueSet}" onClick='window.onClickedNewVS()' image="/rsc/img/design/add_16x16.png" disabled="false" autodisable="self"/>
+                    <button id="bNewVSV" label="${labels.common.version}" onClick='window.onClickedNewVersionVS()' image="/rsc/img/design/add_16x16.png" disabled="true" autodisable="self"/>
                     <button id="bEditVSV" label="${labels.common.edit}" onClick='window.onClickedEditVS()' image="/rsc/img/list/pencil.png" disabled="true" autodisable="self"/>
                     <button id="bDetailsVSV" label="${labels.common.details}"   onClick="window.onClickedDetailsVS()" image="/rsc/img/list/magnifier.png" disabled="true" autodisable="self"/>
                   </div>-->

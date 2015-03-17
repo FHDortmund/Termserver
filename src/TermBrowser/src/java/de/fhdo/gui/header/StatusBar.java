@@ -59,9 +59,9 @@ public class StatusBar extends Window implements AfterCompose
       tbUser.setLabel(user);
 
       if (isAdmin)
-        tbUser.setImage("/rsc/img/symbols/user_admin_16x16.png");
+        tbUser.setImage("/rsc/img/design/user_admin_16x16.png");
       else
-        tbUser.setImage("/rsc/img/symbols/user_16x16.png");
+        tbUser.setImage("/rsc/img/design/user_16x16.png");
     }
 
     /*

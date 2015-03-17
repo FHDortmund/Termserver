@@ -20,6 +20,7 @@ import de.fhdo.Definitions;
 import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.DateTimeHelper;
+import de.fhdo.helper.PropertiesHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.interfaces.IUpdate;
@@ -889,12 +890,29 @@ public class ConceptsTree implements IUpdateModal
 
       cse.getCodeSystemEntityVersions().add(csev);
       csev.getCodeSystemConcepts().add(csc);
+
       csc.setTerm(searchTerm);
       csc.setCode(searchCode);
 
       csc.setIsPreferred(searchPreferred);
 
       parameter.setCodeSystemEntity(cse);
+    }
+
+    logger.debug("Status Visibility: " + PropertiesHelper.getInstance().isGuiShowOnlyVisibleConcepts());
+    
+    //boolean b = SessionHelper.getBoolValue("showInvisibleConcepts", !PropertiesHelper.getInstance().isGuiShowOnlyVisibleConcepts());
+    if (SessionHelper.getBoolValue("showInvisibleConcepts", !PropertiesHelper.getInstance().isGuiShowOnlyVisibleConcepts()) == false)
+    {
+      if(parameter.getCodeSystemEntity() == null)
+        parameter.setCodeSystemEntity(new CodeSystemEntity());
+      if(parameter.getCodeSystemEntity().getCodeSystemEntityVersions() == null || parameter.getCodeSystemEntity().getCodeSystemEntityVersions().size() == 0)
+      {
+        CodeSystemEntityVersion csev = new CodeSystemEntityVersion();
+        parameter.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev);
+      }
+      
+      parameter.getCodeSystemEntity().getCodeSystemEntityVersions().get(0).setStatusVisibility(Definitions.STATUS_VISIBILITY_VISIBLE);
     }
 
     if (conceptsWindow.isLookForward())

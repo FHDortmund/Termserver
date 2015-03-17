@@ -510,10 +510,10 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     //Menuitem miRemoveVS = null;// = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miRemoveFromVS"));
 
     // set icons
-    miDetails.setImage("/rsc/img/list/magnifier.png");
+    miDetails.setImage("/rsc/img/design/details_16x16.png");
     miEdit.setImage("/rsc/img/list/pencil.png");
-    miNewSubConcept.setImage("/rsc/img/list/add.png");
-    miNewRootConcept.setImage("/rsc/img/list/add.png");
+    miNewSubConcept.setImage("/rsc/img/design/add_16x16.png");
+    miNewRootConcept.setImage("/rsc/img/design/add_16x16.png");
 
     if (conceptsTree.getContentType() == ConceptsTree.CONTENT_TYPE.VALUESET)
     {
@@ -714,10 +714,10 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     //Menuitem miRemoveVS = null;// = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miRemoveFromVS"));
 
     // set icons
-    miDetails.setImage("/rsc/img/list/magnifier.png");
+    miDetails.setImage("/rsc/img/design/details_16x16.png");
     miEdit.setImage("/rsc/img/list/pencil.png");
-    miNewSubConcept.setImage("/rsc/img/list/add.png");
-    miNewRootConcept.setImage("/rsc/img/list/add.png");
+    miNewSubConcept.setImage("/rsc/img/design/add_16x16.png");
+    miNewRootConcept.setImage("/rsc/img/design/add_16x16.png");
 
     if (conceptsTree.getContentType() == ConceptsTree.CONTENT_TYPE.VALUESET)
     {

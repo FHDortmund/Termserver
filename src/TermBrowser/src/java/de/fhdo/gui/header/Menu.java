@@ -158,6 +158,31 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
         </*/
     
     getFellow("menuCollaboration").setVisible(PropertiesHelper.getInstance().isCollaborationActive());
+    
+    // Sichtbarkeit Ansicht
+    boolean viewVisible = loggedIn && PropertiesHelper.getInstance().isGuiAllowShowingInvisibleConcepts();
+    logger.debug("viewVisible: " + viewVisible);
+    getFellow("menuView").setVisible(viewVisible);
+    
+    if(viewVisible)
+    {
+      ((Menuitem)getFellow("menuitemVisibleConcepts")).setChecked(SessionHelper.getBoolValue("showInvisibleConcepts", !PropertiesHelper.getInstance().isGuiShowOnlyVisibleConcepts()));
+    }
+    
+    
+    /*<menu label="${labels.common.view}" id="menuView">
+        <menupopup>
+          <menuitem id="menuitemVisibleConcepts" label="${labels.common.showInvisbleConcept}" onClick="win.changeShowVisibleConcepts()" ></menuitem>
+        </menupopup>
+      </menu>*/
+  }
+  
+  public void changeShowVisibleConcepts()
+  {
+    boolean b = SessionHelper.getBoolValue("showInvisibleConcepts", !PropertiesHelper.getInstance().isGuiShowOnlyVisibleConcepts());
+    SessionHelper.setValue("showInvisibleConcepts", !b);
+    
+    Executions.sendRedirect(null); // reload page
   }
 
   public void onLogoBRZClicked()
@@ -289,7 +314,12 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
 
   public void viewAssociationEditor()
   {
-    redirect("/gui/main/modules/AssociationEditor.zul", Labels.getLabel("menu.pleaseWait"), null);
+    if(SessionHelper.isUserLoggedIn())
+      redirect("/gui/main/modules/AssociationEditor.zul", Labels.getLabel("menu.pleaseWait"), null);
+    else
+    {
+      Messagebox.show(Labels.getLabel("menu.loginRequiredForAssociationEditor"));
+    }
   }
 
   private void redirect(String Src, String WaitText, String Parameter)
