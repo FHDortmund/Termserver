@@ -60,6 +60,7 @@ import de.fhdo.terminologie.ws.authoring.UpdateConceptValueSetMembershipStatusRe
 import de.fhdo.terminologie.ws.authoring.UpdateConceptValueSetMembershipStatusResponse;
 import de.fhdo.terminologie.ws.authoring.UpdateValueSetStatusRequestType;
 import de.fhdo.terminologie.ws.authoring.UpdateValueSetStatusResponse;
+import de.fhdo.terminologie.ws.authorization.AuthenticateResponse;
 import de.fhdo.terminologie.ws.authorization.Authorization;
 import de.fhdo.terminologie.ws.authorization.Authorization_Service;
 import de.fhdo.terminologie.ws.authorization.ChangePassword;
@@ -662,6 +663,39 @@ public class WebServiceHelper
     port = service.getAuthorizationPort();
     return port.login(parameter);
   }
+  
+  
+  public static AuthenticateResponse.Return authenticate(List<String> parameter)
+  {
+    return authenticate(parameter, PropertiesHelper.getInstance().getTermserverUrl());
+  }
+
+  public static AuthenticateResponse.Return authenticate(List<String> parameter, String urlHost)
+  {
+    return authenticate(parameter, urlHost, PropertiesHelper.getInstance().getTermserverServiceName());
+  }
+
+  public static AuthenticateResponse.Return authenticate(List<String> parameter, String urlHost, String urlService)
+  {
+    Authorization_Service service;
+    Authorization port;
+    try
+    {
+      // Service mit bestimmter URL ?ffnen
+      service = new Authorization_Service(new URL(optimizeUrl(urlHost) + urlService + "Authorization?wsdl"),
+              new QName("http://authorization.ws.terminologie.fhdo.de/", "Authorization"));
+    }
+    catch (Exception ex)
+    {
+      Logger.getLogger(WebServiceHelper.class.getName()).log(Level.SEVERE, null, ex);
+
+      // Standard Service ?ffnen
+      service = new Authorization_Service();
+    }
+    port = service.getAuthorizationPort();
+    return port.authenticate(parameter);
+  }
+  
   
   public static LogoutResponseType logout(List<String> parameter)
   {

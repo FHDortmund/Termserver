@@ -95,4 +95,17 @@ public class Authorization
       }
     }
   }
+  
+  public static void authenticate(String sessionId)
+  {
+    IAuthorization auth = getAuthorizationClass();
+    
+    if(auth != null)
+    {
+      if(auth.authenticate(sessionId))
+      {
+        logger.debug("authenticate successful");
+      }
+    }
+  }
 }

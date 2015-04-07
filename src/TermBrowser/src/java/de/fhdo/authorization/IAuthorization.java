@@ -28,6 +28,7 @@ public interface IAuthorization
   public boolean doLogin(String username, String password);
   public boolean doLogout();
   public boolean doChangePassword();
+  public boolean authenticate(String sessionId);
   
   
 }

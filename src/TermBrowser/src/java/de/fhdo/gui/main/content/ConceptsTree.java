@@ -845,6 +845,8 @@ public class ConceptsTree implements IUpdateModal
   {
     ListCodeSystemConceptsRequestType parameter = new ListCodeSystemConceptsRequestType();
 
+    logger.debug("create reqeust parameter for csv-id: " + codeSystemVersionId);
+    
     // CodeSystemEntity
     parameter.setCodeSystemEntity(new CodeSystemEntity());
 
@@ -855,14 +857,15 @@ public class ConceptsTree implements IUpdateModal
       csvem.setIsMainClass(true);
       parameter.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().add(csvem);
     }
+    
+    logger.debug("onlyMainClasses: " + onlyMainClasses);
+    logger.debug("codeSystemVersionId: " + codeSystemVersionId);
 
     // CodeSystem(VersionsID) angeben
     CodeSystemVersion csv = new CodeSystemVersion();
     csv.setVersionId(codeSystemVersionId);
     parameter.setCodeSystem(new CodeSystem());
     parameter.getCodeSystem().getCodeSystemVersions().add(csv);
-
-    logger.debug("create reqeust parameter for csv-id: " + codeSystemVersionId);
 
     // login
     if (SessionHelper.isUserLoggedIn())
@@ -897,6 +900,9 @@ public class ConceptsTree implements IUpdateModal
       csc.setIsPreferred(searchPreferred);
 
       parameter.setCodeSystemEntity(cse);
+      
+      logger.debug("add searchTerm: " + searchTerm);
+      logger.debug("add searchCode: " + searchCode);
     }
 
     logger.debug("Status Visibility: " + PropertiesHelper.getInstance().isGuiShowOnlyVisibleConcepts());
@@ -913,6 +919,8 @@ public class ConceptsTree implements IUpdateModal
       }
       
       parameter.getCodeSystemEntity().getCodeSystemEntityVersions().get(0).setStatusVisibility(Definitions.STATUS_VISIBILITY_VISIBLE);
+      
+      logger.debug("show only visible concepts");
     }
 
     if (conceptsWindow.isLookForward())
@@ -927,6 +935,8 @@ public class ConceptsTree implements IUpdateModal
     {
       parameter.setLookForward(false);
     }
+    
+    logger.debug("setLookForward: " + parameter.isLookForward());
 
     // sort parameter
     parameter.setSortingParameter(createSortingParameter());

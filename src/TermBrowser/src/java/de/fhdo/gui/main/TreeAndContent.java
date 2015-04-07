@@ -114,6 +114,15 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
 
     // Lade Session-Werte
     mode = SessionHelper.getMainViewMode();
+    
+    String sessionIdParameter = ArgumentHelper.getWindowParameterString("sessionId");
+    
+    if(sessionIdParameter != null && sessionIdParameter.length() > 0)
+    {
+      // try login
+      logger.debug("Try login with sessionId...");
+      Authorization.authenticate(sessionIdParameter);
+    }
 
     String username = ArgumentHelper.getWindowParameterString("usr");
     String password = ArgumentHelper.getWindowParameterString("pw");

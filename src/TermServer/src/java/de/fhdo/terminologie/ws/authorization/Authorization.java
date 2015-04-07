@@ -20,6 +20,7 @@ import com.sun.xml.ws.developer.SchemaValidation;
 import de.fhdo.terminologie.helper.PropertiesHelper;
 import de.fhdo.terminologie.helper.SecurityHelper;
 import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
+import de.fhdo.terminologie.ws.authorization.types.AuthenticateResponseType;
 import de.fhdo.terminologie.ws.authorization.types.ChangePasswordResponseType;
 import de.fhdo.terminologie.ws.authorization.types.LoginResponseType;
 import de.fhdo.terminologie.ws.authorization.types.LogoutResponseType;
@@ -51,7 +52,7 @@ public class Authorization
     //SecurityHelper.applyIPAdress(parameter.getLogin(), webServiceContext);
     IAuthorization auth = getAuthorizationClass();
 
-    if(auth != null)
+    if (auth != null)
       return auth.Login(SecurityHelper.getIp(webServiceContext), parameterList);
     else
     {
@@ -74,8 +75,8 @@ public class Authorization
      return logout.Logout(parameter);*/
 
     IAuthorization auth = getAuthorizationClass();
-    
-    if(auth != null)
+
+    if (auth != null)
       return auth.Logout(SecurityHelper.getIp(webServiceContext), parameterList);
     else
     {
@@ -96,7 +97,7 @@ public class Authorization
     {
       logger.debug("getAuthorizationClass() - get class from name: " + className);
       Class authClass = Class.forName(className);
-      return (IAuthorization)authClass.newInstance();
+      return (IAuthorization) authClass.newInstance();
     }
     catch (Exception ex)
     {
@@ -105,24 +106,61 @@ public class Authorization
     }
     return null;
   }
-  
+
   public static AuthenticateInfos authenticate(String ip, String loginToken)
   {
     IAuthorization auth = getAuthorizationClass();
-    
-    if(auth != null)
+
+    if (auth != null)
       return auth.Authenticate(ip, loginToken);
-    
+
     return null;
   }
-  
-  
+
+  @WebMethod(operationName = "Authenticate")
+  public AuthenticateResponseType Authenticate(@WebParam(name = "parameter") List<String> parameterList)
+  {
+    //SecurityHelper.applyIPAdress(parameter.getLogin(), webServiceContext);
+    IAuthorization auth = getAuthorizationClass();
+
+    if (auth != null)
+    {
+      AuthenticateResponseType response = new AuthenticateResponseType();
+      response.setReturnInfos(new ReturnType());
+      
+      AuthenticateInfos infos = auth.Authenticate(SecurityHelper.getIp(webServiceContext), parameterList.get(0));
+      
+      if (infos.isLoggedIn())
+      {
+        response.getReturnInfos().setMessage("Authorization confirmed.");
+        response.getReturnInfos().setStatus(ReturnType.Status.OK);
+        response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
+      }
+      else
+      {
+        response.getReturnInfos().setMessage("Authorization denied.");
+        response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+        response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
+      }
+      return response;
+    }
+    else
+    {
+      AuthenticateResponseType response = new AuthenticateResponseType();
+      response.setReturnInfos(new ReturnType());
+      response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
+      response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+      response.getReturnInfos().setMessage("No Authorization class found, please specify a class name in the termserver.properties file located in tomcat/conf. Please see the documentation for more information.");
+      return response;
+    }
+  }
+
   public ChangePasswordResponseType ChangePassword(@WebParam(name = "parameter") List<String> parameterList)
   {
     //SecurityHelper.applyIPAdress(parameter.getLogin(), webServiceContext);
     IAuthorization auth = getAuthorizationClass();
 
-    if(auth != null)
+    if (auth != null)
       return auth.ChangePassword(SecurityHelper.getIp(webServiceContext), parameterList);
     else
     {

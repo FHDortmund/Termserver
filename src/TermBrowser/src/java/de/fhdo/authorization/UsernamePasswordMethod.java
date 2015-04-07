@@ -22,6 +22,7 @@ import de.fhdo.helper.MD5;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.logging.LoggingOutput;
+import de.fhdo.terminologie.ws.authorization.AuthenticateResponse;
 import de.fhdo.terminologie.ws.authorization.LoginResponse;
 import de.fhdo.terminologie.ws.authorization.LogoutResponseType;
 import de.fhdo.terminologie.ws.authorization.Status;
@@ -146,6 +147,37 @@ public class UsernamePasswordMethod implements IAuthorization
     {
       LoggingOutput.outputException(ex, this);
     }
+    return false;
+  }
+
+  public boolean authenticate(String sessionId)
+  {
+    List<String> parameterList = new LinkedList<String>();
+    parameterList.add(sessionId);
+
+    AuthenticateResponse.Return response = WebServiceHelper.authenticate(parameterList);
+    logger.debug("Antwort: " + response.getReturnInfos().getMessage());
+    logger.debug("Antwort-Status: " + response.getReturnInfos().getStatus().name());
+
+    if (response.getReturnInfos().getStatus() == Status.OK)
+    {
+      // Hauptseite aufrufen
+      //CookieHelper.removeCookie("show_captcha");
+      //CookieHelper.setCookie("username", username);
+
+      logger.debug("Authenticate erfolgreich, Session-ID: " + sessionId);
+      //SessionHelper.setValue("session_id", response.getParameterList().get(0));
+      //SessionHelper.setValue("user_name", username);
+      
+      SessionHelper.setValue("session_id", sessionId);
+      //SessionHelper.setValue("user_name", username);
+
+      //Clients.showBusy("Login erfolgreich\n\nTermBrowser wird geladen...");
+      //Executions.sendRedirect("/gui/main/main.zul");
+      //Executions.getCurrent().sendRedirect("../../TermBrowser/gui/main/main.zul?" + "p1=" + userAndPseudEnc);
+      return true;
+    }
+    
     return false;
   }
 
