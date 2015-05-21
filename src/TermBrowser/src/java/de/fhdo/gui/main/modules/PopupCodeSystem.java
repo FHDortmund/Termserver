@@ -347,8 +347,11 @@ public class PopupCodeSystem extends Window implements AfterCompose, IUpdateData
   {
     logger.debug("save_MaintainVersion()");
     boolean createNewVersion = ((Checkbox) getFellow("cbNewVersion")).isChecked();
+    boolean copyConcepts = ((Checkbox) getFellow("cbCopyConcepts")).isChecked();
+    
     VersioningType versioning = new VersioningType();
     versioning.setCreateNewVersion(createNewVersion);
+    versioning.setCopyConcepts(copyConcepts);
 
     logger.debug("createNewVersion: " + createNewVersion);
     if (codeSystemVersion == null)

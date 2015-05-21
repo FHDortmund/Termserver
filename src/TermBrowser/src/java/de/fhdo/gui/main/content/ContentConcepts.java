@@ -16,6 +16,7 @@
  */
 package de.fhdo.gui.main.content;
 
+import de.fhdo.Definitions;
 import de.fhdo.gui.main.TreeAndContent;
 import de.fhdo.gui.main.modules.AssociationEditor;
 import de.fhdo.gui.main.modules.PopupCodeSystem;
@@ -27,11 +28,19 @@ import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.ParameterHelper;
 import de.fhdo.helper.SendBackHelper;
 import de.fhdo.helper.SessionHelper;
+import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.interfaces.IUpdate;
 import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.logging.LoggingOutput;
 import de.fhdo.models.CodesystemGenericTreeModel;
+import de.fhdo.models.ValuesetGenericTreeModel;
 import de.fhdo.models.comparators.ComparatorCodesystemVersions;
+import de.fhdo.terminologie.ws.authoring.Status;
+import de.fhdo.terminologie.ws.authoring.UpdateCodeSystemVersionStatusRequestType;
+import de.fhdo.terminologie.ws.authoring.UpdateCodeSystemVersionStatusResponse;
+import de.fhdo.terminologie.ws.authoring.UpdateValueSetStatus;
+import de.fhdo.terminologie.ws.authoring.UpdateValueSetStatusRequestType;
+import de.fhdo.terminologie.ws.authoring.UpdateValueSetStatusResponse;
 import de.fhdo.terminologie.ws.search.SearchType;
 import java.util.Collections;
 import java.util.HashMap;
@@ -308,6 +317,10 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       cbVersions.setModel(new ListModelList<CodeSystemVersion>(list));
       if (codeSystemVersion != null)
         selectedVersionId = codeSystemVersion.getVersionId();
+      
+      // select cached version
+      //for(CodeSystemVersion csv_list : cbVersions.getItems())
+      //cbVersions.setSelectedIndex(MODAL);
     }
     else if (valueSet != null)
     {
@@ -326,8 +339,11 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
         {
           if (o instanceof CodeSystemVersion)
           {
+            
             CodeSystemVersion csv = (CodeSystemVersion) o;
             item.setLabel(csv.getName());
+            
+            //logger.debug("render csv with id: " + csv.getVersionId());
 
             if (csv.getVersionId().longValue() == selectedVersionIdFinal)
             {
@@ -365,6 +381,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     if (o instanceof CodeSystemVersion)
     {
       CodeSystemVersion csv = (CodeSystemVersion) o;
+      csv.setCodeSystem(codeSystem);
       SessionHelper.setValue("selectedCSV", csv);
       SessionHelper.setValue("selectedVSV", null);
 
@@ -378,6 +395,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     else if (o instanceof ValueSetVersion)
     {
       ValueSetVersion vsv = (ValueSetVersion) o;
+      vsv.setValueSet(valueSet);
       SessionHelper.setValue("selectedVSV", vsv);
       SessionHelper.setValue("selectedCSV", null);
 
@@ -397,20 +415,20 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
     //if(concepts == null)
     concepts = new ConceptsTree(treeConcepts, this);
-    getConcepts().setDragAndDrop(dragAndDrop);
-    getConcepts().setUpdateDropListener(updateListener);
+    concepts.setDragAndDrop(dragAndDrop);
+    concepts.setUpdateDropListener(updateListener);
 
     if (codeSystem != null)
-      getConcepts().setCodeSystemId(codeSystem.getId());
+      concepts.setCodeSystemId(codeSystem.getId());
     else if (valueSet != null)
-      getConcepts().setValueSetId(valueSet.getId());
+      concepts.setValueSetId(valueSet.getId());
 
     if (codeSystemVersion != null)
-      getConcepts().setCodeSystemVersionId(codeSystemVersion.getVersionId());
+      concepts.setCodeSystemVersionId(codeSystemVersion.getVersionId());
     else if (valueSetVersion != null)
-      getConcepts().setValueSetVersionId(valueSetVersion.getVersionId());
+      concepts.setValueSetVersionId(valueSetVersion.getVersionId());
 
-    getConcepts().initData();
+    concepts.initData();
 
   }
 
@@ -429,7 +447,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       }
     }
 
-    getConcepts().onConceptSelect(false, true);
+    concepts.onConceptSelect(false, true);
     showButtons();
   }
 
@@ -464,6 +482,89 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   {
     if (SessionHelper.isUserLoggedIn())
       getConcepts().deleteConcept();
+  }
+
+  public void onDeleteVersionClicked()
+  {
+    if (SessionHelper.isUserLoggedIn())
+    {
+      try
+      {
+        if (Messagebox.show(Labels.getLabel("common.deactivateCSVersion"), Labels.getLabel("common.deleteSystem"), Messagebox.YES | Messagebox.NO, Messagebox.QUESTION)
+            == Messagebox.YES)
+        {
+          if (codeSystem != null)
+          {
+            UpdateCodeSystemVersionStatusRequestType request = new UpdateCodeSystemVersionStatusRequestType();
+            request.setLoginToken(SessionHelper.getSessionId());
+            request.setCodeSystem(new CodeSystem());
+            CodeSystemVersion csv = new CodeSystemVersion();
+            csv.setVersionId(codeSystemVersion.getVersionId());
+            csv.setStatus(Definitions.STATUS_CODESYSTEMVERSION_INVISIBLE);
+            request.getCodeSystem().getCodeSystemVersions().add(csv);
+            
+            UpdateCodeSystemVersionStatusResponse.Return response = WebServiceHelper.updateCodeSystemVersionStatus(request);
+            
+            if(response.getReturnInfos().getStatus() == Status.OK)
+            {
+              // reload cs tree
+              SessionHelper.setValue("selectedCS", null);
+              SessionHelper.setValue("selectedVS", null);
+              
+              CodesystemGenericTreeModel.getInstance().reloadData();
+              
+              Executions.sendRedirect(null);
+              return;
+            }
+            else
+            {
+              Messagebox.show(response.getReturnInfos().getMessage(), Labels.getLabel("common.error"), Messagebox.OK, Messagebox.ERROR);
+            }
+          }
+          else if (valueSet != null)
+          {
+            UpdateValueSetStatusRequestType request = new UpdateValueSetStatusRequestType();
+            request.setLoginToken(SessionHelper.getSessionId());
+            request.setValueSet(new ValueSet());
+            ValueSetVersion vsv = new ValueSetVersion();
+            vsv.setVersionId(valueSetVersion.getVersionId());
+            vsv.setStatus(Definitions.STATUS_CODESYSTEMVERSION_INVISIBLE);
+            request.getValueSet().getValueSetVersions().add(vsv);
+            
+            UpdateValueSetStatusResponse.Return response = WebServiceHelper.updateValueSetStatus(request);
+            
+            if(response.getReturnInfos().getStatus() == Status.OK)
+            {
+              // reload vs tree
+              SessionHelper.setValue("selectedCS", null);
+              SessionHelper.setValue("selectedVS", null);
+              
+              ValuesetGenericTreeModel.getInstance().reloadData();
+              
+              Executions.sendRedirect(null);
+              return;
+            }
+            else
+            {
+              Messagebox.show(response.getReturnInfos().getMessage(), Labels.getLabel("common.error"), Messagebox.OK, Messagebox.ERROR);
+            }
+          }
+          else
+          {
+            logger.debug("codeSystem and valueSet are null");
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        LoggingOutput.outputException(e, this);
+      }
+
+      //if (allowEditing)
+      //TreeAndContent.popupCodeSystem(codeSystem, PopupCodeSystem.EDITMODES.MAINTAIN, false, this);
+      //else
+      //  TreeAndContent.popupCodeSystem(cs, PopupCodeSystem.EDITMODES.DETAILSONLY, false, this);
+    }
   }
 
   public void onEditVersionClicked()
@@ -638,6 +739,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     ComponentHelper.setVisibleAndDisabled("buttonAssumeConcept", sendBack, csev == null, this);
 
     ComponentHelper.setVisible("buttonEditVersion", loggedIn, this);
+    ComponentHelper.setVisible("buttonDeleteVersion", loggedIn, this);
 
     // hide buttons, when in SELECT-Mode
     ComponentHelper.setVisible("buttonExport", externMode == false, this);

@@ -451,6 +451,8 @@ public class UsernamePasswordMethod implements IAuthorization
 
   public AuthenticateInfos Authenticate(String IP, String loginToken)
   {
+    logger.debug("UsernamePasswordMethod.java - Authenticate with loginToken: " + loginToken);
+    
     AuthenticateInfos response = new AuthenticateInfos();
     response.setIsAdmin(false);
     response.setLoggedIn(false);

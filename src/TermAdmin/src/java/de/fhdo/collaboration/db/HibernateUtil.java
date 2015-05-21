@@ -21,32 +21,29 @@ import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.SessionFactory;
 
 /**
- * Hibernate Utility class with a convenient method to get Session Factory object.
+ * Hibernate Utility class with a convenient method to get Session Factory
+ * object.
  *
  * @author Robert Mützner
  */
 public class HibernateUtil
 {
+  private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
+  
   private static SessionFactory sessionFactory = null;
 
   private static SessionFactory buildSessionFactory()
   {
     try
     {
-      
-      /*Configuration************************************************************************************************************/  
-      /**/ String path = System.getProperty("catalina.base") + "/conf/kollaboration.hibernate.cfg.xml";       // test
-      /*Productive_AT_PU*********************************************************************************************************/
-      /**/ //String path = System.getProperty("catalina.base") + "/conf/kollaborationPub.hibernate.cfg.xml";    // test public
-      /**/ //String path = "/data0/web/tomcat_pub/conf/kollaborationPub.hibernate.cfg.xml";                     // public prod
-      /**/ //String path = "/data0/web/tomcat_col/conf/kollaboration.hibernate.cfg.xml";                        // kollab prod
-      /**************************************************************************************************************************/
-      /**/  //String path = "/data0/web/tomcat_term1/conf/kollaboration.hibernate.cfg.xml";                     // testSystem BRZ
-      /**************************************************************************************************************************/  
-      
+      String path = System.getProperty("catalina.base") + "/conf/collaboration.hibernate.cfg.xml";
+
       // Create the SessionFactory from hibernate.cfg.xml
       File file = new File(path);
-      SessionFactory sf = new AnnotationConfiguration().configure(file).buildSessionFactory();
+
+      SessionFactory sf = createSessionFactory(new AnnotationConfiguration().configure(file));
+
+      //SessionFactory sf = new AnnotationConfiguration().configure(file).buildSessionFactory();
       //return new Configuration().configure().buildSessionFactory();
       return sf;
     }
@@ -58,12 +55,43 @@ public class HibernateUtil
     }
   }
 
+  private static SessionFactory createSessionFactory(AnnotationConfiguration aconfig)
+  {
+    return aconfig
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Action.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.AssignedTerm.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.ClassAttribute.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Collaborationuser.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Discussion.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Discussiongroup.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Discussiongroupobject.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Domain.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.DomainValue.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Enquiry.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.File.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Link.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Organisation.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Privilege.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Proposal.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Proposalobject.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Proposalstatuschange.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Quote.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Rating.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Role.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Status.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.Statusrel.class)
+        .addAnnotatedClass(de.fhdo.collaboration.db.classes.SysParam.class)
+        .buildSessionFactory();
+  }
+
   public static SessionFactory getSessionFactory()
   {
-      if(sessionFactory == null)
-          sessionFactory = buildSessionFactory();
-      
-      return sessionFactory;
+    if (sessionFactory == null)
+      sessionFactory = buildSessionFactory();
+    
+    logger.debug("getSessionFactory() collab");
+
+    return sessionFactory;
   }
-  
+
 }

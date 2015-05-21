@@ -70,6 +70,23 @@ public class CodeSystemConceptTranslation implements java.io.Serializable
     this.description = description;
   }
 
+  public CodeSystemConceptTranslation(Long id, String term, String termAbbrevation, String languageCd, String description, String meaning, String hints)
+  {
+    this.id = id;
+    this.term = term;
+    this.termAbbrevation = termAbbrevation;
+    this.languageCd = languageCd;
+    this.description = description;
+    this.meaning = meaning;
+    this.hints = hints;
+  }
+  
+   
+  public CodeSystemConceptTranslation copyObject()
+  {
+    return new CodeSystemConceptTranslation(id, term, termAbbrevation, languageCd, description, meaning, hints);
+  }
+
   @Id
   @GeneratedValue(strategy = IDENTITY)
 

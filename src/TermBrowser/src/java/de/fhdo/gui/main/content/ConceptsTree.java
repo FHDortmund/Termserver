@@ -260,7 +260,7 @@ public class ConceptsTree implements IUpdateModal
 
       logger.debug("ListCodeSystemConceptsResponse: " + response.getReturnInfos().getMessage());
 
-      if (response.getReturnInfos().getStatus() == Status.OK)
+      if (response.getReturnInfos().getStatus() == Status.OK && response.getReturnInfos().getCount() > 0)
       {
         cseList = response.getCodeSystemEntity();
 
@@ -846,7 +846,7 @@ public class ConceptsTree implements IUpdateModal
     ListCodeSystemConceptsRequestType parameter = new ListCodeSystemConceptsRequestType();
 
     logger.debug("create reqeust parameter for csv-id: " + codeSystemVersionId);
-    
+
     // CodeSystemEntity
     parameter.setCodeSystemEntity(new CodeSystemEntity());
 
@@ -857,7 +857,7 @@ public class ConceptsTree implements IUpdateModal
       csvem.setIsMainClass(true);
       parameter.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().add(csvem);
     }
-    
+
     logger.debug("onlyMainClasses: " + onlyMainClasses);
     logger.debug("codeSystemVersionId: " + codeSystemVersionId);
 
@@ -900,26 +900,26 @@ public class ConceptsTree implements IUpdateModal
       csc.setIsPreferred(searchPreferred);
 
       parameter.setCodeSystemEntity(cse);
-      
+
       logger.debug("add searchTerm: " + searchTerm);
       logger.debug("add searchCode: " + searchCode);
     }
 
     logger.debug("Status Visibility: " + PropertiesHelper.getInstance().isGuiShowOnlyVisibleConcepts());
-    
+
     //boolean b = SessionHelper.getBoolValue("showInvisibleConcepts", !PropertiesHelper.getInstance().isGuiShowOnlyVisibleConcepts());
     if (SessionHelper.getBoolValue("showInvisibleConcepts", !PropertiesHelper.getInstance().isGuiShowOnlyVisibleConcepts()) == false)
     {
-      if(parameter.getCodeSystemEntity() == null)
+      if (parameter.getCodeSystemEntity() == null)
         parameter.setCodeSystemEntity(new CodeSystemEntity());
-      if(parameter.getCodeSystemEntity().getCodeSystemEntityVersions() == null || parameter.getCodeSystemEntity().getCodeSystemEntityVersions().size() == 0)
+      if (parameter.getCodeSystemEntity().getCodeSystemEntityVersions() == null || parameter.getCodeSystemEntity().getCodeSystemEntityVersions().size() == 0)
       {
         CodeSystemEntityVersion csev = new CodeSystemEntityVersion();
         parameter.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev);
       }
-      
+
       parameter.getCodeSystemEntity().getCodeSystemEntityVersions().get(0).setStatusVisibility(Definitions.STATUS_VISIBILITY_VISIBLE);
-      
+
       logger.debug("show only visible concepts");
     }
 
@@ -935,7 +935,7 @@ public class ConceptsTree implements IUpdateModal
     {
       parameter.setLookForward(false);
     }
-    
+
     logger.debug("setLookForward: " + parameter.isLookForward());
 
     // sort parameter
@@ -982,110 +982,118 @@ public class ConceptsTree implements IUpdateModal
   {
     logger.debug("update tree, edited: " + edited);
 
-    if (o instanceof CodeSystemEntity)
+    if (o == null || treeModel == null)
     {
-      CodeSystemEntity cse = (CodeSystemEntity) o;
+      logger.debug("object is null, reload tree...");
+      initData();
+    }
+    else
+    {
+      if (o instanceof CodeSystemEntity)
+      {
+        CodeSystemEntity cse = (CodeSystemEntity) o;
 
       //TreeNode newTreeNode = new TreeNode(csev);
-      //TreeNode tn = new DefaultTreeNode(null, createTreeNodeCSEList(cseList));
-      CodeSystemEntityVersion csev = cse.getCodeSystemEntityVersions().get(0);
-      csev.setCodeSystemEntity(cse);
+        //TreeNode tn = new DefaultTreeNode(null, createTreeNodeCSEList(cseList));
+        CodeSystemEntityVersion csev = cse.getCodeSystemEntityVersions().get(0);
+        csev.setCodeSystemEntity(cse);
 
-      TreeNode tn = null;
+        TreeNode tn = null;
 
-      if (edited)
-      {
-        // update data in Treeitem
-        logger.debug("update data in Treeitem");
-
-        Treeitem treeItem = treeConcepts.getSelectedItem();
-        if (treeItem != null)
+        if (edited)
         {
-          TreeNode selectedTreeNode = (TreeNode) treeItem.getAttribute("treenode");
+          // update data in Treeitem
+          logger.debug("update data in Treeitem");
 
-          if (selectedTreeNode != null)
+          Treeitem treeItem = treeConcepts.getSelectedItem();
+          if (treeItem != null)
           {
-            if (selectedTreeNode.isLeaf())
-            {
-              selectedTreeNode.setData(csev);
-            }
-            else
-            {
-              TreeNode parent = selectedTreeNode.getParent();
-              int index = parent.getIndex(selectedTreeNode);
-              parent.remove(selectedTreeNode);
-              selectedTreeNode.setData(csev);
-              parent.insert(selectedTreeNode, index);
+            TreeNode selectedTreeNode = (TreeNode) treeItem.getAttribute("treenode");
 
-              selectedTreeNode.getChildren().clear();
-
-              // select treeitem and set loaded = fals to force reloading
-              logger.debug("search treeitem...");
-              for (Treeitem ti : treeConcepts.getItems())
+            if (selectedTreeNode != null)
+            {
+              if (selectedTreeNode.isLeaf())
               {
-                CodeSystemEntityVersion csev_ti = ti.getValue();
-                if (csev_ti.getVersionId().longValue() == csev.getVersionId())
+                selectedTreeNode.setData(csev);
+              }
+              else
+              {
+                TreeNode parent = selectedTreeNode.getParent();
+                int index = parent.getIndex(selectedTreeNode);
+                parent.remove(selectedTreeNode);
+                selectedTreeNode.setData(csev);
+                parent.insert(selectedTreeNode, index);
+
+                selectedTreeNode.getChildren().clear();
+
+                // select treeitem and set loaded = fals to force reloading
+                logger.debug("search treeitem...");
+                for (Treeitem ti : treeConcepts.getItems())
                 {
-                  // found
-                  logger.debug("found");
-                  ti.setAttribute("loaded", false);
-                  treeConcepts.selectItem(ti);
-                  break;
+                  CodeSystemEntityVersion csev_ti = ti.getValue();
+                  if (csev_ti.getVersionId().longValue() == csev.getVersionId())
+                  {
+                    // found
+                    logger.debug("found");
+                    ti.setAttribute("loaded", false);
+                    treeConcepts.selectItem(ti);
+                    break;
+                  }
                 }
               }
             }
           }
-        }
 
-      }
-      else
-      {
-        if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null
-            && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
-        {
-          // new sub concept
-          Treeitem treeItem = treeConcepts.getSelectedItem();
-          if (treeItem != null)
-          {
-            tn = new DefaultTreeNode(csev);
-
-            TreeNode selectedTreeNode = (TreeNode) treeItem.getAttribute("treenode");
-            if (selectedTreeNode.isLeaf())
-            {
-              // parent has to be recreated
-              logger.debug("recreate treenode");
-              List<TreeNode> children = new LinkedList<TreeNode>();
-              //children.add(tn);
-
-              TreeNode node = new DefaultTreeNode(treeItem.getValue(), children);
-
-              TreeNode parent = selectedTreeNode.getParent();
-              int index = parent.getIndex(selectedTreeNode);
-              parent.remove(selectedTreeNode);
-              parent.insert(node, index);
-            }
-            else
-            {
-              // add to existing childs
-              logger.debug("add new treenode");
-              selectedTreeNode.add(tn);
-            }
-          }
         }
         else
         {
-          // new root concept
-          tn = new DefaultTreeNode(csev);
+          if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null
+              && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
+          {
+            // new sub concept
+            Treeitem treeItem = treeConcepts.getSelectedItem();
+            if (treeItem != null)
+            {
+              tn = new DefaultTreeNode(csev);
 
-          TreeNode tnRoot = (DefaultTreeNode) treeModel.getRoot();
-          tnRoot.add(tn);
-        }
+              TreeNode selectedTreeNode = (TreeNode) treeItem.getAttribute("treenode");
+              if (selectedTreeNode.isLeaf())
+              {
+                // parent has to be recreated
+                logger.debug("recreate treenode");
+                List<TreeNode> children = new LinkedList<TreeNode>();
+                //children.add(tn);
+
+                TreeNode node = new DefaultTreeNode(treeItem.getValue(), children);
+
+                TreeNode parent = selectedTreeNode.getParent();
+                int index = parent.getIndex(selectedTreeNode);
+                parent.remove(selectedTreeNode);
+                parent.insert(node, index);
+              }
+              else
+              {
+                // add to existing childs
+                logger.debug("add new treenode");
+                selectedTreeNode.add(tn);
+              }
+            }
+          }
+          else
+          {
+            // new root concept
+            tn = new DefaultTreeNode(csev);
+
+            TreeNode tnRoot = (DefaultTreeNode) treeModel.getRoot();
+            tnRoot.add(tn);
+          }
 
         //treeConcepts.getModel().
-        // addChildElement
-      }
+          // addChildElement
+        }
 
-      //treeModel = new DefaultTreeModel(tnRoot);
+        //treeModel = new DefaultTreeModel(tnRoot);
+      }
     }
   }
 

@@ -1410,9 +1410,11 @@ public class ListCodeSystemConcepts
               + " LEFT JOIN code_system_entity_version_association cseva2 ON cseva2.codeSystemEntityVersionId2=csc2.versionId";
         }
 
+        
+        
         String sqlCount = "SELECT COUNT(*) FROM code_system_concept csc"
             + " JOIN code_system_entity_version csev ON csc.codeSystemEntityVersionId=csev.versionId"
-            + " JOIN code_system_entity cse ON csev.versionId=cse.id"
+            + " JOIN code_system_entity cse ON csev.codeSystemEntityId=cse.id"
             + " JOIN code_system_version_entity_membership csvem ON cse.id=csvem.codeSystemEntityId"
             + " WHERE_TEIL";
 
@@ -1486,6 +1488,8 @@ public class ListCodeSystemConcepts
         // Parameter hinzufügen (immer mit AND verbunden)
         // Gesamt-Anzahl lesen
         String where = parameterHelper.getWhere("");
+        
+        where += " AND csev.versionId=cse.currentVersionId";
 
         //sqlCount = "SELECT COUNT(DISTINCT cse.id) FROM " + sqlCount.replaceAll("WHERE_TEIL", where);
         sqlCount = sqlCount.replaceAll("WHERE_TEIL", where);

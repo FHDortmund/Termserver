@@ -61,6 +61,8 @@ public class MaintainCodeSystemVersion
     if (validateParameter(parameter, response) == false)
       return response;
 
+    logger.debug("try log in");
+    
     // Login-Informationen auswerten (gilt für jeden Webservice)    
     boolean loggedIn = false;
     if (parameter != null && parameter.getLoginToken() != null)
@@ -68,6 +70,8 @@ public class MaintainCodeSystemVersion
       AuthenticateInfos loginInfoType = Authorization.authenticate(ipAddress, parameter.getLoginToken());
       loggedIn = loginInfoType != null;
     }
+    
+    logger.debug("loggedIn: " + loggedIn);
 
     if (loggedIn == false)
     {
@@ -80,12 +84,16 @@ public class MaintainCodeSystemVersion
 ////////// Der eigentliche Teil  /////////////////////////////////////////////// 
     try
     {
+      logger.debug("begin maintain csv");
+      
       // Für die Statusmeldung ob eine neue VSV angelegt oder die alte verändert wurde
       String sCreateNewVersionMessage = "";
 
       // Hibernate-Block, Session öffnen
       org.hibernate.Session hb_session = HibernateUtil.getSessionFactory().openSession();
+      logger.debug("session opened");
       hb_session.getTransaction().begin();
+      logger.debug("transaction started");
 
       // CodeSystem und CodeSystemVersion zum Speichern vorbereiten 
       CodeSystem cs_Request = parameter.getCodeSystem();
@@ -97,8 +105,14 @@ public class MaintainCodeSystemVersion
         // versuche cs aus der DB zu laden und in cs_db, csv_db zu speichern
         if (cs_Request.getId() != null && cs_Request.getId() > 0)
         {
+          logger.debug("getting cs...");
+          
           CodeSystem cs_db = (CodeSystem) hb_session.get(CodeSystem.class, cs_Request.getId());
+          logger.debug("cs: " + cs_db.getName());
+          
+          logger.debug("getting csv...");
           CodeSystemVersion csv_db = (CodeSystemVersion) hb_session.get(CodeSystemVersion.class, csv_Request.getVersionId());
+          logger.debug("csv: " + csv_db.getName());
 
           // Name soll in der neuen Version geändert werden können
           if (cs_Request.getName() != null && cs_Request.getName().length() > 0)
@@ -138,8 +152,7 @@ public class MaintainCodeSystemVersion
             csvNew.setInsertTimestamp(new java.util.Date()); // Aktuelles Datum          
             csvNew.setStatus(Definitions.STATUS_CODES.ACTIVE.getCode());
             csvNew.setStatusDate(new java.util.Date()); // Aktuelles Datum 
-            
-            
+
           }
           // Alte Version editieren:  csvNew = csv aus DB
           else
@@ -188,20 +201,27 @@ public class MaintainCodeSystemVersion
           // UnderLicence setzen falls vorhanden
           if (csv_Request.getUnderLicence() != null)
             csvNew.setUnderLicence(csv_Request.getUnderLicence());
-          
+
           csvNew.setLastChangeDate(new java.util.Date());
+          
 
           // csvNew schon mal in der DB Speichern, damit ggf eine Id vergeben wird die dann gleich bei den licenceTypes benötigt wird
-          if (parameter.getVersioning().getCreateNewVersion())
+          if (parameter.getVersioning() != null && parameter.getVersioning().getCreateNewVersion() != null &&
+              parameter.getVersioning().getCreateNewVersion())
+          {
+            logger.debug("save csvNew");
             hb_session.save(csvNew);
+            logger.debug("csvNew saved: " + csvNew.getVersionId());
+          }
 
           // für alle angegebenen licenceTypes
           if (csv_Request.getLicenceTypes() != null && csv_Request.getLicenceTypes().isEmpty() == false)
           {
-            Iterator<LicenceType> itLt_Request = csv_Request.getLicenceTypes().iterator(),
-                    itLt_db;
-            LicenceType lt_Request,
-                    lt_New = null;
+            logger.debug("apply licences...");
+            
+            Iterator<LicenceType> itLt_Request = csv_Request.getLicenceTypes().iterator();
+            LicenceType lt_Request, lt_New = null;
+            
             while (itLt_Request.hasNext())
             {
               lt_Request = itLt_Request.next();
@@ -218,7 +238,7 @@ public class MaintainCodeSystemVersion
               // Alte CSVersion bearbeiten bzw. ihre licenceTypes
               else
               {
-                                // licenceType aus der DB auslesen, über csvNew.getLicenceType() nur möglich wenn man mit schleife
+                // licenceType aus der DB auslesen, über csvNew.getLicenceType() nur möglich wenn man mit schleife
                 // das ganze set nach der passenden ID durchsucht.  Sollte über hb_session.get() schneller gehen oder?
                 LicenceType lt_DB = (LicenceType) hb_session.get(LicenceType.class, lt_Request.getId());
 
@@ -239,7 +259,11 @@ public class MaintainCodeSystemVersion
                 hb_session.save(lt_DB);
               }
             }
+            
+            logger.debug("licences applied");
           }
+          
+          logger.debug("save csv_new");
 
           // In DB speichern damit csvNew eine ID bekommt falls es eine neue Version ist, ansonsten wird das Objekt aktualisiert
           hb_session.save(csvNew);
@@ -254,11 +278,38 @@ public class MaintainCodeSystemVersion
             cs_db.getCodeSystemVersions().add(csvNew);
           }
 
+          logger.debug("update cs_db");
           hb_session.update(cs_db);
-          
-          if(parameter.getAssignTaxonomy() != null && parameter.getAssignTaxonomy().booleanValue())
+
+          if (parameter.getAssignTaxonomy() != null && parameter.getAssignTaxonomy().booleanValue())
           {
             assignTaxonomyValues(cs_db.getId(), cs_Request.getDomainValues(), hb_session);
+          }
+
+          if (parameter.getVersioning() != null && parameter.getVersioning().getCopyConcepts() != null && parameter.getVersioning().getCopyConcepts().booleanValue())
+          {
+            // copy all concepts from previous version to new version
+            CopyContent cc = new CopyContent();
+            if (cc.copyContent(csvNew.getPreviousVersionId(), csvNew.getVersionId(), hb_session) == false)
+            {
+              response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
+              response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+              response.getReturnInfos().setMessage("Error at 'MaintainCodeSystemVersion', content could not be copied to new version!");
+
+              hb_session.getTransaction().rollback();
+              return response;
+            }
+          }
+
+          if (cs_Request.getId() > 0 && csvNew.getVersionId() > 0)
+          {
+            hb_session.getTransaction().commit();
+          }
+          else
+          {
+            // Änderungen nicht erfolgreich
+            logger.warn("[MaintainCodeSystemVersion.java] Änderungen nicht erfolgreich");
+            hb_session.getTransaction().rollback();
           }
         }
       }
@@ -274,16 +325,7 @@ public class MaintainCodeSystemVersion
       finally
       {
         // Transaktion abschließen
-        if (cs_Request.getId() > 0 && csvNew.getVersionId() > 0)
-        {
-          hb_session.getTransaction().commit();
-        }
-        else
-        {
-          // Änderungen nicht erfolgreich
-          logger.warn("[MaintainCodeSystemVersion.java] Änderungen nicht erfolgreich");
-          hb_session.getTransaction().rollback();
-        }
+
         hb_session.close();
       }
       if (cs_Request.getId() > 0 && csvNew.getVersionId() > 0)
@@ -305,42 +347,42 @@ public class MaintainCodeSystemVersion
     }
     return response;
   }
-  
+
   public void assignTaxonomyValues(long codeSystemId, Set<DomainValue> values, Session hb_session)
   {
     logger.debug("assignTaxonomyValues...");
     logger.debug("codeSystemId: " + codeSystemId);
-    
-    if(values == null)
+
+    if (values == null)
       return;
-    
+
     logger.debug("count: " + values.size());
-    
+
     String hql = "select distinct dv from DomainValue dv"
-            + " left join dv.codeSystems cs"
-            + " where cs.id=:id";
-    
+        + " left join dv.codeSystems cs"
+        + " where cs.id=:id";
+
     logger.debug("hql: " + hql);
     Query q = hb_session.createQuery(hql);
     q.setParameter("id", codeSystemId);
-    
+
     List<DomainValue> dvList_db = q.list();
     logger.debug("count domain values: " + dvList_db.size());
-    
+
     // check adding new values
-    for(DomainValue dv : values)
+    for (DomainValue dv : values)
     {
       boolean found = false;
-      for(DomainValue dv_db : dvList_db)
+      for (DomainValue dv_db : dvList_db)
       {
-        if(dv_db.getDomainValueId().longValue() == dv.getDomainValueId())
+        if (dv_db.getDomainValueId().longValue() == dv.getDomainValueId())
         {
           found = true;
           break;
         }
       }
-      
-      if(found == false)
+
+      if (found == false)
       {
         // add new value
         String sql = "INSERT INTO domain_value_has_code_system VALUES(" + dv.getDomainValueId() + "," + codeSystemId + ")";
@@ -348,32 +390,30 @@ public class MaintainCodeSystemVersion
         hb_session.createSQLQuery(sql).executeUpdate();
       }
     }
-    
+
     // check removing values
-    for(DomainValue dv_db : dvList_db)
+    for (DomainValue dv_db : dvList_db)
     {
       boolean found = false;
-      for(DomainValue dv : values)
+      for (DomainValue dv : values)
       {
-        if(dv_db.getDomainValueId().longValue() == dv.getDomainValueId())
+        if (dv_db.getDomainValueId().longValue() == dv.getDomainValueId())
         {
           found = true;
           break;
         }
       }
-      
-      if(found == false)
+
+      if (found == false)
       {
         // remove existing value
-        String sql = "DELETE FROM domain_value_has_code_system WHERE domain_value_domainValueId=" + dv_db.getDomainValueId() + 
-                " and code_system_id=" + codeSystemId;
+        String sql = "DELETE FROM domain_value_has_code_system WHERE domain_value_domainValueId=" + dv_db.getDomainValueId()
+            + " and code_system_id=" + codeSystemId;
         logger.debug("sql: " + sql);
         hb_session.createSQLQuery(sql).executeUpdate();
       }
     }
-    
-    
-    
+
   }
 
   private boolean validateParameter(MaintainCodeSystemVersionRequestType request, MaintainCodeSystemVersionResponseType response)

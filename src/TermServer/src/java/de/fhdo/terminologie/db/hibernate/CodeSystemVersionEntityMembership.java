@@ -67,6 +67,20 @@ public class CodeSystemVersionEntityMembership implements java.io.Serializable
     this.isMainClass = isMainClass;
   }
 
+  public CodeSystemVersionEntityMembership(Boolean isAxis, Boolean isMainClass, Long orderNr)
+  {
+    this.isAxis = isAxis;
+    this.isMainClass = isMainClass;
+    this.orderNr = orderNr;
+  }
+  
+  
+  
+  public CodeSystemVersionEntityMembership copyObject()
+  {
+    return new CodeSystemVersionEntityMembership(isAxis, isMainClass, orderNr);
+  }
+
   @EmbeddedId
 
   @AttributeOverrides(

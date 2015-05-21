@@ -31,7 +31,8 @@
             <vbox>
               <label id="labelVersion" value="-"/>
               <zscript>
-                labelVersion.setValue(de.fhdo.Definitions.VERSION);
+                <!--labelVersion.setValue(de.fhdo.Definitions.VERSION);-->
+                labelVersion.setValue(de.fhdo.helper.VersionHelper.getInstance().getVersion());
               </zscript>
             </vbox>
           </hbox> 
@@ -68,7 +69,8 @@
             </vbox>
             <vbox>
               <label value="${labels.common.pHaas}"/>
-              <label value="${labels.common.rMuetzner}, ${labels.common.sBecker}"/>
+              <!--<label value="${labels.common.rMuetzner}, ${labels.common.sBecker}"/>-->
+              <label value="${labels.common.rMuetzner}"/>
             </vbox>
           </hbox>
           <separator bar="false" width="300px"/> 

@@ -17,6 +17,7 @@
 package de.fhdo.gui.admin;
 
 import de.fhdo.helper.SessionHelper;
+import de.fhdo.logging.LoggingOutput;
 import org.zkoss.zk.ui.event.SelectEvent;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Include;
@@ -37,8 +38,50 @@ public class Admin extends Window implements AfterCompose
   {
     /*if(SessionHelper.isAdmin() == false)
      {
-        Executions.getCurrent().sendRedirect("../../TermBrowser/gui/main/main.zul");
+     Executions.getCurrent().sendRedirect("../../TermBrowser/gui/main/main.zul");
      }*/
+  }
+  
+  public void afterCompose()
+  {
+    String id = "";
+
+    // Set tab mode (term/collab)
+    Object o = SessionHelper.getValue("termadmin_mode");
+    if(o != null && o.equals("collaboration"))
+    {
+      Tabbox tb = (Tabbox) getFellow("tabboxMode");
+      tb.setSelectedIndex(1);
+    }
+    
+    // set saved tab
+    o = SessionHelper.getValue("termadmin_tabid");
+    if (o != null)
+      id = o.toString();
+
+    if (id != null && id.length() > 0)
+    {
+      logger.debug("Goto Page: " + id);
+      try
+      {
+        Tabbox tb = (Tabbox) getFellow("tabboxNavigation");
+        //Tabpanel panel = (Tabpanel) getFellow("tabboxNavigation");
+        Tab tab = (Tab) getFellow(id);
+        int index = tab.getIndex();
+        logger.debug("Index: " + index);
+
+        tb.setSelectedIndex(index);
+
+        tabSelected(id);
+      }
+      catch (Exception e)
+      {
+        tabSelected("tabBenutzer");
+        logger.warn(e.getMessage());
+      }
+    }
+    else
+      tabSelected("tabBenutzer");
   }
 
   public void onNavigationSelect(SelectEvent event)
@@ -50,11 +93,46 @@ public class Admin extends Window implements AfterCompose
     Tab tab = (Tab) event.getReference();
     tabSelected(tab.getId());
   }
-  
-  
 
+  public void onTabSelect(SelectEvent event)
+  {
+    if (logger.isDebugEnabled())
+      logger.debug("onNavigationSelect()");
+
+    try
+    {
+      logger.debug("class: " + event.getReference().getClass().getCanonicalName());
+      Tab tab = (Tab) event.getReference();
+      if (tab.getId().equals("tabTerminology"))
+      {
+        tabSelected(((Tabbox) getFellow("tabboxNavigation")).getSelectedTab().getId());
+        SessionHelper.setValue("termadmin_mode", "terminology");
+      }
+      else if (tab.getId().equals("tabCollaboration"))
+      {
+        tabSelected(((Tabbox) getFellow("tabboxNavigationCollab")).getSelectedTab().getId());
+        SessionHelper.setValue("termadmin_mode", "collaboration");
+      }
+    }
+    catch (Exception ex)
+    {
+      LoggingOutput.outputException(ex, this);
+    }
+  }
+
+  /*public void onTabSelect(SelectEvent event)
+   {
+   if (logger.isDebugEnabled())
+   logger.debug("onTabSelect()");
+    
+   logger.debug("class: " + event.getReference().getClass().getCanonicalName());
+   Tab tab = (Tab) event.getReference();
+   tabSelected(tab.getId());
+   }*/
   private void tabSelected(String ID)
   {
+    logger.debug("tabSelected: " + ID);
+
     if (ID == null || ID.length() == 0)
       return;
 
@@ -114,7 +192,25 @@ public class Admin extends Window implements AfterCompose
     {
       includePage("incAssociations", "/gui/admin/modules/terminology/associations.zul");
     }
-    else logger.debug("ID nicht bekannt: " + ID);
+    // KOLLABORATION
+    else if (ID.equals("tabKollabBenutzer"))
+    {
+      includePage("incKollabBenutzer", "/gui/admin/modules/collaboration/benutzer.zul");
+    }
+    else if (ID.equals("tabKollabWorkflow"))
+    {
+      includePage("incKollabWorkflow", "/gui/admin/modules/collaboration/workflow.zul");
+    }
+    else if (ID.equals("tabKollabDomains"))
+    {
+      includePage("incKollabDomains", "/gui/admin/modules/collaboration/domain.zul");
+    }
+    else if (ID.equals("tabKollabSysParam"))
+    {
+      includePage("incKollabSysParam", "/gui/admin/modules/collaboration/sysParam.zul");
+    }
+    else
+      logger.debug("ID nicht bekannt: " + ID);
 
     SessionHelper.setValue("termadmin_tabid", ID);
   }
@@ -135,36 +231,5 @@ public class Admin extends Window implements AfterCompose
     }
   }
 
-  public void afterCompose()
-  {
-    String id = "";
-
-    Object o = SessionHelper.getValue("termadmin_tabid");
-    if (o != null)
-      id = o.toString();
-
-    if (id != null && id.length() > 0)
-    {
-      logger.debug("Goto Page: " + id);
-      try
-      {
-        Tabbox tb = (Tabbox) getFellow("tabboxNavigation");
-        //Tabpanel panel = (Tabpanel) getFellow("tabboxNavigation");
-        Tab tab = (Tab) getFellow(id);
-        int index = tab.getIndex();
-        logger.debug("Index: " + index);
-
-        tb.setSelectedIndex(index);
-
-        tabSelected(id);
-      }
-      catch (Exception e)
-      {
-        tabSelected("tabBenutzer");
-        logger.warn(e.getMessage());
-      }
-    }
-    else
-      tabSelected("tabBenutzer");
-  }
+  
 }

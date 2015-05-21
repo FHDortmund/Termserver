@@ -1,0 +1,1 @@
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TermBrowserWinApp\TerminologieBrowser\TerminologieBrowser\TerminologieBrowser.Windows\TerminologieBrowser.Windows.csproj;neutral

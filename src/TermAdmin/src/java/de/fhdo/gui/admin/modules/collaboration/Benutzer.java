@@ -17,7 +17,6 @@
 package de.fhdo.gui.admin.modules.collaboration;
 
 import de.fhdo.collaboration.db.HibernateUtil;
-import de.fhdo.collaboration.db.classes.AssignedTerm;
 import de.fhdo.collaboration.db.classes.Collaborationuser;
 import de.fhdo.collaboration.db.classes.Discussiongroup;
 import de.fhdo.interfaces.IUpdateModal;
@@ -50,7 +49,7 @@ public class Benutzer extends Window implements AfterCompose, IGenericListAction
   
   public Benutzer()
   {
-    
+    logger.debug("Benutzer() Konstruktor");
   }
 
   public void afterCompose()
@@ -95,6 +94,8 @@ public class Benutzer extends Window implements AfterCompose, IGenericListAction
     List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
     try
     {
+      hb_session.flush();
+      
       //String hql = "from Collaborationuser where hidden=0 AND deleted=0 order by name";
       String hql = "from Collaborationuser order by name";
       logger.debug("hql: " + hql);
@@ -249,7 +250,10 @@ public class Benutzer extends Window implements AfterCompose, IGenericListAction
         Messagebox.show("Fehler beim Löschen des Benutzers: " + e.getLocalizedMessage(), "Benutzer löschen", Messagebox.OK, Messagebox.EXCLAMATION);
         initList();
       }
-      hb_session.close();
+      finally
+      {
+        hb_session.close();
+      }
     }
   }
 

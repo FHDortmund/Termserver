@@ -276,7 +276,10 @@ public class SessionHelper
   {
     org.zkoss.zk.ui.Session session = Sessions.getCurrent();
     if (session != null)
+    {
       session.setAttribute(Name, Value);
+      logger.debug("SessionHelper.setValue() - Name: " + Name + ", Wert: " + Value);
+    }
   }
 
   public static Object getValue(String Name)

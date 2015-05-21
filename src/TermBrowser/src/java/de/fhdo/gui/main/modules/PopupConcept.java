@@ -20,6 +20,7 @@ import de.fhdo.Definitions;
 import de.fhdo.gui.main.content.TreeitemRendererCSEV;
 import de.fhdo.helper.ArgumentHelper;
 import de.fhdo.helper.ComponentHelper;
+import de.fhdo.helper.DateTimeHelper;
 import de.fhdo.helper.DomainHelper;
 import de.fhdo.helper.PropertiesHelper;
 import de.fhdo.helper.SessionHelper;
@@ -35,6 +36,7 @@ import de.fhdo.models.CodesystemGenericTreeModel;
 import de.fhdo.terminologie.ws.authoring.CreateConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.CreateConceptResponse;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptRequestType;
+import de.fhdo.terminologie.ws.authoring.MaintainConceptResponse;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptResponseType;
 import de.fhdo.terminologie.ws.authoring.VersioningType;
 import de.fhdo.terminologie.ws.conceptassociation.CreateConceptAssociationRequestType;
@@ -55,6 +57,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -157,7 +160,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
   private List<CodeSystemEntityVersion> listOntologies;
 
   private IUpdateModal updateListener = null;
-  
+
   private boolean showAllMetadata = false;
 
   public PopupConcept()
@@ -212,7 +215,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
     csevAssociatedVersionId = ArgumentHelper.getWindowArgumentLong("CSEVAssociated"); // für assoziationen   
 
     showAllMetadata = SessionHelper.getBoolValue("ShowAllMetadata", false);
-    
+
     initData();
   }
 
@@ -225,7 +228,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
 
     // fill domain values with selected codes
     DomainHelper.getInstance().fillCombobox((Combobox) getFellow("cbStatus"), de.fhdo.Definitions.DOMAINID_STATUS,
-            csev == null ? "" : "" + csev.getStatusVisibility());
+        csev == null ? "" : "" + csev.getStatusVisibility());
 
     // load data without bindings (dates, ...)
     if (csev.getStatusVisibilityDate() != null)
@@ -236,26 +239,26 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
       ((Datebox) getFellow("dateBoxReleasedAt")).setValue(new Date(csev.getEffectiveDate().toGregorianCalendar().getTimeInMillis()));
 
     ComponentHelper.setVisible("divId", editMode == EDITMODES.CREATE_NEW_VERSION || editMode == EDITMODES.MAINTAIN
-            || editMode == EDITMODES.DETAILSONLY, this);
+        || editMode == EDITMODES.DETAILSONLY, this);
 
     initListMetadata();
 
     showComponents();
-    
+
     // change size when resizing window
     this.addEventListener(Events.ON_SIZE, new EventListener<Event>()
     {
       public void onEvent(Event t) throws Exception
       {
         logger.debug("ON_SIZE");
-        
-        ((Borderlayout)getFellow("borderlayout")).setVflex("100%");
-        ((Tabbox)getFellow("tabboxFilter")).setVflex("100%");
-        
+
+        ((Borderlayout) getFellow("borderlayout")).setVflex("100%");
+        ((Tabbox) getFellow("tabboxFilter")).setVflex("100%");
+
         invalidate();
       }
     });
-    
+
   }
 
   private void showComponents()
@@ -317,7 +320,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
     }
     else
     {
-      logger.debug("load concept details");
+      logger.debug("load concept details, csev-id: " + codeSystemEntityVersionId);
       // load concept details
       ReturnConceptDetailsRequestType parameter = new ReturnConceptDetailsRequestType();
       parameter.setCodeSystemEntity(new CodeSystemEntity());
@@ -332,9 +335,16 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
 
       ReturnConceptDetailsResponse.Return response = WebServiceHelper.returnConceptDetails(parameter);
 
+      logger.debug("WS-response: " + response.getReturnInfos().getMessage());
+
       // keine csev zurueckgekommen (wegen moeglicher Fehler beim WS)
       if (response.getCodeSystemEntity() == null)
+      {
+        Messagebox.show(Labels.getLabel("common.conceptLoadFailure"));
+        this.setVisible(false);
+        this.detach();
         return;
+      }
 
       // load entities
       cse = response.getCodeSystemEntity();
@@ -505,22 +515,22 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
 
   public void showAllMetadata()
   {
-    showAllMetadata = ((Checkbox)getFellow("cbMetadataShowAll")).isChecked();
+    showAllMetadata = ((Checkbox) getFellow("cbMetadataShowAll")).isChecked();
     SessionHelper.setValue("ShowAllMetadata", showAllMetadata);
-    
+
     // reload list
     listMetadataValuesCS = null;
     listMetadataValuesVS = null;
     initListMetadata();
   }
-  
+
   private void initListMetadata()
   {
-    if(listMetadataValuesCS != null && listMetadataValuesVS != null)
+    if (listMetadataValuesCS != null && listMetadataValuesVS != null)
       return;  // already initialized
-    
+
     logger.debug("initListMetadata(), showAllMetadata: " + showAllMetadata);
-    
+
     listMetadataValuesCS = new LinkedList<CodeSystemMetadataValue>();
     listMetadataValuesVS = new LinkedList<ValueSetMetadataValue>();
 
@@ -586,7 +596,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
           meta.setMetadataParameter(mp);
           listMetadataValuesCS.add(meta);
         }
-        
+
         dataList.add(createRowFromMetadataParameter(value, mp));
       }
     }
@@ -604,9 +614,9 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
     genericListMetadata.setButton_delete(false);
     genericListMetadata.setListHeader(header);
     genericListMetadata.setDataList(dataList);
-    
+
     // show list count in tab header
-    ((Tab)getFellow("tabMetadata")).setLabel(Labels.getLabel("common.metadata") + " (" + dataList.size() + ")");
+    ((Tab) getFellow("tabMetadata")).setLabel(Labels.getLabel("common.metadata") + " (" + dataList.size() + ")");
 
   }
 
@@ -660,9 +670,9 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
       genericListTranslation.setButton_delete(false);
       genericListTranslation.setListHeader(header);
       genericListTranslation.setDataList(dataList);
-      
+
       // show list count in tab header
-      ((Tab)getFellow("tabTranslations")).setLabel(Labels.getLabel("common.translations") + " (" + dataList.size() + ")");
+      ((Tab) getFellow("tabTranslations")).setLabel(Labels.getLabel("common.translations") + " (" + dataList.size() + ")");
     }
   }
 
@@ -693,10 +703,21 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
      codeSystemVersion.setExpirationDate(null);*/
     // check mandatory fields
     if ((csc.getCode() == null || csc.getCode().length() == 0)
-            || (csc.getTerm() == null || csc.getTerm().length() == 0))
+        || (csc.getTerm() == null || csc.getTerm().length() == 0))
     {
       Messagebox.show(Labels.getLabel("common.mandatoryFields"), Labels.getLabel("common.requiredField"), Messagebox.OK, Messagebox.EXCLAMATION);
       return;
+    }
+
+    // apply values with no binding
+    try
+    {
+      csev.setEffectiveDate(DateTimeHelper.dateToXMLGregorianCalendar(((Datebox) getFellow("dateBoxReleasedAt")).getValue()));
+      logger.debug("Effective date: " + csev.getEffectiveDate().toString());
+    }
+    catch (Exception e)
+    {
+
     }
 
     // build structure for webservice
@@ -737,13 +758,13 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
       switch (editMode)
       {
         case CREATE:
-          success = save_Create();
+          success = save_Create() > 0;
           break;
         case MAINTAIN:
-          success = save_MaintainVersion();
+          success = save_MaintainVersion() > 0;
           break;
         case CREATE_NEW_VERSION:
-          success = save_MaintainVersion();
+          success = save_MaintainVersion() > 0;
           break;
       }
     }
@@ -755,24 +776,39 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
       success = false;
     }
 
-    if (updateListener != null
-            && (editMode == EDITMODES.MAINTAIN
-            || editMode == EDITMODES.CREATE_NEW_VERSION
-            || editMode == EDITMODES.CREATE))
+    logger.debug("update tree view...");
+    logger.debug("editMode: " + editMode);
+    
+    Checkbox cbNewVersion = (Checkbox) getFellow("cbNewVersion");
+    
+    if (editMode == EDITMODES.CREATE_NEW_VERSION || (editMode == EDITMODES.MAINTAIN && cbNewVersion.isChecked()))
     {
-      // update tree
-
-      updateListener.update(cse, editMode == EDITMODES.MAINTAIN || editMode == EDITMODES.CREATE_NEW_VERSION);
+      updateListener.update(null, true);
+      //this.detach();
+      //Executions.sendRedirect(null);
     }
+    else
+    {
 
-    if (success)
-      this.detach();
+      if (updateListener != null
+          && (editMode == EDITMODES.MAINTAIN
+          || editMode == EDITMODES.CREATE_NEW_VERSION
+          || editMode == EDITMODES.CREATE))
+      {
+        // update tree
+        updateListener.update(cse, editMode == EDITMODES.MAINTAIN || editMode == EDITMODES.CREATE_NEW_VERSION);
+      }
+
+      if (success)
+        this.detach();
+    }
 
   }
 
-  public boolean save_MaintainVersion()
+  public long save_MaintainVersion()
   {
     logger.debug("save_MaintainVersion()");
+    long csev_id = 0;
 
     Checkbox cbNewVersion = (Checkbox) getFellow("cbNewVersion");
 
@@ -797,7 +833,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
       parameter.getCodeSystemEntity().getCodeSystemEntityVersions().clear();
       parameter.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev);
 
-      MaintainConceptResponseType response = WebServiceHelper.maintainConcept(parameter);
+      MaintainConceptResponse.Return response = WebServiceHelper.maintainConcept(parameter);
 
       csev.setCodeSystemEntity(cse);  // das Löschen der cse aus der csev wieder rückgängig machen (war nur für die Anfrage an WS)       
 
@@ -805,10 +841,40 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
       try
       {
         if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
+        {
+          csev_id = response.getCodeSystemEntity().getCurrentVersionId();
+          logger.debug("new csev-id: " + csev_id);
+
           if (parameter.getVersioning().isCreateNewVersion())
             Messagebox.show(Labels.getLabel("popupConcept.newVersionSuccessfullyCreated"));
           else
             Messagebox.show(Labels.getLabel("popupConcept.editConceptSuccessfully"));
+
+          // reload concept to display in tree
+          // load concept details
+          /*ReturnConceptDetailsRequestType parameter2 = new ReturnConceptDetailsRequestType();
+           parameter2.setCodeSystemEntity(new CodeSystemEntity());
+           CodeSystemEntityVersion csev_ws = new CodeSystemEntityVersion();
+           csev_ws.setVersionId(csev_id);
+           parameter2.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev_ws);
+
+           if (SessionHelper.isUserLoggedIn())
+           parameter2.setLoginToken(SessionHelper.getSessionId());
+
+           ReturnConceptDetailsResponse.Return response2 = WebServiceHelper.returnConceptDetails(parameter2);
+           logger.debug("WS-response: " + response2.getReturnInfos().getMessage());
+          
+           if(response.getCodeSystemEntity() != null)
+           cse = response.getCodeSystemEntity();
+           else
+           {
+           Executions.sendRedirect(null);
+           }*/
+          //csev.setVersionId(csev_id);
+          //cse.setCurrentVersionId(csev_id);
+          //cse.setId(response.getCodeSystemEntity().getId());
+          logger.debug("new Version-ID: " + cse.getCurrentVersionId());
+        }
         else
           Messagebox.show(Labels.getLabel("common.error") + "\n" + Labels.getLabel("popupConcept.conceptNotCreated") + "\n\n" + response.getReturnInfos().getMessage());
 
@@ -871,15 +937,16 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
        }*/
     }
 
-    return true;
+    return csev_id;
   }
 
-  public boolean save_Create()
+  public long save_Create()
   {
     logger.debug("save_Create()");
+    long csev_id = 0;
 
     if (checkIfConceptExists(csc.getCode()))
-      return false;
+      return 0;
 
     // Liste leeren, da hier so viele CSVs drin stehen wie es Versionen gibt. Als Parameter darf aber nur genau EINE CSV drin stehen.
     CreateConceptRequestType parameter = new CreateConceptRequestType();
@@ -904,7 +971,9 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
     {
       //Messagebox.show(Labels.getLabel("popupCodeSystem.newCodeSystemsuccessfullyCreated"));
       // die neue cse(v) hat noch keine id. Für Assoziationen aber nötig => aus response auslesen
-      csev.setVersionId(response.getCodeSystemEntity().getCurrentVersionId());
+      csev_id = response.getCodeSystemEntity().getCurrentVersionId();
+
+      csev.setVersionId(csev_id);
       cse.setId(response.getCodeSystemEntity().getId());
       cse.setCurrentVersionId(csev.getVersionId());
 
@@ -929,9 +998,9 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
         logger.debug("to id: " + csevAssociatedVersionId);
 
         CreateConceptAssociationResponse.Return responseAssociation
-                = createAssociation(csevAssociatedVersionId, csev.getVersionId(),
-                        Definitions.ASSOCIATION_KIND.TAXONOMY.getCode(),
-                        PropertiesHelper.getInstance().getAssociationTaxonomyDefaultVersionId());
+            = createAssociation(csevAssociatedVersionId, csev.getVersionId(),
+                Definitions.ASSOCIATION_KIND.TAXONOMY.getCode(),
+                PropertiesHelper.getInstance().getAssociationTaxonomyDefaultVersionId());
 
         try
         {
@@ -965,7 +1034,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
       Messagebox.show(Labels.getLabel("common.error") + "\n" + Labels.getLabel("popupConcept.conceptNotCreated") + "\n\n" + response.getReturnInfos().getMessage());
     }
 
-    return true;
+    return csev_id;
   }
 
   private boolean checkIfConceptExists(String name)
@@ -1056,7 +1125,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
     logger.debug("onCellUpdated()");
 
     if (cellIndex == 1 && row != null && row.getData() != null && row.getData() instanceof MetadataParameter
-            && data != null && data instanceof String)
+        && data != null && data instanceof String)
     {
       logger.debug("set value in list");
 
@@ -1092,12 +1161,12 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
     if (concepts == null || include == null)
       return;
     logger.debug("initConceptList: " + include + ", size: " + concepts.size());
-    
+
     boolean showFilter = false;
 
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    if(showCodeSystemName)
+    if (showCodeSystemName)
       header.add(new GenericListHeaderType(Labels.getLabel("common.codeSystem"), 240, "", showFilter, "String", true, true, false, false));
     header.add(new GenericListHeaderType(Labels.getLabel("common.preferred"), 78, "", showFilter, "Boolean", true, true, false, true));
     header.add(new GenericListHeaderType(Labels.getLabel("common.code"), 150, "", showFilter, "String", true, true, false, false));
@@ -1135,36 +1204,36 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
     GenericListRowType row = new GenericListRowType();
 
     CodeSystemConcept csc2 = csev.getCodeSystemConcepts().get(0);
-    
+
     int index = 0;
 
     GenericListCellType[] cells = new GenericListCellType[showCodeSystemName ? 6 : 5];
-    
-    if(showCodeSystemName)
+
+    if (showCodeSystemName)
     {
       cells[index++] = new GenericListCellType(getCSNameByCSEV(csev), false, "");
     }
-    
+
     cells[index++] = new GenericListCellType(csc2.isIsPreferred(), false, "");
     cells[index++] = new GenericListCellType(csc2.getCode(), false, "");
     cells[index++] = new GenericListCellType(csc2.getTerm(), false, "");
-    
+
     String association = "";
-    if(csev.getAssociationTypes().size() > 0)
+    if (csev.getAssociationTypes().size() > 0)
       association = csev.getAssociationTypes().get(0).getForwardName();
-    
+
     cells[index++] = new GenericListCellType(association, false, "");
-    
+
     Listcell lc = new Listcell("");
     TreeitemRendererCSEV.fillDetailsCell(lc, null, csev, csc2);
     cells[index++] = new GenericListCellType(lc, false, "");
-    
+
     row.setData(csev);
     row.setCells(cells);
 
     return row;
   }
-  
+
   private String getCSNameByCSEV(CodeSystemEntityVersion csev)
   {
     String s = "";
@@ -1176,7 +1245,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
     {
       ReturnConceptDetailsRequestType parameter = new ReturnConceptDetailsRequestType();
 
-            // Load Details
+      // Load Details
       // CSE(V)
       CodeSystemEntity cseTemp = new CodeSystemEntity();
       CodeSystemEntityVersion csevTemp = new CodeSystemEntityVersion();
@@ -1186,31 +1255,30 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
       parameter.setCodeSystemEntity(cseTemp);
 
       ReturnConceptDetailsResponse.Return response = WebServiceHelper.returnConceptDetails(parameter);
-      
-      if(response.getReturnInfos().getStatus() == Status.OK)
+
+      if (response.getReturnInfos().getStatus() == Status.OK)
       {
-        if(response.getCodeSystemEntity() != null && response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships() != null &&
-           response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().size() > 0)
+        if (response.getCodeSystemEntity() != null && response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships() != null
+            && response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().size() > 0)
         {
           long csvId = response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().get(0).getId().getCodeSystemVersionId();
-          if(csvId > 0)
+          if (csvId > 0)
           {
             // load csv from model
             CodeSystem cs = CodesystemGenericTreeModel.getInstance().findCodeSystem(null, null, csvId);
             s = cs.getName();
-            for(CodeSystemVersion csv : cs.getCodeSystemVersions())
+            for (CodeSystemVersion csv : cs.getCodeSystemVersions())
             {
-              if(csv.getVersionId().longValue() == csvId)
+              if (csv.getVersionId().longValue() == csvId)
               {
                 s += " - " + csv.getName();
               }
             }
-            
+
             return s;
           }
         }
       }
-
 
       return "N/A";
     }
@@ -1242,7 +1310,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
   private void initAssociations()
   {
     if (listCrossmappings == null || listLinkedConcepts == null
-            || listOntologies == null)
+        || listOntologies == null)
     {
       // List concept associations (all)
       logger.debug("initAssociations()");
@@ -1275,13 +1343,13 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
           // get linked concept (see if forward or reverse association)
           CodeSystemEntityVersion linkedConcept = null;
           if (ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId2() != null
-                  && ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId2().getVersionId().longValue() != codeSystemEntityVersionId)
+              && ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId2().getVersionId().longValue() != codeSystemEntityVersionId)
           {
             linkedConcept = ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId2();
             linkedConcept.getAssociationTypes().add(ass.getAssociationType());
           }
           else if (ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId1() != null
-                  && ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().getVersionId().longValue() != codeSystemEntityVersionId)
+              && ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().getVersionId().longValue() != codeSystemEntityVersionId)
           {
             linkedConcept = ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId1();
             linkedConcept.getAssociationTypes().add(ass.getAssociationType());
@@ -1313,9 +1381,9 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
         }
 
         // show list count in tab header
-        ((Tab)getFellow("tabCrossmapping")).setLabel(Labels.getLabel("popupConcept.crossmappings") + " (" + listCrossmappings.size() + ")");
-        ((Tab)getFellow("tabLinkedConcepts")).setLabel(Labels.getLabel("popupConcept.linkedConcepts") + " (" + listLinkedConcepts.size() + ")");
-        ((Tab)getFellow("tabOntologies")).setLabel(Labels.getLabel("popupConcept.ontologies") + " (" + listOntologies.size() + ")");
+        ((Tab) getFellow("tabCrossmapping")).setLabel(Labels.getLabel("popupConcept.crossmappings") + " (" + listCrossmappings.size() + ")");
+        ((Tab) getFellow("tabLinkedConcepts")).setLabel(Labels.getLabel("popupConcept.linkedConcepts") + " (" + listLinkedConcepts.size() + ")");
+        ((Tab) getFellow("tabOntologies")).setLabel(Labels.getLabel("popupConcept.ontologies") + " (" + listOntologies.size() + ")");
       }
     }
   }

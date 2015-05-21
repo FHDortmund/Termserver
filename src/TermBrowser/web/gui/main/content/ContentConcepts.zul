@@ -21,6 +21,12 @@
                       autodisable="self"
                       visible="false" 
                       disabled="false"/>
+              <button id="buttonDeleteVersion" 
+                      onClick="winConcepts.onDeleteVersionClicked()" 
+                      image="/rsc/img/design/delete_16x16.png" 
+                      autodisable="self"
+                      visible="false" 
+                      disabled="false"/>
             </div>
           
             <div align="right">

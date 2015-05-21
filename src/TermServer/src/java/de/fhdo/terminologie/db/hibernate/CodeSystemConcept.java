@@ -80,6 +80,25 @@ public class CodeSystemConcept implements java.io.Serializable
     this.hints = hints;
   }
 
+  public CodeSystemConcept(Long codeSystemEntityVersionId, String code, String term, String termAbbrevation, String description, Boolean isPreferred, String meaning, String hints)
+  {
+    this.codeSystemEntityVersionId = codeSystemEntityVersionId;
+    this.code = code;
+    this.term = term;
+    this.termAbbrevation = termAbbrevation;
+    this.description = description;
+    this.isPreferred = isPreferred;
+    this.meaning = meaning;
+    this.hints = hints;
+  }
+  
+  
+  
+  public CodeSystemConcept copyObject()
+  {
+    return new CodeSystemConcept(codeSystemEntityVersionId, code, term, termAbbrevation, description, isPreferred, meaning, hints);
+  }
+
   @Id
 
   @Column(name = "codeSystemEntityVersionId", unique = true, nullable = false)

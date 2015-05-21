@@ -253,6 +253,7 @@
 <xs:element name="validityRange" type="xs:long" minOccurs="0" />
 <xs:element name="valueSet" type="tns:valueSet" minOccurs="0" />
 <xs:element name="versionId" type="xs:long" minOccurs="0" />
+<xs:element name="virtualCodeSystemVersionId" type="xs:long" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 

@@ -149,7 +149,8 @@
       </center>
       <south border="none" style="text-align:right">
         <div style="padding-top:5px; margin-right:4px; margin-bottom:4px;">
-          <checkbox id="cbNewVersion" label="${labels.common.createNewVersion}" /> 
+          <checkbox id="cbNewVersion" label="${labels.common.createNewVersion}" onCheck="cbCopyConcepts.visible=cbNewVersion.checked" /> 
+          <checkbox id="cbCopyConcepts" label="${labels.common.copyConcepts}" visible="false"/> 
           <separator orient="vertical"/>
           <button id="bCreate" label="${labels.common.save}" onClick="winCSDetails.onOkClicked()" autodisable="self"/>
           <button id="bCancel" label="${labels.common.close}" onClick="winCSDetails.onCancelClicked()"/>

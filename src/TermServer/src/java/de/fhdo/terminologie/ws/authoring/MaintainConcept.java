@@ -31,6 +31,7 @@ import de.fhdo.terminologie.ws.authoring.types.MaintainConceptResponseType;
 import de.fhdo.terminologie.ws.authorization.Authorization;
 import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
 import de.fhdo.terminologie.ws.types.ReturnType;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -122,14 +123,21 @@ public class MaintainConcept
 
           csev_New.setPreviousVersionId(cse_db.getCurrentVersionId());
 
-          // speichern damit eine Id erzeugt wird
-          hb_session.save(csev_New);
-
+          if(csev_Request.getEffectiveDate() != null)
+            csev_New.setEffectiveDate(csev_Request.getEffectiveDate());
+          
           // Revision setzen, falls angegeben
           if (csev_Request.getMajorRevision() != null)
             csev_New.setMajorRevision(csev_Request.getMajorRevision());
           if (csev_Request.getMinorRevision() != null)
             csev_New.setMinorRevision(csev_Request.getMinorRevision());
+          
+          csev_New.setIsLeaf(true);  // set true, will be set to false, if relations are inserted
+          
+          // speichern damit eine Id erzeugt wird
+          hb_session.save(csev_New);
+
+          
 
           // CodeSystemConcept neu anlegen, falls angegeben
           if (csev_Request.getCodeSystemConcepts() != null)
@@ -198,6 +206,15 @@ public class MaintainConcept
             }
           }
 
+          // change status from previous entity version
+          CodeSystemEntityVersion csev_db = (CodeSystemEntityVersion) hb_session.load(CodeSystemEntityVersion.class, cse_db.getCurrentVersionId());
+          csev_db.setStatusVisibility(Definitions.STATUS_CODES.INACTIVE.getCode());
+          csev_db.setStatusVisibilityDate(new java.util.Date());
+          csev_db.setStatusDeactivated(1);
+          csev_db.setStatusDeactivatedDate(new java.util.Date());
+          hb_session.save(csev_db);
+          
+          // apply new version id to entity
           cse_db.setCurrentVersionId(csev_New.getVersionId());
           hb_session.save(cse_db);
         }
@@ -207,6 +224,8 @@ public class MaintainConcept
         {
           // original CSE aus DB laden                                  
           cse_db = (CodeSystemEntity) hb_session.load(CodeSystemEntity.class, cse_Request.getId());
+          
+          CodeSystemEntityVersion csev_db = (CodeSystemEntityVersion) hb_session.load(CodeSystemEntityVersion.class, cse_db.getCurrentVersionId());
 
           // Request CSEV, benötigt man für die versionId
           csev_Request = (CodeSystemEntityVersion) cse_Request.getCodeSystemEntityVersions().toArray()[0];
@@ -221,6 +240,13 @@ public class MaintainConcept
             csev_New.setMinorRevision(csev_Request.getMinorRevision());
           if (csev_Request.getIsLeaf() != null)
             csev_New.setIsLeaf((csev_Request.getIsLeaf()));
+          else csev_New.setIsLeaf(csev_db.getIsLeaf());
+          
+          if(csev_New.getIsLeaf() == null)
+            csev_New.setIsLeaf(true);
+          
+          if(csev_Request.getEffectiveDate() != null)
+            csev_New.setEffectiveDate(csev_Request.getEffectiveDate());
 
           // CodeSystemConcept aus DB laden und anpassen
           if (csev_Request.getCodeSystemConcepts() != null)
@@ -304,7 +330,7 @@ public class MaintainConcept
 
             for (CodeSystemMetadataValue mv : csev_Request.getCodeSystemMetadataValues())
             {
-              CodeSystemEntityVersion csev_db = csev_New;
+              csev_db = csev_New;
               CodeSystemMetadataValue mv_db = null;
 
               // check if exists
@@ -363,6 +389,15 @@ public class MaintainConcept
           hb_session.save(cse_db);
         }
         LastChangeHelper.updateLastChangeDate(true, csvId, hb_session);
+        
+        // set response id's
+        response.setCodeSystemEntity(new CodeSystemEntity());
+        response.getCodeSystemEntity().setId(cse_db.getId());
+        response.getCodeSystemEntity().setCurrentVersionId(cse_db.getCurrentVersionId());
+        response.getCodeSystemEntity().setCodeSystemEntityVersions(new HashSet<CodeSystemEntityVersion>());
+        CodeSystemEntityVersion csev_response = new CodeSystemEntityVersion();
+        csev_response.setVersionId(cse_db.getCurrentVersionId());
+        response.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev_response);
       }
       catch (Exception e)
       {

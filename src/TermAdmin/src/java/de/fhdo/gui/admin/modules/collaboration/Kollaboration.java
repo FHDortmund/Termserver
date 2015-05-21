@@ -34,15 +34,19 @@ import org.zkoss.zul.Window;
  */
 public class Kollaboration extends Window implements AfterCompose
 {
+
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
   private Tabbox tb;
+
   public Kollaboration()
   {
-    
+
   }
-  
+
   public void afterCompose()
   {
+    logger.debug("Kollaboration - afterCompose()");
+    
     String id = "";
     tb = (Tabbox) getFellow("tabboxNavigation");
     Object o = SessionHelper.getValue("termadmin_kollaboration_tabid");
@@ -54,7 +58,7 @@ public class Kollaboration extends Window implements AfterCompose
       logger.debug("Goto Page: " + id);
       try
       {
-        
+
         Tab tab = (Tab) getFellow(id);
         int index = tab.getIndex();
         logger.debug("Index: " + index);
@@ -64,43 +68,46 @@ public class Kollaboration extends Window implements AfterCompose
       }
       catch (Exception e)
       {
-        tabSelected("tabRepKollab"); 
+        tabSelected("tabBenutzer");
         logger.warn(e.getMessage());
       }
     }
-    else{
+    else
+    {
 
-        tabSelected("tabRepKollab");
+      tabSelected("tabBenutzer");
     }
     Tabs tabs = tb.getTabs();
     List<Component> tabList = tabs.getChildren();
-    
-    if(SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN)){
-    
-        for(Component c:tabList){
-        
-            if(c.getId().equals("tabBenutzer"))
-                c.setVisible(true);
-            
-            if(c.getId().equals("tabAnfragen"))
-                c.setVisible(true);
-            
-            if(c.getId().equals("tabSvAssignment"))
-                c.setVisible(true);
-            
-            if(c.getId().equals("tabWorkflow"))    
-                c.setVisible(true);
-            
-            if(c.getId().equals("tabDomain"))    
-                c.setVisible(true);
-            
-            if(c.getId().equals("tabSysParam"))
-                c.setVisible(true);
-        }
+
+    //if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN))
+    if(SessionHelper.isAdmin()) // TODO Rollen abfragen?
+    {
+
+      for (Component c : tabList)
+      {
+
+        if (c.getId().equals("tabBenutzer"))
+          c.setVisible(true);
+
+        if (c.getId().equals("tabAnfragen"))
+          c.setVisible(true);
+
+        if (c.getId().equals("tabSvAssignment"))
+          c.setVisible(true);
+
+        if (c.getId().equals("tabWorkflow"))
+          c.setVisible(true);
+
+        if (c.getId().equals("tabDomain"))
+          c.setVisible(true);
+
+        if (c.getId().equals("tabSysParam"))
+          c.setVisible(true);
+      }
     }
   }
-  
-  
+
   public void onNavigationSelect(SelectEvent event)
   {
     if (logger.isDebugEnabled())
@@ -110,7 +117,7 @@ public class Kollaboration extends Window implements AfterCompose
     Tab tab = (Tab) event.getReference();
     tabSelected(tab.getId());
   }
-  
+
   private void tabSelected(String ID)
   {
     if (ID == null || ID.length() == 0)
@@ -144,7 +151,8 @@ public class Kollaboration extends Window implements AfterCompose
     {
       includePage("incRepKollab", "/gui/admin/modules/collaboration/reportingKollab.zul");
     }
-    else logger.debug("ID nicht bekannt: " + ID);
+    else
+      logger.debug("ID nicht bekannt: " + ID);
 
     SessionHelper.setValue("termadmin_kollaboration_tabid", ID);
   }

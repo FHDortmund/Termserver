@@ -25,6 +25,7 @@ public class VersioningType
   private Boolean createNewVersion;
   private Boolean majorUpdate;
   private Boolean minorUpdate;
+  private Boolean copyConcepts;
 
   /**
    * @return the createNewVersion
@@ -72,5 +73,21 @@ public class VersioningType
   public void setMinorUpdate(Boolean minorUpdate)
   {
     this.minorUpdate = minorUpdate;
+  }
+
+  /**
+   * @return the copyConcepts
+   */
+  public Boolean getCopyConcepts()
+  {
+    return copyConcepts;
+  }
+
+  /**
+   * @param copyConcepts the copyConcepts to set
+   */
+  public void setCopyConcepts(Boolean copyConcepts)
+  {
+    this.copyConcepts = copyConcepts;
   }
 }

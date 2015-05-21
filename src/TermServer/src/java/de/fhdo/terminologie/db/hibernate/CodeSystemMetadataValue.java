@@ -17,7 +17,6 @@
 package de.fhdo.terminologie.db.hibernate;
 // Generated 24.10.2011 10:08:21 by Hibernate Tools 3.2.1.GA
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,74 +32,95 @@ import javax.persistence.Table;
  */
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
 @XmlRootElement
-@XmlType(namespace="de.fhdo.termserver.types")
+@XmlType(namespace = "de.fhdo.termserver.types")
 @Entity
-@Table(name="code_system_metadata_value"
-    
+@Table(name = "code_system_metadata_value"
 )
-public class CodeSystemMetadataValue  implements java.io.Serializable {
+public class CodeSystemMetadataValue implements java.io.Serializable
+{
 
+  private Long id;
+  private CodeSystemEntityVersion codeSystemEntityVersion;
+  private MetadataParameter metadataParameter;
+  private String parameterValue;
 
-     private Long id;
-     private CodeSystemEntityVersion codeSystemEntityVersion;
-     private MetadataParameter metadataParameter;
-     private String parameterValue;
+  public CodeSystemMetadataValue()
+  {
+  }
 
-    public CodeSystemMetadataValue() {
-    }
+  public CodeSystemMetadataValue(String parameterValue)
+  {
+    this.parameterValue = parameterValue;
+  }
 
-	
-    public CodeSystemMetadataValue(String parameterValue) {
-        this.parameterValue = parameterValue;
-    }
-    public CodeSystemMetadataValue(CodeSystemEntityVersion codeSystemEntityVersion, MetadataParameter metadataParameter, String parameterValue) {
-       this.codeSystemEntityVersion = codeSystemEntityVersion;
-       this.metadataParameter = metadataParameter;
-       this.parameterValue = parameterValue;
-    }
-   
-     @Id @GeneratedValue(strategy=IDENTITY)
-    
-    @Column(name="id", unique=true, nullable=false)
-    public Long getId() {
-        return this.id;
-    }
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="codeSystemEntityVersionId")
-    public CodeSystemEntityVersion getCodeSystemEntityVersion() {
-        return this.codeSystemEntityVersion;
-    }
-    
-    public void setCodeSystemEntityVersion(CodeSystemEntityVersion codeSystemEntityVersion) {
-        this.codeSystemEntityVersion = codeSystemEntityVersion;
-    }
-@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="metadataParameterId")
-    public MetadataParameter getMetadataParameter() {
-        return this.metadataParameter;
-    }
-    
-    public void setMetadataParameter(MetadataParameter metadataParameter) {
-        this.metadataParameter = metadataParameter;
-    }
-    
-    @Column(name="parameterValue", nullable=false, length=65535)
-    public String getParameterValue() {
-        return this.parameterValue;
-    }
-    
-    public void setParameterValue(String parameterValue) {
-        this.parameterValue = parameterValue;
-    }
+  public CodeSystemMetadataValue(CodeSystemEntityVersion codeSystemEntityVersion, MetadataParameter metadataParameter, String parameterValue)
+  {
+    this.codeSystemEntityVersion = codeSystemEntityVersion;
+    this.metadataParameter = metadataParameter;
+    this.parameterValue = parameterValue;
+  }
 
+  public CodeSystemMetadataValue(Long id, MetadataParameter metadataParameter, String parameterValue)
+  {
+    this.id = id;
+    this.metadataParameter = metadataParameter;
+    this.parameterValue = parameterValue;
+  }
+  
+  public CodeSystemMetadataValue copyObject()
+  {
+    return new CodeSystemMetadataValue(id, metadataParameter, parameterValue);
+  }
 
+  @Id
+  @GeneratedValue(strategy = IDENTITY)
 
+  @Column(name = "id", unique = true, nullable = false)
+  public Long getId()
+  {
+    return this.id;
+  }
+
+  public void setId(Long id)
+  {
+    this.id = id;
+  }
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "codeSystemEntityVersionId")
+  public CodeSystemEntityVersion getCodeSystemEntityVersion()
+  {
+    return this.codeSystemEntityVersion;
+  }
+
+  public void setCodeSystemEntityVersion(CodeSystemEntityVersion codeSystemEntityVersion)
+  {
+    this.codeSystemEntityVersion = codeSystemEntityVersion;
+  }
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "metadataParameterId")
+  public MetadataParameter getMetadataParameter()
+  {
+    return this.metadataParameter;
+  }
+
+  public void setMetadataParameter(MetadataParameter metadataParameter)
+  {
+    this.metadataParameter = metadataParameter;
+  }
+
+  @Column(name = "parameterValue", nullable = false, length = 65535)
+  public String getParameterValue()
+  {
+    return this.parameterValue;
+  }
+
+  public void setParameterValue(String parameterValue)
+  {
+    this.parameterValue = parameterValue;
+  }
 
 }
-
-

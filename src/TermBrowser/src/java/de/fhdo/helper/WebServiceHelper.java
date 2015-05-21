@@ -43,6 +43,7 @@ import de.fhdo.terminologie.ws.authoring.MaintainConceptAssociationTypeRequestTy
 import de.fhdo.terminologie.ws.authoring.MaintainConceptAssociationTypeResponse;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptAssociationTypeResponseType;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptRequestType;
+import de.fhdo.terminologie.ws.authoring.MaintainConceptResponse;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptResponseType;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptValueSetMembershipRequestType;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptValueSetMembershipResponse;
@@ -446,17 +447,17 @@ public class WebServiceHelper
     return port.maintainValueSet(parameter);
   }
 
-  public static MaintainConceptResponseType maintainConcept(MaintainConceptRequestType parameter)
+  public static MaintainConceptResponse.Return maintainConcept(MaintainConceptRequestType parameter)
   {
     return maintainConcept(parameter, PropertiesHelper.getInstance().getTermserverUrl());
   }
 
-  public static MaintainConceptResponseType maintainConcept(MaintainConceptRequestType parameter, String urlHost)
+  public static MaintainConceptResponse.Return maintainConcept(MaintainConceptRequestType parameter, String urlHost)
   {
     return maintainConcept(parameter, urlHost, PropertiesHelper.getInstance().getTermserverServiceName());
   }
 
-  public static MaintainConceptResponseType maintainConcept(MaintainConceptRequestType parameter, String urlHost, String urlService)
+  public static MaintainConceptResponse.Return maintainConcept(MaintainConceptRequestType parameter, String urlHost, String urlService)
   {
     Authoring_Service service;
     Authoring port;

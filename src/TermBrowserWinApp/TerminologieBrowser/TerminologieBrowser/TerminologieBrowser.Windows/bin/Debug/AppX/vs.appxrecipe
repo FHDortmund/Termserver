@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Machine>ROBERT</Machine>
+    <WindowsUser>Robert</WindowsUser>
+    <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
+    <SolutionConfiguration>Debug|AnyCPU</SolutionConfiguration>
+    <PackageArchitecture>neutral</PackageArchitecture>
+    <PackageIdentityName>f1cec186-604d-4fd0-8f3f-126440f58226</PackageIdentityName>
+    <IntermediateOutputPath>C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TermBrowserWinApp\TerminologieBrowser\TerminologieBrowser\TerminologieBrowser.Windows\obj\Debug\</IntermediateOutputPath>
+    <RegisteredManifestChecksum>FDBFC7A9012FB9705DA575DF0ECA6D8962CD022C2E7A10BBEE35F8948E8A411B</RegisteredManifestChecksum>
+    <RegisteredPackageMoniker>f1cec186-604d-4fd0-8f3f-126440f58226_1.0.0.0_neutral__wz8705ndd7nw4</RegisteredPackageMoniker>
+    <RegisteredUserModeAppID>f1cec186-604d-4fd0-8f3f-126440f58226_wz8705ndd7nw4!App</RegisteredUserModeAppID>
+    <RegisteredPackageID>f1cec186-604d-4fd0-8f3f-126440f58226</RegisteredPackageID>
+    <RegisteredPackagePublisher>CN=Robert</RegisteredPackagePublisher>
+    <RegisteredVersion>1.0.0.0</RegisteredVersion>
+    <JitOptimizationSuppressed>True</JitOptimizationSuppressed>
+  </PropertyGroup>
+  <ItemGroup>
+    <AppXManifest Include="C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TermBrowserWinApp\TerminologieBrowser\TerminologieBrowser\TerminologieBrowser.Windows\bin\Debug\AppxManifest.xml">
+      <PackagePath>AppxManifest.xml</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2015-04-23T10:02:05.408</Modified>
+    </AppXManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxPackagedFile Include="C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TermBrowserWinApp\TerminologieBrowser\TerminologieBrowser\TerminologieBrowser.Windows\bin\Debug\TerminologieBrowser.Windows.exe">
+      <PackagePath>TerminologieBrowser.Windows.exe</PackagePath>
+      <Modified>2015-04-23T10:03:27.126</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TermBrowserWinApp\TerminologieBrowser\TerminologieBrowser\TerminologieBrowser.Windows\Assets\Logo.scale-100.png">
+      <PackagePath>Assets\Logo.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2014-03-14T02:19:30.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TermBrowserWinApp\TerminologieBrowser\TerminologieBrowser\TerminologieBrowser.Windows\Assets\SmallLogo.scale-100.png">
+      <PackagePath>Assets\SmallLogo.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2014-03-14T02:19:30.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TermBrowserWinApp\TerminologieBrowser\TerminologieBrowser\TerminologieBrowser.Windows\Assets\SplashScreen.scale-100.png">
+      <PackagePath>Assets\SplashScreen.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2014-03-14T02:19:30.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TermBrowserWinApp\TerminologieBrowser\TerminologieBrowser\TerminologieBrowser.Windows\Assets\StoreLogo.scale-100.png">
+      <PackagePath>Assets\StoreLogo.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2014-03-14T02:19:30.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TermBrowserWinApp\TerminologieBrowser\TerminologieBrowser\TerminologieBrowser.Windows\bin\Debug\App.xbf">
+      <PackagePath>App.xbf</PackagePath>
+      <Modified>2015-04-23T09:54:57.851</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TermBrowserWinApp\TerminologieBrowser\TerminologieBrowser\TerminologieBrowser.Windows\bin\Debug\BasicPage1.xbf">
+      <PackagePath>BasicPage1.xbf</PackagePath>
+      <Modified>2015-04-23T09:54:57.853</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TermBrowserWinApp\TerminologieBrowser\TerminologieBrowser\TerminologieBrowser.Windows\bin\Debug\MainPage.xbf">
+      <PackagePath>MainPage.xbf</PackagePath>
+      <Modified>2015-04-23T10:02:05.111</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TermBrowserWinApp\TerminologieBrowser\TerminologieBrowser\TerminologieBrowser.Windows\bin\Debug\SplitPage1.xbf">
+      <PackagePath>SplitPage1.xbf</PackagePath>
+      <Modified>2015-04-23T10:02:05.111</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TermBrowserWinApp\TerminologieBrowser\TerminologieBrowser\TerminologieBrowser.Windows\bin\Debug\TerminologieBrowser.Windows.xr.xml">
+      <PackagePath>TerminologieBrowser.Windows.xr.xml</PackagePath>
+      <Modified>2015-04-23T10:02:05.096</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TermBrowserWinApp\TerminologieBrowser\TerminologieBrowser\TerminologieBrowser.Windows\bin\Debug\resources.pri">
+      <PackagePath>resources.pri</PackagePath>
+      <Modified>2015-04-23T10:02:05.377</Modified>
+    </AppxPackagedFile>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+</Project>

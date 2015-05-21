@@ -169,7 +169,7 @@ public class MetadataParameter implements java.io.Serializable
     this.valueSetMetadataValues = valueSetMetadataValues;
   }
   
-  @Column(name = "languageCd", nullable = false)
+  @Column(name = "languageCd", nullable = true)
   public String getLanguageCd()
   {
     return this.languageCd;

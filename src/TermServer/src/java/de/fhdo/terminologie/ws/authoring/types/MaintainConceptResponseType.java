@@ -16,8 +16,10 @@
  */
 package de.fhdo.terminologie.ws.authoring.types;
 
+import de.fhdo.terminologie.db.hibernate.CodeSystemEntity;
 import de.fhdo.terminologie.ws.types.ReturnType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  * Die Xml-Annotationen am Anfang bestimmen die Reihenfolge der
@@ -26,10 +28,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Robert Mützner (robert.muetzner@fh-dortmund.de)
  */
 @XmlRootElement
-
+@XmlType(name = "", propOrder = { "returnInfos", "codeSystemEntity"})
 public class MaintainConceptResponseType
 {
   private ReturnType returnInfos;
+  private CodeSystemEntity codeSystemEntity;
 
   public MaintainConceptResponseType()
   {
@@ -50,5 +53,21 @@ public class MaintainConceptResponseType
   public void setReturnInfos(ReturnType returnInfos)
   {
     this.returnInfos = returnInfos;
+  }
+  
+  /**
+   * @return the codeSystemEntity
+   */
+  public CodeSystemEntity getCodeSystemEntity()
+  {
+    return codeSystemEntity;
+  }
+
+  /**
+   * @param codeSystemEntity the codeSystemEntity to set
+   */
+  public void setCodeSystemEntity(CodeSystemEntity codeSystemEntity)
+  {
+    this.codeSystemEntity = codeSystemEntity;
   }
 }

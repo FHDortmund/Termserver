@@ -16,6 +16,8 @@
  */
 package de.fhdo;
 
+import de.fhdo.helper.VersionHelper;
+
 /**
  *
  * @author Robert Mützner
@@ -23,6 +25,11 @@ package de.fhdo;
 public class Definitions
 {
   public final static String VERSION = "2.0.1";
+  
+  public final static String getVersion()
+  {
+    return VersionHelper.getInstance().getVersion();
+  }
   
   public final static String APP_KEY = "TERMSERVER";
   
@@ -51,6 +58,9 @@ public class Definitions
   public static final int STATUS_DEACTIVATED_ACTIVE = 1;
   public static final int STATUS_DEACTIVATED_DELETED = 2;
   public static final int STATUS_DEACTIVATED_DEPRECATED = 3;
+  
+  public static final int STATUS_CODESYSTEMVERSION_INVISIBLE = 0;
+  public static final int STATUS_CODESYSTEMVERSION_VISIBLE = 1;
   
   
   

@@ -16,6 +16,7 @@
  */
 package de.fhdo.terminologie.ws.authoring;
 
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.CodeSystem;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
@@ -85,8 +86,19 @@ public class UpdateCodeSystemVersionStatus
         csv_db.setStatus(csv.getStatus());
         hb_session.update(csv_db);
         
-        
         LastChangeHelper.updateLastChangeDate(true, csv.getVersionId(),hb_session);
+        
+        // check if there are other active cs versions, then update currentVersionId of code_system
+        CodeSystem cs_db = csv_db.getCodeSystem();
+        for(CodeSystemVersion csv_update : cs_db.getCodeSystemVersions())
+        {
+          if(csv_update.getStatus() == 1)
+          {
+            cs_db.setCurrentVersionId(csv_update.getVersionId());
+            hb_session.update(cs_db);
+          }
+        }
+        
         hb_session.getTransaction().commit();
       }
       catch (Exception e)
@@ -98,7 +110,7 @@ public class UpdateCodeSystemVersionStatus
         response.getReturnInfos().setMessage("Fehler bei 'UpdateCodeSystemVersionStatus', Hibernate: " + e.getLocalizedMessage());
 
         logger.error("Fehler bei 'UpdateCodeSystemVersionStatus', Hibernate: " + e.getLocalizedMessage());
-        e.printStackTrace();
+        LoggingOutput.outputException(e, this);
       }
       finally
       {
@@ -142,13 +154,13 @@ public class UpdateCodeSystemVersionStatus
     Set<CodeSystemVersion> csvSet = codeSystem.getCodeSystemVersions();
     if (csvSet != null)
     {
-      if (csvSet.size() > 1)
+      if (csvSet.size() != 1)
       {
         Response.getReturnInfos().setMessage(
-                "Die CodeSystem-Version-Liste darf maximal einen Eintrag haben!");
+                "Die CodeSystem-Version-Liste muss genau einen Eintrag haben!");
         erfolg = false;
       }
-      else if (csvSet.size() == 1)
+      else 
       {
         CodeSystemVersion csv = (CodeSystemVersion) csvSet.toArray()[0];
 

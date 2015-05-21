@@ -8,10 +8,10 @@
     <center border="0">
       <window border="0" use="de.fhdo.gui.admin.Admin" id="win" height="100%" width="100%">
         
-        <tabbox width="100%" height="100%" >
+        <tabbox id="tabboxMode" width="100%" height="100%" onSelect="win.onTabSelect(event)">
           <tabs>
-            <tab label="Terminologie" height="32px"/>
-            <tab label="Kollaboration" height="32px"/>
+            <tab id="tabTerminology" label="Terminologie" height="32px"/>
+            <tab id="tabCollaboration" label="Kollaboration" height="32px"/>
           </tabs>
           <tabpanels>
             <tabpanel>
@@ -67,11 +67,24 @@
               <tabbox id="tabboxNavigationCollab" width="100%" height="100%"  orient="vertical"
                       onSelect="win.onNavigationSelect(event)"  >
                 <tabs width="160px">
-                  <tab label="Kollaboration" id="tabKollaboration" disabled="true"/>
+                  <tab label="Workflow" id="tabKollabWorkflow" disabled="false"/>
+                  <tab label="Benutzer" id="tabKollabBenutzer" disabled="false"/>
+                  <tab label="Domänen" id="tabKollabDomains" disabled="false"/>
+                  <tab label="System-Parameter" id="tabKollabSysParam" disabled="false"/>
+                  
                 </tabs>
                 <tabpanels>
                   <tabpanel>
-                    <include id="incKollaboration"/>
+                    <include id="incKollabWorkflow"/>
+                  </tabpanel>
+                  <tabpanel>
+                    <include id="incKollabBenutzer"/>
+                  </tabpanel>
+                  <tabpanel>
+                    <include id="incKollabDomains"/>
+                  </tabpanel>
+                  <tabpanel>
+                    <include id="incKollabSysParam"/>
                   </tabpanel>
                 </tabpanels>
               </tabbox>

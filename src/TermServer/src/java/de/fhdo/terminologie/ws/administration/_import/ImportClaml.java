@@ -16,10 +16,8 @@
  */
 package de.fhdo.terminologie.ws.administration._import;
 
-import clamlBindingXSD.Fragment;
 import clamlBindingXSD.Label;
 import clamlBindingXSD.Meta;
-import clamlBindingXSD.Para;
 import clamlBindingXSD.Rubric;
 import clamlBindingXSD.RubricKind;
 import de.fhdo.logging.Logger4j;
@@ -38,9 +36,7 @@ import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersionEntityMembership;
 import de.fhdo.terminologie.db.hibernate.MetadataParameter;
 import de.fhdo.terminologie.ws.administration.StaticStatus;
-import de.fhdo.terminologie.ws.administration.claml.MetadataDefinition;
 import de.fhdo.terminologie.ws.administration.claml.MetadataDefinition.METADATA_ATTRIBUTES;
-import de.fhdo.terminologie.ws.administration.claml.RubricKinds;
 import de.fhdo.terminologie.ws.administration.claml.RubricKinds.RUBRICKINDS;
 import de.fhdo.terminologie.ws.administration.types.ImportCodeSystemRequestType;
 import de.fhdo.terminologie.ws.authoring.CreateCodeSystem;
@@ -69,7 +65,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;

@@ -73,6 +73,36 @@ public class CodeSystemEntityVersion implements java.io.Serializable
   public CodeSystemEntityVersion()
   {
   }
+  
+  public CodeSystemEntityVersion cloneObject()
+  {
+    CodeSystemEntityVersion csev = new CodeSystemEntityVersion(versionId, previousVersionId, statusVisibility, statusVisibilityDate, statusDeactivated, statusDeactivatedDate, statusWorkflow, statusWorkflowDate, effectiveDate, majorRevision, minorRevision, insertTimestamp, isLeaf);
+    if(csev.getStatusDeactivatedDate() == null)
+      csev.setStatusDeactivatedDate(new Date());
+    if(csev.getStatusWorkflowDate()== null)
+      csev.setStatusWorkflowDate(new Date());
+      
+    return csev;
+  }
+
+  public CodeSystemEntityVersion(Long versionId, Long previousVersionId, Integer statusVisibility, Date statusVisibilityDate, Integer statusDeactivated, Date statusDeactivatedDate, Integer statusWorkflow, Date statusWorkflowDate, Date effectiveDate, Integer majorRevision, Integer minorRevision, Date insertTimestamp, Boolean isLeaf)
+  {
+    this.versionId = versionId;
+    this.previousVersionId = previousVersionId;
+    this.statusVisibility = statusVisibility;
+    this.statusVisibilityDate = statusVisibilityDate;
+    this.statusDeactivated = statusDeactivated;
+    this.statusDeactivatedDate = statusDeactivatedDate;
+    this.statusWorkflow = statusWorkflow;
+    this.statusWorkflowDate = statusWorkflowDate;
+    this.effectiveDate = effectiveDate;
+    this.majorRevision = majorRevision;
+    this.minorRevision = minorRevision;
+    this.insertTimestamp = insertTimestamp;
+    this.isLeaf = isLeaf;
+  }
+  
+  
 
   public CodeSystemEntityVersion(CodeSystemEntity codeSystemEntity, Integer status, Date statusDate, Date insertTimestamp)
   {

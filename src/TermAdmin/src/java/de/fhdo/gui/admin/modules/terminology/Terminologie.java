@@ -16,7 +16,6 @@
  */
 package de.fhdo.gui.admin.modules.terminology;
 
-import de.fhdo.helper.CODES;
 import de.fhdo.helper.SessionHelper;
 import java.util.List;
 import org.zkoss.zk.ui.Component;

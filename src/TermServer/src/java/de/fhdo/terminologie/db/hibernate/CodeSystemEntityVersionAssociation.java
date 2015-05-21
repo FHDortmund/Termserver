@@ -17,7 +17,6 @@
 package de.fhdo.terminologie.db.hibernate;
 // Generated 24.10.2011 10:08:21 by Hibernate Tools 3.2.1.GA
 
-
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,133 +35,170 @@ import javax.persistence.TemporalType;
  */
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
 @XmlRootElement
-@XmlType(namespace="de.fhdo.termserver.types")
+@XmlType(namespace = "de.fhdo.termserver.types")
 @Entity
-@Table(name="code_system_entity_version_association"
-    
+@Table(name = "code_system_entity_version_association"
 )
-public class CodeSystemEntityVersionAssociation  implements java.io.Serializable {
+public class CodeSystemEntityVersionAssociation implements java.io.Serializable
+{
 
+  private Long id;
+  private CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId2;
+  private CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId1;
+  private AssociationType associationType;
+  private Long leftId;
+  private Integer associationKind;
+  private Integer status;
+  private Date statusDate;
+  private Date insertTimestamp;
 
-     private Long id;
-     private CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId2;
-     private CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId1;
-     private AssociationType associationType;
-     private Long leftId;
-     private Integer associationKind;
-     private Integer status;
-     private Date statusDate;
-     private Date insertTimestamp;
+  public CodeSystemEntityVersionAssociation()
+  {
+  }
 
-    public CodeSystemEntityVersionAssociation() {
-    }
+  public CodeSystemEntityVersionAssociation(CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId2, CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId1, AssociationType associationType, Date statusDate, Date insertTimestamp)
+  {
+    this.codeSystemEntityVersionByCodeSystemEntityVersionId2 = codeSystemEntityVersionByCodeSystemEntityVersionId2;
+    this.codeSystemEntityVersionByCodeSystemEntityVersionId1 = codeSystemEntityVersionByCodeSystemEntityVersionId1;
+    this.associationType = associationType;
+    this.statusDate = statusDate;
+    this.insertTimestamp = insertTimestamp;
+  }
 
-	
-    public CodeSystemEntityVersionAssociation(CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId2, CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId1, AssociationType associationType, Date statusDate, Date insertTimestamp) {
-        this.codeSystemEntityVersionByCodeSystemEntityVersionId2 = codeSystemEntityVersionByCodeSystemEntityVersionId2;
-        this.codeSystemEntityVersionByCodeSystemEntityVersionId1 = codeSystemEntityVersionByCodeSystemEntityVersionId1;
-        this.associationType = associationType;
-        this.statusDate = statusDate;
-        this.insertTimestamp = insertTimestamp;
-    }
-    public CodeSystemEntityVersionAssociation(CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId2, CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId1, AssociationType associationType, Long leftId, Integer associationKind, Integer status, Date statusDate, Date insertTimestamp) {
-       this.codeSystemEntityVersionByCodeSystemEntityVersionId2 = codeSystemEntityVersionByCodeSystemEntityVersionId2;
-       this.codeSystemEntityVersionByCodeSystemEntityVersionId1 = codeSystemEntityVersionByCodeSystemEntityVersionId1;
-       this.associationType = associationType;
-       this.leftId = leftId;
-       this.associationKind = associationKind;
-       this.status = status;
-       this.statusDate = statusDate;
-       this.insertTimestamp = insertTimestamp;
-    }
-   
-     @Id @GeneratedValue(strategy=IDENTITY)
-    
-    @Column(name="id", unique=true, nullable=false)
-    public Long getId() {
-        return this.id;
-    }
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="codeSystemEntityVersionId2", nullable=false)
-    public CodeSystemEntityVersion getCodeSystemEntityVersionByCodeSystemEntityVersionId2() {
-        return this.codeSystemEntityVersionByCodeSystemEntityVersionId2;
-    }
-    
-    public void setCodeSystemEntityVersionByCodeSystemEntityVersionId2(CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId2) {
-        this.codeSystemEntityVersionByCodeSystemEntityVersionId2 = codeSystemEntityVersionByCodeSystemEntityVersionId2;
-    }
-@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="codeSystemEntityVersionId1", nullable=false)
-    public CodeSystemEntityVersion getCodeSystemEntityVersionByCodeSystemEntityVersionId1() {
-        return this.codeSystemEntityVersionByCodeSystemEntityVersionId1;
-    }
-    
-    public void setCodeSystemEntityVersionByCodeSystemEntityVersionId1(CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId1) {
-        this.codeSystemEntityVersionByCodeSystemEntityVersionId1 = codeSystemEntityVersionByCodeSystemEntityVersionId1;
-    }
-@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="associationTypeId", nullable=false)
-    public AssociationType getAssociationType() {
-        return this.associationType;
-    }
-    
-    public void setAssociationType(AssociationType associationType) {
-        this.associationType = associationType;
-    }
-    
-    @Column(name="leftId")
-    public Long getLeftId() {
-        return this.leftId;
-    }
-    
-    public void setLeftId(Long leftId) {
-        this.leftId = leftId;
-    }
-    
-    @Column(name="associationKind")
-    public Integer getAssociationKind() {
-        return this.associationKind;
-    }
-    
-    public void setAssociationKind(Integer associationKind) {
-        this.associationKind = associationKind;
-    }
-    
-    @Column(name="status")
-    public Integer getStatus() {
-        return this.status;
-    }
-    
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="statusDate", nullable=false, length=19)
-    public Date getStatusDate() {
-        return this.statusDate;
-    }
-    
-    public void setStatusDate(Date statusDate) {
-        this.statusDate = statusDate;
-    }
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="insertTimestamp", nullable=false, length=19)
-    public Date getInsertTimestamp() {
-        return this.insertTimestamp;
-    }
-    
-    public void setInsertTimestamp(Date insertTimestamp) {
-        this.insertTimestamp = insertTimestamp;
-    }
+  public CodeSystemEntityVersionAssociation(CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId2, CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId1, AssociationType associationType, Long leftId, Integer associationKind, Integer status, Date statusDate, Date insertTimestamp)
+  {
+    this.codeSystemEntityVersionByCodeSystemEntityVersionId2 = codeSystemEntityVersionByCodeSystemEntityVersionId2;
+    this.codeSystemEntityVersionByCodeSystemEntityVersionId1 = codeSystemEntityVersionByCodeSystemEntityVersionId1;
+    this.associationType = associationType;
+    this.leftId = leftId;
+    this.associationKind = associationKind;
+    this.status = status;
+    this.statusDate = statusDate;
+    this.insertTimestamp = insertTimestamp;
+  }
 
+  public CodeSystemEntityVersionAssociation(Long id, Long leftId, Integer associationKind, Integer status, Date statusDate, Date insertTimestamp)
+  {
+    this.id = id;
+    this.leftId = leftId;
+    this.associationKind = associationKind;
+    this.status = status;
+    this.statusDate = statusDate;
+    this.insertTimestamp = insertTimestamp;
+  }
+  
+  public CodeSystemEntityVersionAssociation copyObject()
+  {
+    return new CodeSystemEntityVersionAssociation(id, leftId, associationKind, status, statusDate, insertTimestamp);
+  }
 
+  @Id
+  @GeneratedValue(strategy = IDENTITY)
 
+  @Column(name = "id", unique = true, nullable = false)
+  public Long getId()
+  {
+    return this.id;
+  }
+
+  public void setId(Long id)
+  {
+    this.id = id;
+  }
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "codeSystemEntityVersionId2", nullable = false)
+  public CodeSystemEntityVersion getCodeSystemEntityVersionByCodeSystemEntityVersionId2()
+  {
+    return this.codeSystemEntityVersionByCodeSystemEntityVersionId2;
+  }
+
+  public void setCodeSystemEntityVersionByCodeSystemEntityVersionId2(CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId2)
+  {
+    this.codeSystemEntityVersionByCodeSystemEntityVersionId2 = codeSystemEntityVersionByCodeSystemEntityVersionId2;
+  }
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "codeSystemEntityVersionId1", nullable = false)
+  public CodeSystemEntityVersion getCodeSystemEntityVersionByCodeSystemEntityVersionId1()
+  {
+    return this.codeSystemEntityVersionByCodeSystemEntityVersionId1;
+  }
+
+  public void setCodeSystemEntityVersionByCodeSystemEntityVersionId1(CodeSystemEntityVersion codeSystemEntityVersionByCodeSystemEntityVersionId1)
+  {
+    this.codeSystemEntityVersionByCodeSystemEntityVersionId1 = codeSystemEntityVersionByCodeSystemEntityVersionId1;
+  }
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "associationTypeId", nullable = false)
+  public AssociationType getAssociationType()
+  {
+    return this.associationType;
+  }
+
+  public void setAssociationType(AssociationType associationType)
+  {
+    this.associationType = associationType;
+  }
+
+  @Column(name = "leftId")
+  public Long getLeftId()
+  {
+    return this.leftId;
+  }
+
+  public void setLeftId(Long leftId)
+  {
+    this.leftId = leftId;
+  }
+
+  @Column(name = "associationKind")
+  public Integer getAssociationKind()
+  {
+    return this.associationKind;
+  }
+
+  public void setAssociationKind(Integer associationKind)
+  {
+    this.associationKind = associationKind;
+  }
+
+  @Column(name = "status")
+  public Integer getStatus()
+  {
+    return this.status;
+  }
+
+  public void setStatus(Integer status)
+  {
+    this.status = status;
+  }
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "statusDate", nullable = false, length = 19)
+  public Date getStatusDate()
+  {
+    return this.statusDate;
+  }
+
+  public void setStatusDate(Date statusDate)
+  {
+    this.statusDate = statusDate;
+  }
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "insertTimestamp", nullable = false, length = 19)
+  public Date getInsertTimestamp()
+  {
+    return this.insertTimestamp;
+  }
+
+  public void setInsertTimestamp(Date insertTimestamp)
+  {
+    this.insertTimestamp = insertTimestamp;
+  }
 
 }
-
-
