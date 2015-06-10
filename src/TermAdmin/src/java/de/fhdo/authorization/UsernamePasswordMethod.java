@@ -89,7 +89,7 @@ public class UsernamePasswordMethod implements IAuthorization
     return false;
   }
 
-  public boolean createOrEditUser(Map<String, String> parameter, boolean createUser)
+  public boolean createOrEditUser(Map<String, String> parameter, boolean createUser, String password)
   {
     logger.debug("createOrEditUser, createUser: " + createUser);
 
@@ -146,8 +146,9 @@ public class UsernamePasswordMethod implements IAuthorization
         // create Salt
         user.setSalt(Password.generateRandomSalt());
 
-        // create random password
-        String password = Password.generateRandomPassword(8);
+        // create random password if not set
+        if(password == null || password.length() == 0)
+          password = Password.generateRandomPassword(8);
 
         // activate user immediately
         user.setActivationTime(new Date());

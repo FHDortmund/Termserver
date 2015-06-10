@@ -67,7 +67,7 @@ public class ListCodeSystemConcepts
 
   public ListCodeSystemConceptsResponseType ListCodeSystemConcepts(ListCodeSystemConceptsRequestType parameter, boolean noLimit, String ipAddress)
   {
-    return ListCodeSystemConcepts(parameter, null, noLimit, ipAddress);
+    return ListCodeSystemConcepts(parameter, null, noLimit, ipAddress, false);
   }
 
 //  public ListCodeSystemConceptsResponseType ListCodeSystemConcepts(ListCodeSystemConceptsRequestType parameter, org.hibernate.Session session, boolean noLimit, String ipAddress)
@@ -1183,7 +1183,7 @@ public class ListCodeSystemConcepts
 //
 //    return response;
 //  }
-  public ListCodeSystemConceptsResponseType ListCodeSystemConcepts(ListCodeSystemConceptsRequestType parameter, org.hibernate.Session session, boolean noLimit, String ipAddress)
+  public ListCodeSystemConceptsResponseType ListCodeSystemConcepts(ListCodeSystemConceptsRequestType parameter, org.hibernate.Session session, boolean noLimit, String ipAddress, boolean reloaded)
   {
     if (logger.isInfoEnabled())
       logger.info("====== ListCodeSystemConcepts gestartet ======");
@@ -1337,12 +1337,15 @@ public class ListCodeSystemConcepts
         if (codeSystemVersionOid != null && codeSystemVersionOid.length() > 0)
         {
           logger.debug("get csv-id from oid");
-          // get csv-id from oid
-          String hql = "from CodeSystemVersion csv"
-              + " where csv.oid=:oid";
+          // get csv-id from oid (current version)
+          String hql = "select distinct csv from CodeSystemVersion csv"
+              + " join csv.codeSystem cs"
+              + " where csv.oid=:oid and cs.currentVersionId=csv.versionId";
           Query q = hb_session.createQuery(hql);
           q.setString("oid", codeSystemVersionOid);
+          
           List<CodeSystemVersion> csvList = q.list();
+          
           if (csvList != null && csvList.size() > 0)
           {
             codeSystemVersionId = csvList.get(0).getVersionId();
@@ -1912,354 +1915,19 @@ public class ListCodeSystemConcepts
         }
         else
         {
+          if(isHierachical && reloaded == false)
+          {
+            // try listing without axis/mainclass
+            parameter.getCodeSystemEntity().setCodeSystemVersionEntityMemberships(null);
+            return ListCodeSystemConcepts(parameter, hb_session, noLimit, ipAddress, true); // set reloaded = true to prevent recursive loads
+          }
           response.setCodeSystemEntity(new LinkedList<CodeSystemEntity>());
           response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
           response.getReturnInfos().setStatus(ReturnType.Status.OK);
           response.getReturnInfos().setMessage("Keine Konzepte für die Filterkriterien vorhanden");
           response.getReturnInfos().setCount(0);
         }
-        /*String hql = "select distinct csc from CodeSystemConcept csc";
-         hql += " join fetch csc.codeSystemEntityVersion csev";
-         hql += " join fetch csev.codeSystemEntity cse";
-         hql += " left outer join fetch csc.codeSystemConceptTranslations csct";
-         hql += " join fetch cse.codeSystemVersionEntityMemberships csvem";
         
-         //if (parameter.isLookForward())
-         //{
-         //  hql += " join fetch csev.codeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1 ass1";
-         //  hql += " join fetch csev.codeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2 ass2";
-         //}
-
-         // Parameter dem Helper hinzufügen
-         // bitte immer den Helper verwenden oder manuell Parameter per Query.setString() hinzufügen,
-         // sonst sind SQL-Injections möglich
-         HQLParameterHelper parameterHelper = new HQLParameterHelper();
-         parameterHelper.addParameter("", "codeSystemVersionId", codeSystemVersionId);
-
-         if (parameter != null && parameter.getCodeSystemEntity() != null)
-         {
-         if (parameter.getCodeSystemEntity().getCodeSystemVersionEntityMemberships() != null
-         && parameter.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().size() > 0)
-         {
-         CodeSystemVersionEntityMembership ms = (CodeSystemVersionEntityMembership) parameter.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().toArray()[0];
-         parameterHelper.addParameter("csvem.", "isAxis", ms.getIsAxis());
-         parameterHelper.addParameter("csvem.", "isMainClass", ms.getIsMainClass());
-         }
-
-         if (parameter.getCodeSystemEntity().getCodeSystemEntityVersions() != null
-         && parameter.getCodeSystemEntity().getCodeSystemEntityVersions().size() > 0)
-         {
-         CodeSystemEntityVersion csev = (CodeSystemEntityVersion) parameter.getCodeSystemEntity().getCodeSystemEntityVersions().toArray()[0];
-         parameterHelper.addParameter("csev.", "statusDate", csev.getStatusDate());
-
-         if (csev.getCodeSystemConcepts() != null && csev.getCodeSystemConcepts().size() > 0)
-         {
-         CodeSystemConcept csc = (CodeSystemConcept) csev.getCodeSystemConcepts().toArray()[0];
-         parameterHelper.addParameter("csc.", "code", csc.getCode());
-         parameterHelper.addParameter("csc.", "term", csc.getTerm());
-         parameterHelper.addParameter("csc.", "termAbbrevation", csc.getTermAbbrevation());
-         parameterHelper.addParameter("csc.", "isPreferred", csc.getIsPreferred());
-
-         if (csc.getCodeSystemConceptTranslations() != null && csc.getCodeSystemConceptTranslations().size() > 0)
-         {
-         CodeSystemConceptTranslation csct = (CodeSystemConceptTranslation) csc.getCodeSystemConceptTranslations().toArray()[0];
-         parameterHelper.addParameter("csct.", "term", csct.getTerm());
-         parameterHelper.addParameter("csct.", "termAbbrevation", csct.getTermAbbrevation());
-         if (csct.getLanguageId() > 0)
-         parameterHelper.addParameter("csct.", "languageId", csct.getLanguageId());
-         }
-         }
-         }
-         }
-
-         if (loggedIn == false)
-         {
-         parameterHelper.addParameter("csev.", "status", Definitions.STATUS_CODES.ACTIVE.getCode());
-         }
-
-         // Parameter hinzufügen (immer mit AND verbunden)
-         String where = parameterHelper.getWhere("");
-         hql += where;
-
-         // immer neueste Version lesen
-         hql += " AND csev.id=cse.currentVersionId";
-
-         hql += " ORDER BY csc.code";
-
-
-
-         // Suche begrenzen
-         int pageSize = -1;
-         int pageIndex = 0;
-         boolean allEntries = false;
-
-         if (parameter != null && parameter.getPagingParameter() != null)
-         {
-         // vorher aber noch die Gesamtanzahl berechnen
-         //Integer count = (Integer) hb_session.createQuery("select count(*) from ....").uniqueResult();
-
-         if (parameter.getPagingParameter().isAllEntries() != null && parameter.getPagingParameter().isAllEntries().booleanValue() == true)
-         {
-         if (loggedIn)
-         allEntries = true;
-         }
-
-         pageSize = parameter.getPagingParameter().getPageSize();
-         pageIndex = parameter.getPagingParameter().getPageIndex();
-         }
-
-         // MaxResults mit Wert aus SysParam prüfen
-         if (traverseConceptsToRoot)
-         {
-         if (pageSize < 0 || (maxPageSizeSearch > 0 && pageSize > maxPageSizeSearch))
-         pageSize = maxPageSizeSearch;
-         }
-         else
-         {
-         if (pageSize < 0 || (maxPageSize > 0 && pageSize > maxPageSize))
-         pageSize = maxPageSize;
-         }
-         if (pageIndex < 0)
-         pageIndex = 0;
-
-         // Gesamt-Anzahl lesen
-         String hqlCount = "select count(term) from CodeSystemConcept csc";
-         hqlCount += " join  csc.codeSystemEntityVersion csev";
-         hqlCount += " join  csev.codeSystemEntity cse";
-         hqlCount += " join  cse.codeSystemVersionEntityMemberships csvem";
-         hqlCount += where;
-
-         //hql = hql.replace("distinct csc", "count(term)");
-         logger.debug("HQL-Count: " + hqlCount);
-         org.hibernate.Query q = hb_session.createQuery(hqlCount);
-
-         // Die Parameter können erst hier gesetzt werden (übernimmt Helper)
-         parameterHelper.applyParameter(q);
-         long anzahlGesamt = (Long) q.uniqueResult();
-
-         // Anzahl zählen Datenbank-Aufruf durchführen
-         //int anzahlGesamt = q.list().size();
-         //int anzahlGesamt = 100;  // TODO Gesamt-Anzahl herausbekommen
-         logger.debug("Anzahl Gesamt: " + anzahlGesamt);
-
-
-         logger.debug("HQL: " + hql);
-         // Query erstellen
-         q = hb_session.createQuery(hql);
-
-         // Die Parameter können erst hier gesetzt werden (übernimmt Helper)
-         parameterHelper.applyParameter(q);
-
-
-         //conceptList = (java.util.List<CodeSystemConcept>) q.list();
-         if (anzahlGesamt > 0)
-         {
-         //hb_session.setFlushMode(FlushMode.AUTO);
-
-         ScrollableResults scrollResults = q.scroll();
-
-         int itCount = 0;
-
-         if (scrollResults != null)
-         {
-         java.util.List<CodeSystemEntity> entityList = new LinkedList<CodeSystemEntity>();
-
-         if (pageIndex > 0 && allEntries == false && anzahlGesamt > 0)
-         {
-         // Vorspulen
-         //if(pageSize * pageIndex < anzahlGesamt)
-         //  scrollResults.setRowNumber(pageSize * pageIndex);
-         for (int i = 0; i < pageSize * pageIndex && i < anzahlGesamt; ++i)
-         {
-         if (scrollResults.next() == false)
-         break;
-
-         if (i % 50 == 0)
-         {
-         // wichtig, da Speicher sonst voll läuft
-         hb_session.flush();
-         hb_session.clear();
-         }
-         }
-         }
-
-         //Iterator<CodeSystemConcept> iterator = conceptList.iterator();
-         //while (iterator.hasNext())
-
-         try
-         {
-         while (scrollResults.next())
-         {
-         if (itCount >= pageSize && allEntries == false)
-         break;
-
-         if (itCount % 50 == 0)
-         {
-         // wichtig, da Speicher sonst voll läuft
-         //hb_session.flush();
-         hb_session.clear();
-         }
-         itCount++;
-
-         //CodeSystemConcept csc = iterator.next();
-         CodeSystemConcept csc = (CodeSystemConcept) scrollResults.get(0);
-
-         // neues Entity generieren, damit nicht nachgeladen werden muss
-         CodeSystemEntity entity = csc.getCodeSystemEntityVersion().getCodeSystemEntity();
-
-         CodeSystemEntityVersion csev = csc.getCodeSystemEntityVersion();
-
-         csev.setCodeSystemEntity(null);
-
-         if (parameter.isLookForward())
-         {
-         // Verbindungen suchen
-         if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2() != null)
-         {
-         for (CodeSystemEntityVersionAssociation ass : csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2())
-         {
-         ass.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(null);
-         ass.setCodeSystemEntityVersionByCodeSystemEntityVersionId2(null);
-         ass.setAssociationType(null);
-         }
-         }
-         if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null)
-         {
-         for (CodeSystemEntityVersionAssociation ass : csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1())
-         {
-         ass.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(null);
-         ass.setCodeSystemEntityVersionByCodeSystemEntityVersionId2(null);
-         ass.setAssociationType(null);
-         }
-         }
-         }
-         else
-         {
-         if (traverseConceptsToRoot)
-         {
-         // Alle Elemente bis zum Root ermitteln (für Suche)
-         TraverseConceptToRoot traverse = new TraverseConceptToRoot();
-         TraverseConceptToRootRequestType requestTraverse = new TraverseConceptToRootRequestType();
-         requestTraverse.setLoginToken(parameter.getLoginToken());
-         requestTraverse.setCodeSystemEntity(new CodeSystemEntity());
-         CodeSystemEntityVersion csevRequest = new CodeSystemEntityVersion();
-         csevRequest.setVersionId(csev.getVersionId());
-         requestTraverse.getCodeSystemEntity().setCodeSystemEntityVersions(new HashSet<CodeSystemEntityVersion>());
-         requestTraverse.getCodeSystemEntity().getCodeSystemEntityVersions().add(csevRequest);
-
-         requestTraverse.setDirectionToRoot(true);
-         requestTraverse.setReadEntityDetails(false);
-         TraverseConceptToRootResponseType responseTraverse = traverse.TraverseConceptToRoot(requestTraverse, hb_session); // die Session übergeben, damit diese nicht geschlossen wird
-
-         //logger.debug("responseTraverse: " + responseTraverse.getReturnInfos().getMessage());
-
-         if (responseTraverse.getReturnInfos().getStatus() == ReturnType.Status.OK)
-         {
-         csev.setCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1(
-         responseTraverse.getCodeSystemEntityVersionRoot().getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1());
-         }
-         else
-         {
-         csev.setCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1(null);
-         }
-         }
-         else
-         {
-         csev.setCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1(null);
-         }
-         csev.setCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2(null);
-         }
-
-         csev.setCodeSystemMetadataValues(null);
-         csev.setConceptValueSetMemberships(null);
-         csev.setPropertyVersions(null);
-         csev.setAssociationTypes(null);
-
-         csc.setCodeSystemEntityVersion(null);
-
-         logger.debug("Akt Code: " + csc.getCode() + ", " + csc.getTerm());
-
-         //Translations
-         if (csc.getCodeSystemConceptTranslations() != null)
-         {
-         Iterator<CodeSystemConceptTranslation> itTrans = csc.getCodeSystemConceptTranslations().iterator();
-
-         while (itTrans.hasNext())
-         {
-         CodeSystemConceptTranslation csct = itTrans.next();
-         csct.setCodeSystemConcept(null);
-         }
-         }
-
-
-
-         csev.setCodeSystemConcepts(new HashSet<CodeSystemConcept>());
-         csev.getCodeSystemConcepts().add(csc);
-
-         entity.setCodeSystemEntityVersions(new HashSet<CodeSystemEntityVersion>());
-         entity.getCodeSystemEntityVersions().add(csev);
-
-         // M:N Verbindung zur Vokabular-Version (ohne nachladen)
-         CodeSystemVersionEntityMembership ms = (CodeSystemVersionEntityMembership) entity.getCodeSystemVersionEntityMemberships().toArray()[0];
-         ms.setCodeSystemVersion(null);
-         ms.setCodeSystemEntity(null);
-         ms.setId(null);
-
-         entity.setCodeSystemVersionEntityMemberships(new HashSet<CodeSystemVersionEntityMembership>());
-         entity.getCodeSystemVersionEntityMemberships().add(ms);
-
-         entityList.add(entity);
-         }
-         }
-         catch (org.hibernate.exception.GenericJDBCException ex)
-         {
-         logger.debug("Keine Eintraege");
-         ex.printStackTrace();
-         }
-
-         int anzahl = 0;
-         if (entityList != null)
-         anzahl = entityList.size();
-         response.setCodeSystemEntity(entityList);
-
-         // Treffermenge prüfen
-         if (anzahlGesamt > anzahl)
-         {
-         // Paging wird aktiviert
-         response.setPagingInfos(new PagingResultType());
-         response.getPagingInfos().setMaxPageSize(maxPageSize);
-         response.getPagingInfos().setPageIndex(pageIndex);
-         response.getPagingInfos().setPageSize(pageSize);
-         response.getPagingInfos().setCount((int) anzahlGesamt);
-         if (parameter != null && parameter.getPagingParameter() != null)
-         {
-         response.getPagingInfos().setMessage("Paging wurde aktiviert, da die Treffermenge größer ist als die maximale Seitengröße.");
-         }
-         //response.getPagingInfos().setMessage();
-         }
-         //response.setPagingInfos(null);
-
-         // Status an den Aufrufer weitergeben
-         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
-         response.getReturnInfos().setStatus(ReturnType.Status.OK);
-         response.getReturnInfos().setMessage("Konzepte erfolgreich gelesen, Anzahl: " + anzahl);
-         response.getReturnInfos().setCount(anzahl);
-
-         }
-         }
-         else
-         {
-         response.setCodeSystemEntity(new LinkedList<CodeSystemEntity>());
-         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
-         response.getReturnInfos().setStatus(ReturnType.Status.OK);
-         response.getReturnInfos().setMessage("Keine Konzepte für die Filterkriterien vorhanden");
-         response.getReturnInfos().setCount(0);
-         }*/
-        // Hibernate-Block wird in 'finally' geschlossen, erst danach
-        // Auswertung der Daten
-        // Achtung: hiernach können keine Tabellen/Daten mehr nachgeladen werden
-        //if(createHibernateSession)
-        //hb_session.getTransaction().commit();
       }
       catch (Exception e)
       {

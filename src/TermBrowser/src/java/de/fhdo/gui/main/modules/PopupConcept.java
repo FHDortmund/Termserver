@@ -37,7 +37,6 @@ import de.fhdo.terminologie.ws.authoring.CreateConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.CreateConceptResponse;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptResponse;
-import de.fhdo.terminologie.ws.authoring.MaintainConceptResponseType;
 import de.fhdo.terminologie.ws.authoring.VersioningType;
 import de.fhdo.terminologie.ws.conceptassociation.CreateConceptAssociationRequestType;
 import de.fhdo.terminologie.ws.conceptassociation.CreateConceptAssociationResponse;
@@ -45,7 +44,6 @@ import de.fhdo.terminologie.ws.conceptassociation.ListConceptAssociationsRequest
 import de.fhdo.terminologie.ws.conceptassociation.ListConceptAssociationsResponse;
 import de.fhdo.terminologie.ws.search.ListCodeSystemConceptsRequestType;
 import de.fhdo.terminologie.ws.search.ListCodeSystemConceptsResponse;
-import de.fhdo.terminologie.ws.search.ListConceptAssociationTypesResponse;
 import de.fhdo.terminologie.ws.search.ReturnConceptDetailsRequestType;
 import de.fhdo.terminologie.ws.search.ReturnConceptDetailsResponse;
 import de.fhdo.terminologie.ws.search.ReturnValueSetConceptMetadataRequestType;
@@ -57,7 +55,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -73,7 +70,6 @@ import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabbox;
 import org.zkoss.zul.Tabpanel;
-import org.zkoss.zul.Treecell;
 import org.zkoss.zul.Window;
 import types.termserver.fhdo.de.AssociationType;
 import types.termserver.fhdo.de.CodeSystem;
@@ -225,6 +221,13 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
 
     setWindowTitle();
     showDetailsVisibilty();
+    
+    // show tabs
+    getFellow("tabMetadata").setVisible(PropertiesHelper.getInstance().isGuiConceptShowMetadata());
+    getFellow("tabTranslations").setVisible(PropertiesHelper.getInstance().isGuiConceptShowTranslations());
+    getFellow("tabCrossmapping").setVisible(PropertiesHelper.getInstance().isGuiConceptShowCrossMappings());
+    getFellow("tabLinkedConcepts").setVisible(PropertiesHelper.getInstance().isGuiConceptShowLinkedConcepts());
+    getFellow("tabOntologies").setVisible(PropertiesHelper.getInstance().isGuiConceptShowOntologies());
 
     // fill domain values with selected codes
     DomainHelper.getInstance().fillCombobox((Combobox) getFellow("cbStatus"), de.fhdo.Definitions.DOMAINID_STATUS,

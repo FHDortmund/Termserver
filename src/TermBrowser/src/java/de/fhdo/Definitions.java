@@ -24,7 +24,7 @@ import de.fhdo.helper.VersionHelper;
  */
 public class Definitions
 {
-  public final static String VERSION = "2.0.1";
+  public final static String VERSION = "2.0.6";
   
   public final static String getVersion()
   {

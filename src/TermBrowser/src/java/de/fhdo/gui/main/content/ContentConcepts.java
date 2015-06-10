@@ -26,6 +26,7 @@ import de.fhdo.gui.main.modules.PopupValueSet;
 import de.fhdo.helper.ArgumentHelper;
 import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.ParameterHelper;
+import de.fhdo.helper.PropertiesHelper;
 import de.fhdo.helper.SendBackHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
@@ -35,10 +36,13 @@ import de.fhdo.logging.LoggingOutput;
 import de.fhdo.models.CodesystemGenericTreeModel;
 import de.fhdo.models.ValuesetGenericTreeModel;
 import de.fhdo.models.comparators.ComparatorCodesystemVersions;
+import de.fhdo.models.comparators.ComparatorConceptCodeAscending;
+import de.fhdo.models.comparators.ComparatorConceptCodeDescending;
+import de.fhdo.models.comparators.ComparatorConceptDesignationAscending;
+import de.fhdo.models.comparators.ComparatorConceptDesignationDescending;
 import de.fhdo.terminologie.ws.authoring.Status;
 import de.fhdo.terminologie.ws.authoring.UpdateCodeSystemVersionStatusRequestType;
 import de.fhdo.terminologie.ws.authoring.UpdateCodeSystemVersionStatusResponse;
-import de.fhdo.terminologie.ws.authoring.UpdateValueSetStatus;
 import de.fhdo.terminologie.ws.authoring.UpdateValueSetStatusRequestType;
 import de.fhdo.terminologie.ws.authoring.UpdateValueSetStatusResponse;
 import de.fhdo.terminologie.ws.search.SearchType;
@@ -63,6 +67,7 @@ import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Radiogroup;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Tree;
+import org.zkoss.zul.Treecol;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.event.PagingEvent;
 import types.termserver.fhdo.de.CodeSystem;
@@ -102,6 +107,8 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   private IUpdate updateListener = null;
   private AssociationEditor associationEditor;
 
+  private TreeAndContent treeAndContent;
+
   public ContentConcepts()
   {
     logger.debug("ContentConcepts() - Konstruktor");
@@ -113,6 +120,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     // loading dynamic parameters
     codeSystem = (CodeSystem) Executions.getCurrent().getAttribute("codeSystem");
     valueSet = (ValueSet) Executions.getCurrent().getAttribute("valueSet");
+    treeAndContent = (TreeAndContent) Executions.getCurrent().getAttribute("parent");
 
     String windowId = ArgumentHelper.getWindowParameterString("id");
 
@@ -283,7 +291,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
     dragAndDrop = ParameterHelper.getBoolean("dragAndDrop", false);
 
-    logger.debug("sendBack: " + sendBack);
+    logger.debug("sendBack: " + isSendBack());
     logger.debug("paramSearch: " + paramSearch);
     logger.debug("paramLoadType: " + paramLoadType);
     logger.debug("paramLoadName: " + paramLoadName);
@@ -317,7 +325,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       cbVersions.setModel(new ListModelList<CodeSystemVersion>(list));
       if (codeSystemVersion != null)
         selectedVersionId = codeSystemVersion.getVersionId();
-      
+
       // select cached version
       //for(CodeSystemVersion csv_list : cbVersions.getItems())
       //cbVersions.setSelectedIndex(MODAL);
@@ -339,12 +347,11 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
         {
           if (o instanceof CodeSystemVersion)
           {
-            
+
             CodeSystemVersion csv = (CodeSystemVersion) o;
             item.setLabel(csv.getName());
-            
-            //logger.debug("render csv with id: " + csv.getVersionId());
 
+            //logger.debug("render csv with id: " + csv.getVersionId());
             if (csv.getVersionId().longValue() == selectedVersionIdFinal)
             {
               cbVersions.setSelectedItem(item);
@@ -404,6 +411,9 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       valueSetVersion = vsv;
     }
 
+    // change title string
+    treeAndContent.setTitleCenter();
+
     loadConcepts();
   }
 
@@ -417,6 +427,12 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     concepts = new ConceptsTree(treeConcepts, this);
     concepts.setDragAndDrop(dragAndDrop);
     concepts.setUpdateDropListener(updateListener);
+    
+    ((Treecol)getFellow("tcTerm")).setSortAscending(new ComparatorConceptDesignationAscending());
+    ((Treecol)getFellow("tcTerm")).setSortDescending(new ComparatorConceptDesignationDescending());
+    
+    ((Treecol)getFellow("tcCode")).setSortAscending(new ComparatorConceptCodeAscending());
+    ((Treecol)getFellow("tcCode")).setSortDescending(new ComparatorConceptCodeDescending());
 
     if (codeSystem != null)
       concepts.setCodeSystemId(codeSystem.getId());
@@ -502,17 +518,17 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
             csv.setVersionId(codeSystemVersion.getVersionId());
             csv.setStatus(Definitions.STATUS_CODESYSTEMVERSION_INVISIBLE);
             request.getCodeSystem().getCodeSystemVersions().add(csv);
-            
+
             UpdateCodeSystemVersionStatusResponse.Return response = WebServiceHelper.updateCodeSystemVersionStatus(request);
-            
-            if(response.getReturnInfos().getStatus() == Status.OK)
+
+            if (response.getReturnInfos().getStatus() == Status.OK)
             {
               // reload cs tree
               SessionHelper.setValue("selectedCS", null);
               SessionHelper.setValue("selectedVS", null);
-              
+
               CodesystemGenericTreeModel.getInstance().reloadData();
-              
+
               Executions.sendRedirect(null);
               return;
             }
@@ -530,17 +546,17 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
             vsv.setVersionId(valueSetVersion.getVersionId());
             vsv.setStatus(Definitions.STATUS_CODESYSTEMVERSION_INVISIBLE);
             request.getValueSet().getValueSetVersions().add(vsv);
-            
+
             UpdateValueSetStatusResponse.Return response = WebServiceHelper.updateValueSetStatus(request);
-            
-            if(response.getReturnInfos().getStatus() == Status.OK)
+
+            if (response.getReturnInfos().getStatus() == Status.OK)
             {
               // reload vs tree
               SessionHelper.setValue("selectedCS", null);
               SessionHelper.setValue("selectedVS", null);
-              
+
               ValuesetGenericTreeModel.getInstance().reloadData();
-              
+
               Executions.sendRedirect(null);
               return;
             }
@@ -564,6 +580,45 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       //TreeAndContent.popupCodeSystem(codeSystem, PopupCodeSystem.EDITMODES.MAINTAIN, false, this);
       //else
       //  TreeAndContent.popupCodeSystem(cs, PopupCodeSystem.EDITMODES.DETAILSONLY, false, this);
+    }
+  }
+
+  public void onDetailVersionClicked()
+  {
+    try
+    {
+      if (codeSystem != null)
+      {
+        logger.debug("show codeSystem version details");
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("CS", codeSystem);
+        data.put("CSV", codeSystemVersion);
+        data.put("EditMode", PopupCodeSystem.EDITMODES.DETAILSONLY);
+
+        Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupCodeSystem.zul", this, data);
+        ((PopupCodeSystem) w).setUpdateListener(this);
+        w.doModal();
+      }
+      else if (valueSet != null)
+      {
+        logger.debug("show valueSet version details");
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("VS", valueSet);
+        data.put("VSV", valueSetVersion);
+        data.put("EditMode", PopupValueSet.EDITMODES.DETAILSONLY);
+
+        Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupValueSet.zul", this, data);
+        ((PopupValueSet) w).setUpdateListener(this);
+        w.doModal();
+      }
+      else
+      {
+        logger.debug("codeSystem and valueSet are null");
+      }
+    }
+    catch (Exception e)
+    {
+      LoggingOutput.outputException(e, this);
     }
   }
 
@@ -726,17 +781,23 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   private void showButtons()
   {
     CodeSystemEntityVersion csev = getConcepts().getSelection();
-    ((Button) getFellow("buttonDetails")).setDisabled(csev == null);
+    //((Button) getFellow("buttonDetails")).setDisabled(csev == null);
 
     // edit, new, ...
     boolean loggedIn = SessionHelper.isUserLoggedIn();
-    ComponentHelper.setVisible("buttonNew", loggedIn, this);
-    ComponentHelper.setVisibleAndDisabled("buttonNewSub", loggedIn, csev == null, this);
-    ComponentHelper.setVisibleAndDisabled("buttonEdit", loggedIn, csev == null, this);
-    ComponentHelper.setVisibleAndDisabled("buttonDelete", loggedIn, csev == null, this);
+    
+    boolean isCodesystem = codeSystemVersion != null;
+    boolean isValueset = valueSetVersion != null;
+    
+    
+    ComponentHelper.setVisible("buttonNew", loggedIn && PropertiesHelper.getInstance().isGuiEditConceptsShowNewRoot() && isCodesystem, this);
+    ComponentHelper.setVisibleAndDisabled("buttonNewSub", loggedIn && PropertiesHelper.getInstance().isGuiEditConceptsShowNewSub() && isCodesystem, csev == null, this);
+    ComponentHelper.setVisibleAndDisabled("buttonEdit", loggedIn && PropertiesHelper.getInstance().isGuiEditConceptsShowEdit() && isCodesystem, csev == null, this);
+    ComponentHelper.setVisibleAndDisabled("buttonDelete", loggedIn && PropertiesHelper.getInstance().isGuiEditConceptsShowDelete() && isCodesystem, csev == null, this);
+    ComponentHelper.setVisibleAndDisabled("buttonDetails", PropertiesHelper.getInstance().isGuiEditConceptsShowDetails(), csev == null, this);
 
     // show button, if concept can be send back
-    ComponentHelper.setVisibleAndDisabled("buttonAssumeConcept", sendBack, csev == null, this);
+    ComponentHelper.setVisibleAndDisabled("buttonAssumeConcept", isSendBack(), csev == null, this);
 
     ComponentHelper.setVisible("buttonEditVersion", loggedIn, this);
     ComponentHelper.setVisible("buttonDeleteVersion", loggedIn, this);
@@ -750,7 +811,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
   public void onAssumeConcept()
   {
-    if (sendBack == false)
+    if (isSendBack() == false)
       return;
 
     SendBackHelper.sendBack(getConcepts().getSelection());
@@ -808,6 +869,14 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   public ConceptsTree getConcepts()
   {
     return concepts;
+  }
+
+  /**
+   * @return the sendBack
+   */
+  public boolean isSendBack()
+  {
+    return sendBack;
   }
 
 }

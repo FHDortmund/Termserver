@@ -60,6 +60,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
   private boolean dragAndDrop;
   private Menupopup contextMenu;
   private IUpdate updateDropListener = null;
+  boolean sendBack = false;
 
   public TreeitemRendererCSEV(ConceptsTree conceptsTree, boolean search, boolean dragAndDrop, IUpdate updateDropListener)
   {
@@ -69,6 +70,9 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     this.updateDropListener = updateDropListener;
 
     logger.debug("updateDropListener: " + updateDropListener);
+    
+    sendBack = conceptsTree.getConceptsWindow().isSendBack();
+    logger.debug("sendBack: " + sendBack);
 
     createContextMenu();
   }
@@ -495,6 +499,8 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       return;
 
     logger.debug("createContextMenu()");
+    
+    
 
     contextMenu = new Menupopup();
     contextMenu.setParent(conceptsTree.getConceptsWindow());
@@ -508,6 +514,9 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     Menuitem miNewRootConcept = new Menuitem(Labels.getLabel("treeitemRendererCSEV.newRootConcept"));
      // TODO Menuitem miDeepLink = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miCreateDeepLink"));
     //Menuitem miRemoveVS = null;// = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miRemoveFromVS"));
+    
+    Menuitem miAssumeConcept = new Menuitem(Labels.getLabel("labels.common.assumeConcept"));
+    
 
     // set icons
     miDetails.setImage("/rsc/img/design/details_16x16.png");
@@ -617,6 +626,11 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
         new Menuseparator().setParent(contextMenu);
         miNewRootConcept.setParent(contextMenu);
         miNewSubConcept.setParent(contextMenu);
+        
+        if(sendBack)
+        {
+          miAssumeConcept.setParent(contextMenu);
+        }
       }
 
       // Menü VS hinzufügen

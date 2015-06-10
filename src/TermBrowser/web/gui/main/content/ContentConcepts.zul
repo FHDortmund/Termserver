@@ -11,6 +11,12 @@
             <div align="left" style="float:left; margin-bottom: 4px;">
               <label value="${labels.common.version}: "/>
               <combobox id="cbVersion" readonly="true" width="250px" onSelect="winConcepts.onVersionChanged()"/>
+              <button id="buttonDetailVersion" 
+                      onClick="winConcepts.onDetailVersionClicked()" 
+                      image="/rsc/img/list/magnifier.png" 
+                      tooltiptext="${labels.common.details}"
+                      autodisable="self"
+                      disabled="false"/>
               <button id="buttonNewVersion" 
                       onClick="winConcepts.onNewVersionClicked()" 
                       image="/rsc/img/design/add_16x16.png"    
@@ -113,13 +119,13 @@
           
           <paging id="paging" visible="false" onPaging="winConcepts.onPaging(event)" />
           <tree id="treeConcepts" vflex="true" width="100%" height="100%" zclass="z-tree" span="0" visible="true"
-                onSelect="winConcepts.onConceptSelect(event)"
+                onSelect="winConcepts.onConceptSelect(event)" 
                 onPaging="winConcepts.onPaging(event)">
             <treecols sizable="true">
-              <treecol label="${labels.common.designation}" sort="auto" id="tcTerm" hflex="min" />
-              <treecol label="${labels.common.code}" sort="auto" id="tcCode" width="180px" />
-              <treecol label="${labels.common.details}" sort="auto" id="tcDetails" width="80px" />
-              <treecol label="${labels.common.source}" sort="auto" id="treecolSource" hflex="min" visible="false" 
+              <treecol label="${labels.common.designation}" id="tcTerm" hflex="min" />
+              <treecol label="${labels.common.code}" id="tcCode" width="180px" sortDirection="ascending" />
+              <treecol label="${labels.common.details}" id="tcDetails" width="80px" />
+              <treecol label="${labels.common.source}" id="treecolSource" hflex="min" visible="false" 
               />
             </treecols>
           </tree>

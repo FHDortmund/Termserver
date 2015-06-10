@@ -110,7 +110,8 @@ public class LoginHelper
         session.setAttribute("collaboration_user_id", user.getId());
         //session.setAttribute("is_admin", (user.getAdmin() == null ? false : user.getAdmin().booleanValue()));
         session.setAttribute("collaboration_user_name", user.getUsername());
-        session.setAttribute("collaboration_user_role", user.getRoles().iterator().next().getName());
+        //session.setAttribute("collaboration_user_role", user.getRoles().iterator().next().getName());  // TODO nur 1 Rolle?
+        session.setAttribute("collaboration_user_roles", user.getRoles());
         
         session.setAttribute("CollaborationActive", true);
         
@@ -145,9 +146,10 @@ public class LoginHelper
     logger.debug("reset()");
     org.zkoss.zk.ui.Session session = Sessions.getCurrent();
 
-    session.setAttribute("collaboration_user_id", 0);
-    session.setAttribute("collaboration_user_name", 0);
-    session.setAttribute("collaboration_user_role", 0);
+    session.removeAttribute("collaboration_user_id");
+    session.removeAttribute("collaboration_user_name");
+    session.removeAttribute("collaboration_user_roles");
+    session.removeAttribute("CollaborationActive");
   }
 
   public void logout()

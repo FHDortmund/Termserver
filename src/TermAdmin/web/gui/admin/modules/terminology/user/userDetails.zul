@@ -41,6 +41,13 @@
               <textbox hflex="true" value="@{winUserDetails.user.email}" id="tb_Email"
                        sclass="mandatory"/>
             </row>
+            <row id="rowPassword">
+              <label value="Passwort:"/>
+              <vbox>
+                <checkbox id="cbPasswordMail" label="Automatisch per Email verschicken" checked="true" onCheck="winUserDetails.showPasswordBox()"/>
+                <textbox hflex="true" id="tb_Password"/>
+              </vbox>
+            </row>
             <row id="row_Aktiv">
               <label value="Aktiv:"/>
               <checkbox id="cb_aktiv" checked="@{winUserDetails.user.enabled}"/>

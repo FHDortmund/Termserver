@@ -229,7 +229,6 @@ public class ConceptsTree implements IUpdateModal
       // load root concepts to tree
       TreeNode tnRoot = new DefaultTreeNode(null, createTreeNodeCSEList(cseList));
       treeModel = new DefaultTreeModel(tnRoot);
-
     }
     else
     {

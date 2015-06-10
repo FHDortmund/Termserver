@@ -93,8 +93,6 @@ public class DBSysParam
       hb_session.close();
     }
 
-    
-
     return list;
   }
 
@@ -206,7 +204,7 @@ public class DBSysParam
   private void resolveDatatype(SysParam setting)
   {
     if (setting != null && setting.getJavaDatatype() != null
-            && setting.getJavaDatatype().equalsIgnoreCase("password"))
+        && setting.getJavaDatatype().equalsIgnoreCase("password"))
     {
       // Passwort entschlüsseln
       setting.setValue(DES.decrypt(setting.getValue()));
@@ -216,7 +214,7 @@ public class DBSysParam
   private void applyDatatype(SysParam setting)
   {
     if (setting != null && setting.getJavaDatatype() != null
-            && setting.getJavaDatatype().equalsIgnoreCase("password"))
+        && setting.getJavaDatatype().equalsIgnoreCase("password"))
     {
       // Passwort entschlüsseln
       setting.setValue(DES.encrypt(setting.getValue()));

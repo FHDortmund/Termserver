@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 /**
@@ -100,6 +101,22 @@ public class SysParamDetails extends Window implements org.zkoss.zk.ui.ext.After
       logger.error("Fehler im Konstruktor: " + e.getMessage());
     }
   }
+  
+  public void changeValueType()
+  {
+    /*String javaDatatype = sysParam.getJavaDatatype();
+    if (javaDatatype != null
+        && (javaDatatype.equalsIgnoreCase("password") || javaDatatype.equalsIgnoreCase("passwd") || javaDatatype.equalsIgnoreCase("pass")))
+    {
+      ((Textbox)getFellow("tbValue")).setRows(1);
+      ((Textbox)getFellow("tbValue")).setType("password");
+    }
+    else
+    {
+      ((Textbox)getFellow("tbValue")).setRows(8);
+      ((Textbox)getFellow("tbValue")).setType("");
+    }*/
+  }
 
   public void onOkClicked()
   {
@@ -168,7 +185,7 @@ public class SysParamDetails extends Window implements org.zkoss.zk.ui.ext.After
 
   public void afterCompose()
   {
-
+    changeValueType();
     //Listbox contactListBox = (Listbox) getFellow("lbCommunication");
     //contactListBox.setModel(communicationListModel);
     //contactListBox.setItemRenderer(communicationRenderer);

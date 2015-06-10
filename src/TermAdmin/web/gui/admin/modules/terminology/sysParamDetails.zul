@@ -40,12 +40,12 @@
             
             <row>
               <label value="Datentyp:"/>
-              <textbox width="97%" value="@{winSysParamDetails.sysParam.javaDatatype}"/>
+              <textbox width="97%" value="@{winSysParamDetails.sysParam.javaDatatype}" onChange="winSysParamDetails.changeValueType()" />
             </row>
             
             <row>
               <label value="Wert:"/>
-              <textbox width="97%" value="@{winSysParamDetails.sysParam.value}" rows="8"/>
+              <textbox id="tbValue" width="97%" value="@{winSysParamDetails.sysParam.value}" rows="8" />
             </row>
             
             <row>

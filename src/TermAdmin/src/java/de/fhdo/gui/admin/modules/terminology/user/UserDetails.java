@@ -27,6 +27,7 @@ import java.util.Map;
 import org.hibernate.Session;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
+import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
@@ -84,6 +85,8 @@ public class UserDetails extends Window implements AfterCompose
     getFellow("rowUserId").setVisible(!newEntry);
 
     ((Textbox) getFellow("tb_Benutzername")).setReadonly(!newEntry);
+    
+    showPasswordBox();
 
     //((Checkbox) getFellow("cb_aktiv")).setDisabled(newEntry);
     //((Checkbox) getFellow("cb_MailAktiv")).setDisabled(newEntry);
@@ -106,6 +109,13 @@ public class UserDetails extends Window implements AfterCompose
      rComboUsername.setVisible(false);
      rUsername.setVisible(true);
      }*/
+    
+  }
+  
+  public void showPasswordBox()
+  {
+    getFellow("rowPassword").setVisible(newEntry);
+    getFellow("tb_Password").setVisible(newEntry && ((Checkbox)getFellow("cbPasswordMail")).isChecked() == false);
   }
 
   public void onOkClicked()
@@ -131,8 +141,18 @@ public class UserDetails extends Window implements AfterCompose
       if(user.getId() != null && user.getId() > 0)
         param.put("userId", user.getId().toString());
 
+      String password = null;
+      
+      if(newEntry)
+      {
+        if(((Checkbox)getFellow("cbPasswordMail")).isChecked() == false)
+        {
+          password = ((Textbox)getFellow("tb_Password")).getText();
+        }
+      }
+      
       IAuthorization auth = Authorization.getAuthorizationClass();
-      if (auth.createOrEditUser(param, newEntry))
+      if (auth.createOrEditUser(param, newEntry, password))
       {
         if(newEntry)
           Messagebox.show("Benutzer erfolgreich erstellt und benachrichtigt.");

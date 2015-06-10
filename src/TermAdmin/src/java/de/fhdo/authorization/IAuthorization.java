@@ -31,7 +31,7 @@ public interface IAuthorization
   
   public void changePassword();
   
-  public boolean createOrEditUser(Map<String,String> parameter, boolean createUser);
+  public boolean createOrEditUser(Map<String,String> parameter, boolean createUser, String password);
   public boolean resendPassword(String username);
   
 }

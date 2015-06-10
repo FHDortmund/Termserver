@@ -58,6 +58,25 @@ public class PropertiesHelper
   private boolean guiCodesystemVersionExpandable;
   private boolean guiConceptExpandable;
   
+  private boolean guiConceptShowMetadata;
+  private boolean guiConceptShowTranslations;
+  private boolean guiConceptShowCrossMappings;
+  private boolean guiConceptShowLinkedConcepts;
+  private boolean guiConceptShowOntologies;
+
+  private boolean guiShowCodesystems;
+  private boolean guiShowValuesets;
+  
+  private boolean guiEditCodesystemsShowNew;
+  private boolean guiEditCodesystemsShowEdit;
+  private boolean guiEditCodesystemsShowDetails;
+  
+  private boolean guiEditConceptsShowNewRoot;
+  private boolean guiEditConceptsShowNewSub;
+  private boolean guiEditConceptsShowEdit;
+  private boolean guiEditConceptsShowDelete;
+  private boolean guiEditConceptsShowDetails;
+  
   private int expandTreeAutoCount = 50;
   
   private long associationTaxonomyDefaultVersionId = 4;
@@ -66,6 +85,8 @@ public class PropertiesHelper
   
   private boolean guiShowOnlyVisibleConcepts;
   private boolean guiAllowShowingInvisibleConcepts;
+  
+  
   
   public static PropertiesHelper getInstance()
   {
@@ -76,6 +97,11 @@ public class PropertiesHelper
   }
 
   public PropertiesHelper()
+  {
+    loadData();
+  }
+  
+  public void reset()
   {
     loadData();
   }
@@ -106,6 +132,12 @@ public class PropertiesHelper
       guiConceptExpandable = getBooleanValue(config.getProperty("gui.concept.expandable", "false"));
       guiConceptMinimal = getBooleanValue(config.getProperty("gui.concept.minimal", "false"));
       
+      guiConceptShowMetadata = getBooleanValue(config.getProperty("gui.concept.showMetadata", "true"));
+      guiConceptShowTranslations = getBooleanValue(config.getProperty("gui.concept.showTranslations", "true"));
+      guiConceptShowCrossMappings = getBooleanValue(config.getProperty("gui.concept.showCrossMappings", "true"));
+      guiConceptShowLinkedConcepts = getBooleanValue(config.getProperty("gui.concept.showLinkedConcepts", "true"));
+      guiConceptShowOntologies = getBooleanValue(config.getProperty("gui.concept.showOntologies", "true"));
+      
       associationTaxonomyDefaultVersionId = getLongValue(config.getProperty("association.taxonomy.default.versionId", "4"), 4);
       associationCrossmappingDefaultVersionId = getLongValue(config.getProperty("association.crossmapping.default.versionId", "0"), 0);
       associationLinkDefaultVersionId = getLongValue(config.getProperty("association.link.default.versionId", "0"), 0);
@@ -114,6 +146,18 @@ public class PropertiesHelper
       
       guiShowOnlyVisibleConcepts = getBooleanValue(config.getProperty("gui.showOnlyVisibleConcepts", "true"));
       guiAllowShowingInvisibleConcepts = getBooleanValue(config.getProperty("gui.allowShowingInvisibleConcepts", "false"));
+      
+      guiShowCodesystems = getBooleanValue(config.getProperty("gui.showCodesystems", "true"));
+      guiShowValuesets = getBooleanValue(config.getProperty("gui.showValuesets", "true"));
+      guiEditCodesystemsShowNew = getBooleanValue(config.getProperty("gui.edit.codesystems.showNew", "true"));
+      guiEditCodesystemsShowEdit = getBooleanValue(config.getProperty("gui.edit.codesystems.showEdit", "true"));
+      guiEditCodesystemsShowDetails = getBooleanValue(config.getProperty("gui.edit.codesystems.showDetails", "true"));
+      
+      guiEditConceptsShowNewRoot = getBooleanValue(config.getProperty("gui.edit.concepts.showNewRoot", "true"));
+      guiEditConceptsShowNewSub = getBooleanValue(config.getProperty("gui.edit.concepts.showNewSub", "true"));
+      guiEditConceptsShowEdit = getBooleanValue(config.getProperty("gui.edit.concepts.showEdit", "true"));
+      guiEditConceptsShowDelete = getBooleanValue(config.getProperty("gui.edit.concepts.showDelete", "true"));
+      guiEditConceptsShowDetails = getBooleanValue(config.getProperty("gui.edit.concepts.showDetails", "true"));
       
       logger.debug("login_classname: " + login_classname);
       logger.debug("termserverUrl: " + termserverUrl);
@@ -344,6 +388,126 @@ public class PropertiesHelper
   public boolean isGuiAllowShowingInvisibleConcepts()
   {
     return guiAllowShowingInvisibleConcepts;
+  }
+
+  /**
+   * @return the guiConceptShowMetadata
+   */
+  public boolean isGuiConceptShowMetadata()
+  {
+    return guiConceptShowMetadata;
+  }
+
+  /**
+   * @return the guiConceptShowTranslations
+   */
+  public boolean isGuiConceptShowTranslations()
+  {
+    return guiConceptShowTranslations;
+  }
+
+  /**
+   * @return the guiConceptShowCrossMappings
+   */
+  public boolean isGuiConceptShowCrossMappings()
+  {
+    return guiConceptShowCrossMappings;
+  }
+
+  /**
+   * @return the guiConceptShowLinkedConcepts
+   */
+  public boolean isGuiConceptShowLinkedConcepts()
+  {
+    return guiConceptShowLinkedConcepts;
+  }
+
+  /**
+   * @return the guiConceptShowOntologies
+   */
+  public boolean isGuiConceptShowOntologies()
+  {
+    return guiConceptShowOntologies;
+  }
+
+  /**
+   * @return the guiShowCodesystems
+   */
+  public boolean isGuiShowCodesystems()
+  {
+    return guiShowCodesystems;
+  }
+
+  /**
+   * @return the guiShowValuesets
+   */
+  public boolean isGuiShowValuesets()
+  {
+    return guiShowValuesets;
+  }
+
+  /**
+   * @return the guiEditCodesystemsShowNew
+   */
+  public boolean isGuiEditCodesystemsShowNew()
+  {
+    return guiEditCodesystemsShowNew;
+  }
+
+  /**
+   * @return the guiEditCodesystemsShowEdit
+   */
+  public boolean isGuiEditCodesystemsShowEdit()
+  {
+    return guiEditCodesystemsShowEdit;
+  }
+
+  /**
+   * @return the guiEditCodesystemsShowDetails
+   */
+  public boolean isGuiEditCodesystemsShowDetails()
+  {
+    return guiEditCodesystemsShowDetails;
+  }
+
+  /**
+   * @return the guiEditConceptsShowNewRoot
+   */
+  public boolean isGuiEditConceptsShowNewRoot()
+  {
+    return guiEditConceptsShowNewRoot;
+  }
+
+  /**
+   * @return the guiEditConceptsShowNewSub
+   */
+  public boolean isGuiEditConceptsShowNewSub()
+  {
+    return guiEditConceptsShowNewSub;
+  }
+
+  /**
+   * @return the guiEditConceptsShowEdit
+   */
+  public boolean isGuiEditConceptsShowEdit()
+  {
+    return guiEditConceptsShowEdit;
+  }
+
+  /**
+   * @return the guiEditConceptsShowDelete
+   */
+  public boolean isGuiEditConceptsShowDelete()
+  {
+    return guiEditConceptsShowDelete;
+  }
+
+  /**
+   * @return the guiEditConceptsShowDetails
+   */
+  public boolean isGuiEditConceptsShowDetails()
+  {
+    return guiEditConceptsShowDetails;
   }
 
 }

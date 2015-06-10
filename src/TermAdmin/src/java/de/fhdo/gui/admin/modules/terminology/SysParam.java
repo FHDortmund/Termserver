@@ -70,7 +70,7 @@ public class SysParam extends Window implements AfterCompose, IGenericListAction
     cells[1] = new GenericListCellType(sysParam.getDomainValueByValidityDomain().getDomainDisplay(), false, "");
     cells[2] = new GenericListCellType(sysParam.getDomainValueByModifyLevel().getDomainDisplay(), false, "");
     cells[3] = new GenericListCellType(sysParam.getJavaDatatype(), false, "");
-    cells[4] = new GenericListCellType(sysParam.getValue(), false, "");
+    cells[4] = new GenericListCellType(sysParam.getValueDisplay(), false, "");
     cells[5] = new GenericListCellType(sysParam.getDescription(), false, "");
 
     row.setData(sysParam);
