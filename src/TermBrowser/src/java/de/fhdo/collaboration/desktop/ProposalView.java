@@ -239,7 +239,7 @@ public class ProposalView extends Window implements AfterCompose, IUpdateModal
           Button button = new Button(child.getAction().getAction());
           button.setAutodisable("true");
           if (allowed &&
-              AssignTermHelper.isUserAllowed(proposal.getVocabularyIdTwo(),proposal.getVocabularyNameTwo()))
+              AssignTermHelper.isUserAllowed(proposal.getObjectVersionId(),proposal.getObjectName()))
           {
             button.setTooltiptext("Ändert den Status zu: " + child.getStatusByStatusIdTo().getStatus());
           }

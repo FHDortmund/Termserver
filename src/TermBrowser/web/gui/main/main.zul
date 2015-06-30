@@ -44,7 +44,7 @@
   </style>
   <window border="none" height="100%" width="100%" >   
    
-    <borderlayout>  
+    <borderlayout>
       <north id="blMainNorth">
         <include src="../header/menu.zul" />                               
       </north>

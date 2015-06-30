@@ -376,8 +376,9 @@ public class ProposalViewVote extends Window
             adr[i]= mailAdr.get(i);
         }
 
+        // TODO
         Mail.sendMailAUT(adr, M_AUT.PROPOSAL_RATING_SUBJECT, M_AUT.getInstance().getProposalRatingText(
-                prop.getVocabularyName(), 
+                prop.getObjectName(), 
                 prop.getContentType(),
                 prop.getDescription(),
                 getTextFromRating(r),

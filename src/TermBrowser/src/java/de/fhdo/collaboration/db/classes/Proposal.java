@@ -56,10 +56,10 @@ public class Proposal  implements java.io.Serializable {
      private Date lastChangeDate;
      private String note;
      private String contentType;
-     private Long vocabularyId;
-     private Long vocabularyIdTwo;
-     private String vocabularyName;
-     private String vocabularyNameTwo;
+     private Long objectId;
+     private Long objectVersionId;
+     private String objectName;
+     private String objectVersionName;
      private Set<Privilege> privileges = new HashSet<Privilege>(0);
      private Set<Rating> ratings = new HashSet<Rating>(0);
      private Set<Proposalobject> proposalobjects = new HashSet<Proposalobject>(0);
@@ -74,28 +74,6 @@ public class Proposal  implements java.io.Serializable {
     public Proposal(Collaborationuser collaborationuser, Date created) {
         this.collaborationuser = collaborationuser;
         this.created = created;
-    }
-    public Proposal(Collaborationuser collaborationuser, String description, Integer status, Date created, Date validFrom, Date validTo, Date statusDate, Date lastChangeDate, String note, String contentType, Long vocabularyId, Long vocabularyIdTwo, String vocabularyName, String vocabularyNameTwo, Set<Privilege> privileges, Set<Rating> ratings, Set<Proposalobject> proposalobjects, Set<Discussion> discussions, Set<Link> links, Set<Proposalstatuschange> proposalstatuschanges) {
-       this.collaborationuser = collaborationuser;
-       this.description = description;
-       this.status = status;
-       this.created = created;
-       this.validFrom = validFrom;
-       this.validTo = validTo;
-       this.statusDate = statusDate;
-       this.lastChangeDate = lastChangeDate;
-       this.note = note;
-       this.contentType = contentType;
-       this.vocabularyId = vocabularyId;
-       this.vocabularyIdTwo = vocabularyIdTwo;
-       this.vocabularyName = vocabularyName;
-       this.vocabularyNameTwo = vocabularyNameTwo;
-       this.privileges = privileges;
-       this.ratings = ratings;
-       this.proposalobjects = proposalobjects;
-       this.discussions = discussions;
-       this.links = links;
-       this.proposalstatuschanges = proposalstatuschanges;
     }
    
      @Id @GeneratedValue(strategy=IDENTITY)
@@ -200,40 +178,40 @@ public class Proposal  implements java.io.Serializable {
         this.contentType = contentType;
     }
     
-    @Column(name="vocabularyId")
-    public Long getVocabularyId() {
-        return this.vocabularyId;
+    @Column(name="objectId")
+    public Long getObjectId() {
+        return this.objectId;
     }
     
-    public void setVocabularyId(Long vocabularyId) {
-        this.vocabularyId = vocabularyId;
+    public void setObjectId(Long objectId) {
+        this.objectId = objectId;
     }
     
-    @Column(name="vocabularyIdTwo")
-    public Long getVocabularyIdTwo() {
-        return this.vocabularyIdTwo;
+    @Column(name="objectVersionId")
+    public Long getObjectVersionId() {
+        return this.objectVersionId;
     }
     
-    public void setVocabularyIdTwo(Long vocabularyIdTwo) {
-        this.vocabularyIdTwo = vocabularyIdTwo;
+    public void setObjectVersionId(Long objectVersionId) {
+        this.objectVersionId = objectVersionId;
     }
     
-    @Column(name="vocabularyName", length=64)
-    public String getVocabularyName() {
-        return this.vocabularyName;
+    @Column(name="objectName", length=255)
+    public String getObjectName() {
+        return this.objectName;
     }
     
-    public void setVocabularyName(String vocabularyName) {
-        this.vocabularyName = vocabularyName;
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
     }
     
-    @Column(name="vocabularyNameTwo", length=64)
-    public String getVocabularyNameTwo() {
-        return this.vocabularyNameTwo;
+    @Column(name="objectVersionName", length=255)
+    public String getObjectVersionName() {
+        return this.objectVersionName;
     }
     
-    public void setVocabularyNameTwo(String vocabularyNameTwo) {
-        this.vocabularyNameTwo = vocabularyNameTwo;
+    public void setObjectVersionName(String objectVersionName) {
+        this.objectVersionName = objectVersionName;
     }
     
 @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="proposal")

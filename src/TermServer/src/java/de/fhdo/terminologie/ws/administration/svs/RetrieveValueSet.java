@@ -16,28 +16,31 @@
  */
 package de.fhdo.terminologie.ws.administration.svs;
 
-import com.sun.tools.ws.wsdl.document.soap.SOAPFault;
+import de.fhdo.terminologie.db.hibernate.CodeSystem;
 import de.fhdo.terminologie.db.hibernate.CodeSystemConcept;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntity;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersion;
+import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersionEntityMembership;
 import de.fhdo.terminologie.db.hibernate.ValueSetVersion;
-import de.fhdo.terminologie.ws.administration.types.ExportCodeSystemContentRequestType;
-import de.fhdo.terminologie.ws.administration.types.ExportCodeSystemContentResponseType;
+import de.fhdo.terminologie.ws.search.ListCodeSystemConcepts;
 import de.fhdo.terminologie.ws.search.ListValueSetContents;
 import de.fhdo.terminologie.ws.search.ReturnValueSetDetails;
+import de.fhdo.terminologie.ws.search.types.ListCodeSystemConceptsRequestType;
+import de.fhdo.terminologie.ws.search.types.ListCodeSystemConceptsResponseType;
 import de.fhdo.terminologie.ws.search.types.ListValueSetContentsRequestType;
 import de.fhdo.terminologie.ws.search.types.ListValueSetContentsResponseType;
 import de.fhdo.terminologie.ws.search.types.ReturnValueSetDetailsRequestType;
 import de.fhdo.terminologie.ws.search.types.ReturnValueSetDetailsResponseType;
 import de.fhdo.terminologie.ws.types.ReturnType;
 import java.util.LinkedList;
-import javax.xml.soap.SOAPException;
-import javax.xml.ws.soap.SOAPFaultException;
+import java.util.List;
 
 /**
  *
  * @author Robert Mützner <robert.muetzner@fh-dortmund.de>
+ * edited 2015-06-18 by Robert Mützner:
+ *   search codesystem if no value set found -> "virtual value set"
  */
 public class RetrieveValueSet
 {
@@ -136,15 +139,37 @@ public class RetrieveValueSet
 
     }
 
+    List<CodeSystemEntity> codeSystemEntityList = null;
+    ValueSet vs = new ValueSet();
+    String preferredLanguageCd = "";
+
     if (vsv == null)
     {
-      throw new SVSFaultException("Value Set with given ID not found.");
+      // no value set with given id found, try searching codesystems by oid
+      logger.debug("no value set with given id found, try searching codesystems by oid");
+      
+      ListCodeSystemConceptsRequestType lcscRequest = new ListCodeSystemConceptsRequestType();
+      lcscRequest.setCodeSystem(new CodeSystem());
+      CodeSystemVersion csv = new CodeSystemVersion();
+      csv.setOid(id);  // search by oid
+      lcscRequest.getCodeSystem().getCodeSystemVersions().add(csv);
+      
+      ListCodeSystemConcepts lcsc = new ListCodeSystemConcepts();
+      ListCodeSystemConceptsResponseType lcscResponse = lcsc.ListCodeSystemConcepts(lcscRequest, true, "");
+      
+      if(lcscResponse.getReturnInfos().getStatus() == ReturnType.Status.OK)
+      {
+        codeSystemEntityList = lcscResponse.getCodeSystemEntity();
+      }
+      else
+      {
+        throw new SVSFaultException(lcscResponse.getReturnInfos().getMessage());
+      }
     }
     else
     {
       logger.debug("found vsv-id: " + vsv.getVersionId());
 
-      ValueSet vs = new ValueSet();
       if (vsv.getOid() == null || vsv.getOid().length() == 0)
         vs.setId("" + vsv.getVersionId());
       else
@@ -153,6 +178,8 @@ public class RetrieveValueSet
       vs.setVersion(vsv.getName());
       vs.setDisplayName(vsv.getValueSet().getName() + " - " + vsv.getName());
 
+      preferredLanguageCd = vsv.getPreferredLanguageCd();
+      
       // read values
       ListValueSetContentsRequestType requestListCodeSystemConcepts = new ListValueSetContentsRequestType();
       requestListCodeSystemConcepts.setValueSet(new de.fhdo.terminologie.db.hibernate.ValueSet());
@@ -160,49 +187,58 @@ public class RetrieveValueSet
 
       ListValueSetContents lcsc = new ListValueSetContents();
       ListValueSetContentsResponseType responseConcepts = lcsc.ListValueSetContents(requestListCodeSystemConcepts, "");
-      
+
       logger.debug(responseConcepts.getReturnInfos().getMessage());
-      
-      if(responseConcepts.getReturnInfos().getStatus() == ReturnType.Status.OK &&
-              responseConcepts.getReturnInfos().getCount() > 0)
+
+      if (responseConcepts.getReturnInfos().getStatus() == ReturnType.Status.OK
+          && responseConcepts.getReturnInfos().getCount() > 0)
       {
-        ConceptList cl = new ConceptList();
-        cl.setConcept(new LinkedList<Concept>());
-        
-        cl.setLang(vsv.getPreferredLanguageCd());
-        
-        // fill list
-        for(CodeSystemEntity cse : responseConcepts.getCodeSystemEntity())
-        {
-          Concept c = new Concept();
-          CodeSystemEntityVersion csv = cse.getCodeSystemEntityVersions().iterator().next();
-          CodeSystemConcept csc = csv.getCodeSystemConcepts().iterator().next();
-          c.setCode(csc.getCode());
-          c.setDisplayName(csc.getTerm());
-          
-          if(cse.getCodeSystemVersionEntityMemberships() != null && cse.getCodeSystemVersionEntityMemberships().size() > 0)
-          {
-            CodeSystemVersionEntityMembership csvem = cse.getCodeSystemVersionEntityMemberships().iterator().next();
-            if(csvem.getCodeSystemVersion() != null)
-            {
-              c.setCodeSystemVersion(csvem.getCodeSystemVersion().getName());
-              c.setCodeSystem(csvem.getCodeSystemVersion().getOid());
-              
-              if(csvem.getCodeSystemVersion().getCodeSystem() != null)
-                c.setCodeSystemName(csvem.getCodeSystemVersion().getCodeSystem().getName());
-            }
-          }
-          
-          cl.getConcept().add(c);
-        }
-        
-        vs.setConceptList(cl);
+        codeSystemEntityList = responseConcepts.getCodeSystemEntity();
       }
       else
       {
         throw new SVSFaultException(responseConcepts.getReturnInfos().getMessage());
       }
+    }
 
+    if (codeSystemEntityList == null)
+    {
+      throw new SVSFaultException("Value Set with given ID not found.");
+    }
+    else
+    {
+      ConceptList cl = new ConceptList();
+      cl.setConcept(new LinkedList<Concept>());
+
+      cl.setLang(preferredLanguageCd);
+
+      // fill list
+      for (CodeSystemEntity cse : codeSystemEntityList)
+      {
+        Concept c = new Concept();
+        CodeSystemEntityVersion csv = cse.getCodeSystemEntityVersions().iterator().next();
+        CodeSystemConcept csc = csv.getCodeSystemConcepts().iterator().next();
+        c.setCode(csc.getCode());
+        c.setDisplayName(csc.getTerm());
+
+        if (cse.getCodeSystemVersionEntityMemberships() != null && cse.getCodeSystemVersionEntityMemberships().size() > 0)
+        {
+          CodeSystemVersionEntityMembership csvem = cse.getCodeSystemVersionEntityMemberships().iterator().next();
+          if (csvem.getCodeSystemVersion() != null)
+          {
+            c.setCodeSystemVersion(csvem.getCodeSystemVersion().getName());
+            c.setCodeSystem(csvem.getCodeSystemVersion().getOid());
+
+            if (csvem.getCodeSystemVersion().getCodeSystem() != null)
+              c.setCodeSystemName(csvem.getCodeSystemVersion().getCodeSystem().getName());
+          }
+        }
+
+        cl.getConcept().add(c);
+      }
+
+      vs.setConceptList(cl);
+      
       return vs;
     }
 

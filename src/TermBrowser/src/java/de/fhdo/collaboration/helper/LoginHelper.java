@@ -31,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.util.StringHelper;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 import org.zkoss.util.resource.Labels;
@@ -45,6 +46,7 @@ import org.zkoss.zul.Messagebox;
  */
 public class LoginHelper
 {
+
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
   private static LoginHelper instance = null;
   private static final int activationTimespan = 259200; //72h
@@ -83,21 +85,21 @@ public class LoginHelper
       }
       if (salt == null)
         salt = "";
-      
-      logger.debug("salt: " +salt);
+
+      logger.debug("salt: " + salt);
 
       // Super, sichere Methode
       String passwordSalted = Password.getSaltedPassword(password, salt, username);
-      
-      logger.debug("username: " +username);
-      logger.debug("password: " +password);
-      logger.debug("passwordSalted: " +passwordSalted);
+
+      logger.debug("username: " + username);
+      logger.debug("password: " + password);
+      logger.debug("passwordSalted: " + passwordSalted);
 
       org.hibernate.Query q2 = hb_session.createQuery("from Collaborationuser WHERE username=:p_user AND password=:p_passwordSalted AND enabled=1 AND activated=1");
       q2.setString("p_user", username);
       q2.setString("p_passwordSalted", passwordSalted);
       userList = (java.util.List<Collaborationuser>) q2.list();
-      
+
       logger.debug("User-List-length 2: " + userList.size());
 
       if (userList.size() == 1)
@@ -108,30 +110,22 @@ public class LoginHelper
         org.zkoss.zk.ui.Session session = Sessions.getCurrent();
 
         session.setAttribute("collaboration_user_id", user.getId());
-        //session.setAttribute("is_admin", (user.getAdmin() == null ? false : user.getAdmin().booleanValue()));
         session.setAttribute("collaboration_user_name", user.getUsername());
         //session.setAttribute("collaboration_user_role", user.getRoles().iterator().next().getName());  // TODO nur 1 Rolle?
         session.setAttribute("collaboration_user_roles", user.getRoles());
-        
+
         session.setAttribute("CollaborationActive", true);
-        
-        /*if (user.getPersons() != null && user.getPersons().size() > 0)
-        {
-          session.setAttribute("person_id", ((Person) user.getPersons().toArray()[0]).getId());
-          session.setAttribute("person_obj", user.getPersons().toArray()[0]);
-        }*/
 
         logger.debug("collaboration_user_id: " + session.getAttribute("collaboration_user_id"));
         logger.debug("collaboration_user_name: " + session.getAttribute("collaboration_user_name"));
 
         loggedin = true;
       }
-      //hb_session.getTransaction().commit();
     }
     catch (Exception e)
     {
       //hb_session.getTransaction().rollback();
-        logger.error("Fehler beim Login: " + e.getLocalizedMessage());
+      logger.error("Fehler beim Login: " + e.getLocalizedMessage());
     }
     finally
     {
@@ -156,39 +150,43 @@ public class LoginHelper
   {
     Clients.showBusy("Abmelden...");
     //collabsoftware muss abgemeldet werden!
-    
-    logger.debug("Authorization.login()-Webservice wird aufgerufen");
-    de.fhdo.terminologie.ws.authorization.Authorization_Service service = new de.fhdo.terminologie.ws.authorization.Authorization_Service();
-    de.fhdo.terminologie.ws.authorization.Authorization port = service.getAuthorizationPort();
 
-    /*LogoutRequestType request = new LogoutRequestType();
-    request.setLogin(new LoginType());
-    request.getLogin().setSessionID(CollaborationSession.getInstance().getSessionID());*/
-
-    List<String> paramList = new LinkedList<String>();
-    paramList.add(CollaborationSession.getInstance().getSessionID());
-    
-    LogoutResponseType response = port.logout(paramList);
-    logger.debug("Antwort: " + response.getReturnInfos().getMessage());
-
-    if (response.getReturnInfos().getStatus() == Status.OK)
+    if (StringHelper.isEmpty(CollaborationSession.getInstance().getSessionID()))
     {
       reset();
-      CollaborationSession.getInstance().setSessionID(null);
-      //org.zkoss.zk.ui.Session session = Sessions.getCurrent();
-      //session.invalidate();
-
       Executions.sendRedirect("/gui/main/main.zul");
     }
     else
     {
-      try
+      logger.debug("Authorization.login()-Webservice wird aufgerufen");
+      de.fhdo.terminologie.ws.authorization.Authorization_Service service = new de.fhdo.terminologie.ws.authorization.Authorization_Service();
+      de.fhdo.terminologie.ws.authorization.Authorization port = service.getAuthorizationPort();
+
+      List<String> paramList = new LinkedList<String>();
+      paramList.add(CollaborationSession.getInstance().getSessionID());
+
+      LogoutResponseType response = port.logout(paramList);
+      logger.debug("Antwort: " + response.getReturnInfos().getMessage());
+
+      if (response.getReturnInfos().getStatus() == Status.OK)
       {
-        Messagebox.show(Labels.getLabel("loginHelper.loggingOffError") + ": " + response.getReturnInfos().getMessage());
+        reset();
+        CollaborationSession.getInstance().setSessionID(null);
+      //org.zkoss.zk.ui.Session session = Sessions.getCurrent();
+        //session.invalidate();
+
+        Executions.sendRedirect("/gui/main/main.zul");
       }
-      catch (Exception ex)
+      else
       {
-        LoggingOutput.outputException(ex, this);
+        try
+        {
+          Messagebox.show(Labels.getLabel("loginHelper.loggingOffError") + ": " + response.getReturnInfos().getMessage());
+        }
+        catch (Exception ex)
+        {
+          LoggingOutput.outputException(ex, this);
+        }
       }
     }
   }
@@ -210,19 +208,22 @@ public class LoginHelper
       DateTime origin = new DateTime(user.getActivationTime());
       Seconds seconds = Seconds.secondsBetween(origin, now);
       int sec = seconds.getSeconds();
-      if(seconds.getSeconds() < activationTimespan){
-      
+      if (seconds.getSeconds() < activationTimespan)
+      {
+
         user.setEnabled(true);
         user.setActivated(true);
         user.setActivationMd5("");
-        
+
         hb_session.merge(user);
 
         hb_session.getTransaction().commit();
         hb_session.close();
 
         return true;
-      }else{
+      }
+      else
+      {
         return false;
       }
     }
@@ -263,7 +264,6 @@ public class LoginHelper
         if (result.length() == 0)
           erfolg = true;
 
-
         if (erfolg)
         {
           // Neues Passwort in der Datenbank speichern
@@ -280,7 +280,7 @@ public class LoginHelper
     catch (Exception e)
     {
       hb_session.getTransaction().rollback();
-        logger.error("Fehler bei resendPassword(): " + e.getLocalizedMessage());
+      logger.error("Fehler bei resendPassword(): " + e.getLocalizedMessage());
     }
     finally
     {

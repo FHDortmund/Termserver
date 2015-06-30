@@ -17,15 +17,20 @@
           ]]></attribute>
           </toolbarbutton>
           <toolbarbutton id="tb_user" image="/rsc/img/design/user_16x16.png" label="-" onClick='win.onUserClicked()'
-                         tooltiptext="${labels.statusBar.userLoggedIn}" visible="false"/>
+                         tooltiptext="${labels.statusBar.userLoggedIn}" visible="true"/>
           <toolbarbutton id="tb_logout" image="/rsc/img/design/logout_16x16.png" label="${labels.common.logoff}" onClick='win.onLogoutClicked()'
                          visible="false"/>
           
           <!--<toolbarbutton id="tb_loginInfo" image="/rsc/img/symbols/info16_16.png" label="" tooltiptext="${labels.statusBar.userLoggedInInfo}" visible="false"/>-->
       
+          <toolbarbutton id="tb_collabUser" image="/rsc/img/design/user_16x16.png" label="-" onClick='win.onCollabUserClicked()'
+                         tooltiptext="${labels.statusBar.userLoggedIn}" visible="false"/>
+          <toolbarbutton id="tb_collabLogout" image="/rsc/img/design/logout_16x16.png" label="${labels.common.logoff}" onClick='win.onCollabLogoutClicked()'
+                         visible="false"/>
       
           <toolbarbutton id="tb_termadmin" image="/rsc/img/symbols/settings_16x16.png" label="Verwaltungsbereich" onClick='win.onCallAdminClicked()'
                          tooltiptext="Wechselt zum Verwaltungsbereich"/>
+          
       
           <!--<toolbarbutton  label="|"/>-->
         </toolbar>

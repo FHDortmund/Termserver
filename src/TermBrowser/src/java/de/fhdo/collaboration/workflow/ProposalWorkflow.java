@@ -29,7 +29,6 @@ import de.fhdo.collaboration.db.classes.Statusrel;
 import de.fhdo.collaboration.helper.AssignTermHelper;
 import de.fhdo.collaboration.helper.CODES;
 import de.fhdo.collaboration.proposal.ProposalStatus;
-import de.fhdo.collaboration.proposal.VocInfo;
 import de.fhdo.communication.M_AUT;
 import de.fhdo.communication.Mail;
 import de.fhdo.helper.DateTimeHelper;
@@ -110,55 +109,35 @@ public class ProposalWorkflow
    *
    * @param proposal Vorschlag
    * @param obj Einzufügendes Objekt (z.B. CodeSystemConcept)
-   * @return
-   */
-  public ReturnType addProposal(Proposal proposal, Object obj, Boolean isExisting)
-  {
-    return addProposal(proposal, obj, null, null, "", isExisting);
-  }
-
-  public ReturnType addProposal(Proposal proposal, Object obj, Object obj2, Long csId, Boolean isExisting)
-  {
-    return addProposal(proposal, obj, obj2, csId, "", isExisting);
-  }
-
-  /**
-   * Fügt einen neuen Vorschlag hinzu und benachrichtigt alle verantwortlichen
-   * Personen.
-   *
-   * @param proposal Vorschlag
-   * @param obj Einzufügendes Objekt (z.B. CodeSystemConcept)
    * @param obj2 Einzufügendes Objekt 2 (z.B. CodeSystemConcept)
    * @return
    */
-  public ReturnType addProposal(Proposal proposal, Object obj, Object obj2, Long csId, String searchCode, Boolean isExisting)
+  public ReturnType addProposal(Proposal proposal, List<Object> proposalObjects, Long codeSystemVersionId, String searchCode, Boolean isExisting)
   {
     ReturnType returnInfos = new ReturnType();
 
     // TODO erst prüfen, ob Benutzer exisitert (Collaborationuser)
-    // SessionHelper.getCollaborationUserID()
     List<Proposalobject> proposalObjectList = new java.util.LinkedList<Proposalobject>();
 
     boolean tsDataInserted = false;
 
-    // 1. Objekte in Terminologieserver erstellen
+    // 1. create objects in Terminology Server
     try
     {
       long insertedConceptId = 0;
 
-      if (proposal.getContentType().equals("vocabulary"))
+      for (Object proposalObject : proposalObjectList)
       {
-        if (!isExisting)
+        if (proposalObject instanceof CodeSystem)
         {
-          logger.debug("Codesystem einfügen mit...");
-
-          CodeSystem cs = (CodeSystem) obj;
+          // Codesystem with version
+          CodeSystem codeSystem = (CodeSystem) proposalObject;
 
           CreateCodeSystemRequestType request = new CreateCodeSystemRequestType();
           request.setLoginToken(CollaborationSession.getInstance().getSessionID());
 
           // Codesystem angeben
-          request.setCodeSystem(cs);
+          request.setCodeSystem(codeSystem);
 
           // Webservice aufrufen
           CreateCodeSystemResponse.Return ret = createCodeSystem(request);
@@ -169,54 +148,50 @@ public class ProposalWorkflow
 
             AssignTermHelper.assignTermToUser(ret.getCodeSystem());
 
-            proposal.setVocabularyId(ret.getCodeSystem().getCurrentVersionId());
-            proposal.setVocabularyIdTwo(ret.getCodeSystem().getId());
-
+            //proposal.setObjectId(ret.getCodeSystem().getCurrentVersionId());
+            //proposal.setObjectVersionId(ret.getCodeSystem().getId());
             // Wird später in DB eingefügt (Codesystem + CodesystemVersion)
             Proposalobject po = new Proposalobject();
             po.setClassId(ret.getCodeSystem().getId());
             po.setClassname("CodeSystem");
-            po.setName(cs.getName());
+            po.setName(codeSystem.getName());
             po.setChangeType(PO_CHANGE_TYPE.NEW.id());
             proposalObjectList.add(po);
 
             po = new Proposalobject();
             po.setClassId(ret.getCodeSystem().getCurrentVersionId());
             po.setClassname("CodeSystemVersion");
-            po.setName(cs.getCodeSystemVersions().get(0).getName());
+            po.setName(codeSystem.getCodeSystemVersions().get(0).getName());
             po.setChangeType(PO_CHANGE_TYPE.NEW.id());
             proposalObjectList.add(po);
           }
           else
           {
             logger.debug("Kein Erfolg beim Einfügen eines CodeSystems: " + ret.getReturnInfos().getMessage());
-            Messagebox.show(ret.getReturnInfos().getMessage());
+            //Messagebox.show(ret.getReturnInfos().getMessage());
+
+            returnInfos.setSuccess(false);
+            returnInfos.setMessage("Fehler beim Einfügen eines Vorschlags: " + ret.getReturnInfos().getMessage());
+            return returnInfos;
           }
+
+        }
+        //else if(proposalObject instanceof )
+
+      }
+
+      /*if (proposal.getContentType().equals("vocabulary"))
+      {
+        if (!isExisting)
+        {
+          logger.debug("Codesystem einfügen mit...");
+
+          CodeSystem cs = (CodeSystem) obj;
+
         }
         else
         {
-          logger.debug("Codesystem existiert. Proposal vorbereiten...");
 
-          tsDataInserted = true;   // Erfolg
-          CodeSystemVersion csv = (CodeSystemVersion) obj;
-
-          proposal.setVocabularyId(csv.getCodeSystem().getCurrentVersionId());
-          proposal.setVocabularyIdTwo(csv.getCodeSystem().getId());
-
-          // Wird später in DB eingefügt (Codesystem + CodesystemVersion)
-          Proposalobject po = new Proposalobject();
-          po.setClassId(csv.getCodeSystem().getId());
-          po.setClassname("CodeSystem");
-          po.setName(csv.getCodeSystem().getName());
-          po.setChangeType(PO_CHANGE_TYPE.CHANGED.id());
-          proposalObjectList.add(po);
-
-          po = new Proposalobject();
-          po.setClassId(csv.getCodeSystem().getCurrentVersionId());
-          po.setClassname("CodeSystemVersion");
-          po.setName(csv.getName());
-          po.setChangeType(PO_CHANGE_TYPE.CHANGED.id());
-          proposalObjectList.add(po);
         }
       }
       else if (proposal.getContentType().equals("valueset"))
@@ -307,7 +282,7 @@ public class ProposalWorkflow
           CodeSystemVersion csv = new CodeSystemVersion();
           csv.setVersionId(proposal.getVocabularyId());
           request.setCodeSystem(new CodeSystem());
-          request.getCodeSystem().setId(csId);
+          request.getCodeSystem().setId(codeSystemVersionId);
           request.getCodeSystem().getCodeSystemVersions().add(csv);
           logger.debug("...Codesystem-Version-ID: " + proposal.getVocabularyId());
 
@@ -326,9 +301,9 @@ public class ProposalWorkflow
 
           // Axis
           if (csc.getCodeSystemEntityVersion() != null
-                  && csc.getCodeSystemEntityVersion().getCodeSystemEntity() != null
-                  && csc.getCodeSystemEntityVersion().getCodeSystemEntity().getCodeSystemVersionEntityMemberships() != null
-                  && csc.getCodeSystemEntityVersion().getCodeSystemEntity().getCodeSystemVersionEntityMemberships().size() > 0)
+              && csc.getCodeSystemEntityVersion().getCodeSystemEntity() != null
+              && csc.getCodeSystemEntityVersion().getCodeSystemEntity().getCodeSystemVersionEntityMemberships() != null
+              && csc.getCodeSystemEntityVersion().getCodeSystemEntity().getCodeSystemVersionEntityMemberships().size() > 0)
           {
             logger.debug("verknüpfe Codesystem mit Begriff");
             request.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().add(csc.getCodeSystemEntityVersion().getCodeSystemEntity().getCodeSystemVersionEntityMemberships().get(0));
@@ -387,7 +362,7 @@ public class ProposalWorkflow
                 {
                   tsDataInserted = true;   // Erfolg
 
-                    //CodeSystemConcept cscParent = cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().getCodeSystemConcepts().get(0);
+                  //CodeSystemConcept cscParent = cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().getCodeSystemConcepts().get(0);
                   // Wird später in DB eingefügt
                   po = new Proposalobject();
                   po.setClassId(ret2.getCodeSystemEntityVersionAssociation().getId());
@@ -565,9 +540,9 @@ public class ProposalWorkflow
                     po.setClassId2(request.getCodeSystemEntityVersion().getConceptValueSetMemberships().get(0).getId().getValuesetVersionId());
                     po.setClassname("ConceptValueSetMembership");
                     po.setName(response.getCodeSystemEntity().get(0).getCodeSystemEntityVersions().get(0).getCodeSystemConcepts().get(0).getCode()
-                            + " ("
-                            + response.getCodeSystemEntity().get(0).getCodeSystemEntityVersions().get(0).getCodeSystemConcepts().get(0).getTerm()
-                            + ")");
+                        + " ("
+                        + response.getCodeSystemEntity().get(0).getCodeSystemEntityVersions().get(0).getCodeSystemConcepts().get(0).getTerm()
+                        + ")");
                     po.setChangeType(PO_CHANGE_TYPE.NEW.id()); // 1 = hinzugefügt
                     proposalObjectList.add(po);
 
@@ -615,13 +590,13 @@ public class ProposalWorkflow
           po.setClassId2(vsv.getVersionId());
           po.setClassname("ConceptValueSetMembership");
           po.setName(csev.getCodeSystemConcepts().get(0).getCode()
-                  + " ("
-                  + csev.getCodeSystemConcepts().get(0).getTerm()
-                  + ")");
+              + " ("
+              + csev.getCodeSystemConcepts().get(0).getTerm()
+              + ")");
           po.setChangeType(PO_CHANGE_TYPE.CHANGED.id()); // 1 = hinzugefügt
           proposalObjectList.add(po);
         }
-      }
+      }*/
     }
     catch (Exception ex)
     {
@@ -637,7 +612,7 @@ public class ProposalWorkflow
 
       try
       {
-        // 2. Vorschlag in DB hinzufügen
+        // 2. add proposal to db
         proposal.setStatus(1); // TODO
         proposal.setStatusDate(new Date());
         proposal.setCreated(new Date());
@@ -647,14 +622,14 @@ public class ProposalWorkflow
 
         hb_session.save(proposal);
 
-        // 3. Objekte in DB hinzufügen
+        // 3. create proposal objects in DB
         for (Proposalobject po : proposalObjectList)
         {
           po.setProposal(proposal);
           hb_session.save(po);
         }
 
-        //Add creator Default privilege
+        // Add creator Default privilege
         Privilege priv = new Privilege();
         priv.setCollaborationuser(new Collaborationuser());
         priv.getCollaborationuser().setId(SessionHelper.getCollaborationUserID());
@@ -669,8 +644,9 @@ public class ProposalWorkflow
         {
           priv.setSendMail(false);
         }
-        if (u.getRoles().iterator().next().getName().equals(CODES.ROLE_ADMIN)
-                || u.getRoles().iterator().next().getName().equals(CODES.ROLE_INHALTSVERWALTER))
+        
+        if (u.getRoles().iterator().next().getName().equals(CODES.ROLE_ADMIN)  // TODO
+            || u.getRoles().iterator().next().getName().equals(CODES.ROLE_INHALTSVERWALTER))
         {
           priv.setMayChangeStatus(true);
           priv.setMayManageObjects(true);
@@ -692,14 +668,18 @@ public class ProposalWorkflow
 
         if (u.getSendMail() != null && u.getSendMail())
         {
-          String[] adr = new String[1];
-          adr[0] = u.getEmail();
-          Mail.sendMailAUT(adr, M_AUT.PROPOSAL_SUBJECT, M_AUT.getInstance().getProposalText(
-                  proposal.getVocabularyName(),
-                  proposal.getContentType(),
-                  proposal.getDescription()));
+          // TODO send mail
+          
+//          String[] adr = new String[1];
+//          adr[0] = u.getEmail();
+//          Mail.sendMailAUT(adr, M_AUT.PROPOSAL_SUBJECT, M_AUT.getInstance().getProposalText(
+//              proposal.getVocabularyName(),
+//              proposal.getContentType(),
+//              proposal.getDescription()));
         }
-        Long id = 0l;
+        
+        
+        /*Long id = 0l;
         String classname = "";
         if (proposal.getContentType().equals("vocabulary"))
         {
@@ -773,12 +753,13 @@ public class ProposalWorkflow
               String[] adr = new String[1];
               adr[0] = userList.get(0).getEmail();
               Mail.sendMailAUT(adr, M_AUT.PROPOSAL_SUBJECT, M_AUT.getInstance().getProposalSelbstVerwText(
-                      proposal.getVocabularyName(),
-                      proposal.getContentType(),
-                      proposal.getDescription()));
+                  proposal.getVocabularyName(),
+                  proposal.getContentType(),
+                  proposal.getDescription()));
             }
           }
-        }
+        }*/
+        
         hb_session.getTransaction().commit();
       }
       catch (Exception ex)
@@ -914,13 +895,15 @@ public class ProposalWorkflow
 
             adr[i] = mailAdr.get(i);
           }
-          Mail.sendMailAUT(adr, M_AUT.PROPOSAL_STATUS_SUBJECT, M_AUT.getInstance().getProposalStatusChangeText(
-                  proposal.getVocabularyName(),
-                  proposal.getContentType(),
-                  proposal.getDescription(),
-                  ProposalStatus.getInstance().getStatusStr(statusFrom),
-                  ProposalStatus.getInstance().getStatusStr(statusTo),
-                  reason));
+          // TODO
+          
+//          Mail.sendMailAUT(adr, M_AUT.PROPOSAL_STATUS_SUBJECT, M_AUT.getInstance().getProposalStatusChangeText(
+//              proposal.getVocabularyName(),
+//              proposal.getContentType(),
+//              proposal.getDescription(),
+//              ProposalStatus.getInstance().getStatusStr(statusFrom),
+//              ProposalStatus.getInstance().getStatusStr(statusTo),
+//              reason));
 
         }
         catch (Exception ex)
@@ -1045,7 +1028,7 @@ public class ProposalWorkflow
       }
       else if (classname == PO_CLASSNAME.VALUESET)
       {
-          //Wäre gut wenn wir das analog zum CS halten und den status hier auch weglassen...
+        //Wäre gut wenn wir das analog zum CS halten und den status hier auch weglassen...
 
         /*
          // Status des Konzepts ändern

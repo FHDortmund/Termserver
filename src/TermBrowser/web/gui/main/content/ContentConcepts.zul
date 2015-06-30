@@ -187,6 +187,32 @@
                     label="${labels.common.assumeConcept}" 
                     onClick="winConcepts.onAssumeConcept()" 
                     disabled="true"/>
+            
+            <div id="divCollaboration" style="float:right; margin-left:12px;" visible="false">
+              <!--<separator orient="vertical" bar="true"/>-->
+              
+              <button id="buttonCollabNew" 
+                    label="${labels.collab.proposeNewConcept}"
+                    onClick="winConcepts.onCollabNewClicked()" 
+                    image="/rsc/img/design/add_16x16.png"    
+                    />
+              <button id="buttonCollabNewSub" 
+                    label="${labels.collab.proposeNewSubConcept}"
+                    onClick="winConcepts.onCollabNewSubClicked()" 
+                    image="/rsc/img/design/add_16x16.png"    
+                    />
+              <button id="buttonCollabEdit" 
+                    label="${labels.collab.proposeToExistingEntry}"
+                    onClick="winConcepts.onCollabEditClicked()" 
+                    image="/rsc/img/list/pencil.png"
+                    />
+              <button id="buttonCollabDelete" 
+                    label="${labels.collab.deleteConcept}"
+                    onClick="winConcepts.onCollabDeletedClicked()" 
+                    image="/rsc/img/list/delete.png"
+                    />
+              
+            </div>
           </div>
           <div align="right">
             <!--            <button id="buttonDeleteVersion"

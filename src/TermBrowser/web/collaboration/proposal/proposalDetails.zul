@@ -10,7 +10,7 @@
         <div>
         <groupbox mold="3d" width="100%" closable="false">
           <caption label="${labels.collab.proposal}" />
-          <label value="${labels.collab.proposalHeader}"/>
+          <label value="${labels.collab.proposalHeader}:"/>
           <textbox id="tbProposal" width="99%" rows="5" value="@{winProposalDetails.proposal.description}"
                    tooltiptext="Geben Sie hier Ihren Vorschlag in Textform ein." sclass="mandatory"/>
         </groupbox>
@@ -22,8 +22,8 @@
           
           <tabbox id="tbAuswahl">
             <tabs>
-              <tab label="Neues Code System/Value Set"/>
-              <tab label="Begriff" selected="true" id="tabSubConcept"/>
+              <tab label="Neues Code System/Value Set" id="tabCodeSystem" visible="false"/>
+              <tab label="Neuer Begriff" selected="true" id="tabConcept"  visible="false"/>
               
             </tabs>
             
@@ -31,19 +31,24 @@
               <!-- VOKABULAR -->
               <tabpanel>
                 <grid width="100%" height="100%" >
-                  <columns sizable="true">
-                    <column width="225px"/>
+                  <columns>
+                    <column hflex="min"/>
                     <column/>
                   </columns>
                   <rows style="vertical-align: top"> 
                     <row>
-                      <label value="${labels.common.codeSystem}"/>
-                      <checkbox id="cbVoc" width="99%" checked="true" sclass="mandatory" onCheck="winProposalDetails.vocOrValChecked(0)"/>
+                      <label value="${labels.common.type}"/>
+                      <div>
+                        <checkbox id="cbVoc" width="99%" checked="true" sclass="mandatory" onCheck="winProposalDetails.vocOrValChecked(0)"
+                                  label="${labels.common.codeSystem}"/>
+                        <checkbox id="cbVal" width="99%" checked="false" sclass="mandatory" onCheck="winProposalDetails.vocOrValChecked(1)"
+                                  label="${labels.common.valueSet}"/>
+                      </div>
                     </row>
-                    <row>
+<!--                    <row>
                       <label value="${labels.common.valueSet}"/>
                       <checkbox id="cbVal" width="99%" checked="false" sclass="mandatory" onCheck="winProposalDetails.vocOrValChecked(1)"/>
-                    </row>
+                    </row>-->
                     <row id="rVocName">
                       <label value="${labels.common.name}"/>
                       <textbox id="tbVocName" width="99%" sclass="mandatory"/>
@@ -54,7 +59,9 @@
                     </row>
                     
                     <row>
+                      <cell colspan="2">
                       <label id="lVersion" value="${labels.common.codeSystemVersion}"/>
+                      </cell>
                     </row>
                     <row id="rVocVersionName">
                       <label value="${labels.common.name}"/>

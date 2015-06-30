@@ -209,7 +209,7 @@ public class Desktop extends Window implements IGenericListActions, AfterCompose
     GenericListRowType row = new GenericListRowType();
 
     GenericListCellType[] cells = new GenericListCellType[8];
-    cells[0] = new GenericListCellType(proposal.getVocabularyName(), false, "");
+    cells[0] = new GenericListCellType(proposal.getObjectName(), false, "");
     cells[1] = new GenericListCellType(proposal.getDescription(), false, "");
     cells[2] = new GenericListCellType(DomainHelper.getInstance().getDomainValueDisplayText(Definitions.DOMAINID_PROPOSAL_TYPES, proposal.getContentType()), false, "");
     cells[3] = new GenericListCellType(ProposalStatus.getInstance().getStatusStr(proposal.getStatus()), false, "");

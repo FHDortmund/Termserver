@@ -14,7 +14,7 @@
                 <tab label="Vorschlags Übersicht" id="tabProposal" />
                 <tab label="Meine Diskussionsgruppen" id="tabDiscGroup" />
               </tabs>
-              <tabpanels>  
+              <tabpanels>
                 <tabpanel>
                   <include id="incProposal"/>
                 </tabpanel>

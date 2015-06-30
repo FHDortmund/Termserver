@@ -103,6 +103,8 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
   private boolean sendBack = false;
   private boolean dragAndDrop = false;
+  
+  private boolean collaborationActive = false;
 
   private IUpdate updateListener = null;
   private AssociationEditor associationEditor;
@@ -116,6 +118,8 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     Executions.getCurrent().setAttribute("instance", this);
 
     getURLParameter();
+    
+    collaborationActive = SessionHelper.isCollaborationActive();
 
     // loading dynamic parameters
     codeSystem = (CodeSystem) Executions.getCurrent().getAttribute("codeSystem");
@@ -804,9 +808,40 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
     // hide buttons, when in SELECT-Mode
     ComponentHelper.setVisible("buttonExport", externMode == false, this);
+    
+    // Collaboration
+    boolean collabLoggedIn = SessionHelper.isCollaborationLoggedIn();
+    ComponentHelper.setVisible("divCollaboration", collaborationActive, this);
+    
+    if(collaborationActive)
+    {
+      ComponentHelper.setVisibleAndDisabled("buttonCollabNewSub", collabLoggedIn && isCodesystem, csev == null, this);
+      ComponentHelper.setVisibleAndDisabled("buttonCollabEdit", collabLoggedIn && isCodesystem, csev == null, this);
+      ComponentHelper.setVisibleAndDisabled("buttonCollabDelete", collabLoggedIn && isCodesystem, csev == null, this);
+    }
+    
+  
+    
 
     //ComponentHelper.setVisible("buttonDeleteVersion", loggedIn, this);
     //ComponentHelper.setVisibleAndDisabled("buttonDeleteVersion", loggedIn, csev == null, this);
+  }
+  
+  public void onCollabNewClicked()
+  {
+    
+  }
+  public void onCollabNewSubClicked()
+  {
+    
+  }
+  public void onCollabEditClicked()
+  {
+    
+  }
+  public void onCollabDeletedClicked()
+  {
+    
   }
 
   public void onAssumeConcept()

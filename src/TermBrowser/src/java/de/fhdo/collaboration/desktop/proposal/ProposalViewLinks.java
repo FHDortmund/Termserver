@@ -125,7 +125,7 @@ public class ProposalViewLinks extends Window implements IGenericListActions, IU
     
     if(SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN) ||
        (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_INHALTSVERWALTER) && 
-        AssignTermHelper.isUserAllowed(proposalView.getProposal().getVocabularyIdTwo(),proposalView.getProposal().getVocabularyNameTwo()))){
+        AssignTermHelper.isUserAllowed(proposalView.getProposal().getObjectVersionId(),proposalView.getProposal().getObjectVersionName()))){
         genericList.setButton_edit(true);
         genericList.setButton_delete(true);
     }

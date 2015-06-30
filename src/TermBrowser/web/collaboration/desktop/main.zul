@@ -1,0 +1,39 @@
+<?page title="Kollaborationsumgebung" contentType="text/html;charset=UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul">       
+  
+  <window border="none" height="100%" width="100%" id="winCollabDesktop"
+          use="de.fhdo.collaboration.desktop.Main">   
+   
+    <borderlayout>
+      <north id="blMainNorth">
+        <include src="../../gui/header/menu.zul" />                               
+      </north>
+            
+      <south id="blMainSouth" height="26px">
+        <include src="../../gui/header/statusBar.zul" />
+      </south> 
+                        
+      <center id="blMainCenter">
+        <tabbox id="tabboxNavigation" height="100%" width="100%" onSelect="winCollabDesktop.onNavigationSelect()" >
+          <tabs>
+            <tab label="Mein Schreibtisch" id="tabDesktop" />
+            <tab label="Alle Vorschläge" id="tabProposals" />
+            <tab label="Meine Vorschläge" id="tabMyProposals" />
+          </tabs>
+          <tabpanels>
+            <tabpanel>
+              <include id="incDesktop"/>
+            </tabpanel>
+            <tabpanel>
+              <include id="incProposals"/>
+            </tabpanel>
+            <tabpanel>
+              <include id="incMyProposals"/>
+            </tabpanel>   
+          </tabpanels>
+        </tabbox>
+        <!--<include id="mainWindowCenter" src="./TreeAndContent.zul" moder="defer"/>-->
+      </center>    
+    </borderlayout>
+  </window>
+</zk>

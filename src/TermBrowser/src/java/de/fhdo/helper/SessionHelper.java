@@ -249,6 +249,12 @@ public class SessionHelper
     long id = getCollaborationUserID(httpSession);
     return id > 0;
   }
+  
+  public static boolean isCollaborationLoggedIn()
+  {
+    long id = getCollaborationUserID();
+    return id > 0;
+  }
 
   public static long getCollaborationUserID()
   {
@@ -302,6 +308,24 @@ public class SessionHelper
     }
     
     return Default;
+  }
+  
+  public static String getStringValue(String Name, String Default)
+  {
+    org.zkoss.zk.ui.Session session = Sessions.getCurrent();
+    if (session != null)
+    {
+      Object o = session.getAttribute(Name);
+      if(o != null)
+        return o.toString();
+    }
+    
+    return Default;
+  }
+  
+  public static String getStringValue(String Name)
+  {
+    return getStringValue(Name, "");
   }
 
   public static Object getValue(String Name, HttpSession httpSession)

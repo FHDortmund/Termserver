@@ -44,11 +44,11 @@
         <menupopup>
           <!-- Productive_AT_PU: public prod exclude, kollab prod include-->
           <!--Productive_AT_PU: public: visible=false, kollab: visible=true-->
-          <menuitem id="menuitemCollabLogin" label="${labels.collab.collaborationLogin}" onClick="win.collaborationClicked()" image="/rsc/img/symbols/lock_16x16.png" visible="true"></menuitem>
+          <menuitem id="menuitemCollabLogin" label="${labels.collab.collaborationLogin}" onClick="win.collaborationClicked()" image="/rsc/img/design/login_16x16.png" visible="true"></menuitem>
           <!--Productive_AT_PU: public: visible=false, kollab: visible=true-->
-          <menuitem id="menuitemCollabLogoff" label="${labels.common.logoffKollab}" onClick="win.onLogoutClicked()" image="/rsc/img/symbols/unlock_16x16.png" visible="true"></menuitem>
-          <menuseparator/>
-          <menuitem label="${labels.common.actualProceedings}" onClick="win.viewActualProceedings()"></menuitem>     
+          <menuitem id="menuitemCollabLogoff" label="${labels.common.logoffKollab}" onClick="win.onCollabLogoutClicked()" image="/rsc/img/design/logout_16x16.png" visible="true"></menuitem>
+<!--          <menuseparator/>
+          <menuitem label="${labels.common.actualProceedings}" onClick="win.viewActualProceedings()"></menuitem>     -->
         </menupopup>
       </menu>
       
@@ -84,15 +84,16 @@
                            image="/rsc/img/design/search_start_32x32.png" orient="vertical"
                            onClick="win.onGlobalSearch()"/>
             
+            <toolbarbutton id="tbb_CollabDesktop" label="Mein Schreibtisch" visible="@{win.isCollaboration}"
+                           tooltiptext="Öffnet Ihre Schreibtisch-Ansicht der Kollaborationsplattform" 
+                           image="/rsc/img/collab/home_32x32.png" orient="vertical"
+                           onClick="win.onDesktopClicked()" />
+            
             <toolbarbutton id="tbb_Vorschlag" label="Vorschlag..."
                            tooltiptext="Erstellt einen neuen Vorschlag unabhängig vom gewählten Kontext. Fügen Sie z.B. den Wunsch eines neuen Code Systems hinzu." 
-                           image="/rsc/img/collab/Add.png" orient="vertical"
+                           image="/rsc/img/design/add_32x32.png" orient="vertical"
                            onClick="win.onNewProposalClicked()" visible="@{win.isCollaboration}"/>
             
-            <toolbarbutton label="Mein Schreibtisch" visible="@{win.isCollaboration}"
-                           tooltiptext="Öffnet Ihre Schreibtisch-Ansicht der Kollaborationsplattform" 
-                           image="/rsc/img/collab/Home.png" orient="vertical"
-                           onClick="win.onDesktopClicked()" />
             <!--Productive_AT_PU: public: exclude, kollab: include--><!--<toolbarbutton label="Zur Publikationsumgebung" visible="@{win.isNotCollaboration}"
                          tooltiptext="Weiterleitung zur Publikationsumgebung" 
                          image="/rsc/img/collab/Forward.png" orient="vertical"

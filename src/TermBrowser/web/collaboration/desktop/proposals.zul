@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">       
+  <window border="none" height="100%" width="100%" 
+          id="winProposals"
+          use="de.fhdo.collaboration.desktop.Proposals">
+    <include id="incList" src="~./zul/pages/GenericList.zul"/>
+  </window>
+</zk>

@@ -1,6 +1,0 @@
-<!-- Define Component Class -->
-<?component name="dual-listbox" extends="div" class="de.fhdo.collaboration.proposal.DualListboxVoc"?>
-<window id="duallistboxVoc" apply="de.fhdo.collaboration.proposal.DualComposerVoc">
-    <!-- Direct Use -->
-    <dual-listbox id="dualLBoxVoc" />
-</window>

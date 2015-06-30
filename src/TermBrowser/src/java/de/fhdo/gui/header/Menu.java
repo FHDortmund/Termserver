@@ -17,6 +17,7 @@
 package de.fhdo.gui.header;
 
 import de.fhdo.authorization.Authorization;
+import de.fhdo.collaboration.helper.LoginHelper;
 import de.fhdo.helper.PropertiesHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.ViewHelper;
@@ -31,6 +32,7 @@ import org.zkoss.zk.ui.SuspendNotAllowedException;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Menuitem;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Window;
 
 /**
@@ -69,119 +71,50 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
 
   public void afterCompose()
   {
-
-    /*String p1 = Executions.getCurrent().getParameter("p1");
-
-    if (p1 != null)
-    {
-
-      //Get original pseudonym/pwhash from DB stored by TermAdmin
-      String[] uAndP = (DES.decrypt(p1)).split(";");
-      ArrayList<String> userCred = LoginHelper.getInstance().getPseudonym(uAndP[0]);
-
-      int index = 0;
-      for (String s : uAndP)
-      {
-        logger.debug("uAndP[" + index++ + "]: " + s);
-      }
-
-      boolean similar = uAndP[1].equals(userCred.get(0));
-      if (similar)
-      {
-        if (LoginHelper.getInstance().login(uAndP[0], userCred.get(1), true, uAndP[2]))
-        {
-          logger.debug("[Menu.java] Login erfolgreich");
-
-          //delete token from DB
-          boolean isAdmin = true;
-          if (uAndP != null && uAndP.length > 3)
-            isAdmin = Boolean.valueOf(uAndP[3]);
-          SessionHelper.setValue("is_admin", isAdmin);
-          LoginHelper.getInstance().deletePseudonym(SessionHelper.getUserName());
-          TreeModelVS.reloadData(getDesktop());
-
-          logger.debug("session collaboration_user_role: " + SessionHelper.getValue("collaboration_user_role"));
-          logger.debug("collaboration_user_role: " + uAndP[4]);
-
-          if (SessionHelper.getValue("collaboration_user_role") == null)
-          {
-            SessionHelper.setValue("collaboration_user_role", uAndP[4]);
-          }
-          if (SessionHelper.getValue("collaboration_user_id") == null)
-          {
-            SessionHelper.setValue("collaboration_user_id", uAndP[5]);
-          }
-          //Executions.getCurrent().sendRedirect("../../gui/main/main.zul");
-        }
-        else
-        {
-          Executions.getCurrent().sendRedirect("../../../TermAdmin/index.zul");
-        }
-      }
-      else
-      {
-        Executions.getCurrent().sendRedirect("../../../TermAdmin/index.zul");
-      }
-    }
-
-    boolean loggedIn = SessionHelper.isUserLoggedIn();
-    boolean isAdmin = SessionHelper.isAdmin();
-    ((Menuitem) getFellow("menuitemAnmelden")).setDisabled(loggedIn);
-    ((Menuitem) getFellow("menuitemAbmelden")).setDisabled(!loggedIn);
-    ((Menuitem) getFellow("menuitemAdminSettings")).setDisabled((loggedIn && isAdmin) == true ? false : true);
-    ((Menuitem) getFellow("menuitemDetails")).setDisabled(!loggedIn);
-
-    ((Menuitem) getFellow("menuitemCollabLogin")).setDisabled(isCollaboration);
-    ((Menuitem) getFellow("menuitemCollabLogoff")).setDisabled(!isCollaboration);
-
-    if ((SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN)
-            || SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_INHALTSVERWALTER)) && isCollaboration)
-    {
-      ((Toolbarbutton) getFellow("tbb_Vorschlag")).setVisible(true);
-    }
-    else
-    {
-      ((Toolbarbutton) getFellow("tbb_Vorschlag")).setVisible(false);
-    }*/
-    
     // Sichtbarkeiten Login-Status
     //String user = SessionHelper.getUserName();
     boolean loggedIn = SessionHelper.isUserLoggedIn();
-    
-    ((Menuitem)getFellow("menuitemAnmelden")).setDisabled(loggedIn);
-    ((Menuitem)getFellow("menuitemAbmelden")).setDisabled(!loggedIn);
-    ((Menuitem)getFellow("menuitemChangePassword")).setDisabled(!loggedIn);
-    
-    /*<menuitem id="menuitemAnmelden" label="${labels.common.doLogin}"  onClick="win.login()" image="/rsc/img/symbols/lock_16x16.png"></menuitem>
-          <menuitem id="menuitemAbmelden" label="${labels.common.doLogoff}" onClick="win.logout()" image="/rsc/img/symbols/unlock_16x16.png"></menuitem>
-          <menuitem id="menuitemChangePassword" label="${labels.common.changePassword}" onClick="win.changePassword()" image="/rsc/img/symbols/key_16x16.png"></menuitem>
-        </*/
-    
+
+    ((Menuitem) getFellow("menuitemAnmelden")).setDisabled(loggedIn);
+    ((Menuitem) getFellow("menuitemAbmelden")).setDisabled(!loggedIn);
+    ((Menuitem) getFellow("menuitemChangePassword")).setDisabled(!loggedIn);
+
+    // collaboration
+    if (PropertiesHelper.getInstance().isCollaborationActive())
+    {
+      boolean collabLoggedIn = SessionHelper.isCollaborationLoggedIn();
+      
+      ((Menuitem) getFellow("menuitemCollabLogin")).setDisabled(collabLoggedIn);
+      ((Menuitem) getFellow("menuitemCollabLogoff")).setDisabled(!collabLoggedIn);
+    //((Menuitem)getFellow("menuitemChangePassword")).setDisabled(!collabLoggedIn);
+
+      ((Toolbarbutton) getFellow("tbb_CollabDesktop")).setDisabled(!collabLoggedIn);
+      ((Toolbarbutton) getFellow("tbb_Vorschlag")).setDisabled(!collabLoggedIn);
+    }
     getFellow("menuCollaboration").setVisible(PropertiesHelper.getInstance().isCollaborationActive());
-    
+
     // Sichtbarkeit Ansicht
     boolean viewVisible = loggedIn && PropertiesHelper.getInstance().isGuiAllowShowingInvisibleConcepts();
     logger.debug("viewVisible: " + viewVisible);
     getFellow("menuView").setVisible(viewVisible);
-    
-    if(viewVisible)
+
+    if (viewVisible)
     {
-      ((Menuitem)getFellow("menuitemVisibleConcepts")).setChecked(SessionHelper.getBoolValue("showInvisibleConcepts", !PropertiesHelper.getInstance().isGuiShowOnlyVisibleConcepts()));
+      ((Menuitem) getFellow("menuitemVisibleConcepts")).setChecked(SessionHelper.getBoolValue("showInvisibleConcepts", !PropertiesHelper.getInstance().isGuiShowOnlyVisibleConcepts()));
     }
-    
-    
+
     /*<menu label="${labels.common.view}" id="menuView">
-        <menupopup>
-          <menuitem id="menuitemVisibleConcepts" label="${labels.common.showInvisbleConcept}" onClick="win.changeShowVisibleConcepts()" ></menuitem>
-        </menupopup>
-      </menu>*/
+     <menupopup>
+     <menuitem id="menuitemVisibleConcepts" label="${labels.common.showInvisbleConcept}" onClick="win.changeShowVisibleConcepts()" ></menuitem>
+     </menupopup>
+     </menu>*/
   }
-  
+
   public void changeShowVisibleConcepts()
   {
     boolean b = SessionHelper.getBoolValue("showInvisibleConcepts", !PropertiesHelper.getInstance().isGuiShowOnlyVisibleConcepts());
     SessionHelper.setValue("showInvisibleConcepts", !b);
-    
+
     Executions.sendRedirect(null); // reload page
   }
 
@@ -209,7 +142,7 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
       Executions.sendRedirect("../../../TermAdmin/gui/admin/logout.zul");
     }
   }
-  
+
   public void onGlobalSearch()
   {
     try
@@ -283,15 +216,15 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
     try
     {
       Window win = (Window) Executions.createComponents(
-              "/gui/info/actualProceedings.zul",
-              null, null);
+          "/gui/info/actualProceedings.zul",
+          null, null);
       win.setMaximizable(false);
       win.doModal();
     }
     catch (SuspendNotAllowedException ex)
     {
       logger.error("Fehler in Klasse '" + Menu.class.getName()
-              + "': " + ex.getMessage());
+          + "': " + ex.getMessage());
     }
   }
 
@@ -300,21 +233,21 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
     try
     {
       Window win = (Window) Executions.createComponents(
-              "/gui/info/impressum.zul",
-              null, null);
+          "/gui/info/impressum.zul",
+          null, null);
       win.setMaximizable(false);
       win.doModal();
     }
     catch (SuspendNotAllowedException ex)
     {
       logger.error("Fehler in Klasse '" + Menu.class.getName()
-              + "': " + ex.getMessage());
+          + "': " + ex.getMessage());
     }
   }
 
   public void viewAssociationEditor()
   {
-    if(SessionHelper.isUserLoggedIn())
+    if (SessionHelper.isUserLoggedIn())
       redirect("/gui/main/modules/AssociationEditor.zul", Labels.getLabel("menu.pleaseWait"), null);
     else
     {
@@ -405,8 +338,8 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
       if (fehler == false)
       {
         Window win = (Window) Executions.createComponents(
-                Src,
-                null, map);
+            Src,
+            null, map);
         win.setMaximizable(true); //TODO Manche module müssen Maximiert werden können! Bitte im Modul setMax false machen!
         win.doModal();
       }
@@ -414,7 +347,7 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
     catch (SuspendNotAllowedException ex)
     {
       logger.error("Fehler in Klasse '" + Menu.class.getName()
-              + "': " + ex.getMessage());
+          + "': " + ex.getMessage());
     }
   }
 
@@ -426,15 +359,15 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
     try
     {
       Window win = (Window) Executions.createComponents(
-              "/gui/info/about.zul",
-              null, null);
+          "/gui/info/about.zul",
+          null, null);
       win.setMaximizable(false);
       win.doModal();
     }
     catch (SuspendNotAllowedException ex)
     {
       logger.error("Fehler in Klasse '" + Menu.class.getName()
-              + "': " + ex.getMessage());
+          + "': " + ex.getMessage());
     }
   }
 
@@ -447,11 +380,17 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
   {
     Authorization.logout();
   }
-  
+
   public void changePassword()
   {
     Authorization.changePassword();
   }
+  
+  public void onCollabLogoutClicked()
+  {
+    LoginHelper.getInstance().logout();
+  }
+  
 
   public void showUADetails()
   {
@@ -527,13 +466,13 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+      LoggingOutput.outputException(e, this);
     }
   }
 
   public void onDesktopClicked()
   {
-    Executions.getCurrent().sendRedirect("/collaboration/desktop/mainCollab.zul");
+    Executions.getCurrent().sendRedirect("/collaboration/desktop/main.zul");
   }
 
   /**

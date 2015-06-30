@@ -17,10 +17,14 @@
 package de.fhdo.gui.header;
 
 import de.fhdo.authorization.Authorization;
+import de.fhdo.collaboration.helper.LoginHelper;
 import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.PropertiesHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.VersionHelper;
+import de.fhdo.logging.LoggingOutput;
+import java.util.HashMap;
+import java.util.Map;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Label;
@@ -41,17 +45,14 @@ public class StatusBar extends Window implements AfterCompose
   public void afterCompose()
   {
     String user = SessionHelper.getUserName();
+    String collabUser = "";
     boolean isAdmin = SessionHelper.isAdmin();
 
-    /*if (SessionHelper.isCollaborationActive())
-     {
-     collaboration = true;
-     user = SessionHelper.getCollaborationUserName();
-     }
-     else
-     {
-     user = SessionHelper.getUserName();
-     }*/
+    if (SessionHelper.isCollaborationActive())
+    {
+      collabUser = SessionHelper.getCollaborationUserName();
+    }
+
     if (user.length() > 0)
     {
       Toolbarbutton tbUser = (Toolbarbutton) getFellow("tb_user");
@@ -64,6 +65,17 @@ public class StatusBar extends Window implements AfterCompose
         tbUser.setImage("/rsc/img/design/user_16x16.png");
     }
 
+    if (collabUser.length() > 0)
+    {
+      Toolbarbutton tbCollabUser = (Toolbarbutton) getFellow("tb_collabUser");
+      tbCollabUser.setLabel(collabUser);
+
+      if (isAdmin)
+        tbCollabUser.setImage("/rsc/img/design/user_admin_16x16.png");
+      else
+        tbCollabUser.setImage("/rsc/img/design/user_16x16.png");
+    }
+
     /*
      ComponentHelper.setVisible("tb_user", user.length() > 0, this);
      ComponentHelper.setVisible("tb_logout", user.length() > 0, this);
@@ -72,6 +84,9 @@ public class StatusBar extends Window implements AfterCompose
     ComponentHelper.setVisible("tb_user", user.length() > 0, this);
     ComponentHelper.setVisible("tb_logout", user.length() > 0, this);
     ComponentHelper.setVisible("tb_termadmin", isAdmin, this);
+
+    ComponentHelper.setVisible("tb_collabUser", collabUser.length() > 0, this);
+    ComponentHelper.setVisible("tb_collabLogout", collabUser.length() > 0, this);
 
     /*if (user.length() > 0)
      {
@@ -108,13 +123,13 @@ public class StatusBar extends Window implements AfterCompose
      }*/
     // show termserver status/link
     String tsLabel
-            = PropertiesHelper.getInstance().getTermserverUrl()
-            + PropertiesHelper.getInstance().getTermserverServiceName();
-    
+        = PropertiesHelper.getInstance().getTermserverUrl()
+        + PropertiesHelper.getInstance().getTermserverServiceName();
+
     String version = VersionHelper.getInstance().getVersion();
-    if(version != null && version.length() > 0)
+    if (version != null && version.length() > 0)
       tsLabel += " | v" + version;
-    
+
     ((Label) getFellow("labelTermserver")).setValue(tsLabel);
   }
 
@@ -148,9 +163,40 @@ public class StatusBar extends Window implements AfterCompose
      }
      }*/
   }
-  
+
+  public void onCollabUserClicked()
+  {
+    //Authorization.logout();
+    //Authorization.changePassword();
+    // User-Details öffnen
+    if (SessionHelper.isCollaborationActive())
+    {
+      try
+      {
+        Map map = new HashMap();
+        map.put("user_id", SessionHelper.getCollaborationUserID());
+
+        Window win = (Window) Executions.createComponents(
+            "/collaboration/userDetails.zul", null, map);
+
+        win.doModal();
+      }
+      catch (Exception ex)
+      {
+        LoggingOutput.outputException(ex, this);
+      }
+    }
+  }
+
   public void onLogoutClicked()
   {
     Authorization.logout();
+  }
+  
+  public void onCollabLogoutClicked()
+  {
+    LoginHelper.getInstance().logout();
+    //reset
+    //Authorization.logout();
   }
 }

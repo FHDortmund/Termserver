@@ -272,13 +272,15 @@ public class DiscussionEntryDetails extends Window implements AfterCompose
         
             adr[i]= mailAdr.get(i);
         }
-        
-        Mail.sendMailAUT(adr, M_AUT.PROPOSAL_DISCUSSION_SUBJECT, M_AUT.getInstance().getProposalDiscussionEntryText(
-                prop.getVocabularyName(), 
-                prop.getContentType(),
-                prop.getDescription(),
-                discussion.getLongDescription(),
-                discussion.getCollaborationuser().getFirstName() + " " + discussion.getCollaborationuser().getName()));
+
+        // TODO
+//        Mail.sendMailAUT(adr, M_AUT.PROPOSAL_DISCUSSION_SUBJECT, M_AUT.getInstance().getProposalDiscussionEntryText(
+//                prop.getVocabularyName(), 
+//                prop.getContentType(),
+//                prop.getDescription(),
+//                discussion.getLongDescription(),
+//                discussion.getCollaborationuser().getFirstName() + " " + discussion.getCollaborationuser().getName()));
+//        
         
         
       }

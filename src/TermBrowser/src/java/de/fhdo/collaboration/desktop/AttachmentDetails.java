@@ -322,12 +322,13 @@ public class AttachmentDetails extends Window implements org.zkoss.zk.ui.ext.Aft
 
             adr[i]= mailAdr.get(i);
         }
-        Mail.sendMailAUT(adr, M_AUT.PROPOSAL_LINK_SUBJECT, M_AUT.getInstance().getProposalLinkChangeText(
-                    proposal.getVocabularyName(), 
-                    proposal.getContentType(),
-                    proposal.getDescription(),
-                    selectedTechnicalType.getDisplayText(),
-                    link.getDescription()));
+        // TODO
+//        Mail.sendMailAUT(adr, M_AUT.PROPOSAL_LINK_SUBJECT, M_AUT.getInstance().getProposalLinkChangeText(
+//                    proposal.getVocabularyName(), 
+//                    proposal.getContentType(),
+//                    proposal.getDescription(),
+//                    selectedTechnicalType.getDisplayText(),
+//                    link.getDescription()));
         
         
         hb_session.getTransaction().commit();
