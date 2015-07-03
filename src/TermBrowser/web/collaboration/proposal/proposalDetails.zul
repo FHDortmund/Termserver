@@ -78,21 +78,21 @@
               
               <!-- BEGRIFF -->
               <tabpanel>
-                <grid width="50%" height="50%">
+                <grid width="100%" >
                   <columns sizable="true">
-                    <column width="155px"/>
+                    <column hflex="min"/>
                     <column/>
                   </columns>
                   <rows style="vertical-align: top"> 
                     <row>
                       <label value="Zugehöriges Code System/Value Set"/>
-                      <label id="lConceptVocabulary" value="@{winProposalDetails.sourceString}"/>
+                      <label id="lConceptVocabulary"/>
                     </row>
                     <row id="rOriginalCodeSystem" visible ="false" >
                       <label value="Ursprungs CodeSystem"/>
                       <label id="lOriginalCodeSystem" value=""/>
                     </row>
-                    <row visible="@{winProposalDetails.subConceptVisible}">
+                    <row id="rowParentConcept" visible="false">
                       <label value="Überbegriff"/>
                       <label id="lParentConcept"/>
                     </row>
@@ -122,23 +122,9 @@
                       <label value="${labels.common.description}"/>
                       <textbox id="tbDescription" width="99%" rows="5"/>
                     </row>
-                    
-<!--<row><label value="${labels.common.termPreferred}"/>           <textbox  id="tbTermPL"      value="@{termPL}"                                           width="99%" readonly="true"/></row>    
-<row><label value="${labels.common.abbrevation}"/>             <textbox  id="tbAbbrevation" value="@{csc.termAbbrevation, save-when='bCreate.onClick'}" width="99%"/></row>
-<row><label value="${labels.common.code}" id="lCode" />        <textbox  id="tbCode"        value="@{csc.code, save-when='bCreate.onClick'}"            width="99%"/></row>
-<row><label value="${labels.common.status}"/>                  <textbox  id="tbStatus"      value="@{csev.status, save-when='bCreate.onClick'}"         width="99%"/></row>
-<row><label value="${labels.common.statusLastEdited}"/>        <datebox  id="dateBoxSD" width="100%" format="short+medium"/></row>                                                        
-<row><label value="${labels.common.insertedAt}"/>              <datebox  id="dateBoxID" width="100%" format="short+medium"/> </row>
-<row><label value="${labels.common.releasedAt}"/>              <datebox  id="dateBoxED" width="100%" format="short+medium"/> </row>                                                 
-<row><label value="${labels.common.isPreferredTerm}" id="lPref"/><checkbox id="cbPreferred" value="@{csc.isPreferred, save-when='bCreate.onClick'}"   checked="@{csc.isPreferred}"      width="100%"/></row>
-<row><label value="${labels.common.mainAxis}"/>                <checkbox id="cbAxis"        value="@{csvem.isAxis, save-when='bCreate.onClick'}"      checked="@{csvem.isAxis}"         width="100%"/></row>
-<row><label value="${labels.common.mainClass}"/>               <checkbox id="cbMainClass"   value="@{csvem.isMainClass, save-when='bCreate.onClick'}" checked="@{csvem.isMainClass}"    width="100%"/></row>
-                                <row>
-                    <cell colspan="2"> <label id="lReq" value="* ${labels.common.requiredField}" style="font-style:italic;font-size:0.6em"/> </cell>  
-                    </row>-->
                   </rows>
                 </grid>
-                <grid width="100%">
+<!--                <grid width="100%">
                   <columns sizable="true">
                     <column width="100%"/>
                   </columns>
@@ -162,7 +148,7 @@
                       <textbox id="tbCodeVs" width="40%" sclass="mandatory"/>
                     </row>
                   </rows>
-                </grid>  
+                </grid>  -->
               </tabpanel>
               
             

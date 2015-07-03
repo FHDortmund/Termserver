@@ -17,7 +17,6 @@
 package de.fhdo.gui.main.modules;
 
 import de.fhdo.Definitions;
-import de.fhdo.collaboration.helper.AssignTermHelper;
 import de.fhdo.helper.ArgumentHelper;
 import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.DateTimeHelper;
@@ -326,7 +325,7 @@ public class PopupCodeSystem extends Window implements AfterCompose, IUpdateData
     // Message über Erfolg/Misserfolg                
     if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
     {
-      AssignTermHelper.assignTermToUser(response.getCodeSystem());
+//      AssignTermHelper.assignTermToUser(response.getCodeSystem());
       Messagebox.show(Labels.getLabel("popupCodeSystem.newCodeSystemsuccessfullyCreated"));
       //((ContentCSVSDefault) this.getParent()).refreshCS();  // TODO nicht schön
       //this.detach();

@@ -1,26 +1,9 @@
-/* 
- * CTS2 based Terminology Server and Terminology Browser
- * Copyright (C) 2014 FH Dortmund: Peter Haas, Robert Muetzner
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package de.fhdo.collaboration.db.classes;
-// Generated 15.05.2013 18:02:38 by Hibernate Tools 3.2.1.GA
+// Generated 30.06.2015 09:32:45 by Hibernate Tools 4.3.1
 
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -51,8 +34,8 @@ public class Domain  implements java.io.Serializable {
      private String domainCodesys;
      private String description;
      private String domainType;
-     private Set<ClassAttribute> classAttributes = new HashSet<ClassAttribute>(0);
      private Set<DomainValue> domainValues = new HashSet<DomainValue>(0);
+     private Set<ClassAttribute> classAttributes = new HashSet<ClassAttribute>(0);
 
     public Domain() {
     }
@@ -61,7 +44,7 @@ public class Domain  implements java.io.Serializable {
     public Domain(String name) {
         this.name = name;
     }
-    public Domain(DomainValue domainValueByDefaultValueId, DomainValue domainValueByDisplayOrder, String name, String displayText, String domainOid, String domainCodesys, String description, String domainType, Set<ClassAttribute> classAttributes, Set<DomainValue> domainValues) {
+    public Domain(DomainValue domainValueByDefaultValueId, DomainValue domainValueByDisplayOrder, String name, String displayText, String domainOid, String domainCodesys, String description, String domainType, Set<DomainValue> domainValues, Set<ClassAttribute> classAttributes) {
        this.domainValueByDefaultValueId = domainValueByDefaultValueId;
        this.domainValueByDisplayOrder = domainValueByDisplayOrder;
        this.name = name;
@@ -70,11 +53,12 @@ public class Domain  implements java.io.Serializable {
        this.domainCodesys = domainCodesys;
        this.description = description;
        this.domainType = domainType;
-       this.classAttributes = classAttributes;
        this.domainValues = domainValues;
+       this.classAttributes = classAttributes;
     }
    
      @Id @GeneratedValue(strategy=IDENTITY)
+
     
     @Column(name="id", unique=true, nullable=false)
     public Long getId() {
@@ -84,6 +68,7 @@ public class Domain  implements java.io.Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
 @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="default_value_id")
     public DomainValue getDomainValueByDefaultValueId() {
@@ -93,6 +78,7 @@ public class Domain  implements java.io.Serializable {
     public void setDomainValueByDefaultValueId(DomainValue domainValueByDefaultValueId) {
         this.domainValueByDefaultValueId = domainValueByDefaultValueId;
     }
+
 @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="display_order")
     public DomainValue getDomainValueByDisplayOrder() {
@@ -102,6 +88,7 @@ public class Domain  implements java.io.Serializable {
     public void setDomainValueByDisplayOrder(DomainValue domainValueByDisplayOrder) {
         this.domainValueByDisplayOrder = domainValueByDisplayOrder;
     }
+
     
     @Column(name="name", nullable=false, length=60)
     public String getName() {
@@ -111,6 +98,7 @@ public class Domain  implements java.io.Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
     
     @Column(name="display_text", length=65535)
     public String getDisplayText() {
@@ -120,6 +108,7 @@ public class Domain  implements java.io.Serializable {
     public void setDisplayText(String displayText) {
         this.displayText = displayText;
     }
+
     
     @Column(name="domain_oid", length=100)
     public String getDomainOid() {
@@ -129,6 +118,7 @@ public class Domain  implements java.io.Serializable {
     public void setDomainOid(String domainOid) {
         this.domainOid = domainOid;
     }
+
     
     @Column(name="domain_codesys", length=100)
     public String getDomainCodesys() {
@@ -138,6 +128,7 @@ public class Domain  implements java.io.Serializable {
     public void setDomainCodesys(String domainCodesys) {
         this.domainCodesys = domainCodesys;
     }
+
     
     @Column(name="description", length=65535)
     public String getDescription() {
@@ -147,6 +138,7 @@ public class Domain  implements java.io.Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
     
     @Column(name="domain_type", length=50)
     public String getDomainType() {
@@ -156,21 +148,23 @@ public class Domain  implements java.io.Serializable {
     public void setDomainType(String domainType) {
         this.domainType = domainType;
     }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="domain")
-    public Set<ClassAttribute> getClassAttributes() {
-        return this.classAttributes;
-    }
-    
-    public void setClassAttributes(Set<ClassAttribute> classAttributes) {
-        this.classAttributes = classAttributes;
-    }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="domain")
+
+@OneToMany(fetch=FetchType.LAZY, mappedBy="domain")
     public Set<DomainValue> getDomainValues() {
         return this.domainValues;
     }
     
     public void setDomainValues(Set<DomainValue> domainValues) {
         this.domainValues = domainValues;
+    }
+
+@OneToMany(fetch=FetchType.LAZY, mappedBy="domain")
+    public Set<ClassAttribute> getClassAttributes() {
+        return this.classAttributes;
+    }
+    
+    public void setClassAttributes(Set<ClassAttribute> classAttributes) {
+        this.classAttributes = classAttributes;
     }
 
 

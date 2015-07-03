@@ -20,6 +20,7 @@ import de.fhdo.collaboration.db.HibernateUtil;
 import de.fhdo.collaboration.db.classes.Collaborationuser;
 import de.fhdo.collaboration.db.classes.Proposal;
 import de.fhdo.collaboration.db.classes.Rating;
+import de.fhdo.collaboration.db.classes.Userprivilege;
 import de.fhdo.collaboration.desktop.ProposalView;
 import de.fhdo.collaboration.helper.ProposalHelper;
 import de.fhdo.communication.M_AUT;
@@ -62,15 +63,14 @@ public class ProposalViewVote extends Window
 
   public ProposalViewVote()
   {
-    
-    
+
   }
 
   private void loadData()
   {
     // Bestimmen, ob Vorschlag in Diskussion ist und Zeitraum eingehalten wird
     inDiscussion = ProposalHelper.isProposalInDiscussion(proposalView.getProposal());
-    
+
     loadVoting();
     loadStatistics();
   }
@@ -80,16 +80,20 @@ public class ProposalViewVote extends Window
     // TODO Rechte beachten (!!)
     // nur Inhaltsverwalter dürfen Statistiken sehen (!)
     // bzw. Personen, welche den 
-    
-    Map<Long, Collaborationuser> users = ProposalHelper.getAllUsersForProposal(proposalId);
 
-    int anzahlTeilnehmer = users.size();
+    //Map<Long, Collaborationuser> users = ProposalHelper.getAllUsersForProposal(proposalId);
+    Map<Long, Userprivilege> userPriv = proposalView.getUserPrivileges();
+
+    int anzahlTeilnehmer = userPriv != null ? userPriv.size() : 0;
     int anzahlStimmen = 0;
     int anzahlAblehnungen = 0;
     int anzahlZustimmungen = 0;
     int anzahlZustimmungenModifikation = 0;
-    
-    String []stimmeHeader = new String[]{"Ablehnung", "Zustimmung", "Zustimmung mit Modifikation"};
+
+    String[] stimmeHeader = new String[]
+    {
+      "Ablehnung", "Zustimmung", "Zustimmung mit Modifikation"
+    };
 
     // Header für Liste
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
@@ -101,49 +105,48 @@ public class ProposalViewVote extends Window
     List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
 
     Session hb_session = HibernateUtil.getSessionFactory().openSession();
-    //hb_session.getTransaction().begin();
+    
     try
     {
       String hql = "from Rating r "
-              + " join fetch r.collaborationuser cu"
-              + " where proposalId=" + proposalId;
+          + " join fetch r.collaborationuser cu"
+          + " where proposalId=" + proposalId;
 
       List<Rating> list = hb_session.createQuery(hql).list();
       if (list != null && list.size() > 0)
       {
-          Iterator<Rating> iter = list.iterator();
-        while(iter.hasNext()){
+        Iterator<Rating> iter = list.iterator();
+        while (iter.hasNext())
+        {
           // Stimmen lesen und anzeigen
-            Rating r = iter.next();
+          Rating r = iter.next();
 
-            if (r.getValue() == 1)
-            {
-              anzahlAblehnungen++;
-              anzahlStimmen++;
-            }
-            else if (r.getValue() == 2)
-            {
-              anzahlZustimmungen++;
-              anzahlStimmen++;
-            }
-            else if (r.getValue() == 3)
-            {
-              anzahlZustimmungenModifikation++;
-              anzahlStimmen++;
-            }
+          if (r.getValue() == 1)
+          {
+            anzahlAblehnungen++;
+            anzahlStimmen++;
+          }
+          else if (r.getValue() == 2)
+          {
+            anzahlZustimmungen++;
+            anzahlStimmen++;
+          }
+          else if (r.getValue() == 3)
+          {
+            anzahlZustimmungenModifikation++;
+            anzahlStimmen++;
+          }
 
-            if (r.getValue() > 0)
-            {
-              // Diese Stimme in die Liste eintragen
-              dataList.add(createRatingRow(r));
-            }
+          if (r.getValue() > 0)
+          {
+            // Diese Stimme in die Liste eintragen
+            dataList.add(createRatingRow(r));
+          }
         }
       }
-      //hb_session.getTransaction().commit();
     }
     catch (Exception e)
     {
-        //hb_session.getTransaction().rollback();
       LoggingOutput.outputException(e, this);
     }
     finally
@@ -156,19 +159,19 @@ public class ProposalViewVote extends Window
     String prozentAblehnung = "";
     String prozentZustimmung = "";
     String prozentZustimmungModifikation = "";
-    
-    if(anzahlTeilnehmer > 0)
+
+    if (anzahlTeilnehmer > 0)
     {
       prozentStimmen = " (" + (anzahlStimmen * 100 / anzahlTeilnehmer) + "%)";
     }
-    
-    if(anzahlStimmen > 0)
+
+    if (anzahlStimmen > 0)
     {
       prozentAblehnung = " (" + (anzahlAblehnungen * 100 / anzahlStimmen) + "%)";
       prozentZustimmung = " (" + (anzahlZustimmungen * 100 / anzahlStimmen) + "%)";
       prozentZustimmungModifikation = " (" + (anzahlZustimmungenModifikation * 100 / anzahlStimmen) + "%)";
     }
-    
+
     ((Label) getFellow("labelAnzTeilnehmer")).setValue("" + anzahlTeilnehmer);
     ((Label) getFellow("labelAnzStimmen")).setValue("" + anzahlStimmen + prozentStimmen);
     ((Label) getFellow("labelAblehnungen")).setValue("" + anzahlAblehnungen + prozentAblehnung);
@@ -187,7 +190,7 @@ public class ProposalViewVote extends Window
     genericList.setShowCount(true);
 
   }
-  
+
   private String getTextFromRating(Rating r)
   {
     String stimme = "";
@@ -205,7 +208,6 @@ public class ProposalViewVote extends Window
     GenericListRowType row = new GenericListRowType();
 
     String stimme = getTextFromRating(r);
-    
 
     // Dokument-Icon
     GenericListCellType[] cells = new GenericListCellType[3];
@@ -230,9 +232,9 @@ public class ProposalViewVote extends Window
     try
     {
       String hql = "from Rating r "
-              + " join fetch r.collaborationuser cu"
-              + " where proposalId=" + proposalId
-              + " and cu.id=" + SessionHelper.getCollaborationUserID();
+          + " join fetch r.collaborationuser cu"
+          + " where proposalId=" + proposalId
+          + " and cu.id=" + SessionHelper.getCollaborationUserID();
 
       List<Rating> list = hb_session.createQuery(hql).list();
       if (list != null && list.size() > 0)
@@ -248,9 +250,9 @@ public class ProposalViewVote extends Window
         }
         else
           rg.setSelectedIndex(0);
-        
+
         // Ergebnis anzeigen
-        ((Label)getFellow("labelStimmeErgebnis")).setValue(getTextFromRating(r));
+        ((Label) getFellow("labelStimmeErgebnis")).setValue(getTextFromRating(r));
       }
 
       //hb_session.getTransaction().commit();
@@ -258,19 +260,19 @@ public class ProposalViewVote extends Window
     catch (Exception e)
     {
       //hb_session.getTransaction().rollback();
-        LoggingOutput.outputException(e, this);
+      LoggingOutput.outputException(e, this);
     }
     finally
     {
       hb_session.close();
     }
-    
-    ((Groupbox)getFellow("gb")).setVisible(inDiscussion);
-    ((Groupbox)getFellow("gbStimmergebnis")).setVisible(inDiscussion == false && stimmeVorhanden);
-    
-    ((Vbox)getFellow("vboxAbstimmung")).setVisible(inDiscussion);
-    ((Vbox)getFellow("vboxAbstimmungErgebnis")).setVisible(inDiscussion == false && stimmeVorhanden);
-    ((Vbox)getFellow("vboxAbstimmungVorher")).setVisible(inDiscussion == false && stimmeVorhanden == false);
+
+    ((Groupbox) getFellow("gb")).setVisible(inDiscussion);
+    ((Groupbox) getFellow("gbStimmergebnis")).setVisible(inDiscussion == false && stimmeVorhanden);
+
+    ((Vbox) getFellow("vboxAbstimmung")).setVisible(inDiscussion);
+    ((Vbox) getFellow("vboxAbstimmungErgebnis")).setVisible(inDiscussion == false && stimmeVorhanden);
+    ((Vbox) getFellow("vboxAbstimmungVorher")).setVisible(inDiscussion == false && stimmeVorhanden == false);
   }
 
   /**
@@ -288,10 +290,10 @@ public class ProposalViewVote extends Window
     try
     {
       String hql = "from Rating r "
-              + " join fetch r.collaborationuser cu"
-              + " where proposalId=" + proposalId
-              + " and cu.id=" + SessionHelper.getCollaborationUserID();
-      
+          + " join fetch r.collaborationuser cu"
+          + " where proposalId=" + proposalId
+          + " and cu.id=" + SessionHelper.getCollaborationUserID();
+
       List<Rating> list = hb_session.createQuery(hql).list();
       if (list == null || list.size() == 0)
       {
@@ -327,65 +329,72 @@ public class ProposalViewVote extends Window
       ((Button) getFellow("buttonSpeichern")).setDisabled(true);
       ((Textbox) getFellow("tbBegruendung")).setDisabled(true);
 
-        ArrayList<Collaborationuser> completeUserList = new ArrayList<Collaborationuser>();
-        
-        Proposal prop = (Proposal)hb_session.get(Proposal.class, proposalId);
-        Collaborationuser user = (Collaborationuser)hb_session.get(Collaborationuser.class, SessionHelper.getCollaborationUserID());
-
-        //Lade alle Benutzer mit Privilegien auf Proposal
-        String hqlPrivilegeUsers = "from Collaborationuser cu join fetch cu.privileges pri join fetch pri.proposal pro join fetch cu.organisation o where pro.id=:id";
-        Query qPrivilegeUsers = hb_session.createQuery(hqlPrivilegeUsers);
-        qPrivilegeUsers.setParameter("id", prop.getId());
-        List<Collaborationuser> privUserList = qPrivilegeUsers.list();
-
-        for(Collaborationuser cu:privUserList){
-            completeUserList.add(cu);
-        }
-
-        //Lade alle Diskussionsgruppen mit Privilegien auf Proposal
-        String hqlPrivilegeGroups = "from Collaborationuser cu join fetch cu.discussiongroups dg join fetch dg.privileges pri join fetch pri.proposal pro where pro.id=:id";
-        Query qPrivilegeGroups = hb_session.createQuery(hqlPrivilegeGroups);
-        qPrivilegeGroups.setParameter("id", prop.getId());
-        List<Collaborationuser> privGroupList = qPrivilegeGroups.list();
-
-        for(Collaborationuser cu:privGroupList){
-
-            boolean doubleEntry = false;
-            for(Collaborationuser cuI:completeUserList){
-
-                if(cu.getId().equals(cuI.getId())){
-                    doubleEntry = true;
-                }
-            }
-
-            if(!doubleEntry){
-                completeUserList.add(cu);
-            }
-        }
-
-        ArrayList<String> mailAdr = new ArrayList<String>();
-        for(Collaborationuser u:completeUserList){
-            
-            
-            if(u.getSendMail() != null && u.getSendMail())
-                mailAdr.add(u.getEmail());
-        }
-        String[] adr = new String[mailAdr.size()];
-        for(int i = 0;i<adr.length;i++){
-
-            adr[i]= mailAdr.get(i);
-        }
-
-        // TODO
-        Mail.sendMailAUT(adr, M_AUT.PROPOSAL_RATING_SUBJECT, M_AUT.getInstance().getProposalRatingText(
-                prop.getObjectName(), 
-                prop.getContentType(),
-                prop.getDescription(),
-                getTextFromRating(r),
-                r.getText(),
-                user.getFirstName() + " " + user.getName()));
+      // TODO Benachrichtigung
       
-      
+//      ArrayList<Collaborationuser> completeUserList = new ArrayList<Collaborationuser>();
+//
+//      Proposal prop = (Proposal) hb_session.get(Proposal.class, proposalId);
+//      Collaborationuser user = (Collaborationuser) hb_session.get(Collaborationuser.class, SessionHelper.getCollaborationUserID());
+//
+//      //Lade alle Benutzer mit Privilegien auf Proposal
+//      String hqlPrivilegeUsers = "from Collaborationuser cu join fetch cu.privileges pri join fetch pri.proposal pro join fetch cu.organisation o where pro.id=:id";
+//      Query qPrivilegeUsers = hb_session.createQuery(hqlPrivilegeUsers);
+//      qPrivilegeUsers.setParameter("id", prop.getId());
+//      List<Collaborationuser> privUserList = qPrivilegeUsers.list();
+//
+//      for (Collaborationuser cu : privUserList)
+//      {
+//        completeUserList.add(cu);
+//      }
+//
+//      //Lade alle Diskussionsgruppen mit Privilegien auf Proposal
+//      String hqlPrivilegeGroups = "from Collaborationuser cu join fetch cu.discussiongroups dg join fetch dg.privileges pri join fetch pri.proposal pro where pro.id=:id";
+//      Query qPrivilegeGroups = hb_session.createQuery(hqlPrivilegeGroups);
+//      qPrivilegeGroups.setParameter("id", prop.getId());
+//      List<Collaborationuser> privGroupList = qPrivilegeGroups.list();
+//
+//      for (Collaborationuser cu : privGroupList)
+//      {
+//
+//        boolean doubleEntry = false;
+//        for (Collaborationuser cuI : completeUserList)
+//        {
+//
+//          if (cu.getId().equals(cuI.getId()))
+//          {
+//            doubleEntry = true;
+//          }
+//        }
+//
+//        if (!doubleEntry)
+//        {
+//          completeUserList.add(cu);
+//        }
+//      }
+//
+//      ArrayList<String> mailAdr = new ArrayList<String>();
+//      for (Collaborationuser u : completeUserList)
+//      {
+//
+//        if (u.isSendMail())
+//          mailAdr.add(u.getEmail());
+//      }
+//      String[] adr = new String[mailAdr.size()];
+//      for (int i = 0; i < adr.length; i++)
+//      {
+//
+//        adr[i] = mailAdr.get(i);
+//      }
+//
+//      // TODO
+//      Mail.sendMailAUT(adr, M_AUT.PROPOSAL_RATING_SUBJECT, M_AUT.getInstance().getProposalRatingText(
+//          prop.getObjectName(),
+//          prop.getContentType(),
+//          prop.getDescription(),
+//          getTextFromRating(r),
+//          r.getText(),
+//          user.getFirstName() + " " + user.getName()));
+
       // Statistiken aktualisieren
       loadStatistics();
     }
@@ -441,5 +450,4 @@ public class ProposalViewVote extends Window
     this.inDiscussion = inDiscussion;
   }
 
-  
 }

@@ -19,11 +19,11 @@ package de.fhdo.collaboration.desktop;
 import de.fhdo.collaboration.db.HibernateUtil;
 import de.fhdo.collaboration.db.classes.Proposal;
 import de.fhdo.collaboration.db.classes.Statusrel;
+import de.fhdo.collaboration.db.classes.Userprivilege;
 import de.fhdo.collaboration.desktop.proposal.ProposalViewDetails;
 import de.fhdo.collaboration.desktop.proposal.ProposalViewDiscussion;
 import de.fhdo.collaboration.desktop.proposal.ProposalViewLinks;
 import de.fhdo.collaboration.desktop.proposal.ProposalViewVote;
-import de.fhdo.collaboration.helper.AssignTermHelper;
 import de.fhdo.collaboration.helper.ProposalHelper;
 import de.fhdo.collaboration.proposal.ProposalStatus;
 import de.fhdo.collaboration.proposal.ProposalStatusChange;
@@ -69,6 +69,8 @@ public class ProposalView extends Window implements AfterCompose, IUpdateModal
   private ProposalViewVote proposalViewVote;
   private ProposalViewDiscussion proposalViewDiscussion;
 
+  private Map<Long, Userprivilege> userPrivileges;
+
   public ProposalView()
   {
     long proposalId = ArgumentHelper.getWindowArgumentLong("proposal_id");
@@ -97,17 +99,16 @@ public class ProposalView extends Window implements AfterCompose, IUpdateModal
 
       //if(proposal != null && proposal.getDescription() != null && proposal.getDescription().length() > 0)
       //  this.setTitle(this.getTitle() + ": " + proposal.getDescription());
-
       Session hb_session = HibernateUtil.getSessionFactory().openSession();
       //hb_session.getTransaction().begin();
-      
+
       try
       {
         String hql = "from Proposal p "
-                + " join fetch p.collaborationuser cu"
-                + " left join fetch cu.organisation o"
-                + " left join fetch p.proposalobjects po"
-                + " where p.id=" + proposalId;
+            + " join fetch p.collaborationuser cu"
+            + " left join fetch cu.organisation o"
+            + " left join fetch p.proposalobjects po"
+            + " where p.id=" + proposalId;
 
         if (logger.isDebugEnabled())
           logger.debug("HQL: " + hql);
@@ -125,17 +126,19 @@ public class ProposalView extends Window implements AfterCompose, IUpdateModal
           //this.setTitle(this.getTitle() + ": " + proposal.getDescription());
         }
 
+        // Load all users with access to this proposal
+        userPrivileges = ProposalHelper.getAllUserPrivilegesForProposal(proposalId, hb_session);
       }
       catch (Exception e)
       {
-            //hb_session.getTransaction().rollback();
-            LoggingOutput.outputException(e, this);
+        LoggingOutput.outputException(e, this);
       }
       finally
       {
         // Session schließen
         hb_session.close();
       }
+
     }
   }
 
@@ -150,11 +153,9 @@ public class ProposalView extends Window implements AfterCompose, IUpdateModal
 
     // Vorschlag hinzufügen (1. Tab), andere Tabs dynamisch hinzufügen
     Include incVorschlag = (Include) getFellow("incVorschlag");
-    incVorschlag.setSrc("proposal/proposalViewDetails.zul");
+    incVorschlag.setSrc("/collaboration/desktop/proposal/proposalViewDetails.zul");
     proposalViewDetails = (ProposalViewDetails) incVorschlag.getFellow("winProposalViewDetails");
     proposalViewDetails.setProposalView(this);
-
-
 
     showCurrentStatus();
   }
@@ -238,8 +239,8 @@ public class ProposalView extends Window implements AfterCompose, IUpdateModal
 
           Button button = new Button(child.getAction().getAction());
           button.setAutodisable("true");
-          if (allowed &&
-              AssignTermHelper.isUserAllowed(proposal.getObjectVersionId(),proposal.getObjectName()))
+          if (allowed)
+          //AssignTermHelper.isUserAllowed(proposal.getObjectVersionId(),proposal.getObjectName()))
           {
             button.setTooltiptext("Ändert den Status zu: " + child.getStatusByStatusIdTo().getStatus());
           }
@@ -270,7 +271,7 @@ public class ProposalView extends Window implements AfterCompose, IUpdateModal
                 logger.debug("erstelle Fenster...");
 
                 Window win = (Window) Executions.createComponents(
-                        "/collaboration/proposal/proposalChangeStatus.zul", null, map);
+                    "/collaboration/proposal/proposalChangeStatus.zul", null, map);
 
                 ((ProposalStatusChange) win).setUpdateInterface(refThis);
 
@@ -280,7 +281,7 @@ public class ProposalView extends Window implements AfterCompose, IUpdateModal
               catch (Exception ex)
               {
                 logger.error("Fehler in Klasse '" + this.getClass().getName()
-                        + "': " + ex.getMessage());
+                    + "': " + ex.getMessage());
               }
             }
           });
@@ -297,7 +298,7 @@ public class ProposalView extends Window implements AfterCompose, IUpdateModal
     // Zeitraum der Diskussion anzeigen
     String diskLabel = "Diskussion";
     String abstimmungLabel = "Abstimmung";
-    
+
     if (inDiscussion)
     {
       SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
@@ -322,8 +323,7 @@ public class ProposalView extends Window implements AfterCompose, IUpdateModal
 
     ((Tab) getFellow("tabDiscussion")).setLabel(diskLabel);
     ((Tab) getFellow("tabAbstimmung")).setLabel(abstimmungLabel);
-    
-    
+
   }
 
   /**
@@ -334,14 +334,14 @@ public class ProposalView extends Window implements AfterCompose, IUpdateModal
     this.setVisible(false);
     this.detach();
   }
-  
+
   public void onShowWorkflow()
   {
     try
     {
       Window win = (Window) Executions.createComponents(
-              "/collaboration/workflow.zul",
-              null, null);
+          "/collaboration/workflow.zul",
+          null, null);
       win.setMaximizable(false);
       win.doModal();
     }
@@ -397,9 +397,9 @@ public class ProposalView extends Window implements AfterCompose, IUpdateModal
       ReturnType ret = (ReturnType) o;
       if (ret.isSuccess())
       {
-        if(!ret.getMessage().equals("InlinePropUpdate"))
-            Messagebox.show("Status erfolgreich geändert.", "Status ändern", Messagebox.OK, Messagebox.INFORMATION);
-        
+        if (!ret.getMessage().equals("InlinePropUpdate"))
+          Messagebox.show("Status erfolgreich geändert.", "Status ändern", Messagebox.OK, Messagebox.INFORMATION);
+
         loadProposal(proposal.getId());
 
         // GUI aktualisieren
@@ -416,5 +416,13 @@ public class ProposalView extends Window implements AfterCompose, IUpdateModal
         Messagebox.show(ret.getMessage(), "Status ändern", Messagebox.OK, Messagebox.ERROR);
       }
     }
+  }
+
+  /**
+   * @return the userPrivileges
+   */
+  public Map<Long, Userprivilege> getUserPrivileges()
+  {
+    return userPrivileges;
   }
 }

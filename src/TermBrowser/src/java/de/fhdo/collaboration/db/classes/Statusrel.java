@@ -1,26 +1,9 @@
-/* 
- * CTS2 based Terminology Server and Terminology Browser
- * Copyright (C) 2014 FH Dortmund: Peter Haas, Robert Muetzner
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package de.fhdo.collaboration.db.classes;
-// Generated 15.05.2013 18:02:38 by Hibernate Tools 3.2.1.GA
+// Generated 30.06.2015 09:32:45 by Hibernate Tools 4.3.1
 
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -44,27 +27,28 @@ public class Statusrel  implements java.io.Serializable {
 
 
      private Long id;
-     private Status statusByStatusIdFrom;
      private Action action;
      private Status statusByStatusIdTo;
+     private Status statusByStatusIdFrom;
      private Set<Role> roles = new HashSet<Role>(0);
 
     public Statusrel() {
     }
 
 	
-    public Statusrel(Status statusByStatusIdFrom, Status statusByStatusIdTo) {
-        this.statusByStatusIdFrom = statusByStatusIdFrom;
+    public Statusrel(Status statusByStatusIdTo, Status statusByStatusIdFrom) {
         this.statusByStatusIdTo = statusByStatusIdTo;
+        this.statusByStatusIdFrom = statusByStatusIdFrom;
     }
-    public Statusrel(Status statusByStatusIdFrom, Action action, Status statusByStatusIdTo, Set<Role> roles) {
-       this.statusByStatusIdFrom = statusByStatusIdFrom;
+    public Statusrel(Action action, Status statusByStatusIdTo, Status statusByStatusIdFrom, Set<Role> roles) {
        this.action = action;
        this.statusByStatusIdTo = statusByStatusIdTo;
+       this.statusByStatusIdFrom = statusByStatusIdFrom;
        this.roles = roles;
     }
    
      @Id @GeneratedValue(strategy=IDENTITY)
+
     
     @Column(name="id", unique=true, nullable=false)
     public Long getId() {
@@ -74,15 +58,7 @@ public class Statusrel  implements java.io.Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="statusIdFrom", nullable=false)
-    public Status getStatusByStatusIdFrom() {
-        return this.statusByStatusIdFrom;
-    }
-    
-    public void setStatusByStatusIdFrom(Status statusByStatusIdFrom) {
-        this.statusByStatusIdFrom = statusByStatusIdFrom;
-    }
+
 @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="actionId")
     public Action getAction() {
@@ -92,6 +68,7 @@ public class Statusrel  implements java.io.Serializable {
     public void setAction(Action action) {
         this.action = action;
     }
+
 @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="statusIdTo", nullable=false)
     public Status getStatusByStatusIdTo() {
@@ -101,8 +78,19 @@ public class Statusrel  implements java.io.Serializable {
     public void setStatusByStatusIdTo(Status statusByStatusIdTo) {
         this.statusByStatusIdTo = statusByStatusIdTo;
     }
-@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-    @JoinTable(name="role2action", joinColumns = { 
+
+@ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="statusIdFrom", nullable=false)
+    public Status getStatusByStatusIdFrom() {
+        return this.statusByStatusIdFrom;
+    }
+    
+    public void setStatusByStatusIdFrom(Status statusByStatusIdFrom) {
+        this.statusByStatusIdFrom = statusByStatusIdFrom;
+    }
+
+@ManyToMany(fetch=FetchType.LAZY)
+    @JoinTable(name="role2action", catalog="collab", joinColumns = { 
         @JoinColumn(name="statusRelId", nullable=false, updatable=false) }, inverseJoinColumns = { 
         @JoinColumn(name="roleId", nullable=false, updatable=false) })
     public Set<Role> getRoles() {

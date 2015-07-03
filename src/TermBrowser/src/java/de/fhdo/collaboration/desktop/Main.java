@@ -17,8 +17,6 @@
 package de.fhdo.collaboration.desktop;
 
 import de.fhdo.helper.SessionHelper;
-import org.hibernate.util.StringHelper;
-import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Include;
 import org.zkoss.zul.Tab;
@@ -71,6 +69,8 @@ public class Main extends Window implements AfterCompose
       
       String incId = id.replaceFirst("tab", "inc");
       Include inc = (Include) getFellow(incId);
+      
+      logger.debug("loading " + incId);
       
       if(inc.getSrc() == null || inc.getSrc().length() == 0)
       {

@@ -1,27 +1,10 @@
-/* 
- * CTS2 based Terminology Server and Terminology Browser
- * Copyright (C) 2014 FH Dortmund: Peter Haas, Robert Muetzner
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package de.fhdo.collaboration.db.classes;
-// Generated 15.05.2013 18:02:38 by Hibernate Tools 3.2.1.GA
+// Generated 30.06.2015 09:32:45 by Hibernate Tools 4.3.1
 
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -46,8 +29,8 @@ public class Discussion  implements java.io.Serializable {
 
 
      private Long id;
-     private Proposal proposal;
      private Collaborationuser collaborationuser;
+     private Proposal proposal;
      private Proposalobject proposalobject;
      private Long lastDiscussionId;
      private Date date;
@@ -55,18 +38,18 @@ public class Discussion  implements java.io.Serializable {
      private Boolean initial;
      private String longDescription;
      private String shortDescription;
-     private int postNumber;
-     private Set<Quote> quotesForDiscussionId = new HashSet<Quote>(0);
-     private Set<Rating> ratings = new HashSet<Rating>(0);
+     private Integer postNumber;
      private Set<Link> links = new HashSet<Link>(0);
+     private Set<Rating> ratings = new HashSet<Rating>(0);
+     private Set<Quote> quotesForDiscussionId = new HashSet<Quote>(0);
      private Set<Quote> quotesForDiscussionIdQuoted = new HashSet<Quote>(0);
 
     public Discussion() {
     }
 
-    public Discussion(Proposal proposal, Collaborationuser collaborationuser, Proposalobject proposalobject, Long lastDiscussionId, Date date, Date changed, Boolean initial, String longDescription, String shortDescription, Set<Quote> quotesForDiscussionId, Set<Rating> ratings, Set<Link> links, Set<Quote> quotesForDiscussionIdQuoted) {
-       this.proposal = proposal;
+    public Discussion(Collaborationuser collaborationuser, Proposal proposal, Proposalobject proposalobject, Long lastDiscussionId, Date date, Date changed, Boolean initial, String longDescription, String shortDescription, Integer postNumber, Set<Link> links, Set<Rating> ratings, Set<Quote> quotesForDiscussionId, Set<Quote> quotesForDiscussionIdQuoted) {
        this.collaborationuser = collaborationuser;
+       this.proposal = proposal;
        this.proposalobject = proposalobject;
        this.lastDiscussionId = lastDiscussionId;
        this.date = date;
@@ -74,13 +57,15 @@ public class Discussion  implements java.io.Serializable {
        this.initial = initial;
        this.longDescription = longDescription;
        this.shortDescription = shortDescription;
-       this.quotesForDiscussionId = quotesForDiscussionId;
-       this.ratings = ratings;
+       this.postNumber = postNumber;
        this.links = links;
+       this.ratings = ratings;
+       this.quotesForDiscussionId = quotesForDiscussionId;
        this.quotesForDiscussionIdQuoted = quotesForDiscussionIdQuoted;
     }
    
      @Id @GeneratedValue(strategy=IDENTITY)
+
     
     @Column(name="id", unique=true, nullable=false)
     public Long getId() {
@@ -90,15 +75,7 @@ public class Discussion  implements java.io.Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="proposalId")
-    public Proposal getProposal() {
-        return this.proposal;
-    }
-    
-    public void setProposal(Proposal proposal) {
-        this.proposal = proposal;
-    }
+
 @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="collaborationUserId")
     public Collaborationuser getCollaborationuser() {
@@ -108,6 +85,17 @@ public class Discussion  implements java.io.Serializable {
     public void setCollaborationuser(Collaborationuser collaborationuser) {
         this.collaborationuser = collaborationuser;
     }
+
+@ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="proposalId")
+    public Proposal getProposal() {
+        return this.proposal;
+    }
+    
+    public void setProposal(Proposal proposal) {
+        this.proposal = proposal;
+    }
+
 @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="proposalObjectId")
     public Proposalobject getProposalobject() {
@@ -117,6 +105,7 @@ public class Discussion  implements java.io.Serializable {
     public void setProposalobject(Proposalobject proposalobject) {
         this.proposalobject = proposalobject;
     }
+
     
     @Column(name="lastDiscussionId")
     public Long getLastDiscussionId() {
@@ -126,6 +115,7 @@ public class Discussion  implements java.io.Serializable {
     public void setLastDiscussionId(Long lastDiscussionId) {
         this.lastDiscussionId = lastDiscussionId;
     }
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="date", length=19)
     public Date getDate() {
@@ -135,6 +125,7 @@ public class Discussion  implements java.io.Serializable {
     public void setDate(Date date) {
         this.date = date;
     }
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="changed", length=19)
     public Date getChanged() {
@@ -144,6 +135,7 @@ public class Discussion  implements java.io.Serializable {
     public void setChanged(Date changed) {
         this.changed = changed;
     }
+
     
     @Column(name="initial")
     public Boolean getInitial() {
@@ -153,6 +145,7 @@ public class Discussion  implements java.io.Serializable {
     public void setInitial(Boolean initial) {
         this.initial = initial;
     }
+
     
     @Column(name="longDescription", length=65535)
     public String getLongDescription() {
@@ -162,6 +155,7 @@ public class Discussion  implements java.io.Serializable {
     public void setLongDescription(String longDescription) {
         this.longDescription = longDescription;
     }
+
     
     @Column(name="shortDescription", length=65535)
     public String getShortDescription() {
@@ -171,36 +165,18 @@ public class Discussion  implements java.io.Serializable {
     public void setShortDescription(String shortDescription) {
         this.shortDescription = shortDescription;
     }
+
     
     @Column(name="postNumber")
-    public int getPostNumber() {
+    public Integer getPostNumber() {
         return this.postNumber;
     }
     
-    public void setPostNumber(int postNumber) {
+    public void setPostNumber(Integer postNumber) {
         this.postNumber = postNumber;
     }
-   
-    
-    
-    
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="discussionByDiscussionId")
-    public Set<Quote> getQuotesForDiscussionId() {
-        return this.quotesForDiscussionId;
-    }
-    
-    public void setQuotesForDiscussionId(Set<Quote> quotesForDiscussionId) {
-        this.quotesForDiscussionId = quotesForDiscussionId;
-    }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="discussion")
-    public Set<Rating> getRatings() {
-        return this.ratings;
-    }
-    
-    public void setRatings(Set<Rating> ratings) {
-        this.ratings = ratings;
-    }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="discussion")
+
+@OneToMany(fetch=FetchType.LAZY, mappedBy="discussion")
     public Set<Link> getLinks() {
         return this.links;
     }
@@ -208,7 +184,26 @@ public class Discussion  implements java.io.Serializable {
     public void setLinks(Set<Link> links) {
         this.links = links;
     }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="discussionByDiscussionIdQuoted")
+
+@OneToMany(fetch=FetchType.LAZY, mappedBy="discussion")
+    public Set<Rating> getRatings() {
+        return this.ratings;
+    }
+    
+    public void setRatings(Set<Rating> ratings) {
+        this.ratings = ratings;
+    }
+
+@OneToMany(fetch=FetchType.LAZY, mappedBy="discussionByDiscussionId")
+    public Set<Quote> getQuotesForDiscussionId() {
+        return this.quotesForDiscussionId;
+    }
+    
+    public void setQuotesForDiscussionId(Set<Quote> quotesForDiscussionId) {
+        this.quotesForDiscussionId = quotesForDiscussionId;
+    }
+
+@OneToMany(fetch=FetchType.LAZY, mappedBy="discussionByDiscussionIdQuoted")
     public Set<Quote> getQuotesForDiscussionIdQuoted() {
         return this.quotesForDiscussionIdQuoted;
     }

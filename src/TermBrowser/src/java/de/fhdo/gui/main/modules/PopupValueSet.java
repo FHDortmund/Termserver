@@ -17,7 +17,6 @@
 package de.fhdo.gui.main.modules;
 
 import de.fhdo.Definitions;
-import de.fhdo.collaboration.helper.AssignTermHelper;
 import de.fhdo.helper.ArgumentHelper;
 import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.DateTimeHelper;
@@ -320,7 +319,7 @@ public class PopupValueSet extends Window implements AfterCompose
     // Message über Erfolg/Misserfolg                
     if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
     {
-      AssignTermHelper.assignTermToUser(response.getValueSet());
+//      AssignTermHelper.assignTermToUser(response.getValueSet());
       Messagebox.show(Labels.getLabel("popupValueSet.createValueSetSuccessfully"));
       //((ContentCSVSDefault) this.getParent()).refreshVS(); // TODO nicht schön
       //this.detach();

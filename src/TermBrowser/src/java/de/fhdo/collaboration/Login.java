@@ -176,7 +176,7 @@ public class Login extends Window implements org.zkoss.zk.ui.ext.AfterCompose
 
       if (loginCorrect)
       {
-        CollaborationSession.getInstance().getSessionID(username);
+        //CollaborationSession.getInstance().getSessionID(username);
         // Hauptseite aufrufen
         CookieHelper.removeCookie("show_captcha");
         CookieHelper.setCookie("username_collaboration", username);

@@ -44,19 +44,14 @@ public class HibernateUtil
 
       SessionFactory sf = new AnnotationConfiguration().configure(file)
           .addAnnotatedClass(de.fhdo.collaboration.db.classes.Action.class)
-          .addAnnotatedClass(de.fhdo.collaboration.db.classes.AssignedTerm.class)
           .addAnnotatedClass(de.fhdo.collaboration.db.classes.ClassAttribute.class)
           .addAnnotatedClass(de.fhdo.collaboration.db.classes.Collaborationuser.class)
           .addAnnotatedClass(de.fhdo.collaboration.db.classes.Discussion.class)
-          .addAnnotatedClass(de.fhdo.collaboration.db.classes.Discussiongroup.class)
-          .addAnnotatedClass(de.fhdo.collaboration.db.classes.Discussiongroupobject.class)
           .addAnnotatedClass(de.fhdo.collaboration.db.classes.Domain.class)
           .addAnnotatedClass(de.fhdo.collaboration.db.classes.DomainValue.class)
-          .addAnnotatedClass(de.fhdo.collaboration.db.classes.Enquiry.class)
           .addAnnotatedClass(de.fhdo.collaboration.db.classes.File.class)
           .addAnnotatedClass(de.fhdo.collaboration.db.classes.Link.class)
           .addAnnotatedClass(de.fhdo.collaboration.db.classes.Organisation.class)
-          .addAnnotatedClass(de.fhdo.collaboration.db.classes.Privilege.class)
           .addAnnotatedClass(de.fhdo.collaboration.db.classes.Proposal.class)
           .addAnnotatedClass(de.fhdo.collaboration.db.classes.Proposalobject.class)
           .addAnnotatedClass(de.fhdo.collaboration.db.classes.Proposalstatuschange.class)
@@ -66,6 +61,7 @@ public class HibernateUtil
           .addAnnotatedClass(de.fhdo.collaboration.db.classes.Status.class)
           .addAnnotatedClass(de.fhdo.collaboration.db.classes.Statusrel.class)
           .addAnnotatedClass(de.fhdo.collaboration.db.classes.SysParam.class)
+          .addAnnotatedClass(de.fhdo.collaboration.db.classes.Userprivilege.class)
           .buildSessionFactory();
 
       return sf;

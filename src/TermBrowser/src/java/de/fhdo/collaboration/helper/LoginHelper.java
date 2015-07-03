@@ -24,14 +24,12 @@ import de.fhdo.helper.Password;
 import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.ws.authorization.LogoutResponseType;
 import de.fhdo.terminologie.ws.authorization.Status;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.util.StringHelper;
+import org.hibernate.internal.util.StringHelper;
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 import org.zkoss.util.resource.Labels;
@@ -112,6 +110,8 @@ public class LoginHelper
         session.setAttribute("collaboration_user_id", user.getId());
         session.setAttribute("collaboration_user_name", user.getUsername());
         //session.setAttribute("collaboration_user_role", user.getRoles().iterator().next().getName());  // TODO nur 1 Rolle?
+        
+        Hibernate.initialize(user.getRoles());
         session.setAttribute("collaboration_user_roles", user.getRoles());
 
         session.setAttribute("CollaborationActive", true);

@@ -17,7 +17,6 @@
 package de.fhdo.collaboration.helper;
 
 import de.fhdo.collaboration.db.HibernateUtil;
-import de.fhdo.collaboration.db.classes.Discussiongroup;
 import de.fhdo.collaboration.db.classes.Role;
 import de.fhdo.helper.SessionHelper;
 import java.util.Iterator;
@@ -36,47 +35,6 @@ public class CollaborationuserHelper
 
 
   
-  public static List<Long> GetDiscussionGroupIDsForCurrentUser(Session hb_session)
-  {
-    logger.debug("GetDiscussionGroupIDsForCurrentUser()");
-    
-    List<Long> retList = new LinkedList<Long>();
-
-    String hql = "select distinct dg from Discussiongroup dg "
-            + " left join dg.collaborationusers cu "
-            + " where cu.id=" + SessionHelper.getCollaborationUserID();
-
-    logger.debug("HQL: " + hql);
-    
-    List<Discussiongroup> list = hb_session.createQuery(hql).list();
-    if (list != null)
-    {
-      for (Discussiongroup dg : list)
-      {
-        logger.debug("DG gefunden mit ID: " + dg.getId());
-        retList.add(dg.getId());
-      }
-    }
-
-    return retList;
-  }
-  
-  public static String ConvertDiscussionGroupListToCommaString(List<Long> list)
-  {
-    String s = "";
-    
-    if(list != null)
-    {
-      for(Long l : list)
-      {
-        if(s.length() > 0)
-          s += ",";
-        s += "" + l;
-      }
-    }
-    
-    return s;
-  }
   
    public static Role getCollaborationuserRoleByName(String role){
    

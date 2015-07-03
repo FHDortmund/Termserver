@@ -19,20 +19,28 @@ package de.fhdo.collaboration.desktop;
 import de.fhdo.collaboration.db.Definitions;
 import de.fhdo.collaboration.db.DomainHelper;
 import de.fhdo.collaboration.db.HibernateUtil;
+import de.fhdo.collaboration.db.classes.Collaborationuser;
 import de.fhdo.collaboration.db.classes.Proposal;
-import de.fhdo.collaboration.helper.CODES;
 import de.fhdo.collaboration.helper.CollaborationuserHelper;
 import de.fhdo.collaboration.proposal.ProposalStatus;
+import de.fhdo.helper.DateTimeHelper;
 import de.fhdo.helper.ParameterHelper;
 import de.fhdo.helper.SessionHelper;
+import de.fhdo.interfaces.IUpdate;
+import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.list.GenericList;
 import de.fhdo.list.GenericListCellType;
 import de.fhdo.list.GenericListHeaderType;
 import de.fhdo.list.GenericListRowType;
+import de.fhdo.list.IGenericListActions;
 import de.fhdo.logging.LoggingOutput;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import org.hibernate.Session;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Include;
 import org.zkoss.zul.Window;
@@ -41,18 +49,30 @@ import org.zkoss.zul.Window;
  *
  * @author Robert Mützner <robert.muetzner@fh-dortmund.de>
  */
-public class Proposals extends Window implements AfterCompose
+public class Proposals extends Window implements AfterCompose, IGenericListActions, IUpdateModal
 {
+
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
-  
+
   MODES mode;
-  private enum MODES {ALL, MINE}
+
+  
+
+  
+
+  private enum MODES
+  {
+
+    ALL, MINE
+  }
+
+  GenericList genericList;
 
   public Proposals()
   {
     // init mode
     String s_mode = ParameterHelper.getString("mode");
-    if(s_mode.equalsIgnoreCase("mine"))
+    if (s_mode.equalsIgnoreCase("mine"))
     {
       mode = MODES.MINE;
     }
@@ -60,19 +80,16 @@ public class Proposals extends Window implements AfterCompose
     {
       mode = MODES.ALL;  // default, show all proposals
     }
-    
+
     logger.debug("Proposals() - Mode: " + mode.name());
-    
-    
-    
+
   }
 
   public void afterCompose()
   {
     initList();
   }
-  
-  
+
   private void initList()
   {
     logger.debug("Proposals(): initList()");
@@ -90,78 +107,49 @@ public class Proposals extends Window implements AfterCompose
 
     // Daten laden
     Session hb_session = HibernateUtil.getSessionFactory().openSession();
-    //hb_session.getTransaction().begin();
 
     List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
     try
     {
-      List<Long> discussionGroups = CollaborationuserHelper.GetDiscussionGroupIDsForCurrentUser(hb_session);
+      // TODO MODE und Rollen berücksichtigen
+      String hql, where = "";
+      hql = "select distinct p from Proposal p join fetch p.collaborationuser u ";
+                //+ " left join p.privileges priv"
+      // - alle Vorschläge anzeigen, die Privilegien mit User-ID haben
+      //+ " where (priv.collaborationuser.id=" + SessionHelper.getCollaborationUserID();
 
-      // PRIVILEGIEN
-      if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN))
+      if (mode == MODES.MINE)
       {
-        String hql;
-        hql = "select distinct p from Proposal p";
-
-        // Sortierung
-        hql += " order by p.created desc";
-
-        if (logger.isDebugEnabled())
-          logger.debug("HQL: " + hql);
-
-        List<Proposal> proposalList = hb_session.createQuery(hql).list();
-
-        for (int i = 0; i < proposalList.size(); ++i)
-        {
-          Proposal proposal = proposalList.get(i);
-          GenericListRowType row = createRow(proposal);
-          dataList.add(row);
-        }
-
+        where = "u.id=" + SessionHelper.getCollaborationUserID();
       }
-      else
-      {        //Jedesmal wenn jemand einen Vorschlag macht wird geprüft ob der Vorschlagende der TermVerwalter ist => wenn nicht werden
-        //dem Inhaltsverwalter automatisch Privilegien zugesprochen => Auch bei der Zuweisung von Terminologien zu Inhaltsverwaltern im
-        //Admin wird das nachträglich gecheckt!
-        String hql;
-        hql = "select distinct p from Proposal p join fetch p.collaborationuser u "
-                + " left join p.privileges priv"
-                // - alle Vorschläge anzeigen, die Privilegien mit User-ID haben
-                + " where (priv.collaborationuser.id=" + SessionHelper.getCollaborationUserID();
 
-        // - alle Vorschläge anzeigen, die Privilegien mit Discussion-ID haben
-        if (discussionGroups != null && discussionGroups.size() > 0)
-        {
-          hql += " or priv.discussiongroup.id in (" + CollaborationuserHelper.ConvertDiscussionGroupListToCommaString(discussionGroups) + ")";
-        }
-
-        // - alle eigenen Vorschläge dürfen in Liste angezeigt werden (aber nicht Detail-Ansicht)
-        hql += " or p.collaborationuser.id=" + SessionHelper.getCollaborationUserID();
-
-        hql += ")";
-
-        // Sortierung
-        hql += " order by p.created desc";
-
-        if (logger.isDebugEnabled())
-          logger.debug("HQL: " + hql);
-
-        List<Proposal> proposalList = hb_session.createQuery(hql).list();
-
-        for (int i = 0; i < proposalList.size(); ++i)
-        {
-          Proposal proposal = proposalList.get(i);
-          GenericListRowType row = createRow(proposal);
-          dataList.add(row);
-        }
+      // - alle eigenen Vorschläge dürfen in Liste angezeigt werden (aber nicht Detail-Ansicht)
+      //hql += " or p.collaborationuser.id=" + SessionHelper.getCollaborationUserID();
+      //hql += ")";
+      if (where.length() > 0)
+      {
+        hql += " where " + where;
       }
-      //hb_session.getTransaction().commit();
+
+      // Sortierung
+      hql += " order by p.created desc";
+
+      if (logger.isDebugEnabled())
+        logger.debug("HQL: " + hql);
+
+      List<Proposal> proposalList = hb_session.createQuery(hql).list();
+
+      for (int i = 0; i < proposalList.size(); ++i)
+      {
+        Proposal proposal = proposalList.get(i);
+        GenericListRowType row = createRow(proposal);
+        dataList.add(row);
+      }
+
     }
     catch (Exception e)
     {
-      //hb_session.getTransaction().rollback();
       LoggingOutput.outputException(e, this);
-      //logger.error("[" + this.getClass().getCanonicalName() + "] Fehler bei initList(): " + e.getMessage());
     }
     finally
     {
@@ -186,7 +174,7 @@ public class Proposals extends Window implements AfterCompose
     GenericListRowType row = new GenericListRowType();
 
     GenericListCellType[] cells = new GenericListCellType[8];
-    cells[0] = new GenericListCellType(proposal.getObjectName(), false, "");
+    cells[0] = new GenericListCellType(proposal.getObjectFullName(), false, "");
     cells[1] = new GenericListCellType(proposal.getDescription(), false, "");
     cells[2] = new GenericListCellType(DomainHelper.getInstance().getDomainValueDisplayText(Definitions.DOMAINID_PROPOSAL_TYPES, proposal.getContentType()), false, "");
     cells[3] = new GenericListCellType(ProposalStatus.getInstance().getStatusStr(proposal.getStatus()), false, "");
@@ -213,5 +201,107 @@ public class Proposals extends Window implements AfterCompose
   }
   
   
+
+  private String calculateRest(Date date)
+  {
+    String s = "";
+
+    if (date != null)
+    {
+      long diff = DateTimeHelper.GetDateDiffInDays(DateTimeHelper.dateToXMLGregorianCalendar(date));
+      if (diff == 0)
+        s = "letzter Tag";
+      else if (diff == 1)
+        s = "1 Tag";
+      else if (diff > 1)
+        s = diff + " Tage";
+      else
+        s = "-";
+    }
+
+    return s;
+  }
+
+  public String getListName(Collaborationuser user)
+  {
+    String s = "";
+
+    s = user.getFirstName();
+    if (s != null && s.length() > 0)
+      s += " ";
+    s += user.getName();
+
+    if (s == null || s.length() == 0)
+      s = user.getUsername();
+
+    // TODO Organisation hinzufügen
+    return s;
+  }
+
+  public void onNewClicked(String string)
+  {
+
+  }
+
+  public void onEditClicked(String string, Object data)
+  {
+    logger.debug("onEditClicked()");
+
+    if (data != null && data instanceof Proposal)
+    {
+      openProposal((Proposal) data);
+
+    }
+  }
   
+  private void openProposal(Proposal proposal)
+  {
+    try
+    {
+      logger.debug("Vorschlag öffnen mit ID: " + proposal.getId());
+
+      Map map = new HashMap();
+      map.put("proposal_id", proposal.getId());
+
+      Window win = (Window) Executions.createComponents(
+              "/collaboration/desktop/proposalView.zul", null, map);
+
+      ((ProposalView) win).setUpdateInterface(this);
+
+      win.doModal();
+    }
+    catch (Exception ex)
+    {
+      LoggingOutput.outputException(ex, this);
+      logger.debug("Fehler beim Öffnen eines Vorschlags: " + ex.getLocalizedMessage());
+    }
+  }
+
+  public void onDeleted(String string, Object o)
+  {
+
+  }
+
+  public void onSelected(String string, Object o)
+  {
+
+  }
+  
+  public void update(Object o, boolean edited)
+  {
+    if (o != null)
+    {
+      if (o instanceof Proposal)
+      {
+        // Zeile ändern oder hinzufügen
+        Proposal p = (Proposal) o;
+        GenericListRowType row = createRow(p);
+        if (edited)
+          genericList.updateEntry(row);
+        else
+          genericList.addEntry(row);
+      }
+    }
+  }
+
 }

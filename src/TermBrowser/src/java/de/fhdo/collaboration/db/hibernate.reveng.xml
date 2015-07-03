@@ -18,7 +18,7 @@ limitations under the License.
 
 <!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
 <hibernate-reverse-engineering>
-  <schema-selection match-catalog="web5db3"/>
+  <schema-selection match-catalog="collab"/>
   <table-filter match-name="proposal"/>
   <table-filter match-name="action"/>
   <table-filter match-name="proposalobject"/>
@@ -28,22 +28,19 @@ limitations under the License.
   <table-filter match-name="file"/>
   <table-filter match-name="link"/>
   <table-filter match-name="quote"/>
-  <table-filter match-name="discussiongroup"/>
   <table-filter match-name="statusrel"/>
   <table-filter match-name="discussion"/>
   <table-filter match-name="sys_param"/>
   <table-filter match-name="domain"/>
   <table-filter match-name="role2action"/>
   <table-filter match-name="rating"/>
-  <table-filter match-name="discussiongroupobject"/>
-  <table-filter match-name="proposalstatuschange"/>
   <table-filter match-name="organisation"/>
   <table-filter match-name="class_attribute"/>
   <table-filter match-name="role2collaborationuser"/>
   <table-filter match-name="domainvalue2domainvalue"/>
   <table-filter match-name="status"/>
   <table-filter match-name="role2status"/>
-  <table-filter match-name="discussiongroup2collaborationuser"/>
-  <table-filter match-name="privilege"/>
-  <table-filter match-name="enquiry"/>
+  <table-filter match-name="proposalstatuschange"/>
+  <table-filter match-name="userprivilege"/>
+  
 </hibernate-reverse-engineering>

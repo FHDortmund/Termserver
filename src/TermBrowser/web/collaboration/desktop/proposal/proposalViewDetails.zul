@@ -26,29 +26,29 @@
                     </row>
                     <row>
                       <label value="Erstellt am:"/>
-                      <datebox value="@{winProposalView.proposal.created}" inplace="false" readonly="true" disabled="true" format="medium+short" width="200px"/>
+                      <datebox value="@{winProposalView.proposal.created}" inplace="false" readonly="true" disabled="false" format="medium+short" width="200px"/>
                     </row>
-                    <row>
+<!--                    <row>
                       <label value="Letzte Änderung:"/>
                       <datebox id="db_lastChangeDate" value="@{winProposalView.proposal.lastChangeDate}" inplace="false" readonly="true" disabled="true" format="medium+short" width="200px"/>
-                    </row>
+                    </row>-->
                     <row>
                       <label value="Gültig von:"/>
-                      <datebox value="@{winProposalView.proposal.validFrom}" inplace="false" readonly="true" disabled="true" format="medium"/>
+                      <datebox value="@{winProposalView.proposal.validFrom}" inplace="false" readonly="true" disabled="false" format="medium"/>
                     </row>
                     <row>
                       <label value="Gültig bis:"/>
-                      <datebox value="@{winProposalView.proposal.validTo}" inplace="false" readonly="true" disabled="true" format="medium"/>
+                      <datebox value="@{winProposalView.proposal.validTo}" inplace="false" readonly="true" disabled="false" format="medium"/>
                     </row>
                     <row>
                       <label value="Erstellt von:"/>
                       <textbox width="99%" value="@{winProposalView.erstellerFull}"
-                               readonly="true" inplace="false" disabled="true"/>
+                               readonly="true" inplace="false" disabled="false"/>
                     </row>
                     <row>
                       <label value="Zugehörige Terminologie:"/>
-                      <textbox width="99%" value="@{winProposalView.proposal.vocabularyName}"
-                               readonly="true" inplace="false" disabled="true"/>
+                      <textbox width="99%" value="@{winProposalView.proposal.objectFullName}"
+                               readonly="true" inplace="false" disabled="false"/>
                     </row>
                     <row>
                       <label value="Notiz:"/>

@@ -25,9 +25,6 @@ import de.fhdo.collaboration.db.classes.DomainValue;
 import de.fhdo.collaboration.db.classes.File;
 import de.fhdo.collaboration.db.classes.Link;
 import de.fhdo.collaboration.db.classes.Proposal;
-import de.fhdo.collaboration.proposal.ProposalStatus;
-import de.fhdo.communication.M_AUT;
-import de.fhdo.communication.Mail;
 import de.fhdo.helper.ArgumentHelper;
 import de.fhdo.helper.FileCopy;
 import de.fhdo.helper.SessionHelper;
@@ -69,16 +66,17 @@ public class AttachmentDetails extends Window implements org.zkoss.zk.ui.ext.Aft
   private DomainValue selectedMimeType;
   boolean bearbeiten = false;
   private Proposal proposal;
-  private Session hb_sessionS;
   //private ComboitemRenderer subtypRenderer;
 
   public AttachmentDetails()
   {
     Map args;
+
+    Session hb_session = HibernateUtil.getSessionFactory().openSession();
     
     try
     {
-      hb_sessionS = HibernateUtil.getSessionFactory().openSession();
+
       logger.debug("AttachmentDetails() - Konstruktor");
 
       mimeTypeList = DomainHelper.getInstance().getDomainList(Definitions.DOMAINID_MIME_TYPES);
@@ -88,41 +86,38 @@ public class AttachmentDetails extends Window implements org.zkoss.zk.ui.ext.Aft
 
       //selectedTechnicalType = new DomainValue();
       //selectedTechnicalType.setDomainValueId(Definitions.TECHNICALTYPE_DOCUMENT);
-
       if (technicalTypeList.size() > 0)
         selectedTechnicalType = technicalTypeList.get(0);
 
       //selectedLogicalType = new DomainValue();
       //selectedMimeType = new DomainValue();
-
       long linkId = ArgumentHelper.getWindowArgumentLong("link_id");
 
       if (linkId > 0)
       {
-        
+
         //hb_session.getTransaction().begin();
-        
         try
         {
-          link = (Link) hb_sessionS.get(Link.class, linkId);
+          link = (Link) hb_session.get(Link.class, linkId);
           proposal = link.getProposal();
           selectedTechnicalType = DomainHelper.getInstance().getDomainValue(
-                  Definitions.DOMAINID_ATTACHMENT_TECHNICAL_TYPES, link.getLinkType().toString());
+              Definitions.DOMAINID_ATTACHMENT_TECHNICAL_TYPES, link.getLinkType().toString());
 
           selectedMimeType = DomainHelper.getInstance().getDomainValue(
-                  Definitions.DOMAINID_MIME_TYPES, link.getMimeType());
+              Definitions.DOMAINID_MIME_TYPES, link.getMimeType());
 
           if (selectedMimeType != null)
             logger.debug("MimeType-Code: " + selectedMimeType.getCode());
           else
             logger.debug("MimeType-Code: null");
-          
+
           //hb_session.getTransaction().commit();
         }
         catch (Exception e)
         {
-            //hb_session.getTransaction().rollback();
-            LoggingOutput.outputException(e, this);
+          //hb_session.getTransaction().rollback();
+          LoggingOutput.outputException(e, this);
         }
 
         bearbeiten = true;
@@ -133,21 +128,20 @@ public class AttachmentDetails extends Window implements org.zkoss.zk.ui.ext.Aft
 
         link.setCollaborationuser(new Collaborationuser());
         link.getCollaborationuser().setId(SessionHelper.getCollaborationUserID());
-        
+
         // Verbindung zu Proposal oder Discussion herstellen
         long proposalId = ArgumentHelper.getWindowArgumentLong("proposal_id");
         long discussionId = ArgumentHelper.getWindowArgumentLong("discussion_id");
-        
-        
+
         //hb_session.getTransaction().begin();
-        
-        try{
-            proposal =(Proposal)hb_sessionS.get(Proposal.class, proposalId);
+        try
+        {
+          proposal = (Proposal) hb_session.get(Proposal.class, proposalId);
         }
         catch (Exception e)
         {
-            //hb_session.getTransaction().rollback();
-            LoggingOutput.outputException(e, this);
+          //hb_session.getTransaction().rollback();
+          LoggingOutput.outputException(e, this);
         }
 
         if (proposalId > 0)
@@ -171,10 +165,14 @@ public class AttachmentDetails extends Window implements org.zkoss.zk.ui.ext.Aft
 
       if (selectedMimeType == null)
         selectedMimeType = new DomainValue();
-        }
-        catch (Exception e)
-        {
+    }
+    catch (Exception e)
+    {
       logger.error(e.getLocalizedMessage());
+    }
+    finally
+    {
+      hb_session.close();
     }
   }
 
@@ -214,13 +212,11 @@ public class AttachmentDetails extends Window implements org.zkoss.zk.ui.ext.Aft
      {
      link.setFile(null);
      }*/
-
     Row row = (Row) getFellow("documentRow");
     row.setVisible(selectedTechnicalType.getCode().equals("1"));
 
     row = (Row) getFellow("mimeTypeRow");
     row.setVisible(selectedTechnicalType.getCode().equals("1"));
-
 
   }
 
@@ -234,7 +230,6 @@ public class AttachmentDetails extends Window implements org.zkoss.zk.ui.ext.Aft
 
       //if(link.getAttachment() != null)
       //  logger.debug("Tech type: " + getAttachment().getAttachment().getTechnicalTypeCd());
-
       if (selectedTechnicalType != null)
       {
         //link.setTechnicalTypeCd(selectedTechnicalType.getDomainCode());
@@ -245,17 +240,16 @@ public class AttachmentDetails extends Window implements org.zkoss.zk.ui.ext.Aft
         }
       }
 
-
       Session hb_session = HibernateUtil.getSessionFactory().openSession();
       hb_session.getTransaction().begin();
-      
+
       try
       {
         if (bearbeiten)
         {
           hb_session.merge(link);
-          
-          if(file != null)
+
+          if (file != null)
           {
             file.setLinkId(link.getId());
             hb_session.merge(file);
@@ -266,62 +260,62 @@ public class AttachmentDetails extends Window implements org.zkoss.zk.ui.ext.Aft
           // Neuer Eintrag
           link.setInsertTs(new Date());
           hb_session.save(link);
-          
-          if(file != null)
+
+          if (file != null)
           {
             logger.debug("Speicher neue Datei mit Link-ID: " + link.getId());
             file.setLinkId(link.getId());
             hb_session.save(file);
           }
-          
-          
+
         }
-        
+
         //Benachrichtigung Benutzer
-        ArrayList<Collaborationuser> completeUserList = new ArrayList<Collaborationuser>();
-
-        //Lade alle Benutzer mit Privilegien auf Proposal
-        String hqlPrivilegeUsers = "from Collaborationuser cu join fetch cu.privileges pri join fetch pri.proposal pro join fetch cu.organisation o where pro.id=:id";
-        Query qPrivilegeUsers = hb_session.createQuery(hqlPrivilegeUsers);
-        qPrivilegeUsers.setParameter("id", proposal.getId());
-        List<Collaborationuser> privUserList = qPrivilegeUsers.list();
-
-        for(Collaborationuser cu:privUserList){
-            completeUserList.add(cu);
-        }
-
-        //Lade alle Diskussionsgruppen mit Privilegien auf Proposal
-        String hqlPrivilegeGroups = "from Collaborationuser cu join fetch cu.discussiongroups dg join fetch dg.privileges pri join fetch pri.proposal pro where pro.id=:id";
-        Query qPrivilegeGroups = hb_session.createQuery(hqlPrivilegeGroups);
-        qPrivilegeGroups.setParameter("id", proposal.getId());
-        List<Collaborationuser> privGroupList = qPrivilegeGroups.list();
-
-        for(Collaborationuser cu:privGroupList){
-
-            boolean doubleEntry = false;
-            for(Collaborationuser cuI:completeUserList){
-
-                if(cu.getId().equals(cuI.getId())){
-                    doubleEntry = true;
-                }
-            }
-
-            if(!doubleEntry){
-                completeUserList.add(cu);
-            }
-        }
-
-        ArrayList<String> mailAdr = new ArrayList<String>();
-        for(Collaborationuser u:completeUserList){
-
-            if(u.getSendMail() != null && u.getSendMail())
-                mailAdr.add(u.getEmail());
-        }
-        String[] adr = new String[mailAdr.size()];
-        for(int i = 0;i<adr.length;i++){
-
-            adr[i]= mailAdr.get(i);
-        }
+        // TODO Benachrichtigung, aber nicht hier!
+//        ArrayList<Collaborationuser> completeUserList = new ArrayList<Collaborationuser>();
+//
+//        //Lade alle Benutzer mit Privilegien auf Proposal
+//        String hqlPrivilegeUsers = "from Collaborationuser cu join fetch cu.privileges pri join fetch pri.proposal pro join fetch cu.organisation o where pro.id=:id";
+//        Query qPrivilegeUsers = hb_session.createQuery(hqlPrivilegeUsers);
+//        qPrivilegeUsers.setParameter("id", proposal.getId());
+//        List<Collaborationuser> privUserList = qPrivilegeUsers.list();
+//
+//        for(Collaborationuser cu:privUserList){
+//            completeUserList.add(cu);
+//        }
+//
+//        //Lade alle Diskussionsgruppen mit Privilegien auf Proposal
+//        String hqlPrivilegeGroups = "from Collaborationuser cu join fetch cu.discussiongroups dg join fetch dg.privileges pri join fetch pri.proposal pro where pro.id=:id";
+//        Query qPrivilegeGroups = hb_session.createQuery(hqlPrivilegeGroups);
+//        qPrivilegeGroups.setParameter("id", proposal.getId());
+//        List<Collaborationuser> privGroupList = qPrivilegeGroups.list();
+//
+//        for(Collaborationuser cu:privGroupList){
+//
+//            boolean doubleEntry = false;
+//            for(Collaborationuser cuI:completeUserList){
+//
+//                if(cu.getId().equals(cuI.getId())){
+//                    doubleEntry = true;
+//                }
+//            }
+//
+//            if(!doubleEntry){
+//                completeUserList.add(cu);
+//            }
+//        }
+//
+//        ArrayList<String> mailAdr = new ArrayList<String>();
+//        for(Collaborationuser u:completeUserList){
+//
+//            if(u.isSendMail())
+//                mailAdr.add(u.getEmail());
+//        }
+//        String[] adr = new String[mailAdr.size()];
+//        for(int i = 0;i<adr.length;i++){
+//
+//            adr[i]= mailAdr.get(i);
+//        }
         // TODO
 //        Mail.sendMailAUT(adr, M_AUT.PROPOSAL_LINK_SUBJECT, M_AUT.getInstance().getProposalLinkChangeText(
 //                    proposal.getVocabularyName(), 
@@ -329,40 +323,35 @@ public class AttachmentDetails extends Window implements org.zkoss.zk.ui.ext.Aft
 //                    proposal.getDescription(),
 //                    selectedTechnicalType.getDisplayText(),
 //                    link.getDescription()));
-        
-        
         hb_session.getTransaction().commit();
-        
+
         // Collaborationuser lesen und speichern in link, damit dieser in der Liste angezeigt werden kann
-        link.setCollaborationuser((Collaborationuser) hb_sessionS.get(Collaborationuser.class, SessionHelper.getCollaborationUserID()));
+        link.setCollaborationuser((Collaborationuser) hb_session.get(Collaborationuser.class, SessionHelper.getCollaborationUserID()));
+
+        if (getUpdateListInterface() != null)
+          getUpdateListInterface().update(link, bearbeiten);
       }
       catch (Exception e)
       {
         LoggingOutput.outputException(e, this);
         hb_session.getTransaction().rollback();
-        
+
         // TODO Fehlermeldung anzeigen
       }
       finally
       {
         hb_session.close();
-        
-        if (getUpdateListInterface() != null)
-          getUpdateListInterface().update(link, bearbeiten);
       }
 
-      
     }
     catch (Exception e)
     {
       // Fehlermeldung ausgeben
       logger.error("Fehler in onOkClicked(): " + e.getMessage());
-      hb_sessionS.close();
     }
 
     this.setVisible(false);
     this.detach();
-    hb_sessionS.close();
     //de.fhdo.gui.patientrecord.modules.masterdata.CommunicationDetails cannot be cast to de.fhdo.gui.patientrecord.modules.masterdata.Mast
 
     //Executions.getCurrent().setAttribute("contactPerson_controller", null);
@@ -372,8 +361,8 @@ public class AttachmentDetails extends Window implements org.zkoss.zk.ui.ext.Aft
   {
     this.setVisible(false);
     this.detach();
-    if(hb_sessionS != null)
-        hb_sessionS.close();
+    //if (hb_sessionS != null)
+    //  hb_sessionS.close();
   }
 
   public void selectFile(Event event) throws IOException
@@ -426,15 +415,13 @@ public class AttachmentDetails extends Window implements org.zkoss.zk.ui.ext.Aft
         }
 
         file = f;
-        
-        
+
         //getAttachment().setFile(f);
         link.setContent(media.getName()); // Dateiname
         link.setMimeType(media.getContentType());
 
         logger.debug("ct: " + media.getContentType());
         logger.debug("format: " + media.getFormat());
-
 
         Textbox tb = (Textbox) getFellow("filename");
         tb.setValue(media.getName());
@@ -452,8 +439,6 @@ public class AttachmentDetails extends Window implements org.zkoss.zk.ui.ext.Aft
   public void afterCompose()
   {
     showContent();
-
-
 
     //de.fhdo.help.Help.getInstance().addHelpToWindow(this);
   }

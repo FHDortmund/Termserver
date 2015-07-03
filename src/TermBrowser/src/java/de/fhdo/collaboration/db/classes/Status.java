@@ -1,26 +1,9 @@
-/* 
- * CTS2 based Terminology Server and Terminology Browser
- * Copyright (C) 2014 FH Dortmund: Peter Haas, Robert Muetzner
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package de.fhdo.collaboration.db.classes;
-// Generated 15.05.2013 18:02:38 by Hibernate Tools 3.2.1.GA
+// Generated 30.06.2015 09:32:45 by Hibernate Tools 4.3.1
 
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -47,23 +30,24 @@ public class Status  implements java.io.Serializable {
      private Boolean isPublic;
      private Boolean isDeleted;
      private String status;
+     private Set<Statusrel> statusrelsForStatusIdTo = new HashSet<Statusrel>(0);
      private Set<Statusrel> statusrelsForStatusIdFrom = new HashSet<Statusrel>(0);
      private Set<Role> roles = new HashSet<Role>(0);
-     private Set<Statusrel> statusrelsForStatusIdTo = new HashSet<Statusrel>(0);
 
     public Status() {
     }
 
-    public Status(Boolean isPublic, Boolean isDeleted, String status, Set<Statusrel> statusrelsForStatusIdFrom, Set<Role> roles, Set<Statusrel> statusrelsForStatusIdTo) {
+    public Status(Boolean isPublic, Boolean isDeleted, String status, Set<Statusrel> statusrelsForStatusIdTo, Set<Statusrel> statusrelsForStatusIdFrom, Set<Role> roles) {
        this.isPublic = isPublic;
        this.isDeleted = isDeleted;
        this.status = status;
+       this.statusrelsForStatusIdTo = statusrelsForStatusIdTo;
        this.statusrelsForStatusIdFrom = statusrelsForStatusIdFrom;
        this.roles = roles;
-       this.statusrelsForStatusIdTo = statusrelsForStatusIdTo;
     }
    
      @Id @GeneratedValue(strategy=IDENTITY)
+
     
     @Column(name="id", unique=true, nullable=false)
     public Long getId() {
@@ -73,6 +57,7 @@ public class Status  implements java.io.Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     
     @Column(name="isPublic")
     public Boolean getIsPublic() {
@@ -82,6 +67,7 @@ public class Status  implements java.io.Serializable {
     public void setIsPublic(Boolean isPublic) {
         this.isPublic = isPublic;
     }
+
     
     @Column(name="isDeleted")
     public Boolean getIsDeleted() {
@@ -91,6 +77,7 @@ public class Status  implements java.io.Serializable {
     public void setIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
+
     
     @Column(name="status", length=65535)
     public String getStatus() {
@@ -100,7 +87,17 @@ public class Status  implements java.io.Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="statusByStatusIdFrom")
+
+@OneToMany(fetch=FetchType.LAZY, mappedBy="statusByStatusIdTo")
+    public Set<Statusrel> getStatusrelsForStatusIdTo() {
+        return this.statusrelsForStatusIdTo;
+    }
+    
+    public void setStatusrelsForStatusIdTo(Set<Statusrel> statusrelsForStatusIdTo) {
+        this.statusrelsForStatusIdTo = statusrelsForStatusIdTo;
+    }
+
+@OneToMany(fetch=FetchType.LAZY, mappedBy="statusByStatusIdFrom")
     public Set<Statusrel> getStatusrelsForStatusIdFrom() {
         return this.statusrelsForStatusIdFrom;
     }
@@ -108,8 +105,9 @@ public class Status  implements java.io.Serializable {
     public void setStatusrelsForStatusIdFrom(Set<Statusrel> statusrelsForStatusIdFrom) {
         this.statusrelsForStatusIdFrom = statusrelsForStatusIdFrom;
     }
-@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-    @JoinTable(name="role2status", joinColumns = { 
+
+@ManyToMany(fetch=FetchType.LAZY)
+    @JoinTable(name="role2status", catalog="collab", joinColumns = { 
         @JoinColumn(name="statusId", nullable=false, updatable=false) }, inverseJoinColumns = { 
         @JoinColumn(name="roleId", nullable=false, updatable=false) })
     public Set<Role> getRoles() {
@@ -118,14 +116,6 @@ public class Status  implements java.io.Serializable {
     
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="statusByStatusIdTo")
-    public Set<Statusrel> getStatusrelsForStatusIdTo() {
-        return this.statusrelsForStatusIdTo;
-    }
-    
-    public void setStatusrelsForStatusIdTo(Set<Statusrel> statusrelsForStatusIdTo) {
-        this.statusrelsForStatusIdTo = statusrelsForStatusIdTo;
     }
 
 

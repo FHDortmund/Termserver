@@ -20,11 +20,8 @@ import de.fhdo.collaboration.db.CollaborationSession;
 import de.fhdo.collaboration.db.Definitions;
 import de.fhdo.collaboration.db.DomainHelper;
 import de.fhdo.collaboration.db.HibernateUtil;
-import de.fhdo.collaboration.db.classes.AssignedTerm;
 import de.fhdo.collaboration.db.classes.Collaborationuser;
 import de.fhdo.collaboration.db.classes.Proposal;
-import de.fhdo.collaboration.helper.AssignTermHelper;
-import de.fhdo.collaboration.helper.CODES;
 import de.fhdo.collaboration.helper.CollaborationuserHelper;
 import de.fhdo.collaboration.proposal.ProposalStatus;
 import de.fhdo.helper.DateTimeHelper;
@@ -76,24 +73,24 @@ public class Desktop extends Window implements IGenericListActions, AfterCompose
 
   public void afterCompose()
   {
-    initList();
+//    initList();
 
-    westId = (West) getFellow("westId");
-    eastId = (East) getFellow("eastId");
-
-    if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_INHALTSVERWALTER))
-    {
-      initMyTermList();
-      westId.setSize("80%");
-      eastId.setSize("20%");
-      eastId.setVisible(true);
-    }
-    else
-    {
-      westId.setSize("100%");
-      eastId.setSize("0%");
-      eastId.setVisible(false);
-    }
+//    westId = (West) getFellow("westId");
+//    eastId = (East) getFellow("eastId");
+//
+//    if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_INHALTSVERWALTER))
+//    {
+//      initMyTermList();
+//      westId.setSize("80%");
+//      eastId.setSize("20%");
+//      eastId.setVisible(true);
+//    }
+//    else
+//    {
+//      westId.setSize("100%");
+//      eastId.setSize("0%");
+//      eastId.setVisible(false);
+//    }
   }
 
   private void initList()
@@ -101,107 +98,107 @@ public class Desktop extends Window implements IGenericListActions, AfterCompose
     logger.debug("Desktop(): initList()");
 
     // Header
-    List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Terminologie", 225, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Vorschlag", 0, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Typ", 140, "", true, DomainHelper.getInstance().getDomainStringList(Definitions.DOMAINID_PROPOSAL_TYPES), true, true, false, false));
-    header.add(new GenericListHeaderType("Status", 120, "", true, ProposalStatus.getInstance().getHeaderFilter(), true, true, false, false));
-    header.add(new GenericListHeaderType("Datum", 110, "", true, "DateTime", true, true, false, false));
-    header.add(new GenericListHeaderType("Disk.Ende", 100, "", true, "Date", true, true, false, false));
-    header.add(new GenericListHeaderType("Rest", 80, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Autor", 140, "", true, "String", true, true, false, false));
-
-    // Daten laden
-    Session hb_session = HibernateUtil.getSessionFactory().openSession();
-    //hb_session.getTransaction().begin();
-
-    List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
-    try
-    {
-      List<Long> discussionGroups = CollaborationuserHelper.GetDiscussionGroupIDsForCurrentUser(hb_session);
-
-      // PRIVILEGIEN
-      if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN))
-      {
-        String hql;
-        hql = "select distinct p from Proposal p";
-
-        // Sortierung
-        hql += " order by p.created desc";
-
-        if (logger.isDebugEnabled())
-          logger.debug("HQL: " + hql);
-
-        List<Proposal> proposalList = hb_session.createQuery(hql).list();
-
-        for (int i = 0; i < proposalList.size(); ++i)
-        {
-          Proposal proposal = proposalList.get(i);
-          GenericListRowType row = createRow(proposal);
-          dataList.add(row);
-        }
-
-      }
-      else
-      {        //Jedesmal wenn jemand einen Vorschlag macht wird geprüft ob der Vorschlagende der TermVerwalter ist => wenn nicht werden
-        //dem Inhaltsverwalter automatisch Privilegien zugesprochen => Auch bei der Zuweisung von Terminologien zu Inhaltsverwaltern im
-        //Admin wird das nachträglich gecheckt!
-        String hql;
-        hql = "select distinct p from Proposal p join fetch p.collaborationuser u "
-                + " left join p.privileges priv"
-                // - alle Vorschläge anzeigen, die Privilegien mit User-ID haben
-                + " where (priv.collaborationuser.id=" + SessionHelper.getCollaborationUserID();
-
-        // - alle Vorschläge anzeigen, die Privilegien mit Discussion-ID haben
-        if (discussionGroups != null && discussionGroups.size() > 0)
-        {
-          hql += " or priv.discussiongroup.id in (" + CollaborationuserHelper.ConvertDiscussionGroupListToCommaString(discussionGroups) + ")";
-        }
-
-        // - alle eigenen Vorschläge dürfen in Liste angezeigt werden (aber nicht Detail-Ansicht)
-        hql += " or p.collaborationuser.id=" + SessionHelper.getCollaborationUserID();
-
-        hql += ")";
-
-        // Sortierung
-        hql += " order by p.created desc";
-
-        if (logger.isDebugEnabled())
-          logger.debug("HQL: " + hql);
-
-        List<Proposal> proposalList = hb_session.createQuery(hql).list();
-
-        for (int i = 0; i < proposalList.size(); ++i)
-        {
-          Proposal proposal = proposalList.get(i);
-          GenericListRowType row = createRow(proposal);
-          dataList.add(row);
-        }
-      }
-      //hb_session.getTransaction().commit();
-    }
-    catch (Exception e)
-    {
-      //hb_session.getTransaction().rollback();
-      LoggingOutput.outputException(e, this);
-      //logger.error("[" + this.getClass().getCanonicalName() + "] Fehler bei initList(): " + e.getMessage());
-    }
-    finally
-    {
-      hb_session.close();
-    }
-
-    // Liste initialisieren
-    Include inc = (Include) getFellow("incList");
-    Window winGenericList = (Window) inc.getFellow("winGenericList");
-    genericList = (GenericList) winGenericList;
-
-    genericList.setListActions(this);
-    //genericList.setButton_new(true);
-    genericList.setButton_edit(true);
-    //genericList.setButton_delete(true);
-    genericList.setListHeader(header);
-    genericList.setDataList(dataList);
+//    List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
+//    header.add(new GenericListHeaderType("Terminologie", 225, "", true, "String", true, true, false, false));
+//    header.add(new GenericListHeaderType("Vorschlag", 0, "", true, "String", true, true, false, false));
+//    header.add(new GenericListHeaderType("Typ", 140, "", true, DomainHelper.getInstance().getDomainStringList(Definitions.DOMAINID_PROPOSAL_TYPES), true, true, false, false));
+//    header.add(new GenericListHeaderType("Status", 120, "", true, ProposalStatus.getInstance().getHeaderFilter(), true, true, false, false));
+//    header.add(new GenericListHeaderType("Datum", 110, "", true, "DateTime", true, true, false, false));
+//    header.add(new GenericListHeaderType("Disk.Ende", 100, "", true, "Date", true, true, false, false));
+//    header.add(new GenericListHeaderType("Rest", 80, "", true, "String", true, true, false, false));
+//    header.add(new GenericListHeaderType("Autor", 140, "", true, "String", true, true, false, false));
+//
+//    // Daten laden
+//    Session hb_session = HibernateUtil.getSessionFactory().openSession();
+//    //hb_session.getTransaction().begin();
+//
+//    List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
+//    try
+//    {
+//      List<Long> discussionGroups = CollaborationuserHelper.GetDiscussionGroupIDsForCurrentUser(hb_session);
+//
+//      // PRIVILEGIEN
+//      if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN))
+//      {
+//        String hql;
+//        hql = "select distinct p from Proposal p";
+//
+//        // Sortierung
+//        hql += " order by p.created desc";
+//
+//        if (logger.isDebugEnabled())
+//          logger.debug("HQL: " + hql);
+//
+//        List<Proposal> proposalList = hb_session.createQuery(hql).list();
+//
+//        for (int i = 0; i < proposalList.size(); ++i)
+//        {
+//          Proposal proposal = proposalList.get(i);
+//          GenericListRowType row = createRow(proposal);
+//          dataList.add(row);
+//        }
+//
+//      }
+//      else
+//      {        //Jedesmal wenn jemand einen Vorschlag macht wird geprüft ob der Vorschlagende der TermVerwalter ist => wenn nicht werden
+//        //dem Inhaltsverwalter automatisch Privilegien zugesprochen => Auch bei der Zuweisung von Terminologien zu Inhaltsverwaltern im
+//        //Admin wird das nachträglich gecheckt!
+//        String hql;
+//        hql = "select distinct p from Proposal p join fetch p.collaborationuser u "
+//                + " left join p.privileges priv"
+//                // - alle Vorschläge anzeigen, die Privilegien mit User-ID haben
+//                + " where (priv.collaborationuser.id=" + SessionHelper.getCollaborationUserID();
+//
+//        // - alle Vorschläge anzeigen, die Privilegien mit Discussion-ID haben
+//        if (discussionGroups != null && discussionGroups.size() > 0)
+//        {
+//          hql += " or priv.discussiongroup.id in (" + CollaborationuserHelper.ConvertDiscussionGroupListToCommaString(discussionGroups) + ")";
+//        }
+//
+//        // - alle eigenen Vorschläge dürfen in Liste angezeigt werden (aber nicht Detail-Ansicht)
+//        hql += " or p.collaborationuser.id=" + SessionHelper.getCollaborationUserID();
+//
+//        hql += ")";
+//
+//        // Sortierung
+//        hql += " order by p.created desc";
+//
+//        if (logger.isDebugEnabled())
+//          logger.debug("HQL: " + hql);
+//
+//        List<Proposal> proposalList = hb_session.createQuery(hql).list();
+//
+//        for (int i = 0; i < proposalList.size(); ++i)
+//        {
+//          Proposal proposal = proposalList.get(i);
+//          GenericListRowType row = createRow(proposal);
+//          dataList.add(row);
+//        }
+//      }
+//      //hb_session.getTransaction().commit();
+//    }
+//    catch (Exception e)
+//    {
+//      //hb_session.getTransaction().rollback();
+//      LoggingOutput.outputException(e, this);
+//      //logger.error("[" + this.getClass().getCanonicalName() + "] Fehler bei initList(): " + e.getMessage());
+//    }
+//    finally
+//    {
+//      hb_session.close();
+//    }
+//
+//    // Liste initialisieren
+//    Include inc = (Include) getFellow("incList");
+//    Window winGenericList = (Window) inc.getFellow("winGenericList");
+//    genericList = (GenericList) winGenericList;
+//
+//    genericList.setListActions(this);
+//    //genericList.setButton_new(true);
+//    genericList.setButton_edit(true);
+//    //genericList.setButton_delete(true);
+//    genericList.setListHeader(header);
+//    genericList.setDataList(dataList);
   }
 
   private GenericListRowType createRow(Proposal proposal)
@@ -337,87 +334,87 @@ public class Desktop extends Window implements IGenericListActions, AfterCompose
 
   private void initMyTermList()
   {
-    logger.debug("Desktop(): initMyTermList()");
-
-    // Header
-    List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Bezeichnung", 0, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Typ", 150, "", true, "String", true, true, false, false));
-
-    ArrayList<AssignedTerm> assignedTermList = AssignTermHelper.getUsersAssignedTerms();
-
-    List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
-
-    for (AssignedTerm at : assignedTermList)
-    {
-
-      if (at.getClassname().equals("CodeSystem"))
-      {
-
-        ReturnCodeSystemDetailsRequestType parameter = new ReturnCodeSystemDetailsRequestType();
-        // Login
-        if (SessionHelper.isUserLoggedIn())
-        {
-          parameter.setLoginToken(SessionHelper.getSessionId());
-        }
-        else if (SessionHelper.isCollaborationActive())
-        {
-          parameter.setLoginToken(CollaborationSession.getInstance().getSessionID());
-        }
-
-        CodeSystem csTemp = new CodeSystem();
-        csTemp.setId(at.getClassId());
-        parameter.setCodeSystem(csTemp);
-
-        ReturnCodeSystemDetailsResponse.Return response = WebServiceHelper.returnCodeSystemDetails(parameter);
-
-        if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.search.Status.OK)
-        {
-          if (response.getCodeSystem() != null)
-          {
-            GenericListRowType row = createMyTermRow(response.getCodeSystem());
-            dataList.add(row);
-          }
-        }
-      }
-      else
-      {
-
-        de.fhdo.terminologie.ws.search.ReturnValueSetDetailsRequestType request = new de.fhdo.terminologie.ws.search.ReturnValueSetDetailsRequestType();
-        // Login
-        if (SessionHelper.isUserLoggedIn())
-        {
-          request.setLoginToken(SessionHelper.getSessionId());
-        }
-
-        ValueSet vs = new ValueSet();
-        vs.setId(at.getClassId());
-        request.setValueSet(vs);
-
-        ReturnValueSetDetailsResponse.Return response = WebServiceHelper.returnValueSetDetails(request);
-
-        if (response.getReturnInfos().getStatus() == Status.OK)
-        {
-          if (response.getValueSet() != null)
-          {
-            GenericListRowType row = createMyTermRow(response.getValueSet());
-            dataList.add(row);
-          }
-        }
-      }
-    }
-
-    // Liste initialisieren
-    Include inc = (Include) getFellow("incListMyTerm");
-    Window winGenericList = (Window) inc.getFellow("winGenericList");
-    genList = (GenericList) winGenericList;
-
-    genList.setListActions(this);
-    genList.setButton_new(false);
-    genList.setButton_edit(false);
-    genList.setButton_delete(false);
-    genList.setListHeader(header);
-    genList.setDataList(dataList);
+//    logger.debug("Desktop(): initMyTermList()");
+//
+//    // Header
+//    List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
+//    header.add(new GenericListHeaderType("Bezeichnung", 0, "", true, "String", true, true, false, false));
+//    header.add(new GenericListHeaderType("Typ", 150, "", true, "String", true, true, false, false));
+//
+//    ArrayList<AssignedTerm> assignedTermList = AssignTermHelper.getUsersAssignedTerms();
+//
+//    List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
+//
+//    for (AssignedTerm at : assignedTermList)
+//    {
+//
+//      if (at.getClassname().equals("CodeSystem"))
+//      {
+//
+//        ReturnCodeSystemDetailsRequestType parameter = new ReturnCodeSystemDetailsRequestType();
+//        // Login
+//        if (SessionHelper.isUserLoggedIn())
+//        {
+//          parameter.setLoginToken(SessionHelper.getSessionId());
+//        }
+//        else if (SessionHelper.isCollaborationActive())
+//        {
+//          parameter.setLoginToken(CollaborationSession.getInstance().getSessionID());
+//        }
+//
+//        CodeSystem csTemp = new CodeSystem();
+//        csTemp.setId(at.getClassId());
+//        parameter.setCodeSystem(csTemp);
+//
+//        ReturnCodeSystemDetailsResponse.Return response = WebServiceHelper.returnCodeSystemDetails(parameter);
+//
+//        if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.search.Status.OK)
+//        {
+//          if (response.getCodeSystem() != null)
+//          {
+//            GenericListRowType row = createMyTermRow(response.getCodeSystem());
+//            dataList.add(row);
+//          }
+//        }
+//      }
+//      else
+//      {
+//
+//        de.fhdo.terminologie.ws.search.ReturnValueSetDetailsRequestType request = new de.fhdo.terminologie.ws.search.ReturnValueSetDetailsRequestType();
+//        // Login
+//        if (SessionHelper.isUserLoggedIn())
+//        {
+//          request.setLoginToken(SessionHelper.getSessionId());
+//        }
+//
+//        ValueSet vs = new ValueSet();
+//        vs.setId(at.getClassId());
+//        request.setValueSet(vs);
+//
+//        ReturnValueSetDetailsResponse.Return response = WebServiceHelper.returnValueSetDetails(request);
+//
+//        if (response.getReturnInfos().getStatus() == Status.OK)
+//        {
+//          if (response.getValueSet() != null)
+//          {
+//            GenericListRowType row = createMyTermRow(response.getValueSet());
+//            dataList.add(row);
+//          }
+//        }
+//      }
+//    }
+//
+//    // Liste initialisieren
+//    Include inc = (Include) getFellow("incListMyTerm");
+//    Window winGenericList = (Window) inc.getFellow("winGenericList");
+//    genList = (GenericList) winGenericList;
+//
+//    genList.setListActions(this);
+//    genList.setButton_new(false);
+//    genList.setButton_edit(false);
+//    genList.setButton_delete(false);
+//    genList.setListHeader(header);
+//    genList.setDataList(dataList);
   }
 
   private GenericListRowType createMyTermRow(Object obj)

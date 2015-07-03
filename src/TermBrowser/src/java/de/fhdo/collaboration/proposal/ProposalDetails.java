@@ -3,7 +3,7 @@
  * Copyright (C) 2014 FH Dortmund: Peter Haas, Robert Muetzner
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * you may not use this file except in compliance with the License."
  * You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
@@ -18,7 +18,10 @@ package de.fhdo.collaboration.proposal;
 
 import de.fhdo.collaboration.db.CollaborationSession;
 import de.fhdo.collaboration.db.classes.Proposal;
+import de.fhdo.collaboration.db.classes.Proposalobject;
 import de.fhdo.collaboration.proposal.newproposal.INewProposal;
+import de.fhdo.collaboration.proposal.newproposal.ProposalCodeSystem;
+import de.fhdo.collaboration.proposal.newproposal.ProposalConcept;
 import de.fhdo.collaboration.workflow.ProposalWorkflow;
 import de.fhdo.collaboration.workflow.ReturnType;
 import de.fhdo.helper.ArgumentHelper;
@@ -26,6 +29,7 @@ import de.fhdo.helper.DateTimeHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.interfaces.IUpdateModal;
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.ws.search.ListCodeSystemsInTaxonomyRequestType;
 import de.fhdo.terminologie.ws.search.ListCodeSystemsInTaxonomyResponse;
 import de.fhdo.terminologie.ws.search.ListValueSetsRequestType;
@@ -33,6 +37,8 @@ import de.fhdo.terminologie.ws.search.ListValueSetsResponse;
 import de.fhdo.terminologie.ws.search.Status;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
@@ -83,6 +89,8 @@ public class ProposalDetails extends Window implements AfterCompose
   {
     logger.debug("ProposalDetails() - Konstruktor");
 
+    proposal = new Proposal();
+
     loadArguments();
     initData();
   }
@@ -93,10 +101,18 @@ public class ProposalDetails extends Window implements AfterCompose
 
     if (source != null)
     {
+      logger.debug("source: " + source.getClass().getCanonicalName());
+
       if (source instanceof CodeSystem || source instanceof CodeSystemVersion)
       {
         selectedTab = (Tab) getFellow("tabCodeSystem");
+        proposalObject = new ProposalCodeSystem();
+      }
 
+      if (source instanceof CodeSystemEntity || source instanceof CodeSystemEntityVersion)
+      {
+        selectedTab = (Tab) getFellow("tabConcept");
+        proposalObject = new ProposalConcept();
       }
 
 //      if (source instanceof CodeSystemVersion && !isExisting && type.equals("")) //Neues Concept
@@ -294,8 +310,6 @@ public class ProposalDetails extends Window implements AfterCompose
     }
     else
     {
-      
-      
 
 //      int selIndex = 0;
 //      Tabbox tb = (Tabbox) getFellow("tbAuswahl");
@@ -309,36 +323,53 @@ public class ProposalDetails extends Window implements AfterCompose
 //      }
     }
 
-    if (selectedTab != null)
+    if (selectedTab != null && proposalObject != null)
     {
       Tabbox tb = (Tabbox) getFellow("tbAuswahl");
       selectedTab.setVisible(true);
       tb.setSelectedTab(selectedTab);
+
+      proposalObject.initData(this, null);  // TODO Objekt übergeben, wenn bearbeiten
     }
     else
     {
       // TODO Fehlermeldung
-      Messagebox.show("Error");
+      Messagebox.show("Objekt wird nicht unterstützt.");
       this.detach();
     }
-    
-    // initialize Data
-    proposalObject.initData(this);
   }
 
   private void loadArguments()
   {
     isExisting = (Boolean) ArgumentHelper.getWindowArgument("isExisting");
-    type = (String) ArgumentHelper.getWindowArgument("type");
-
-    if (type == null)
-      type = "";
+    type = (String) ArgumentHelper.getWindowArgumentString("type");
 
     source = ArgumentHelper.getWindowArgument("source");
     codeSystemId = ArgumentHelper.getWindowArgumentLong("codeSystemId");
     codeSystemVersionId = ArgumentHelper.getWindowArgumentLong("codeSystemVersionId");
     valueSetId = ArgumentHelper.getWindowArgumentLong("valueSetId");
     valueSetVersionId = ArgumentHelper.getWindowArgumentLong("valueSetVersionId");
+    
+    String objectName = ArgumentHelper.getWindowArgumentString("objectName");
+    String objectVersionName = ArgumentHelper.getWindowArgumentString("objectVersionName");
+
+    if (isExisting == false)
+    {
+      // new proposal
+      if (codeSystemId > 0)
+      {
+        proposal.setObjectId(codeSystemId);
+        proposal.setObjectVersionId(codeSystemVersionId);
+      }
+      else if(valueSetId > 0)
+      {
+        proposal.setObjectId(valueSetId);
+        proposal.setObjectVersionId(valueSetVersionId);
+      }
+      
+      proposal.setObjectName(objectName);
+      proposal.setObjectVersionName(objectVersionName);
+    }
 
 //    Object o = ArgumentHelper.getWindowArgument("parentCodeSystemEntityVersion");
 //    if (o != null)
@@ -348,7 +379,6 @@ public class ProposalDetails extends Window implements AfterCompose
 //        parentTerm = (CodeSystemEntityVersion) o;
 //      }
 //    }
-
   }
 
   public void vocOrValChecked(int i)
@@ -407,357 +437,393 @@ public class ProposalDetails extends Window implements AfterCompose
 
   private void initData()
   {
-    proposal = new Proposal();
+    //proposal = new Proposal();
 
     /*//Init Voc Data
-    ListCodeSystemsInTaxonomyRequestType parameter = new ListCodeSystemsInTaxonomyRequestType();
-    ListCodeSystemsInTaxonomyResponse.Return response = WebServiceHelper.listCodeSystemsInTaxonomy(parameter);
+     ListCodeSystemsInTaxonomyRequestType parameter = new ListCodeSystemsInTaxonomyRequestType();
+     ListCodeSystemsInTaxonomyResponse.Return response = WebServiceHelper.listCodeSystemsInTaxonomy(parameter);
 
-    if (response.getReturnInfos().getStatus() == Status.OK)
-    {
+     if (response.getReturnInfos().getStatus() == Status.OK)
+     {
 
-      for (DomainValue dv : response.getDomainValue())
-      {
+     for (DomainValue dv : response.getDomainValue())
+     {
 
-        for (CodeSystem cs : dv.getCodeSystems())
-        {
+     for (CodeSystem cs : dv.getCodeSystems())
+     {
 
-          for (CodeSystemVersion csv : cs.getCodeSystemVersions())
-          {
-            VocInfo vi = new VocInfo(csv.getVersionId(), cs.getId(), cs.getName(), csv.getName());
-            vocData.add(vi);
-          }
-        }
-      }
+     for (CodeSystemVersion csv : cs.getCodeSystemVersions())
+     {
+     VocInfo vi = new VocInfo(csv.getVersionId(), cs.getId(), cs.getName(), csv.getName());
+     vocData.add(vi);
+     }
+     }
+     }
 
-      Executions.getCurrent().setAttribute("vocData", vocData);
-      Executions.getCurrent().setAttribute("choosenVocData", choosenVocData);
-    }
-    else
-    {
+     Executions.getCurrent().setAttribute("vocData", vocData);
+     Executions.getCurrent().setAttribute("choosenVocData", choosenVocData);
+     }
+     else
+     {
 
-      Messagebox.show(response.getReturnInfos().getMessage(), "Fehler beim Laden der Code Systeme!", Messagebox.OK, Messagebox.ERROR);
-    }*/
+     Messagebox.show(response.getReturnInfos().getMessage(), "Fehler beim Laden der Code Systeme!", Messagebox.OK, Messagebox.ERROR);
+     }*/
   }
 
   public void onOkClicked()
   {
     // check mandatory fields
+    if (((Textbox) getFellow("tbProposal")).getText().length() == 0)
+    {
+      Messagebox.show("Sie müssen einen Vorschlag eingeben.");
+      return;
+    }
+
     String s = proposalObject.checkMandatoryFields(this);
-    if(isNullOrEmtpy(s) == false)
+    if (isNullOrEmtpy(s) == false)
     {
       Messagebox.show(s);
+      return;
     }
-    
-    
+
+    try
+    {
+      List<Object> proposalObjects = new LinkedList<Object>();
+
+      // save proposal data
+      proposal.setDescription(((Textbox) getFellow("tbProposal")).getText());
+      proposal.setCreated(new Date());
+
+      // save specific proposal data
+      proposalObject.saveData(this, proposal, proposalObjects);
+
+      ReturnType ret = ProposalWorkflow.getInstance().addProposal(proposal, proposalObjects, isExisting);
+      if (ret.isSuccess())
+      {
+        Messagebox.show(ret.getMessage(), "Vorschlag erstellen", Messagebox.OK, Messagebox.INFORMATION);
+        this.detach();
+      }
+      else
+      {
+        if (ret.getMessage() == null || ret.getMessage().length() == 0)
+          Messagebox.show("Fehler beim Einfügen eines Vorschlags.");
+        else
+          Messagebox.show(ret.getMessage());
+        return;
+      }
+    }
+    catch (Exception ex)
+    {
+      LoggingOutput.outputException(ex, this);
+      Messagebox.show("Fehler beim Speichern des Vorschlags: " + ex.getLocalizedMessage());
+    }
+
+    //
     //ret = ProposalWorkflow.getInstance().addProposal(proposal, csev, source, valueSetVersionId, isExisting);
-    
     /*Checkbox cbVoc = (Checkbox) getFellow("cbVoc");
-    Checkbox cbVal = (Checkbox) getFellow("cbVal");
-    Tabbox tb = (Tabbox) getFellow("tbAuswahl");
-    boolean runS = true;
+     Checkbox cbVal = (Checkbox) getFellow("cbVal");
+     Tabbox tb = (Tabbox) getFellow("tbAuswahl");
+     boolean runS = true;
 
-    if (cbVoc.isChecked())
-    {
+     if (cbVoc.isChecked())
+     {
 
-      ListCodeSystemsInTaxonomyRequestType para = new ListCodeSystemsInTaxonomyRequestType();
+     ListCodeSystemsInTaxonomyRequestType para = new ListCodeSystemsInTaxonomyRequestType();
 
-      if (SessionHelper.isCollaborationActive())
-      {
-        // Kollaborationslogin verwenden (damit auch nicht-aktive Begriffe angezeigt werden können)
-        para.setLoginToken(CollaborationSession.getInstance().getSessionID());
-      }
-      else if (SessionHelper.isUserLoggedIn())
-      {
-        para.setLoginToken(SessionHelper.getSessionId());
-      }
+     if (SessionHelper.isCollaborationActive())
+     {
+     // Kollaborationslogin verwenden (damit auch nicht-aktive Begriffe angezeigt werden können)
+     para.setLoginToken(CollaborationSession.getInstance().getSessionID());
+     }
+     else if (SessionHelper.isUserLoggedIn())
+     {
+     para.setLoginToken(SessionHelper.getSessionId());
+     }
 
-      //Search_Service service = new Search_Service();
-      //Search port = service.getSearchPort();
-      de.fhdo.terminologie.ws.search.ListCodeSystemsInTaxonomyResponse.Return resp = WebServiceHelper.listCodeSystemsInTaxonomy(para);
+     //Search_Service service = new Search_Service();
+     //Search port = service.getSearchPort();
+     de.fhdo.terminologie.ws.search.ListCodeSystemsInTaxonomyResponse.Return resp = WebServiceHelper.listCodeSystemsInTaxonomy(para);
 
-      for (DomainValue dv : resp.getDomainValue())
-      {
+     for (DomainValue dv : resp.getDomainValue())
+     {
 
-        for (CodeSystem csL : dv.getCodeSystems())
-        {
-          if ((((Textbox) getFellow("tbVocName")).getText()).equals(csL.getName()))
-          {
-            runS = false;
-          }
-        }
-      }
-    }
-    else if (cbVal.isChecked())
-    {
+     for (CodeSystem csL : dv.getCodeSystems())
+     {
+     if ((((Textbox) getFellow("tbVocName")).getText()).equals(csL.getName()))
+     {
+     runS = false;
+     }
+     }
+     }
+     }
+     else if (cbVal.isChecked())
+     {
 
-      ListValueSetsRequestType para = new ListValueSetsRequestType();
+     ListValueSetsRequestType para = new ListValueSetsRequestType();
 
-      // login
-      if (SessionHelper.isCollaborationActive())
-      {
-        // Kollaborationslogin verwenden (damit auch nicht-aktive Begriffe angezeigt werden können)
-        para.setLoginToken(CollaborationSession.getInstance().getSessionID());
-      }
-      else if (SessionHelper.isUserLoggedIn())
-      {
-        para.setLoginToken(SessionHelper.getSessionId());
-      }
+     // login
+     if (SessionHelper.isCollaborationActive())
+     {
+     // Kollaborationslogin verwenden (damit auch nicht-aktive Begriffe angezeigt werden können)
+     para.setLoginToken(CollaborationSession.getInstance().getSessionID());
+     }
+     else if (SessionHelper.isUserLoggedIn())
+     {
+     para.setLoginToken(SessionHelper.getSessionId());
+     }
 
-      ListValueSetsResponse.Return resp = WebServiceHelper.listValueSets(para);
+     ListValueSetsResponse.Return resp = WebServiceHelper.listValueSets(para);
 
-      for (ValueSet vsL : resp.getValueSet())
-      {
-        if ((((Textbox) getFellow("tbVocName")).getText()).equals(vsL.getName()))
-        {
-          runS = false;
-        }
-      }
-    }
+     for (ValueSet vsL : resp.getValueSet())
+     {
+     if ((((Textbox) getFellow("tbVocName")).getText()).equals(vsL.getName()))
+     {
+     runS = false;
+     }
+     }
+     }
 
-    if (isExisting || (!isExisting && runS) || type.equals("concept") || type.equals("conceptmembership"))
-    {
-      if (logger.isDebugEnabled())
-        logger.debug("Daten speichern");
+     if (isExisting || (!isExisting && runS) || type.equals("concept") || type.equals("conceptmembership"))
+     {
+     if (logger.isDebugEnabled())
+     logger.debug("Daten speichern");
 
-      ReturnType ret = null;
+     ReturnType ret = null;
 
-      int selIndex = tb.getSelectedIndex();
+     int selIndex = tb.getSelectedIndex();
 
-      // Abhängig von der Auswahl den Vorschlag erstellen
-      if (selIndex == 0)
-      {
+     // Abhängig von der Auswahl den Vorschlag erstellen
+     if (selIndex == 0)
+     {
 
-        if (cbVoc.isChecked())
-        {
+     if (cbVoc.isChecked())
+     {
 
-          if (!isExisting)
-          {
-            // Erstellt ein neues Vokabular
-            CodeSystem cs = new CodeSystem();
-            cs.setName(((Textbox) getFellow("tbVocName")).getText());
-            cs.setDescription(((Textbox) getFellow("tbVocDescription")).getText());
+     if (!isExisting)
+     {
+     // Erstellt ein neues Vokabular
+     CodeSystem cs = new CodeSystem();
+     cs.setName(((Textbox) getFellow("tbVocName")).getText());
+     cs.setDescription(((Textbox) getFellow("tbVocDescription")).getText());
 
-            CodeSystemVersion csv = new CodeSystemVersion();
-            csv.setName(((Textbox) getFellow("tbVocVersionName")).getText());
-            csv.setDescription(((Textbox) getFellow("tbVocVersionDescription")).getText());
-            csv.setStatus(0);
-            //csv.setValidityRange(236l); //optional
-            csv.setValidityRange(4l); //optional
+     CodeSystemVersion csv = new CodeSystemVersion();
+     csv.setName(((Textbox) getFellow("tbVocVersionName")).getText());
+     csv.setDescription(((Textbox) getFellow("tbVocVersionDescription")).getText());
+     csv.setStatus(0);
+     //csv.setValidityRange(236l); //optional
+     csv.setValidityRange(4l); //optional
 
-            cs.getCodeSystemVersions().add(csv);
+     cs.getCodeSystemVersions().add(csv);
 
-            proposal.setVocabularyId(0l);  // wird nach Erstellen eingefügt
-            proposal.setVocabularyName(cs.getName());
-            proposal.setContentType("vocabulary");
-            proposal.setVocabularyNameTwo("CodeSystem");
+     proposal.setVocabularyId(0l);  // wird nach Erstellen eingefügt
+     proposal.setVocabularyName(cs.getName());
+     proposal.setContentType("vocabulary");
+     proposal.setVocabularyNameTwo("CodeSystem");
 
-            if (pruefePflichtfelder_Vocabulary(cs, csv))
-            {
-              ret = ProposalWorkflow.getInstance().addProposal(proposal, cs, isExisting);
-            }
-          }
-          else
-          {
-            proposal.setVocabularyId(((CodeSystemVersion) source).getCodeSystem().getId());      //Existing Vok 
-            proposal.setVocabularyName(((CodeSystemVersion) source).getCodeSystem().getName());
-            proposal.setVocabularyIdTwo(((CodeSystemVersion) source).getCodeSystem().getId());
-            proposal.setContentType("vocabulary");
-            proposal.setVocabularyNameTwo("CodeSystem");
-            ret = ProposalWorkflow.getInstance().addProposal(proposal, source, isExisting);
-          }
-        }
-        else
-        {
+     if (pruefePflichtfelder_Vocabulary(cs, csv))
+     {
+     ret = ProposalWorkflow.getInstance().addProposal(proposal, cs, isExisting);
+     }
+     }
+     else
+     {
+     proposal.setVocabularyId(((CodeSystemVersion) source).getCodeSystem().getId());      //Existing Vok 
+     proposal.setVocabularyName(((CodeSystemVersion) source).getCodeSystem().getName());
+     proposal.setVocabularyIdTwo(((CodeSystemVersion) source).getCodeSystem().getId());
+     proposal.setContentType("vocabulary");
+     proposal.setVocabularyNameTwo("CodeSystem");
+     ret = ProposalWorkflow.getInstance().addProposal(proposal, source, isExisting);
+     }
+     }
+     else
+     {
 
-          if (!isExisting)
-          {
-            // Erstellt ein neues ValueSet
-            ValueSet vs = new ValueSet();
-            vs.setName(((Textbox) getFellow("tbVocName")).getText());
-            vs.setDescription(((Textbox) getFellow("tbVocDescription")).getText());
+     if (!isExisting)
+     {
+     // Erstellt ein neues ValueSet
+     ValueSet vs = new ValueSet();
+     vs.setName(((Textbox) getFellow("tbVocName")).getText());
+     vs.setDescription(((Textbox) getFellow("tbVocDescription")).getText());
 
-            ValueSetVersion vsv = new ValueSetVersion();
-            vsv.setStatus(0);
-            vsv.setName(((Textbox) getFellow("tbVocVersionName")).getText());
+     ValueSetVersion vsv = new ValueSetVersion();
+     vsv.setStatus(0);
+     vsv.setName(((Textbox) getFellow("tbVocVersionName")).getText());
 
-            vs.getValueSetVersions().add(vsv);
+     vs.getValueSetVersions().add(vsv);
 
-            proposal.setVocabularyId(0l);  // wird nach Erstellen eingefügt
-            proposal.setVocabularyName(vs.getName());
-            proposal.setContentType("valueset");
-            proposal.setVocabularyNameTwo("ValueSet");
+     proposal.setVocabularyId(0l);  // wird nach Erstellen eingefügt
+     proposal.setVocabularyName(vs.getName());
+     proposal.setContentType("valueset");
+     proposal.setVocabularyNameTwo("ValueSet");
 
-            if (pruefePflichtfelder_ValueSet(vs))
-            {
-              ret = ProposalWorkflow.getInstance().addProposal(proposal, vs, isExisting);
-            }
-          }
-          else
-          {
+     if (pruefePflichtfelder_ValueSet(vs))
+     {
+     ret = ProposalWorkflow.getInstance().addProposal(proposal, vs, isExisting);
+     }
+     }
+     else
+     {
 
-            proposal.setVocabularyId(((ValueSetVersion) source).getValueSet().getId());  //Existing VS
-            proposal.setVocabularyName(((ValueSetVersion) source).getValueSet().getName());
-            proposal.setVocabularyIdTwo(((ValueSetVersion) source).getValueSet().getId());
-            proposal.setContentType("valueset");
-            proposal.setVocabularyNameTwo("ValueSet");
-            ret = ProposalWorkflow.getInstance().addProposal(proposal, source, isExisting);
-          }
-        }
-      }
-      else if (selIndex == 1)
-      {
+     proposal.setVocabularyId(((ValueSetVersion) source).getValueSet().getId());  //Existing VS
+     proposal.setVocabularyName(((ValueSetVersion) source).getValueSet().getName());
+     proposal.setVocabularyIdTwo(((ValueSetVersion) source).getValueSet().getId());
+     proposal.setContentType("valueset");
+     proposal.setVocabularyNameTwo("ValueSet");
+     ret = ProposalWorkflow.getInstance().addProposal(proposal, source, isExisting);
+     }
+     }
+     }
+     else if (selIndex == 1)
+     {
 
-        if (source instanceof CodeSystemVersion)
-        {
+     if (source instanceof CodeSystemVersion)
+     {
 
-          if (!isExisting)
-          {
-            // Erstellt einen neuen Begriff
-            Object obj2 = null;
-            proposal.setVocabularyId(codeSystemVersionId);
-            proposal.setVocabularyName(getSourceString());
-            proposal.setVocabularyIdTwo(((CodeSystemVersion) source).getCodeSystem().getId());
-            proposal.setContentType("concept");
-            proposal.setVocabularyNameTwo("CodeSystem");
+     if (!isExisting)
+     {
+     // Erstellt einen neuen Begriff
+     Object obj2 = null;
+     proposal.setVocabularyId(codeSystemVersionId);
+     proposal.setVocabularyName(getSourceString());
+     proposal.setVocabularyIdTwo(((CodeSystemVersion) source).getCodeSystem().getId());
+     proposal.setContentType("concept");
+     proposal.setVocabularyNameTwo("CodeSystem");
 
-            CodeSystemConcept csc = new CodeSystemConcept();
-            csc.setCode(((Textbox) getFellow("tbCode")).getText());
-            csc.setDescription(((Textbox) getFellow("tbDescription")).getText());
-            csc.setIsPreferred(((Checkbox) getFellow("cbPreferred")).isChecked());
-            csc.setTerm(((Textbox) getFellow("tbTerm")).getText());
-            csc.setTermAbbrevation(((Textbox) getFellow("tbAbbrevation")).getText());
+     CodeSystemConcept csc = new CodeSystemConcept();
+     csc.setCode(((Textbox) getFellow("tbCode")).getText());
+     csc.setDescription(((Textbox) getFellow("tbDescription")).getText());
+     csc.setIsPreferred(((Checkbox) getFellow("cbPreferred")).isChecked());
+     csc.setTerm(((Textbox) getFellow("tbTerm")).getText());
+     csc.setTermAbbrevation(((Textbox) getFellow("tbAbbrevation")).getText());
 
-            // Beziehung zu Vokabular setzen
-            CodeSystemVersionEntityMembership csvem = new CodeSystemVersionEntityMembership();
-            csvem.setIsAxis(false); // TODO
+     // Beziehung zu Vokabular setzen
+     CodeSystemVersionEntityMembership csvem = new CodeSystemVersionEntityMembership();
+     csvem.setIsAxis(false); // TODO
 
-            if (parentTerm == null)
-              csvem.setIsMainClass(true);
-            else
-              csvem.setIsMainClass(false);
+     if (parentTerm == null)
+     csvem.setIsMainClass(true);
+     else
+     csvem.setIsMainClass(false);
 
-            csvem.setCodeSystemVersion(new CodeSystemVersion());
-            csvem.getCodeSystemVersion().setVersionId(codeSystemVersionId);
-            CodeSystemEntityVersion csev = new CodeSystemEntityVersion();
-            csev.setCodeSystemEntity(new CodeSystemEntity());
-            csev.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().add(csvem);
-            csc.setCodeSystemEntityVersion(csev);
+     csvem.setCodeSystemVersion(new CodeSystemVersion());
+     csvem.getCodeSystemVersion().setVersionId(codeSystemVersionId);
+     CodeSystemEntityVersion csev = new CodeSystemEntityVersion();
+     csev.setCodeSystemEntity(new CodeSystemEntity());
+     csev.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().add(csvem);
+     csc.setCodeSystemEntityVersion(csev);
 
-            if (parentTerm != null)
-            {
-              // Neuer Unterbegriff, also auch Beziehung hinzufügen
-              proposal.setContentType("subconcept");
+     if (parentTerm != null)
+     {
+     // Neuer Unterbegriff, also auch Beziehung hinzufügen
+     proposal.setContentType("subconcept");
 
-              CodeSystemEntityVersionAssociation cseva = new CodeSystemEntityVersionAssociation();
-              cseva.setAssociationKind(2);
-              cseva.setAssociationType(new AssociationType());
-              cseva.getAssociationType().setCodeSystemEntityVersionId(4L); // TODO 4 ist zur Zeit Standard für Unterklasse
-              cseva.setLeftId(parentTerm.getVersionId());
-              cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(parentTerm);
-              //cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(new CodeSystemEntityVersion());
-              //cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setVersionId(parentTerm.getVersionId());
+     CodeSystemEntityVersionAssociation cseva = new CodeSystemEntityVersionAssociation();
+     cseva.setAssociationKind(2);
+     cseva.setAssociationType(new AssociationType());
+     cseva.getAssociationType().setCodeSystemEntityVersionId(4L); // TODO 4 ist zur Zeit Standard für Unterklasse
+     cseva.setLeftId(parentTerm.getVersionId());
+     cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(parentTerm);
+     //cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(new CodeSystemEntityVersion());
+     //cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setVersionId(parentTerm.getVersionId());
 
-              obj2 = cseva;
-            }
+     obj2 = cseva;
+     }
 
-            if (pruefePflichtfelder_Concept(csc))
-            {
-              ret = ProposalWorkflow.getInstance().addProposal(proposal, csc, obj2, codeSystemId, isExisting);
-            }
-          }
-          else
-          {
+     if (pruefePflichtfelder_Concept(csc))
+     {
+     ret = ProposalWorkflow.getInstance().addProposal(proposal, csc, obj2, codeSystemId, isExisting);
+     }
+     }
+     else
+     {
 
-            // Erstellt einen neuen Begriff
-            proposal.setVocabularyId(codeSystemVersionId);  //Existing Konzept
-            proposal.setVocabularyName(getSourceString());
-            proposal.setVocabularyIdTwo(((CodeSystemVersion) source).getCodeSystem().getId());
-            proposal.setContentType("concept");
-            proposal.setVocabularyNameTwo("CodeSystem");
+     // Erstellt einen neuen Begriff
+     proposal.setVocabularyId(codeSystemVersionId);  //Existing Konzept
+     proposal.setVocabularyName(getSourceString());
+     proposal.setVocabularyIdTwo(((CodeSystemVersion) source).getCodeSystem().getId());
+     proposal.setContentType("concept");
+     proposal.setVocabularyNameTwo("CodeSystem");
 
-            ret = ProposalWorkflow.getInstance().addProposal(proposal, csev, isExisting);
-          }
-        }
-        if (source instanceof ValueSetVersion)
-        {
+     ret = ProposalWorkflow.getInstance().addProposal(proposal, csev, isExisting);
+     }
+     }
+     if (source instanceof ValueSetVersion)
+     {
 
-          if (!isExisting)
-          {
-            // Erstellt einen neuen Begriff
-            proposal.setVocabularyId(valueSetVersionId);
-            proposal.setVocabularyName(getSourceString());
-            proposal.setVocabularyIdTwo(((ValueSetVersion) source).getValueSet().getId());
-            proposal.setContentType("conceptVs");
-            proposal.setVocabularyNameTwo("ValueSet");
+     if (!isExisting)
+     {
+     // Erstellt einen neuen Begriff
+     proposal.setVocabularyId(valueSetVersionId);
+     proposal.setVocabularyName(getSourceString());
+     proposal.setVocabularyIdTwo(((ValueSetVersion) source).getValueSet().getId());
+     proposal.setContentType("conceptVs");
+     proposal.setVocabularyNameTwo("ValueSet");
 
-            ValueSetVersion vsv = new ValueSetVersion();
-            vsv.setVersionId(valueSetVersionId);
-            vsv.setValueSet(null);
-            //CSEV Später!
+     ValueSetVersion vsv = new ValueSetVersion();
+     vsv.setVersionId(valueSetVersionId);
+     vsv.setValueSet(null);
+     //CSEV Später!
 
-            ConceptValueSetMembership cvsm = new ConceptValueSetMembership();
-            cvsm.setStatus(0);
-            cvsm.setStatusDate(DateTimeHelper.dateToXMLGregorianCalendar(new Date()));
-            cvsm.setValueSetVersion(vsv);
+     ConceptValueSetMembership cvsm = new ConceptValueSetMembership();
+     cvsm.setStatus(0);
+     cvsm.setStatusDate(DateTimeHelper.dateToXMLGregorianCalendar(new Date()));
+     cvsm.setValueSetVersion(vsv);
 
-            if (pruefePflichtfelder_ConceptVs(cvsm))
-            {
+     if (pruefePflichtfelder_ConceptVs(cvsm))
+     {
 
-              ret = ProposalWorkflow.getInstance().addProposal(proposal, dlbv.getChosenDataList().iterator().next(), source, valueSetVersionId, ((Textbox) getFellow("tbCodeVs")).getText(), isExisting);
-            }
-          }
-          else
-          {
+     ret = ProposalWorkflow.getInstance().addProposal(proposal, dlbv.getChosenDataList().iterator().next(), source, valueSetVersionId, ((Textbox) getFellow("tbCodeVs")).getText(), isExisting);
+     }
+     }
+     else
+     {
 
-            // Erstellt einen neuen Begriff
-            proposal.setVocabularyId(valueSetVersionId);
-            proposal.setVocabularyName(getSourceString());
-            proposal.setVocabularyIdTwo(((ValueSetVersion) source).getValueSet().getId());
-            proposal.setContentType("conceptVs");
-            proposal.setVocabularyNameTwo("ValueSet");
+     // Erstellt einen neuen Begriff
+     proposal.setVocabularyId(valueSetVersionId);
+     proposal.setVocabularyName(getSourceString());
+     proposal.setVocabularyIdTwo(((ValueSetVersion) source).getValueSet().getId());
+     proposal.setContentType("conceptVs");
+     proposal.setVocabularyNameTwo("ValueSet");
 
-            ret = ProposalWorkflow.getInstance().addProposal(proposal, csev, source, valueSetVersionId, isExisting);
+     ret = ProposalWorkflow.getInstance().addProposal(proposal, csev, source, valueSetVersionId, isExisting);
 
-          }
-        }
-      }
+     }
+     }
+     }
 
-      // Antwort auswerten
-      if (ret != null)
-      {
-        if (ret.isSuccess())
-        {
-          // Erfolg
-          if (ret.getMessage() != null && ret.getMessage().length() > 0)
-          {
-            Messagebox.show(ret.getMessage(), "Vorschlag erstellen", Messagebox.OK, Messagebox.INFORMATION);
-          }
+     // Antwort auswerten
+     if (ret != null)
+     {
+     if (ret.isSuccess())
+     {
+     // Erfolg
+     if (ret.getMessage() != null && ret.getMessage().length() > 0)
+     {
+     Messagebox.show(ret.getMessage(), "Vorschlag erstellen", Messagebox.OK, Messagebox.INFORMATION);
+     }
 
-          // Formular schließen
-          this.setVisible(false);
-          this.detach();
+     // Formular schließen
+     this.setVisible(false);
+     this.detach();
 
-          // Hauptansicht aktualisieren
-          if (updateInterface != null)
-          {
-            updateInterface.update(proposal, false);
-          }
-        }
-        else
-        {
-          // Fehlermeldung ausgeben
-          Messagebox.show("Code wurde nicht gefunden!", "Vorschlag erstellen", Messagebox.OK, Messagebox.ERROR);
-        }
-      }
-    }
-    else
-    {
-      Messagebox.show("Ein CodeSystem/ValueSet mit dem selben Namen existiert bereits!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
-    }*/
+     // Hauptansicht aktualisieren
+     if (updateInterface != null)
+     {
+     updateInterface.update(proposal, false);
+     }
+     }
+     else
+     {
+     // Fehlermeldung ausgeben
+     Messagebox.show("Code wurde nicht gefunden!", "Vorschlag erstellen", Messagebox.OK, Messagebox.ERROR);
+     }
+     }
+     }
+     else
+     {
+     Messagebox.show("Ein CodeSystem/ValueSet mit dem selben Namen existiert bereits!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+     }*/
   }
-
-  
 
   private boolean isNullOrEmtpy(String s)
   {
@@ -800,8 +866,6 @@ public class ProposalDetails extends Window implements AfterCompose
     return "";
   }
 
- 
-
   /**
    * @param updateInterface the updateInterface to set
    */
@@ -826,5 +890,4 @@ public class ProposalDetails extends Window implements AfterCompose
     this.proposal = proposal;
   }
 
- 
 }

@@ -226,52 +226,53 @@ public class DiscussionEntryDetails extends Window implements AfterCompose
           logger.debug("Neu geladen mit user-ID: " + discussion.getCollaborationuser().getId() + " und name: " + discussion.getCollaborationuser().getName());
         }
         
-        ArrayList<Collaborationuser> completeUserList = new ArrayList<Collaborationuser>();
-        
-        Proposal prop = (Proposal)hb_session.get(Proposal.class, discussion.getProposal().getId());
-        
-        //Lade alle Benutzer mit Privilegien auf Proposal
-        String hqlPrivilegeUsers = "from Collaborationuser cu join fetch cu.privileges pri join fetch pri.proposal pro join fetch cu.organisation o where pro.id=:id";
-        Query qPrivilegeUsers = hb_session.createQuery(hqlPrivilegeUsers);
-        qPrivilegeUsers.setParameter("id", prop.getId());
-        List<Collaborationuser> privUserList = qPrivilegeUsers.list();
-
-        for(Collaborationuser cu:privUserList){
-            completeUserList.add(cu);
-        }
-
-        //Lade alle Diskussionsgruppen mit Privilegien auf Proposal
-        String hqlPrivilegeGroups = "from Collaborationuser cu join fetch cu.discussiongroups dg join fetch dg.privileges pri join fetch pri.proposal pro where pro.id=:id";
-        Query qPrivilegeGroups = hb_session.createQuery(hqlPrivilegeGroups);
-        qPrivilegeGroups.setParameter("id", prop.getId());
-        List<Collaborationuser> privGroupList = qPrivilegeGroups.list();
-
-        for(Collaborationuser cu:privGroupList){
-
-            boolean doubleEntry = false;
-            for(Collaborationuser cuI:completeUserList){
-
-                if(cu.getId().equals(cuI.getId())){
-                    doubleEntry = true;
-                }
-            }
-
-            if(!doubleEntry){
-                completeUserList.add(cu);
-            }
-        }
-        
-        ArrayList<String> mailAdr = new ArrayList<String>();
-        for(Collaborationuser u:completeUserList){
-
-            if(u.getSendMail() != null && u.getSendMail())
-                mailAdr.add(u.getEmail());
-        }
-        String[] adr = new String[mailAdr.size()];
-        for(int i = 0;i<adr.length;i++){
-        
-            adr[i]= mailAdr.get(i);
-        }
+        // TODO Benachrichtigungen
+//        ArrayList<Collaborationuser> completeUserList = new ArrayList<Collaborationuser>();
+//        
+//        Proposal prop = (Proposal)hb_session.get(Proposal.class, discussion.getProposal().getId());
+//        
+//        //Lade alle Benutzer mit Privilegien auf Proposal
+//        String hqlPrivilegeUsers = "from Collaborationuser cu join fetch cu.privileges pri join fetch pri.proposal pro join fetch cu.organisation o where pro.id=:id";
+//        Query qPrivilegeUsers = hb_session.createQuery(hqlPrivilegeUsers);
+//        qPrivilegeUsers.setParameter("id", prop.getId());
+//        List<Collaborationuser> privUserList = qPrivilegeUsers.list();
+//
+//        for(Collaborationuser cu:privUserList){
+//            completeUserList.add(cu);
+//        }
+//
+//        //Lade alle Diskussionsgruppen mit Privilegien auf Proposal
+//        String hqlPrivilegeGroups = "from Collaborationuser cu join fetch cu.discussiongroups dg join fetch dg.privileges pri join fetch pri.proposal pro where pro.id=:id";
+//        Query qPrivilegeGroups = hb_session.createQuery(hqlPrivilegeGroups);
+//        qPrivilegeGroups.setParameter("id", prop.getId());
+//        List<Collaborationuser> privGroupList = qPrivilegeGroups.list();
+//
+//        for(Collaborationuser cu:privGroupList){
+//
+//            boolean doubleEntry = false;
+//            for(Collaborationuser cuI:completeUserList){
+//
+//                if(cu.getId().equals(cuI.getId())){
+//                    doubleEntry = true;
+//                }
+//            }
+//
+//            if(!doubleEntry){
+//                completeUserList.add(cu);
+//            }
+//        }
+//        
+//        ArrayList<String> mailAdr = new ArrayList<String>();
+//        for(Collaborationuser u:completeUserList){
+//
+//            if(u.isSendMail())
+//                mailAdr.add(u.getEmail());
+//        }
+//        String[] adr = new String[mailAdr.size()];
+//        for(int i = 0;i<adr.length;i++){
+//        
+//            adr[i]= mailAdr.get(i);
+//        }
 
         // TODO
 //        Mail.sendMailAUT(adr, M_AUT.PROPOSAL_DISCUSSION_SUBJECT, M_AUT.getInstance().getProposalDiscussionEntryText(

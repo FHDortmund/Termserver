@@ -33,7 +33,7 @@ import de.fhdo.tree.GenericTreeRowType;
 import de.fhdo.tree.IGenericTreeActions;
 import java.util.HashMap;
 import java.util.Map;
-import org.hibernate.util.StringHelper;
+import org.hibernate.annotations.common.util.StringHelper;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;

@@ -1,21 +1,5 @@
-/* 
- * CTS2 based Terminology Server and Terminology Browser
- * Copyright (C) 2014 FH Dortmund: Peter Haas, Robert Muetzner
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package de.fhdo.collaboration.db.classes;
-// Generated 15.05.2013 18:02:38 by Hibernate Tools 3.2.1.GA
+// Generated 30.06.2015 09:32:45 by Hibernate Tools 4.3.1
 
 
 import javax.persistence.Column;
@@ -39,9 +23,9 @@ public class Rating  implements java.io.Serializable {
 
 
      private Long id;
+     private Collaborationuser collaborationuser;
      private Discussion discussion;
      private Proposal proposal;
-     private Collaborationuser collaborationuser;
      private Integer negative;
      private Integer positive;
      private String text;
@@ -51,14 +35,13 @@ public class Rating  implements java.io.Serializable {
     }
 
 	
-    public Rating(Discussion discussion, Collaborationuser collaborationuser) {
-        this.discussion = discussion;
+    public Rating(Collaborationuser collaborationuser) {
         this.collaborationuser = collaborationuser;
     }
-    public Rating(Discussion discussion, Proposal proposal, Collaborationuser collaborationuser, Integer negative, Integer positive, String text, Integer value) {
+    public Rating(Collaborationuser collaborationuser, Discussion discussion, Proposal proposal, Integer negative, Integer positive, String text, Integer value) {
+       this.collaborationuser = collaborationuser;
        this.discussion = discussion;
        this.proposal = proposal;
-       this.collaborationuser = collaborationuser;
        this.negative = negative;
        this.positive = positive;
        this.text = text;
@@ -66,6 +49,7 @@ public class Rating  implements java.io.Serializable {
     }
    
      @Id @GeneratedValue(strategy=IDENTITY)
+
     
     @Column(name="id", unique=true, nullable=false)
     public Long getId() {
@@ -75,24 +59,7 @@ public class Rating  implements java.io.Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="discussionId")
-    public Discussion getDiscussion() {
-        return this.discussion;
-    }
-    
-    public void setDiscussion(Discussion discussion) {
-        this.discussion = discussion;
-    }
-@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="proposalId")
-    public Proposal getProposal() {
-        return this.proposal;
-    }
-    
-    public void setProposal(Proposal proposal) {
-        this.proposal = proposal;
-    }
+
 @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="collaborationUserId", nullable=false)
     public Collaborationuser getCollaborationuser() {
@@ -102,6 +69,27 @@ public class Rating  implements java.io.Serializable {
     public void setCollaborationuser(Collaborationuser collaborationuser) {
         this.collaborationuser = collaborationuser;
     }
+
+@ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="discussionId")
+    public Discussion getDiscussion() {
+        return this.discussion;
+    }
+    
+    public void setDiscussion(Discussion discussion) {
+        this.discussion = discussion;
+    }
+
+@ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="proposalId")
+    public Proposal getProposal() {
+        return this.proposal;
+    }
+    
+    public void setProposal(Proposal proposal) {
+        this.proposal = proposal;
+    }
+
     
     @Column(name="negative")
     public Integer getNegative() {
@@ -111,6 +99,7 @@ public class Rating  implements java.io.Serializable {
     public void setNegative(Integer negative) {
         this.negative = negative;
     }
+
     
     @Column(name="positive")
     public Integer getPositive() {
@@ -120,6 +109,7 @@ public class Rating  implements java.io.Serializable {
     public void setPositive(Integer positive) {
         this.positive = positive;
     }
+
     
     @Column(name="text", length=65535)
     public String getText() {
@@ -129,6 +119,7 @@ public class Rating  implements java.io.Serializable {
     public void setText(String text) {
         this.text = text;
     }
+
     
     @Column(name="value")
     public Integer getValue() {

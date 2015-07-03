@@ -17,6 +17,8 @@
 package de.fhdo.collaboration.proposal.newproposal;
 
 import de.fhdo.collaboration.db.classes.Proposal;
+import de.fhdo.collaboration.db.classes.Proposalobject;
+import java.util.List;
 import org.hibernate.Session;
 import org.zkoss.zul.Window;
 
@@ -26,7 +28,7 @@ import org.zkoss.zul.Window;
  */
 public interface INewProposal
 {
-  public String initData(Window window);
-  public String createProposal(Window window, Proposal proposal, Session hb_session);
+  public String initData(Window window, Object obj);
+  public String saveData(Window window, Proposal proposal, List<Object> proposalObjects);
   public String checkMandatoryFields(Window window);
 }

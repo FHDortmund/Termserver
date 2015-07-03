@@ -1,26 +1,9 @@
-/* 
- * CTS2 based Terminology Server and Terminology Browser
- * Copyright (C) 2014 FH Dortmund: Peter Haas, Robert Muetzner
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package de.fhdo.collaboration.db.classes;
-// Generated 15.05.2013 18:02:38 by Hibernate Tools 3.2.1.GA
+// Generated 30.06.2015 09:32:45 by Hibernate Tools 4.3.1
 
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -46,7 +29,6 @@ public class DomainValue  implements java.io.Serializable {
 
      private Long id;
      private Domain domain;
-     private DomainValue domainValue;
      private String code;
      private String displayText;
      private String description;
@@ -55,26 +37,25 @@ public class DomainValue  implements java.io.Serializable {
      private String attrib3;
      private Integer orderNo;
      private String imageFile;
-     private Set<DomainValue> domainValues = new HashSet<DomainValue>(0);
+     private long languageId;
+     private Set<Domain> domainsForDefaultValueId = new HashSet<Domain>(0);
+     private Set<Domain> domainsForDisplayOrder = new HashSet<Domain>(0);
+     private Set<SysParam> sysParamsForModifyLevel = new HashSet<SysParam>(0);
      private Set<DomainValue> domainValuesForDomainValueIdParent = new HashSet<DomainValue>(0);
      private Set<DomainValue> domainValuesForDomainValueIdChild = new HashSet<DomainValue>(0);
      private Set<SysParam> sysParamsForValidityDomain = new HashSet<SysParam>(0);
-     private Set<Domain> domainsForDisplayOrder = new HashSet<Domain>(0);
-     private Set<Domain> domainsForDefaultValueId = new HashSet<Domain>(0);
-     private Set<SysParam> sysParamsForModifyLevel = new HashSet<SysParam>(0);
 
     public DomainValue() {
     }
 
 	
-    public DomainValue(Domain domain, DomainValue domainValue, String code) {
+    public DomainValue(Domain domain, String code, long languageId) {
         this.domain = domain;
-        this.domainValue = domainValue;
         this.code = code;
+        this.languageId = languageId;
     }
-    public DomainValue(Domain domain, DomainValue domainValue, String code, String displayText, String description, String attrib1, String attrib2, String attrib3, Integer orderNo, String imageFile, Set<DomainValue> domainValues, Set<DomainValue> domainValuesForDomainValueIdParent, Set<DomainValue> domainValuesForDomainValueIdChild, Set<SysParam> sysParamsForValidityDomain, Set<Domain> domainsForDisplayOrder, Set<Domain> domainsForDefaultValueId, Set<SysParam> sysParamsForModifyLevel) {
+    public DomainValue(Domain domain, String code, String displayText, String description, String attrib1, String attrib2, String attrib3, Integer orderNo, String imageFile, long languageId, Set<Domain> domainsForDefaultValueId, Set<Domain> domainsForDisplayOrder, Set<SysParam> sysParamsForModifyLevel, Set<DomainValue> domainValuesForDomainValueIdParent, Set<DomainValue> domainValuesForDomainValueIdChild, Set<SysParam> sysParamsForValidityDomain) {
        this.domain = domain;
-       this.domainValue = domainValue;
        this.code = code;
        this.displayText = displayText;
        this.description = description;
@@ -83,16 +64,17 @@ public class DomainValue  implements java.io.Serializable {
        this.attrib3 = attrib3;
        this.orderNo = orderNo;
        this.imageFile = imageFile;
-       this.domainValues = domainValues;
+       this.languageId = languageId;
+       this.domainsForDefaultValueId = domainsForDefaultValueId;
+       this.domainsForDisplayOrder = domainsForDisplayOrder;
+       this.sysParamsForModifyLevel = sysParamsForModifyLevel;
        this.domainValuesForDomainValueIdParent = domainValuesForDomainValueIdParent;
        this.domainValuesForDomainValueIdChild = domainValuesForDomainValueIdChild;
        this.sysParamsForValidityDomain = sysParamsForValidityDomain;
-       this.domainsForDisplayOrder = domainsForDisplayOrder;
-       this.domainsForDefaultValueId = domainsForDefaultValueId;
-       this.sysParamsForModifyLevel = sysParamsForModifyLevel;
     }
    
      @Id @GeneratedValue(strategy=IDENTITY)
+
     
     @Column(name="id", unique=true, nullable=false)
     public Long getId() {
@@ -102,6 +84,7 @@ public class DomainValue  implements java.io.Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
 @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="domain_id", nullable=false)
     public Domain getDomain() {
@@ -111,15 +94,7 @@ public class DomainValue  implements java.io.Serializable {
     public void setDomain(Domain domain) {
         this.domain = domain;
     }
-@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="language_id", nullable=false)
-    public DomainValue getDomainValue() {
-        return this.domainValue;
-    }
-    
-    public void setDomainValue(DomainValue domainValue) {
-        this.domainValue = domainValue;
-    }
+
     
     @Column(name="code", nullable=false, length=30)
     public String getCode() {
@@ -129,6 +104,7 @@ public class DomainValue  implements java.io.Serializable {
     public void setCode(String code) {
         this.code = code;
     }
+
     
     @Column(name="display_text", length=65535)
     public String getDisplayText() {
@@ -138,6 +114,7 @@ public class DomainValue  implements java.io.Serializable {
     public void setDisplayText(String displayText) {
         this.displayText = displayText;
     }
+
     
     @Column(name="description", length=65535)
     public String getDescription() {
@@ -147,6 +124,7 @@ public class DomainValue  implements java.io.Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
     
     @Column(name="attrib1", length=60)
     public String getAttrib1() {
@@ -156,6 +134,7 @@ public class DomainValue  implements java.io.Serializable {
     public void setAttrib1(String attrib1) {
         this.attrib1 = attrib1;
     }
+
     
     @Column(name="attrib2", length=60)
     public String getAttrib2() {
@@ -165,6 +144,7 @@ public class DomainValue  implements java.io.Serializable {
     public void setAttrib2(String attrib2) {
         this.attrib2 = attrib2;
     }
+
     
     @Column(name="attrib3", length=60)
     public String getAttrib3() {
@@ -174,6 +154,7 @@ public class DomainValue  implements java.io.Serializable {
     public void setAttrib3(String attrib3) {
         this.attrib3 = attrib3;
     }
+
     
     @Column(name="order_no")
     public Integer getOrderNo() {
@@ -183,6 +164,7 @@ public class DomainValue  implements java.io.Serializable {
     public void setOrderNo(Integer orderNo) {
         this.orderNo = orderNo;
     }
+
     
     @Column(name="image_file", length=65535)
     public String getImageFile() {
@@ -192,16 +174,46 @@ public class DomainValue  implements java.io.Serializable {
     public void setImageFile(String imageFile) {
         this.imageFile = imageFile;
     }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="domainValue")
-    public Set<DomainValue> getDomainValues() {
-        return this.domainValues;
+
+    
+    @Column(name="language_id", nullable=false)
+    public long getLanguageId() {
+        return this.languageId;
     }
     
-    public void setDomainValues(Set<DomainValue> domainValues) {
-        this.domainValues = domainValues;
+    public void setLanguageId(long languageId) {
+        this.languageId = languageId;
     }
-@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-    @JoinTable(name="domainvalue2domainvalue", joinColumns = { 
+
+@OneToMany(fetch=FetchType.LAZY, mappedBy="domainValueByDefaultValueId")
+    public Set<Domain> getDomainsForDefaultValueId() {
+        return this.domainsForDefaultValueId;
+    }
+    
+    public void setDomainsForDefaultValueId(Set<Domain> domainsForDefaultValueId) {
+        this.domainsForDefaultValueId = domainsForDefaultValueId;
+    }
+
+@OneToMany(fetch=FetchType.LAZY, mappedBy="domainValueByDisplayOrder")
+    public Set<Domain> getDomainsForDisplayOrder() {
+        return this.domainsForDisplayOrder;
+    }
+    
+    public void setDomainsForDisplayOrder(Set<Domain> domainsForDisplayOrder) {
+        this.domainsForDisplayOrder = domainsForDisplayOrder;
+    }
+
+@OneToMany(fetch=FetchType.LAZY, mappedBy="domainValueByModifyLevel")
+    public Set<SysParam> getSysParamsForModifyLevel() {
+        return this.sysParamsForModifyLevel;
+    }
+    
+    public void setSysParamsForModifyLevel(Set<SysParam> sysParamsForModifyLevel) {
+        this.sysParamsForModifyLevel = sysParamsForModifyLevel;
+    }
+
+@ManyToMany(fetch=FetchType.LAZY)
+    @JoinTable(name="domainvalue2domainvalue", catalog="collab", joinColumns = { 
         @JoinColumn(name="domain_value_id_child", nullable=false, updatable=false) }, inverseJoinColumns = { 
         @JoinColumn(name="domain_value_id_parent", nullable=false, updatable=false) })
     public Set<DomainValue> getDomainValuesForDomainValueIdParent() {
@@ -211,8 +223,9 @@ public class DomainValue  implements java.io.Serializable {
     public void setDomainValuesForDomainValueIdParent(Set<DomainValue> domainValuesForDomainValueIdParent) {
         this.domainValuesForDomainValueIdParent = domainValuesForDomainValueIdParent;
     }
-@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-    @JoinTable(name="domainvalue2domainvalue", joinColumns = { 
+
+@ManyToMany(fetch=FetchType.LAZY)
+    @JoinTable(name="domainvalue2domainvalue", catalog="collab", joinColumns = { 
         @JoinColumn(name="domain_value_id_parent", nullable=false, updatable=false) }, inverseJoinColumns = { 
         @JoinColumn(name="domain_value_id_child", nullable=false, updatable=false) })
     public Set<DomainValue> getDomainValuesForDomainValueIdChild() {
@@ -222,37 +235,14 @@ public class DomainValue  implements java.io.Serializable {
     public void setDomainValuesForDomainValueIdChild(Set<DomainValue> domainValuesForDomainValueIdChild) {
         this.domainValuesForDomainValueIdChild = domainValuesForDomainValueIdChild;
     }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="domainValueByValidityDomain")
+
+@OneToMany(fetch=FetchType.LAZY, mappedBy="domainValueByValidityDomain")
     public Set<SysParam> getSysParamsForValidityDomain() {
         return this.sysParamsForValidityDomain;
     }
     
     public void setSysParamsForValidityDomain(Set<SysParam> sysParamsForValidityDomain) {
         this.sysParamsForValidityDomain = sysParamsForValidityDomain;
-    }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="domainValueByDisplayOrder")
-    public Set<Domain> getDomainsForDisplayOrder() {
-        return this.domainsForDisplayOrder;
-    }
-    
-    public void setDomainsForDisplayOrder(Set<Domain> domainsForDisplayOrder) {
-        this.domainsForDisplayOrder = domainsForDisplayOrder;
-    }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="domainValueByDefaultValueId")
-    public Set<Domain> getDomainsForDefaultValueId() {
-        return this.domainsForDefaultValueId;
-    }
-    
-    public void setDomainsForDefaultValueId(Set<Domain> domainsForDefaultValueId) {
-        this.domainsForDefaultValueId = domainsForDefaultValueId;
-    }
-@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY, mappedBy="domainValueByModifyLevel")
-    public Set<SysParam> getSysParamsForModifyLevel() {
-        return this.sysParamsForModifyLevel;
-    }
-    
-    public void setSysParamsForModifyLevel(Set<SysParam> sysParamsForModifyLevel) {
-        this.sysParamsForModifyLevel = sysParamsForModifyLevel;
     }
 
 

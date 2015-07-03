@@ -17,8 +17,14 @@
 package de.fhdo.collaboration.proposal.newproposal;
 
 import de.fhdo.collaboration.db.classes.Proposal;
+import de.fhdo.collaboration.db.classes.Proposalobject;
+import java.util.List;
 import org.hibernate.Session;
+import org.zkoss.zul.Checkbox;
+import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
+import types.termserver.fhdo.de.CodeSystem;
+import types.termserver.fhdo.de.CodeSystemVersion;
 
 /**
  *
@@ -27,7 +33,7 @@ import org.zkoss.zul.Window;
 public class ProposalCodeSystem implements INewProposal
 {
 
-  public String initData(Window window)
+  public String initData(Window window, Object obj)
   {
     
     
@@ -36,13 +42,45 @@ public class ProposalCodeSystem implements INewProposal
 
   public String checkMandatoryFields(Window window)
   {
-    
+    if(((Textbox)window.getFellow("tbVocName")).getText().length() == 0)
+    {
+      return "Sie müssen einen Namen für das Codesystem/Valueset angeben.";
+    }
+    if(((Textbox)window.getFellow("tbVocVersionName")).getText().length() == 0)
+    {
+      return "Sie müssen einen Namen für die Codesystem/Valueset-Version angeben.";
+    }
     
     return "";
   }
 
-  public String createProposal(Window window, Proposal proposal, Session hb_session)
+  public String saveData(Window window, Proposal proposal, List<Object> proposalObjects)
   {
+    if(((Checkbox)window.getFellow("cbVoc")).isChecked())
+    {
+      // Codesystem
+      proposal.setContentType("vocabulary");
+      
+      CodeSystem cs = new CodeSystem();
+      cs.setName(((Textbox)window.getFellow("tbVocName")).getText());
+      cs.setDescription(((Textbox)window.getFellow("tbVocDescription")).getText());
+      
+      CodeSystemVersion csv = new CodeSystemVersion();
+      csv.setName(((Textbox)window.getFellow("tbVocVersionName")).getText());
+      csv.setDescription(((Textbox)window.getFellow("tbVocVersionDescription")).getText());
+      
+      cs.getCodeSystemVersions().add(csv);
+      
+      proposalObjects.add(cs);
+      
+    }
+    else if(((Checkbox)window.getFellow("cbVal")).isChecked())
+    {
+      // Valueset
+      proposal.setContentType("valueset");
+      
+    }
+    
     
     
     return "";

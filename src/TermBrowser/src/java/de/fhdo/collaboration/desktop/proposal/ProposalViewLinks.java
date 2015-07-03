@@ -22,8 +22,6 @@ import de.fhdo.collaboration.db.HibernateUtil;
 import de.fhdo.collaboration.db.classes.Link;
 import de.fhdo.collaboration.desktop.AttachmentDetails;
 import de.fhdo.collaboration.desktop.ProposalView;
-import de.fhdo.collaboration.helper.AssignTermHelper;
-import de.fhdo.collaboration.helper.CODES;
 import de.fhdo.collaboration.helper.OnDocumentClickListener;
 import de.fhdo.collaboration.helper.ProposalHelper;
 import de.fhdo.helper.AttachmentHelper;
@@ -123,12 +121,12 @@ public class ProposalViewLinks extends Window implements IGenericListActions, IU
     genericList.setDataList(dataList);
     genericList.setShowCount(true);
     
-    if(SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN) ||
-       (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_INHALTSVERWALTER) && 
-        AssignTermHelper.isUserAllowed(proposalView.getProposal().getObjectVersionId(),proposalView.getProposal().getObjectVersionName()))){
-        genericList.setButton_edit(true);
-        genericList.setButton_delete(true);
-    }
+//    if(SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN) ||
+//       (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_INHALTSVERWALTER) && 
+//        AssignTermHelper.isUserAllowed(proposalView.getProposal().getObjectVersionId(),proposalView.getProposal().getObjectVersionName()))){
+//        genericList.setButton_edit(true);
+//        genericList.setButton_delete(true);
+//    }
   }
 
   private GenericListRowType createLinkRow(Link link)

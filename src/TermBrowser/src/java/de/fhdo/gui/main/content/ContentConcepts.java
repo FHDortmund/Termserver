@@ -17,6 +17,7 @@
 package de.fhdo.gui.main.content;
 
 import de.fhdo.Definitions;
+import de.fhdo.collaboration.helper.ProposalHelper;
 import de.fhdo.gui.main.TreeAndContent;
 import de.fhdo.gui.main.modules.AssociationEditor;
 import de.fhdo.gui.main.modules.PopupCodeSystem;
@@ -829,19 +830,27 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   
   public void onCollabNewClicked()
   {
+    if(codeSystem != null)
+    {
+      ProposalHelper.createProposalConcept(codeSystem, codeSystemVersion, this);
+    }
     
+    if(valueSet != null)
+    {
+      // TODO
+    }
   }
   public void onCollabNewSubClicked()
   {
-    
+    // TODO
   }
   public void onCollabEditClicked()
   {
-    
+    // TODO
   }
   public void onCollabDeletedClicked()
   {
-    
+    // TODO
   }
 
   public void onAssumeConcept()

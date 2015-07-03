@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <!--
 CTS2 based Terminology Server and Terminology Browser
 Copyright (C) 2014 FH Dortmund: Peter Haas, Robert Muetzner
@@ -15,83 +16,36 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-
-<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/collaboration</property>
-    <property name="hibernate.connection.username">term</property>
-    <property name="hibernate.connection.password">term123</property>
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/collab</property>
+    <property name="hibernate.connection.username">root</property>
+    <property name="hibernate.connection.password">test</property>
     <property name="hibernate.show_sql">false</property>
     <property name="hibernate.current_session_context_class">thread</property>
-    <property name="hibernate.query.factory_class">org.hibernate.hql.classic.ClassicQueryTranslatorFactory</property>
+    <!--<property name="hibernate.query.factory_class">org.hibernate.hql.classic.ClassicQueryTranslatorFactory</property>-->
+    <property name="hibernate.query.factory_class">org.hibernate.hql.internal.classic.ClassicQueryTranslatorFactory</property>
     <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
-    <mapping class="de.fhdo.collaboration.db.classes.DomainValue"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Enquiry"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Domain"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Discussion"/>
     <mapping class="de.fhdo.collaboration.db.classes.Proposalstatuschange"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Proposal"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Link"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Discussiongroupobject"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Role"/>
+    <mapping class="de.fhdo.collaboration.db.classes.Domain"/>
     <mapping class="de.fhdo.collaboration.db.classes.Quote"/>
     <mapping class="de.fhdo.collaboration.db.classes.Action"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Collaborationuser"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Proposalobject"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Status"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Statusrel"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Privilege"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Organisation"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Rating"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Discussiongroup"/>
     <mapping class="de.fhdo.collaboration.db.classes.SysParam"/>
-    <mapping class="de.fhdo.collaboration.db.classes.ClassAttribute"/>
-    <mapping class="de.fhdo.collaboration.db.classes.DiscussiongroupobjectId"/>
-    <mapping class="de.fhdo.collaboration.db.classes.DomainValue"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Domain"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Discussion"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Proposalstatuschange"/>
     <mapping class="de.fhdo.collaboration.db.classes.Proposal"/>
     <mapping class="de.fhdo.collaboration.db.classes.Link"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Discussiongroupobject"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Role"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Quote"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Action"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Collaborationuser"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Proposalobject"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Status"/>
     <mapping class="de.fhdo.collaboration.db.classes.Statusrel"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Privilege"/>
     <mapping class="de.fhdo.collaboration.db.classes.Organisation"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Rating"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Discussiongroup"/>
-    <mapping class="de.fhdo.collaboration.db.classes.SysParam"/>
-    <mapping class="de.fhdo.collaboration.db.classes.ClassAttribute"/>
-    <mapping class="de.fhdo.collaboration.db.classes.DiscussiongroupobjectId"/>
-    <mapping class="de.fhdo.collaboration.db.classes.DomainValue"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Domain"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Discussion"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Proposalstatuschange"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Proposal"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Link"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Discussiongroupobject"/>
     <mapping class="de.fhdo.collaboration.db.classes.Role"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Quote"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Action"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Collaborationuser"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Proposalobject"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Status"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Statusrel"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Privilege"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Organisation"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Rating"/>
-    <mapping class="de.fhdo.collaboration.db.classes.Discussiongroup"/>
-    <mapping class="de.fhdo.collaboration.db.classes.SysParam"/>
     <mapping class="de.fhdo.collaboration.db.classes.File"/>
+    <mapping class="de.fhdo.collaboration.db.classes.Proposalobject"/>
+    <mapping class="de.fhdo.collaboration.db.classes.Rating"/>
+    <mapping class="de.fhdo.collaboration.db.classes.Status"/>
     <mapping class="de.fhdo.collaboration.db.classes.ClassAttribute"/>
-    <mapping class="de.fhdo.collaboration.db.classes.DiscussiongroupobjectId"/>
+    <mapping class="de.fhdo.collaboration.db.classes.DomainValue"/>
+    <mapping class="de.fhdo.collaboration.db.classes.Userprivilege"/>
+    <mapping class="de.fhdo.collaboration.db.classes.Collaborationuser"/>
+    <mapping class="de.fhdo.collaboration.db.classes.Discussion"/>
   </session-factory>
 </hibernate-configuration>

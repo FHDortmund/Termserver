@@ -20,6 +20,7 @@ import de.fhdo.collaboration.db.classes.Status;
 import de.fhdo.collaboration.db.HibernateUtil;
 import de.fhdo.collaboration.db.classes.Role;
 import de.fhdo.collaboration.db.classes.Statusrel;
+import de.fhdo.helper.SessionHelper;
 import de.fhdo.logging.LoggingOutput;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,7 +56,7 @@ public class ProposalStatus
     statusMap = null;
     initData();
   }
-  
+
   public void reloadData()
   {
     statusMap = null;
@@ -67,32 +68,32 @@ public class ProposalStatus
     {
       // Daten laden
       Session hb_session = HibernateUtil.getSessionFactory().openSession();
-      //hb_session.getTransaction().begin();
+
       try
       {
         statusMap = new HashMap<Long, Status>();
         statusrelMap = new HashMap<Long, Statusrel>();
 
         String hql = "select distinct s from Status s"
-                + " left join fetch s.statusrelsForStatusIdFrom rel"
-                + " left join fetch rel.action";
-                //+ " left join fetch rel.statusByStatusIdTo";
+            + " left join fetch s.statusrelsForStatusIdFrom rel"
+            + " left join fetch rel.action";
+        //+ " left join fetch rel.statusByStatusIdTo";
 
         List<Status> statusList = hb_session.createQuery(hql).list();
 
         for (Status status : statusList)
         {
           statusMap.put(status.getId(), status);
-          
+
           /*for(Statusrel rel : status.getStatusrelsForStatusIdFrom())
-          {
-            logger.debug("Status: " + status.getId() + " von " + rel.getStatusByStatusIdFrom().getId() + " zu " + rel.getStatusByStatusIdTo().getId());
-          }*/
+           {
+           logger.debug("Status: " + status.getId() + " von " + rel.getStatusByStatusIdFrom().getId() + " zu " + rel.getStatusByStatusIdTo().getId());
+           }*/
         }
-        
+
         hql = "select distinct rel from Statusrel rel"
-                + " left join fetch rel.roles roles"
-                + " left join fetch rel.action";
+            + " left join fetch rel.roles roles"
+            + " left join fetch rel.action";
 
         List<Statusrel> statusrelList = hb_session.createQuery(hql).list();
 
@@ -100,12 +101,10 @@ public class ProposalStatus
         {
           statusrelMap.put(rel.getId(), rel);
         }
-      //hb_session.getTransaction().commit();
       }
       catch (Exception e)
       {
-        //hb_session.getTransaction().rollback();
-          LoggingOutput.outputException(e, this);
+        LoggingOutput.outputException(e, this);
       }
       finally
       {
@@ -131,7 +130,7 @@ public class ProposalStatus
 
     return "";
   }
-  
+
   public Status getStatus(long status)
   {
     initData();
@@ -151,7 +150,7 @@ public class ProposalStatus
     {
       String s[] = new String[statusMap.values().size()];
       int count = 0;
-      for(Status status : statusMap.values())
+      for (Status status : statusMap.values())
       {
         s[count++] = status.getStatus();
       }
@@ -162,7 +161,7 @@ public class ProposalStatus
     }
     return "String";
   }
-  
+
   public Set<Statusrel> getStatusChilds(long status)
   {
     initData();
@@ -174,90 +173,129 @@ public class ProposalStatus
 
     return new HashSet<Statusrel>();
   }
-  
+
   public Statusrel getStatusRel(long statusFrom, long statusTo)
   {
     initData();
-    
-    for(Statusrel rel : statusrelMap.values())
+
+    for (Statusrel rel : statusrelMap.values())
     {
-      if(rel.getStatusByStatusIdFrom().getId().longValue() == statusFrom &&
-         rel.getStatusByStatusIdTo().getId().longValue() == statusTo)
+      if (rel.getStatusByStatusIdFrom().getId().longValue() == statusFrom
+          && rel.getStatusByStatusIdTo().getId().longValue() == statusTo)
       {
         // Statusänderung
         return rel;
       }
     }
-    
+
     return null;
   }
-  
+
   public boolean isStatusChangePossible(long statusFrom, long statusTo)
   {
     initData();
-    
-    if(getStatusRel(statusFrom, statusTo) == null)
+
+    if (getStatusRel(statusFrom, statusTo) == null)
       return false;
-    else return true;
+    else
+      return true;
   }
-  
+
   public boolean isUserAllowed(Statusrel rel, long collabUserId)
   {
-    initData();
-    
     boolean erlaubt = false;
-    if(logger.isDebugEnabled())
+    if (logger.isDebugEnabled())
       logger.debug("isUserAllowed() mit userId: " + collabUserId);
-    
-    Session hb_session = HibernateUtil.getSessionFactory().openSession();
-    //hb_session.getTransaction().begin();
-    try
+
+    if (collabUserId == SessionHelper.getCollaborationUserID())
     {
-      String hql = "select distinct r from Role r"
-              + " join r.collaborationusers cu"
-              + " where cu.id=" + collabUserId;
-      
-      if(logger.isDebugEnabled())
-        logger.debug("HQL: " + hql);
-      
-      List<Role> roleList = hb_session.createQuery(hql).list();
-      
-      //if(logger.isDebugEnabled())
-      //  logger.debug("Anzahl: " + roleList.size());
-      
-      for(Role role : roleList)
+      Object o = SessionHelper.getValue("collaboration_user_roles");
+      if (o != null)
       {
-        //if(logger.isDebugEnabled())
-        //  logger.debug("Rolle: " + role.getName() + ", id: " + role.getId());
+        Set<Role> roles = (Set<Role>) o;
+        //logger.debug("user has roles: " + roles.size());
+        //logger.debug("Status change need one of the following roles: ");
+//        for (Role roleCompare : rel.getRoles())
+//        {
+//          logger.debug(roleCompare.getName());
+//        }
         
-        for(Role roleCompare : rel.getRoles())
+        for (Role role : roles)
+        {
+          for (Role roleCompare : rel.getRoles())
+          {
+            if (role.getId().longValue() == roleCompare.getId().longValue())
+            {
+              // Berechtigung vorhanden
+              erlaubt = true;
+              break;
+            }
+          }
+          if (erlaubt)
+            break;
+        }
+        
+      }
+      else
+      {
+        logger.debug("user has no roles");
+        return false;
+      }
+
+    }
+    else
+    {
+      initData();
+      
+      Session hb_session = HibernateUtil.getSessionFactory().openSession();
+      //hb_session.getTransaction().begin();
+      try
+      {
+        String hql = "select distinct r from Role r"
+            + " join r.collaborationusers cu"
+            + " where cu.id=" + collabUserId;
+
+        if (logger.isDebugEnabled())
+          logger.debug("HQL: " + hql);
+
+        List<Role> roleList = hb_session.createQuery(hql).list();
+
+        //if(logger.isDebugEnabled())
+        //  logger.debug("Anzahl: " + roleList.size());
+        for (Role role : roleList)
         {
           //if(logger.isDebugEnabled())
-          //  logger.debug("  vergleiche mit Rolle: " + roleCompare.getName() + ", id: " + roleCompare.getId());
-          
-          if(role.getId().longValue() == roleCompare.getId().longValue())
+          //  logger.debug("Rolle: " + role.getName() + ", id: " + role.getId());
+
+          for (Role roleCompare : rel.getRoles())
           {
-            // Berechtigung vorhanden
-            erlaubt = true;
-            break;
+            //if(logger.isDebugEnabled())
+            //  logger.debug("  vergleiche mit Rolle: " + roleCompare.getName() + ", id: " + roleCompare.getId());
+
+            if (role.getId().longValue() == roleCompare.getId().longValue())
+            {
+              // Berechtigung vorhanden
+              erlaubt = true;
+              break;
+            }
           }
+          if (erlaubt)
+            break;
         }
-        if(erlaubt)
-          break;
+        //hb_session.getTransaction().commit();
       }
-      //hb_session.getTransaction().commit();
-    }
-    catch (Exception ex)
-    {
-      //hb_session.getTransaction().rollback();
+      catch (Exception ex)
+      {
+        //hb_session.getTransaction().rollback();
         LoggingOutput.outputException(ex, this);
+      }
+      finally
+      {
+        // Session schließen
+        hb_session.close();
+      }
     }
-    finally
-    {
-      // Session schließen
-      hb_session.close();
-    }
-    
+
     return erlaubt;
   }
 }

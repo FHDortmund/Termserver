@@ -34,6 +34,7 @@ import org.zkoss.zul.Menuitem;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Toolbarbutton;
 import org.zkoss.zul.Window;
+import types.termserver.fhdo.de.CodeSystem;
 
 /**
  *
@@ -461,6 +462,8 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
     {
       Map<String, Object> data = new HashMap<String, Object>();
       data.put("isExisting", false);
+      data.put("source", new CodeSystem());
+      
       Window w = (Window) Executions.getCurrent().createComponents("/collaboration/proposal/proposalDetails.zul", this, data);
       w.doModal();
     }

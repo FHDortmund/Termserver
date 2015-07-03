@@ -21,16 +21,11 @@ import de.fhdo.collaboration.db.HibernateUtil;
 import de.fhdo.collaboration.db.PO_CHANGE_TYPE;
 import de.fhdo.collaboration.db.PO_CLASSNAME;
 import de.fhdo.collaboration.db.TERMSERVER_STATUS;
-import de.fhdo.collaboration.db.classes.AssignedTerm;
-import de.fhdo.collaboration.db.classes.Collaborationuser;
-import de.fhdo.collaboration.db.classes.Privilege;
-import de.fhdo.collaboration.db.classes.Proposal;
 import de.fhdo.collaboration.db.classes.Proposalobject;
 import de.fhdo.collaboration.db.classes.Proposalstatuschange;
+import de.fhdo.collaboration.db.classes.Userprivilege;
 import de.fhdo.collaboration.desktop.ProposalView;
 import de.fhdo.collaboration.desktop.proposal.privilege.PrivilegeDetails;
-import de.fhdo.collaboration.helper.AssignTermHelper;
-import de.fhdo.collaboration.helper.CODES;
 import de.fhdo.collaboration.helper.ProposalHelper;
 import de.fhdo.collaboration.proposal.ProposalStatus;
 import de.fhdo.collaboration.workflow.ReturnType;
@@ -90,6 +85,7 @@ public class ProposalViewDetails extends Window implements IGenericListActions, 
 
   public ProposalViewDetails()
   {
+    logger.debug("ProposalViewDetails()");
   }
 
   public void initListVerlauf()
@@ -179,131 +175,45 @@ public class ProposalViewDetails extends Window implements IGenericListActions, 
       logger.debug("ProposalViewDetails: initListPrivilegien()");
 
     // Header
-    /*TODO List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-     header.add(new GenericListHeaderType("", 30, "", false, "String", true, false, false, false));
-     header.add(new GenericListHeaderType("Benutzer/Diskussiongruppe", 0, "", true, "String", true, false, false, false));
-     header.add(new GenericListHeaderType("Organisation/Gruppenleiter", 0, "", true, "String", true, false, false, false));
-    
-     Session hb_session = HibernateUtil.getSessionFactory().openSession();
-     //hb_session.getTransaction().begin();
-     // Daten laden
-     long proposalId = proposalView.getProposal().getId();
-     Collaborationuser u = (Collaborationuser)hb_session.get(Collaborationuser.class, proposalView.getProposal().getCollaborationuser().getId());
-    
-     List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
-     PrivilegienListData data = new PrivilegienListData();
-     data.setDiscussiongroup(null); //Nur User
-     data.setIsCreator(true);
-     data.setUser(u);
-    
-     String hqlPriv = "from Privilege priv "
-     + " left join fetch priv.collaborationuser cu"
-     + " left join fetch cu.organisation"
-     + " where proposalId=" + proposalId
-     + " and cu.id=" + u.getId()
-     + " order by cu.name ";
+    List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
+    header.add(new GenericListHeaderType("", 30, "", false, "String", true, false, false, false));
+    header.add(new GenericListHeaderType("Rolle", 120, "", true, "String", true, false, false, false));
+    header.add(new GenericListHeaderType("Benutzer", 0, "", true, "String", true, false, false, false));
+    header.add(new GenericListHeaderType("Organisation", 0, "", true, "String", true, false, false, false));
 
-     List<Privilege> listPriv = hb_session.createQuery(hqlPriv).list();
-      
-     if(listPriv.size() == 1){
-     data.setPrivilege(listPriv.get(0));
-     }
-      
-     boolean sv = false;
-     for(AssignedTerm at:u.getAssignedTerms()){
-     if(at.getClassId().equals(proposalView.getProposal().getVocabularyIdTwo()) && at.getClassname().equals(proposalView.getProposal().getVocabularyNameTwo()))
-     sv = true;
-     }
-      
-     // Ersteller als 1. hinzufügen
-     dataList.add(createPrivilegienRow(data,sv));
+    // Daten laden
+    Map<Long, Userprivilege> userPrivileges = proposalView.getUserPrivileges();
 
-     // Benutzer und/oder Benutzergruppen hinzufügen
-     try
-     {
-     String hql = "from Privilege priv "
-     + " left join fetch priv.collaborationuser cu"
-     + " left join fetch cu.organisation"
-     + " left join fetch priv.discussiongroup dc"
-     + " where proposalId=" + proposalId
-     + " order by cu.name ";
+    //long proposalId = proposalView.getProposal().getId();
+    //Collaborationuser u = (Collaborationuser) hb_session.get(Collaborationuser.class, proposalView.getProposal().getCollaborationuser().getId());
+    List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
 
-     List<Privilege> list = hb_session.createQuery(hql).list();
+    for (Userprivilege userpriv : userPrivileges.values())
+    {
+      dataList.add(createPrivilegienRow(userpriv));
+    }
 
-     for (Privilege link : list)
-     {
-     if (link.getCollaborationuser() != null && link.getCollaborationuser().getId().longValue()
-     != proposalView.getProposal().getCollaborationuser().getId().longValue())
-     {
-     PrivilegienListData d = new PrivilegienListData();
-     d.setUser(link.getCollaborationuser()); //Nur User
-     d.setPrivilege(link);
-     d.setDiscussiongroup(null);
-          
-     if(d.getUser().getRoles().iterator().next().getName().equals(CODES.ROLE_ADMIN)){
-     d.setIsAdmin(true);
-     }else{d.setIsAdmin(false);}
-     d.setIsCreator(false);
-          
-     boolean sV = false;
-     Collaborationuser uL = (Collaborationuser)hb_session.get(Collaborationuser.class, d.getUser().getId());
-     for(AssignedTerm at:uL.getAssignedTerms()){
-     if(at.getClassId().equals(proposalView.getProposal().getVocabularyIdTwo()) && at.getClassname().equals(proposalView.getProposal().getVocabularyNameTwo()))
-     sV = true;
-     }
-          
-     GenericListRowType row = createPrivilegienRow(d,sV);
-     dataList.add(row);
-     }else if(link.getDiscussiongroup() != null){
-        
-     PrivilegienListData d = new PrivilegienListData();
-     d.setDiscussiongroup(link.getDiscussiongroup());
-     //Get DG Leader
-     Collaborationuser user = (Collaborationuser)hb_session.get(Collaborationuser.class, link.getDiscussiongroup().getHead());
-     d.setUser(user); 
-     d.setPrivilege(link);
-     d.setIsAdmin(false);
-     d.setIsCreator(false);
-            
-     GenericListRowType row = createPrivilegienRow(d,false);
-     dataList.add(row);
-     }else{}
-        
-     }
-     //hb_session.getTransaction().commit();
-     }
-     catch (Exception e)
-     {
-     //hb_session.getTransaction().rollback();
-     LoggingOutput.outputException(e, this);
-     }
-     finally
-     {
-     hb_session.close();
-     }
+    // Benutzer und/oder Benutzergruppen hinzufügen
+    // Liste initialisieren
+    Include inc = (Include) getFellow("incListPrivilegien");
+    Window winGenericList = (Window) inc.getFellow("winGenericList");
+    genericListStatus = (GenericList) winGenericList;
 
-     // Liste initialisieren
-     Include inc = (Include) getFellow("incListPrivilegien");
-     Window winGenericList = (Window) inc.getFellow("winGenericList");
-     genericListStatus = (GenericList) winGenericList;
+    //genericListStatus.setListActions(this);
+    genericListStatus.setListHeader(header);
+    genericListStatus.setDataList(dataList);
+    genericListStatus.setListId("privilegien");
+    genericListStatus.setListActions(this);
 
-     //genericListStatus.setListActions(this);
-     genericListStatus.setListHeader(header);
-     genericListStatus.setDataList(dataList);
-     genericListStatus.setListId("privilegien");
-     genericListStatus.setListActions(this);
-    
-    
-    
-    
-     if(SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN) ||
-     (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_INHALTSVERWALTER) && 
-     AssignTermHelper.isUserAllowed(proposalView.getProposal().getVocabularyIdTwo(),proposalView.getProposal().getVocabularyNameTwo()))){
-     genericListStatus.setButton_new(true);
-     ((Button)genericListStatus.getFellow("buttonNew")).setLabel("Hinzufügen");
-     genericListStatus.setButton_delete(true);
-     ((Button)genericListStatus.getFellow("buttonDelete")).setLabel("Entfernen");
-     }*/
+//    if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN)
+//        || (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_INHALTSVERWALTER)
+//        && AssignTermHelper.isUserAllowed(proposalView.getProposal().getVocabularyIdTwo(), proposalView.getProposal().getVocabularyNameTwo())))
+//    {
+//      genericListStatus.setButton_new(true);
+//      ((Button) genericListStatus.getFellow("buttonNew")).setLabel("Hinzufügen");
+//      genericListStatus.setButton_delete(true);
+//      ((Button) genericListStatus.getFellow("buttonDelete")).setLabel("Entfernen");
+//    }
     /*
      Set<Statusrel> statusChilds = ProposalStatus.getInstance().getStatusChilds(proposal.getStatus());
 
@@ -335,60 +245,48 @@ public class ProposalViewDetails extends Window implements IGenericListActions, 
      */
   }
 
-  private GenericListRowType createPrivilegienRow(PrivilegienListData data, boolean sv)
+  private GenericListRowType createPrivilegienRow(Object data)
   {
     // Benutzer-Icon
     Listcell lc = new Listcell("");
     Image image = new Image();
-    String f1 = "";
-    String f2 = "";
-
-    if (data.getDiscussiongroup() != null)
-    { //Discussiongroup
-
-      image.setSrc("/rsc/img/symbols/useraccounts.png");
-      image.setTooltiptext("Gruppe");
-      f1 = data.getDiscussiongroup().getName();
-      f2 = data.getUser().getFirstName() + " " + data.getUser().getName();
-
-    }
-    else
-    {                                  //Single User
-
-      if (data.getIsAdmin())
+    String benutzer = "";
+    String organisation = "";
+    String rolle = "";
+    
+    if(data instanceof Userprivilege)
+    {
+      Userprivilege userpriv = (Userprivilege)data;
+      
+      if(userpriv.getAdminRights())
       {
         image.setSrc("/rsc/img/symbols/user_admin_16x16.png");
-        image.setTooltiptext(CODES.ROLE_ADMIN);
-      }
-      else if (data.getIsCreator())
-      {
-        image.setSrc("/rsc/img/symbols/user_admin_16x16.png");
-        image.setTooltiptext("Ersteller");
+        //image.setTooltiptext(CODES.ROLE_ADMIN);
+        //image.setTooltiptext(CODES.ROLE_ADMIN);
       }
       else
       {
         image.setSrc("/rsc/img/symbols/user_16x16.png");
-        image.setTooltiptext(CODES.ROLE_BENUTZER);
       }
-
-      if (sv)
+      
+      benutzer = userpriv.getCollaborationuser().getFullName();
+      organisation = userpriv.getCollaborationuser().getOrganisation().getOrganisation();
+      
+      if(userpriv.getRole() != null)
       {
-        image.setSrc("/rsc/img/symbols/user_admin_16x16.png");
-        image.setTooltiptext(CODES.ROLE_INHALTSVERWALTER);
+        rolle = userpriv.getRole().getName();
       }
-
-      f1 = data.getUser().getFirstName() + " " + data.getUser().getName();
-      f2 = data.getUser().getOrganisation().getOrganisation();
     }
 
     lc.appendChild(image);
 
     GenericListRowType row = new GenericListRowType();
 
-    GenericListCellType[] cells = new GenericListCellType[3];
+    GenericListCellType[] cells = new GenericListCellType[4];
     cells[0] = new GenericListCellType(lc, false, "");
-    cells[1] = new GenericListCellType(f1, false, "");
-    cells[2] = new GenericListCellType(f2, false, "");
+    cells[1] = new GenericListCellType(rolle, false, "");
+    cells[2] = new GenericListCellType(benutzer, false, "");
+    cells[3] = new GenericListCellType(organisation, false, "");
 
     row.setData(data);
     row.setCells(cells);
@@ -610,37 +508,37 @@ public class ProposalViewDetails extends Window implements IGenericListActions, 
   {
     logger.debug("onDeleted()");
 
-    if (data != null && data instanceof PrivilegienListData)
-    {
-      PrivilegienListData pld = (PrivilegienListData) data;
-
-      // Person aus der Datenbank löschen
-      Session hb_session = HibernateUtil.getSessionFactory().openSession();
-      hb_session.getTransaction().begin();
-
-      try
-      {
-        Privilege priv_db = (Privilege) hb_session.get(Privilege.class, pld.getPrivilege().getId());
-
-        priv_db.setCollaborationuser(null);
-        priv_db.setDiscussiongroup(null);
-        priv_db.setProposal(null);
-
-        hb_session.delete(priv_db);
-
-        hb_session.getTransaction().commit();
-
-        Messagebox.show("Eintrag wurde erfolgreich entfernt.", "Eintrag entfernen", Messagebox.OK, Messagebox.INFORMATION);
-      }
-      catch (Exception e)
-      {
-        hb_session.getTransaction().rollback();
-
-        Messagebox.show("Fehler beim Entfernen des Eintrags: " + e.getLocalizedMessage(), "Eintrag entfernen", Messagebox.OK, Messagebox.EXCLAMATION);
-        initListPrivilegien();
-      }
-      hb_session.close();
-    }
+//    if (data != null && data instanceof PrivilegienListData)
+//    {
+//      PrivilegienListData pld = (PrivilegienListData) data;
+//
+//      // Person aus der Datenbank löschen
+//      Session hb_session = HibernateUtil.getSessionFactory().openSession();
+//      hb_session.getTransaction().begin();
+//
+//      try
+//      {
+//        Privilege priv_db = (Privilege) hb_session.get(Privilege.class, pld.getPrivilege().getId());
+//
+//        priv_db.setCollaborationuser(null);
+//        priv_db.setDiscussiongroup(null);
+//        priv_db.setProposal(null);
+//
+//        hb_session.delete(priv_db);
+//
+//        hb_session.getTransaction().commit();
+//
+//        Messagebox.show("Eintrag wurde erfolgreich entfernt.", "Eintrag entfernen", Messagebox.OK, Messagebox.INFORMATION);
+//      }
+//      catch (Exception e)
+//      {
+//        hb_session.getTransaction().rollback();
+//
+//        Messagebox.show("Fehler beim Entfernen des Eintrags: " + e.getLocalizedMessage(), "Eintrag entfernen", Messagebox.OK, Messagebox.EXCLAMATION);
+//        initListPrivilegien();
+//      }
+//      hb_session.close();
+//    }
   }
 
   public void onSelected(String id, Object data)
@@ -662,109 +560,109 @@ public class ProposalViewDetails extends Window implements IGenericListActions, 
 
     // Person aus der Datenbank löschen
     /*TODO Session hb_session = HibernateUtil.getSessionFactory().openSession();
-    hb_session.getTransaction().begin();
+     hb_session.getTransaction().begin();
 
-    try
-    {
-      Proposal p = (Proposal) hb_session.get(Proposal.class, proposalView.getProposal().getId());
-      p.setDescription(proposalView.getProposal().getDescription());
-      p.setNote(proposalView.getProposal().getNote());
-      proposalView.getProposal().setLastChangeDate(new Date());
-      p.setLastChangeDate(proposalView.getProposal().getLastChangeDate());
-      ((Datebox) getFellow("db_lastChangeDate")).setValue(p.getLastChangeDate());
-      hb_session.update(p);
-      hb_session.getTransaction().commit();
+     try
+     {
+     Proposal p = (Proposal) hb_session.get(Proposal.class, proposalView.getProposal().getId());
+     p.setDescription(proposalView.getProposal().getDescription());
+     p.setNote(proposalView.getProposal().getNote());
+     proposalView.getProposal().setLastChangeDate(new Date());
+     p.setLastChangeDate(proposalView.getProposal().getLastChangeDate());
+     ((Datebox) getFellow("db_lastChangeDate")).setValue(p.getLastChangeDate());
+     hb_session.update(p);
+     hb_session.getTransaction().commit();
 
-      de.fhdo.collaboration.workflow.ReturnType rt = new ReturnType();
-      rt.setSuccess(true);
-      rt.setMessage("InlinePropUpdate");//don't change!
-      proposalView.update(rt, false);
+     de.fhdo.collaboration.workflow.ReturnType rt = new ReturnType();
+     rt.setSuccess(true);
+     rt.setMessage("InlinePropUpdate");//don't change!
+     proposalView.update(rt, false);
 
-        //Mailversandt
-      //Benachrichtigung Benutzer
-      ArrayList<Collaborationuser> completeUserList = new ArrayList<Collaborationuser>();
+     //Mailversandt
+     //Benachrichtigung Benutzer
+     ArrayList<Collaborationuser> completeUserList = new ArrayList<Collaborationuser>();
 
-      //Lade alle Benutzer mit Privilegien auf Proposal
-      String hqlPrivilegeUsers = "from Collaborationuser cu join fetch cu.privileges pri join fetch pri.proposal pro join fetch cu.organisation o where pro.id=:id";
-      Query qPrivilegeUsers = hb_session.createQuery(hqlPrivilegeUsers);
-      qPrivilegeUsers.setParameter("id", proposalView.getProposal().getId());
-      List<Collaborationuser> privUserList = qPrivilegeUsers.list();
+     //Lade alle Benutzer mit Privilegien auf Proposal
+     String hqlPrivilegeUsers = "from Collaborationuser cu join fetch cu.privileges pri join fetch pri.proposal pro join fetch cu.organisation o where pro.id=:id";
+     Query qPrivilegeUsers = hb_session.createQuery(hqlPrivilegeUsers);
+     qPrivilegeUsers.setParameter("id", proposalView.getProposal().getId());
+     List<Collaborationuser> privUserList = qPrivilegeUsers.list();
 
-      for (Collaborationuser cu : privUserList)
-      {
-        completeUserList.add(cu);
-      }
+     for (Collaborationuser cu : privUserList)
+     {
+     completeUserList.add(cu);
+     }
 
-      //Lade alle Diskussionsgruppen mit Privilegien auf Proposal
-      String hqlPrivilegeGroups = "from Collaborationuser cu join fetch cu.discussiongroups dg join fetch dg.privileges pri join fetch pri.proposal pro where pro.id=:id";
-      Query qPrivilegeGroups = hb_session.createQuery(hqlPrivilegeGroups);
-      qPrivilegeGroups.setParameter("id", proposalView.getProposal().getId());
-      List<Collaborationuser> privGroupList = qPrivilegeGroups.list();
+     //Lade alle Diskussionsgruppen mit Privilegien auf Proposal
+     String hqlPrivilegeGroups = "from Collaborationuser cu join fetch cu.discussiongroups dg join fetch dg.privileges pri join fetch pri.proposal pro where pro.id=:id";
+     Query qPrivilegeGroups = hb_session.createQuery(hqlPrivilegeGroups);
+     qPrivilegeGroups.setParameter("id", proposalView.getProposal().getId());
+     List<Collaborationuser> privGroupList = qPrivilegeGroups.list();
 
-      for (Collaborationuser cu : privGroupList)
-      {
+     for (Collaborationuser cu : privGroupList)
+     {
 
-        boolean doubleEntry = false;
-        for (Collaborationuser cuI : completeUserList)
-        {
+     boolean doubleEntry = false;
+     for (Collaborationuser cuI : completeUserList)
+     {
 
-          if (cu.getId().equals(cuI.getId()))
-          {
-            doubleEntry = true;
-          }
-        }
+     if (cu.getId().equals(cuI.getId()))
+     {
+     doubleEntry = true;
+     }
+     }
 
-        if (!doubleEntry)
-        {
-          completeUserList.add(cu);
-        }
-      }
+     if (!doubleEntry)
+     {
+     completeUserList.add(cu);
+     }
+     }
 
-      ArrayList<String> mailAdr = new ArrayList<String>();
-      for (Collaborationuser u : completeUserList)
-      {
+     ArrayList<String> mailAdr = new ArrayList<String>();
+     for (Collaborationuser u : completeUserList)
+     {
 
-        if (u.getSendMail() != null && u.getSendMail())
-          mailAdr.add(u.getEmail());
-      }
-      String[] adr = new String[mailAdr.size()];
-      for (int i = 0; i < adr.length; i++)
-      {
+     if (u.getSendMail() != null && u.getSendMail())
+     mailAdr.add(u.getEmail());
+     }
+     String[] adr = new String[mailAdr.size()];
+     for (int i = 0; i < adr.length; i++)
+     {
 
-        adr[i] = mailAdr.get(i);
-      }
-      Mail.sendMailAUT(adr, M_AUT.PROPOSAL_CHANGE_DESCRIPTION, M_AUT.getInstance().getProposalDescriptionChangeText(
-          proposalView.getProposal().getVocabularyName(),
-          proposalView.getProposal().getContentType(),
-          proposalView.getProposal().getDescription(), proposalView.getProposal().getNote()));
-    }
-    catch (Exception e)
-    {
-      hb_session.getTransaction().rollback();
+     adr[i] = mailAdr.get(i);
+     }
+     Mail.sendMailAUT(adr, M_AUT.PROPOSAL_CHANGE_DESCRIPTION, M_AUT.getInstance().getProposalDescriptionChangeText(
+     proposalView.getProposal().getVocabularyName(),
+     proposalView.getProposal().getContentType(),
+     proposalView.getProposal().getDescription(), proposalView.getProposal().getNote()));
+     }
+     catch (Exception e)
+     {
+     hb_session.getTransaction().rollback();
 
-      Messagebox.show("Fehler beim aktualisieren der Daten: " + e.getLocalizedMessage(), "Update", Messagebox.OK, Messagebox.EXCLAMATION);
-      initListPrivilegien();
-    }
-    hb_session.close();*/
+     Messagebox.show("Fehler beim aktualisieren der Daten: " + e.getLocalizedMessage(), "Update", Messagebox.OK, Messagebox.EXCLAMATION);
+     initListPrivilegien();
+     }
+     hb_session.close();*/
   }
 
   public void initProposal()
   {
-/* TODO 
-    Long userId = SessionHelper.getCollaborationUserID();
-    if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN)
-        || (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_INHALTSVERWALTER)
-        && AssignTermHelper.isUserAllowed(proposalView.getProposal().getVocabularyIdTwo(), proposalView.getProposal().getVocabularyNameTwo()))
-        || (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_BENUTZER)
-        && userId == proposalView.getProposal().getCollaborationuser().getId()))
-    {
-      ((Button) getFellow("buttonEditProposal")).setDisabled(false);
-    }
+    /* TODO 
+     Long userId = SessionHelper.getCollaborationUserID();
+     if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN)
+     || (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_INHALTSVERWALTER)
+     && AssignTermHelper.isUserAllowed(proposalView.getProposal().getVocabularyIdTwo(), proposalView.getProposal().getVocabularyNameTwo()))
+     || (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_BENUTZER)
+     && userId == proposalView.getProposal().getCollaborationuser().getId()))
+     {
+     ((Button) getFellow("buttonEditProposal")).setDisabled(false);
+     }
 
-    if (proposalView.getProposal().getCollaborationuser().getId().equals(userId)
-        && (ProposalStatus.getInstance().getStatusStr(proposalView.getProposal().getStatus())).equals("vorgeschlagen"))
-    {
-      ((Button) getFellow("buttonEditProposal")).setDisabled(false);
-    }*/
+     if (proposalView.getProposal().getCollaborationuser().getId().equals(userId)
+     && (ProposalStatus.getInstance().getStatusStr(proposalView.getProposal().getStatus())).equals("vorgeschlagen"))
+     {
+     ((Button) getFellow("buttonEditProposal")).setDisabled(false);
+     }*/
   }
 }

@@ -1,26 +1,9 @@
-/* 
- * CTS2 based Terminology Server and Terminology Browser
- * Copyright (C) 2014 FH Dortmund: Peter Haas, Robert Muetzner
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package de.fhdo.collaboration.db.classes;
-// Generated 15.05.2013 18:02:38 by Hibernate Tools 3.2.1.GA
+// Generated 30.06.2015 09:32:45 by Hibernate Tools 4.3.1
 
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -42,25 +25,37 @@ import javax.persistence.Table;
 )
 public class Role  implements java.io.Serializable {
 
+
      private Long id;
      private Boolean adminFlag;
      private String name;
-     private Set<Status> statuses = new HashSet<Status>(0);
+     private Boolean mayChangeStatus;
+     private Boolean mayAdminProposal;
      private Set<Collaborationuser> collaborationusers = new HashSet<Collaborationuser>(0);
+     private Set<Userprivilege> userprivileges = new HashSet<Userprivilege>(0);
      private Set<Statusrel> statusrels = new HashSet<Statusrel>(0);
+     private Set<Status> statuses = new HashSet<Status>(0);
 
     public Role() {
     }
 
-    public Role(Boolean adminFlag, String name, Set<Status> statuses, Set<Collaborationuser> collaborationusers, Set<Statusrel> statusrels) {
+	
+    public Role(String name) {
+        this.name = name;
+    }
+    public Role(Boolean adminFlag, String name, Boolean mayChangeStatus, Boolean mayAdminProposal, Set<Collaborationuser> collaborationusers, Set<Userprivilege> userprivileges, Set<Statusrel> statusrels, Set<Status> statuses) {
        this.adminFlag = adminFlag;
        this.name = name;
-       this.statuses = statuses;
+       this.mayChangeStatus = mayChangeStatus;
+       this.mayAdminProposal = mayAdminProposal;
        this.collaborationusers = collaborationusers;
+       this.userprivileges = userprivileges;
        this.statusrels = statusrels;
+       this.statuses = statuses;
     }
    
      @Id @GeneratedValue(strategy=IDENTITY)
+
     
     @Column(name="id", unique=true, nullable=false)
     public Long getId() {
@@ -70,6 +65,7 @@ public class Role  implements java.io.Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+
     
     @Column(name="adminFlag")
     public Boolean getAdminFlag() {
@@ -79,8 +75,9 @@ public class Role  implements java.io.Serializable {
     public void setAdminFlag(Boolean adminFlag) {
         this.adminFlag = adminFlag;
     }
+
     
-    @Column(name="name", length=65535)
+    @Column(name="name", nullable=false, length=65535)
     public String getName() {
         return this.name;
     }
@@ -88,19 +85,29 @@ public class Role  implements java.io.Serializable {
     public void setName(String name) {
         this.name = name;
     }
-@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-    @JoinTable(name="role2status", joinColumns = { 
-        @JoinColumn(name="roleId", nullable=false, updatable=false) }, inverseJoinColumns = { 
-        @JoinColumn(name="statusId", nullable=false, updatable=false) })
-    public Set<Status> getStatuses() {
-        return this.statuses;
+
+    
+    @Column(name="mayChangeStatus")
+    public Boolean getMayChangeStatus() {
+        return this.mayChangeStatus;
     }
     
-    public void setStatuses(Set<Status> statuses) {
-        this.statuses = statuses;
+    public void setMayChangeStatus(Boolean mayChangeStatus) {
+        this.mayChangeStatus = mayChangeStatus;
     }
-@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-    @JoinTable(name="role2collaborationuser", joinColumns = { 
+
+    
+    @Column(name="mayAdminProposal")
+    public Boolean getMayAdminProposal() {
+        return this.mayAdminProposal;
+    }
+    
+    public void setMayAdminProposal(Boolean mayAdminProposal) {
+        this.mayAdminProposal = mayAdminProposal;
+    }
+
+@ManyToMany(fetch=FetchType.LAZY)
+    @JoinTable(name="role2collaborationuser", catalog="collab", joinColumns = { 
         @JoinColumn(name="roleId", nullable=false, updatable=false) }, inverseJoinColumns = { 
         @JoinColumn(name="collaborationUserId", nullable=false, updatable=false) })
     public Set<Collaborationuser> getCollaborationusers() {
@@ -110,8 +117,18 @@ public class Role  implements java.io.Serializable {
     public void setCollaborationusers(Set<Collaborationuser> collaborationusers) {
         this.collaborationusers = collaborationusers;
     }
-@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-    @JoinTable(name="role2action", joinColumns = { 
+
+@OneToMany(fetch=FetchType.LAZY, mappedBy="role")
+    public Set<Userprivilege> getUserprivileges() {
+        return this.userprivileges;
+    }
+    
+    public void setUserprivileges(Set<Userprivilege> userprivileges) {
+        this.userprivileges = userprivileges;
+    }
+
+@ManyToMany(fetch=FetchType.LAZY)
+    @JoinTable(name="role2action", catalog="collab", joinColumns = { 
         @JoinColumn(name="roleId", nullable=false, updatable=false) }, inverseJoinColumns = { 
         @JoinColumn(name="statusRelId", nullable=false, updatable=false) })
     public Set<Statusrel> getStatusrels() {
@@ -120,6 +137,18 @@ public class Role  implements java.io.Serializable {
     
     public void setStatusrels(Set<Statusrel> statusrels) {
         this.statusrels = statusrels;
+    }
+
+@ManyToMany(fetch=FetchType.LAZY)
+    @JoinTable(name="role2status", catalog="collab", joinColumns = { 
+        @JoinColumn(name="roleId", nullable=false, updatable=false) }, inverseJoinColumns = { 
+        @JoinColumn(name="statusId", nullable=false, updatable=false) })
+    public Set<Status> getStatuses() {
+        return this.statuses;
+    }
+    
+    public void setStatuses(Set<Status> statuses) {
+        this.statuses = statuses;
     }
 
 
