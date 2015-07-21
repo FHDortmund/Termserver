@@ -854,6 +854,7 @@ public class ConceptsTree implements IUpdateModal
     {
       CodeSystemVersionEntityMembership csvem = new CodeSystemVersionEntityMembership();
       csvem.setIsMainClass(true);
+      csvem.setIsAxis(true);
       parameter.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().add(csvem);
     }
 

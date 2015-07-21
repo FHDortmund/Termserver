@@ -1,0 +1,1727 @@
+************* technique *************
+[0] unspecified
+[1] x-ray
+	[10] unspecified
+	[11] plain radiography
+		[110] unspecified
+		[111] digital
+			[1110] unspecified
+			[1111] overview image
+			[1112] tomography
+			[1113] high beam energy
+			[1114] low beam energy
+			[1115] far view projection
+			[1116] 1:1 projection
+			[1117] magnification
+			[1118] dual energy
+			[1119] intraoral periapical
+			[111a] intraoral bitewing
+			[111b] occlusal
+			[111c] panoramic
+			[111d] narrow beam radiography
+			[111e] child filter
+			[111f] 42 microns
+			[111g] 43.5 microns
+			[111h] 50 microns
+			[111i] 100 microns
+			[111j] 200 microns
+		[112] analog
+			[1120] unspecified
+			[1121] overview image
+			[1122] tomography
+			[1123] high beam energy
+			[1124] low beam energy
+			[1125] far view projection
+			[1126] 1:1 projection
+			[1127] magnification
+			[1128] intraoral periapical
+			[1129] intraoral bitewing
+			[112a] occlusal
+			[112b] panoramic
+			[112c] narrow beam radiography
+			[112d] child filter
+			[112e] 42 microns
+			[112f] 43.5 microns
+			[112g] 50 microns
+			[112h] 100 microns
+			[112i] 200 microns
+		[113] x-ray stereometry
+			[1130] unspecified
+		[114] x-ray stereography
+			[1140] unspecified
+			[1141] narrow beam radiography
+		[115] tomosynthesis
+			[1150] unspecified
+		[116] xeroradiography
+			[1160] unspecified
+		[117] computed radiography (CR)
+			[1170] unspecified
+	[12] fluoroscopy
+		[120] unspecified
+		[121] digital
+			[1210] unspecified
+		[122] analog
+			[1220] unspecified
+	[13] angiography
+		[130] unspecified
+		[131] digital
+			[1310] unspecified
+			[1311] subtraction (DSA)
+			[1312] rotation angiography
+			[1313] pathfinder technique
+		[132] analog
+			[1320] unspecified
+			[1321] photo subtraction
+	[14] computed tomography (CT)
+		[140] unspecified
+		[141] conventional CT
+			[1410] unspecified
+			[1411] low dose
+			[1412] high resolution
+			[1413] bolus tracking
+		[142] quantitative CT
+			[1420] unspecified
+			[1421] dual energy
+		[143] multiplanar reformat
+			[1430] unspecified
+		[144] interventional CT
+			[1440] unspecified
+	[15] DEXA (quantitative radiography)
+		[150] unspecified
+		[151] digital
+			[1510] unspecified
+			[1511] dual energy
+	[16] radiotherapy
+		[160] unspecified
+		[161] digital
+			[1610] unspecified
+		[162] analog
+			[1620] unspecified
+[2] ultrasound imaging
+	[20] unspecified
+	[21] A-mode
+		[210] unspecified
+		[211] 3.5 MHz
+			[2110] unspecified
+		[212] 5.0 MHz
+			[2120] unspecified
+		[213] 7.5 MHz
+			[2130] unspecified
+		[214] 10 MHz
+			[2140] unspecified
+		[215] variable frequency
+			[2150] unspecified
+	[22] B-mode
+		[220] unspecified
+		[221] sector scan
+			[2210] unspecified
+			[2211] 3.5 MHz
+			[2212] 5.0 MHz
+			[2213] 7.5 MHz
+			[2214] 10 MHz
+			[2215] variable frequency
+		[222] linear scan
+			[2220] unspecified
+			[2221] 3.5 MHz
+			[2222] 5.0 MHz
+			[2223] 7.5 MHz
+			[2224] 10 MHz
+			[2225] variable frequency
+	[23] M-mode
+		[230] unspecified
+		[231] 3.5 MHz
+			[2310] unspecified
+		[232] 5.0 MHz
+			[2320] unspecified
+		[233] 7.5 MHz
+			[2330] unspecified
+		[234] 10 MHz
+			[2340] unspecified
+		[235] variable frequency
+			[2350] unspecified
+	[24] compound mode
+		[240] unspecified
+		[241] 3.5 MHz
+			[2410] unspecified
+		[242] 5.0 MHz
+			[2420] unspecified
+		[243] 7.5 MHz
+			[2430] unspecified
+		[244] 10 MHz
+			[2440] unspecified
+		[245] variable frequency
+			[2450] unspecified
+	[25] SieScape mode
+		[250] unspecified
+		[251] 3.5 MHz
+			[2510] unspecified
+		[252] 5.0 MHz
+			[2520] unspecified
+		[253] 7.5 MHz
+			[2530] unspecified
+		[254] 10 MHz
+			[2540] unspecified
+		[255] variable frequency
+			[2550] unspecified
+	[26] duplex mode
+		[260] unspecified
+		[261] 3.5 MHz
+			[2610] unspecified
+		[262] 5.0 MHz
+			[2620] unspecified
+		[263] 7.5 MHz
+			[2630] unspecified
+		[264] 10 MHz
+			[2640] unspecified
+		[265] variable frequency
+			[2650] unspecified
+	[27] Doppler mode
+		[270] unspecified
+		[271] 3.5 MHz
+			[2710] unspecified
+		[272] 5.0 MHz
+			[2720] unspecified
+		[273] 7.5 MHz
+			[2730] unspecified
+		[274] 10 MHz
+			[2740] unspecified
+		[275] variable frequency
+			[2750] unspecified
+	[28] 3D imaging
+		[280] unspecified
+		[281] 3.5 MHz
+			[2810] unspecified
+		[282] 5.0 MHz
+			[2820] unspecified
+		[283] 7.5 MHz
+			[2830] unspecified
+		[284] 10 MHz
+			[2840] unspecified
+		[285] variable frequency
+			[2850] unspecified
+[3] magnetic resonance measurements
+	[30] unspecified
+	[31] magnetic resonance imaging (MRI)
+		[310] unspecified
+		[311] T1-weigthed
+			[3110] unspecified
+			[3111] endo coil
+			[3112] body
+			[3113] body array
+			[3114] head coil
+			[3115] neck coil
+			[3116] spine coil
+			[3117] loop coil
+			[3118] shoulder coil
+			[3119] knee coil
+			[311a] hand / small FOV
+			[311b] mamma coil
+			[311c] flexible coil, large
+			[311d] flexible coil, small
+			[311e] endorectal coil
+			[311f] wrap around coil
+		[312] T2-weighted
+			[3120] unspecified
+			[3121] endo coil
+			[3122] body 
+			[3123] body array
+			[3124] head coil
+			[3125] neck coil
+			[3126] spine coil
+			[3127] loop coil
+			[3128] shoulder coil
+			[3129] knee coil
+			[312a] hand / small FOV
+			[312b] mamma coil
+			[312c] flexible coil, large
+			[312d] flexible coil, small
+			[312e] endorectal coil
+			[312f] wrap around coil
+		[313] proton-weighted
+			[3130] unspecified
+			[3131] endo coil
+			[3132] body
+			[3133] body array
+			[3134] head coil
+			[3135] neck coil
+			[3136] spine coil
+			[3137] loop coil
+			[3138] shoulder coil
+			[3139] knee coil
+			[313a] hand / small FOV
+			[313b] mamma coil
+			[313c] flexible coil, large
+			[313d] flexible coil, small
+			[313e] endorectal coil
+			[313f] wrap around coil
+		[314] fat suppression
+			[3140] unspecified
+			[3141] endo coil
+			[3142] body
+			[3143] body array
+			[3144] head coil
+			[3145] neck coil
+			[3146] spine coil
+			[3147] loop coil
+			[3148] shoulder coil
+			[3149] knee coil
+			[314a] hand / small FOV
+			[314b] mamma coil
+			[314c] flexible coil, large
+			[314d] flexible coil, small
+			[314e] endorectal coil
+			[314f] wrap around coil
+		[315] Cine-Lolo
+			[3150] unspecified
+			[3151] endo coil
+			[3152] body
+			[3153] body array
+			[3154] head coil
+			[3155] neck coil
+			[3156] spine coil
+			[3157] loop coil
+			[3158] shoulder coil
+			[3159] knee coil
+			[315a] hand / small FOV
+			[315b] mamma coil
+			[315c] flexible coil, large
+			[315d] flexible coil, small
+			[315e] endorectal coil
+			[315f] wrap around coil
+		[316] inversion recovery
+			[3160] unspecified
+			[3161] endo coil
+			[3162] body
+			[3163] body array
+			[3164] head coil
+			[3165] neck coil
+			[3166] spine coil
+			[3167] loop coil
+			[3168] shoulder coil
+			[3169] knee coil
+			[316a] hand / small FOV
+			[316b] mamma coil
+			[316c] flexible coil, large
+			[316d] flexible coil, small
+			[316e] endorectal coil
+			[316f] wrap around coil
+		[317] FLARE
+			[3170] unspecified
+			[3171] endo coil
+			[3172] body
+			[3173] body array
+			[3174] head coil
+			[3175] neck coil
+			[3176] spine coil
+			[3177] loop coil
+			[3178] shoulder coil
+			[3179] knee coil
+			[317a] hand / small FOV
+			[317b] mamma coil
+			[317c] flexible coil, large
+			[317d] flexible coil, small
+			[317e] endorectal coil
+			[317f] wrap around coil
+		[318] 3D-FFE high resolution
+			[3180] unspecified
+			[3181] endo coil
+			[3182] body
+			[3183] body array
+			[3184] head coil
+			[3185] neck coil
+			[3186] spine coil
+			[3187] loop coil
+			[3188] shoulder coil
+			[3189] knee coil
+			[318a] hand / small FOV
+			[318b] mamma coil
+			[318c] flexible coil, large
+			[318d] flexible coil, small
+			[318e] endorectal coil
+			[318f] wrap around coil
+	[32] spectroscopy
+		[320] unspecified
+	[33] angiography (MRA)
+		[330] unspecified
+	[34] functional MRI (fMRI)
+		[340] unspecified
+	[35] mamography
+		[350] unspecified
+[4] nuclear medicine imaging
+	[40] unspecified
+	[41] scintillation probe
+		[410] unspecified
+	[42] gamma camera
+		[420] unspecified
+	[43] single photon emission computed tomography (SPECT)
+		[430] unspecified
+	[44] positron emission tomography (PET)
+		[440] unspecified
+		[441] PET-CT
+			[4410] unspecified
+		[442] PET-MR
+			[4420] unspecified
+[5] optical imaging
+	[50] unspecified
+	[51] endoscopy
+		[510] unspecified
+		[511] rigid
+			[5110] unspecified
+			[5111] continuous light
+			[5112] stroboscopy
+		[512] flexible
+			[5120] unspecified
+			[5121] continuous light
+			[5122] stroboscopy
+		[513] stereoscopic
+			[5130] unspecified
+			[5131] continuous light
+			[5132] stroboscopy
+		[514] wireless
+			[5140] unspecified
+			[5141] capsule
+	[52] microscopy
+		[520] unspecified
+		[521] plain
+			[5210] unspecified
+		[522] stained
+			[5220] unspecified
+		[523] fluorescence
+			[5230] unspecified
+		[524] electron
+			[5240] unspecified
+	[53] photography
+		[530] unspecified
+	[54] funduscopy
+		[540] unspecified
+	[55] laser surface scan
+		[550] unspecified
+	[56] thermography
+		[560] unspecified
+	[57] moving picture
+		[570] unspecified
+[6] biophysical procedures
+	[60] unspecified
+	[61] electric
+		[610] unspecified
+	[62] magnetic
+		[620] unspecified
+	[63] probes
+		[630] unspecified
+[7] others
+	[70] unspecified
+	[71] workstation
+		[710] unspecified
+	[72] hardcopy
+		[720] unspecified
+	[73] secondary capture
+		[730] unspecified
+	[74] documentation
+		[740] unspecified
+		[741] value
+			[7410] unspecified
+		[742] curve local
+			[7420] unspecified
+		[743] curve temporal
+			[7430] unspecified
+		[744] area complex (3D)
+			[7440] unspecified
+		[745] picture
+			[7450] unspecified
+		[746] local series
+			[7460] unspecified
+		[747] temporal series
+			[7470] unspecified
+		[748] complex series (4D)
+			[7480] unspecified
+		[749] cine documentation
+			[7490] unspecified
+		[74a] fluoroscopy
+			[74a0] unspecified
+		[74b] volume (data set)
+			[74b0] unspecified
+		[74c] volume temporal (data set)
+			[74c0] unspecified
+[8] secondary digitalization
+	[80] unspecified
+	[81] laser sampling
+		[810] unspecified
+	[82] LCD sampling
+		[820] unspecified
+	[83] video digitizing
+		[830] unspecified
+[9] figure
+	[90] unspecified
+	[91] diagnostic image
+		[910] unspecified
+		[911] grayscale
+			[9110] unspecified
+			[9111] original
+			[9112] annotation
+		[912] color
+			[9120] unspecified
+			[9121] original
+			[9122] annotation
+	[92] diagnostic visualization
+		[920] unspecified
+		[921] grayscale
+			[9210] unspecified
+		[922] color
+			[9220] unspecified
+	[93] photograph
+		[930] unspecified
+		[931] grayscale
+			[9310] unspecified
+			[9311] device
+			[9312] person
+			[9313] object
+			[9314] portrait
+			[9315] other
+		[932] color
+			[9320] unspecified
+			[9321] device
+			[9322] person
+			[9323] object
+			[9324] portrait
+			[9325] other
+	[94] screen shot
+		[940] unspecified
+		[941] grayscale
+			[9410] unspecified
+		[942] color
+			[9420] unspecified
+	[95] graph
+		[950] unspecified
+		[951] grayscale
+			[9510] unspecified
+		[952] color
+			[9520] unspecified
+	[96] diagram
+		[960] unspecified
+		[961] grayscale
+			[9610] unspecified
+		[962] color
+			[9620] unspecified
+	[97] drawing
+		[970] unspecified
+		[971] grayscale
+			[9710] unspecified
+		[972] color
+			[9720] unspecified
+	[98] multi-panel medical
+		[980] unspecified
+		[981] grayscale
+			[9810] unspecified
+			[9811] 1 part
+			[9812] 2 parts
+			[9813] 3 parts
+			[9814] 4 parts
+			[9815] 5 parts
+			[9816] 6 parts
+			[9817] 7 parts
+			[9818] 8 parts
+			[9819] 9 parts
+			[981a] 10 parts
+			[981b] 11 parts
+			[981c] 12 parts
+			[981d] 13 parts
+			[981e] 14 parts
+			[981f] 15 parts
+			[981g] 16 parts
+			[981h] 17 parts
+			[981i] 18 parts
+			[981j] 19 parts
+			[981k] 20 parts
+			[981l] 21 parts
+			[981m] 22 parts
+			[981n] 23 parts
+			[981o] 24 parts
+			[981p] 25 parts
+		[982] color
+			[9820] unspecified
+			[9821] 1 part
+			[9822] 2 parts
+			[9823] 3 parts
+			[9824] 4 parts
+			[9825] 5 parts
+			[9826] 6 parts
+			[9827] 7 parts
+			[9828] 8 parts
+			[9829] 9 parts
+			[982a] 10 parts
+			[982b] 11 parts
+			[982c] 12 parts
+			[982d] 13 parts
+			[982e] 14 parts
+			[982f] 15 parts
+			[982g] 16 parts
+			[982h] 17 parts
+			[982i] 18 parts
+			[982j] 19 parts
+			[982k] 20 parts
+			[982l] 21 parts
+			[982m] 22 parts
+			[982n] 23 parts
+			[982o] 24 parts
+			[982p] 25 parts
+	[99] multi-panel non-medical
+		[990] unspecified
+		[991] grayscale
+			[9910] unspecified
+			[9911] 1 part
+			[9912] 2 parts
+			[9913] 3 parts
+			[9914] 4 parts
+			[9915] 5 parts
+			[9916] 6 parts
+			[9917] 7 parts
+			[9918] 8 parts
+			[9919] 9 parts
+			[991a] 10 parts
+			[991b] 11 parts
+			[991c] 12 parts
+			[991d] 13 parts
+			[991e] 14 parts
+			[991f] 15 parts
+			[991g] 16 parts
+			[991h] 17 parts
+			[991i] 18 parts
+			[991j] 19 parts
+			[991k] 20 parts
+			[991l] 21 parts
+			[991m] 22 parts
+			[991n] 23 parts
+			[991o] 24 parts
+			[991p] 25 parts
+		[992] color
+			[9920] unspecified
+			[9921] 1 part
+			[9922] 2 parts
+			[9923] 3 parts
+			[9924] 4 parts
+			[9925] 5 parts
+			[9926] 6 parts
+			[9927] 7 parts
+			[9928] 8 parts
+			[9929] 9 parts
+			[992a] 10 parts
+			[992b] 11 parts
+			[992c] 12 parts
+			[992d] 13 parts
+			[992e] 14 parts
+			[992f] 15 parts
+			[992g] 16 parts
+			[992h] 17 parts
+			[992i] 18 parts
+			[992j] 19 parts
+			[992k] 20 parts
+			[992l] 21 parts
+			[992m] 22 parts
+			[992n] 23 parts
+			[992o] 24 parts
+			[992p] 25 parts
+	[9a] multi-panel mixed
+		[9a0] unspecified
+		[9a1] grayscale
+			[9a10] unspecified
+			[9a11] 1 part
+			[9a12] 2 parts
+			[9a13] 3 parts
+			[9a14] 4 parts
+			[9a15] 5 parts
+			[9a16] 6 parts
+			[9a17] 7 parts
+			[9a18] 8 parts
+			[9a19] 9 parts
+			[9a1a] 10 parts
+			[9a1b] 11 parts
+			[9a1c] 12 parts
+			[9a1d] 13 parts
+			[9a1e] 14 parts
+			[9a1f] 15 parts
+			[9a1g] 16 parts
+			[9a1h] 17 parts
+			[9a1i] 18 parts
+			[9a1j] 19 parts
+			[9a1k] 20 parts
+			[9a1l] 21 parts
+			[9a1m] 22 parts
+			[9a1n] 23 parts
+			[9a1o] 24 parts
+			[9a1p] 25 parts
+		[9a2] color
+			[9a20] unspecified
+			[9a21] 1 part
+			[9a22] 2 parts
+			[9a23] 3 parts
+			[9a24] 4 parts
+			[9a25] 5 parts
+			[9a26] 6 parts
+			[9a27] 7 parts
+			[9a28] 8 parts
+			[9a29] 9 parts
+			[9a2a] 10 parts
+			[9a2b] 11 parts
+			[9a2c] 12 parts
+			[9a2d] 13 parts
+			[9a2e] 14 parts
+			[9a2f] 15 parts
+			[9a2g] 16 parts
+			[9a2h] 17 parts
+			[9a2i] 18 parts
+			[9a2j] 19 parts
+			[9a2k] 20 parts
+			[9a2l] 21 parts
+			[9a2m] 22 parts
+			[9a2n] 23 parts
+			[9a2o] 24 parts
+			[9a2p] 25 parts
+	[9b] other
+		[9b0] unspecified
+		[9b1] grayscale
+			[9b10] unspecified
+			[9b11] scanned table
+			[9b12] scanned itemize
+			[9b13] scanned equation
+			[9b14] scanned document
+			[9b15] artifact
+		[9b2] color
+			[9b20] unspecified
+			[9b21] scanned table
+			[9b22] scanned itemize
+			[9b23] scanned equation
+			[9b24] scanned document
+			[9b25] artifact
+	[9c] protein spot
+		[9c0] unspecified
+		[9c1] grayscale
+			[9c10] unspecified
+			[9c11] original
+			[9c12] annotated
+		[9c2] color
+			[9c20] unspecified
+			[9c21] original
+			[9c22] annotated
+
+************* direction *************
+[0] unspecified
+[1] coronal
+	[10] unspecified
+	[11] posteroanterior (PA)
+		[110] unspecified
+		[111] inspiration
+		[112] expiration
+		[113] valsalva
+		[114] phonation
+		[115] upright
+		[116] sitting
+		[117] supine
+		[118] prone
+		[119] lateral decubitus
+		[11a] flexion, left
+		[11b] flexion, right
+		[11c] swallow
+		[11d] micturition
+		[11e] bending
+		[11f] axial
+		[11g] left side
+		[11h] right side
+		[11i] ethnic: caucasian
+		[11j] ethnic: asian
+		[11k] ethnic: african-american
+		[11l] ethnic: hispanic
+	[12] anteroposterior (AP, coronal)
+		[120] unspecified
+		[121] inspiration
+		[122] expiration
+		[123] valsalva
+		[124] phonation
+		[125] upright
+		[126] sitting
+		[127] supine
+		[128] prone
+		[129] lateral decubitus
+		[12a] flexion, left
+		[12b] flexion, right
+		[12c] swallow
+		[12d] micturition
+		[12e] bending
+		[12f] axial
+		[12g] left side
+		[12h] right Side
+		[12i] ethnic: caucasian
+		[12j] ethnic: asian
+		[12k] ethnic: african-american
+		[12l] ethnic: hispanic
+		[12m] upright
+		[12n] left tilted
+		[12o] right tilted
+[2] sagittal
+	[20] unspecified
+	[21] lateral, right-left
+		[210] unspecified
+		[211] inspiration
+		[212] expiration
+		[213] valsalva
+		[214] Hitzenberg maneuver
+		[215] upright
+		[216] supine
+		[217] prone
+		[218] inclination
+		[219] reclination
+		[21a] swallow
+		[21b] defaecation
+		[21c] micturition
+	[22] lateral, left-right
+		[220] unspecified
+		[221] inspiration
+		[222] expiration
+		[223] valsalva
+		[224] Hitzenberg maneuver
+		[225] upright
+		[226] supine
+		[227] prone
+		[228] inclination
+		[229] reclination
+		[22a] swallow
+		[22b] defaecation
+		[22c] micturition
+	[23] mediolateral
+		[230] unspecified
+	[24] lateromedial
+		[240] unspecified
+[3] axial
+	[30] unspecified
+	[31] craniocaudal
+		[310] unspecified
+		[311] right adjoining
+		[312] left adjoining
+	[32] caudocranial (transversal, axial)
+		[320] unspecified
+		[321] right adjoining
+		[322] left adjoining
+[4] other orientation
+	[40] unspecified
+	[41] oblique
+		[410] unspecified
+		[411] single view
+		[412] multi view
+		[413] zoom
+	[42] occipitofrontal
+		[420] unspecified
+	[43] occipitomental
+		[430] unspecified
+	[44] bregmaticooccipital
+		[440] unspecified
+	[45] submentobregmatical
+		[450] unspecified
+	[46] submentobregmaticofrontal
+		[460] unspecified
+	[47] bregmaticooral
+		[470] unspecified
+	[48] bregmaticosubmental
+		[480] unspecified
+	[49] right anterior oblique (RAO)
+		[490] unspecified
+	[4a] left anterior oblique (LAO)
+		[4a0] unspecified
+	[4b] frontooccipital
+		[4b0] unspecified
+	[4c] perpendicular to the dental arch
+		[4c0] unspecified
+		[4c1] right adjoining
+		[4c2] left adjoining
+[5] RSA / ap and lateral (simultaneously)
+	[50] unspecified
+
+************* anatomy *************
+[0] unspecified
+[1] whole body
+	[10] unspecified
+	[11] torso
+		[110] unspecified
+	[12] extremities
+		[120] unspecified
+	[13] body surface
+		[130] unspecified
+[2] cranium
+	[20] unspecified
+	[21] facial cranium
+		[210] unspecified
+		[211] forehead
+		[212] eye area
+		[213] nose area
+		[214] maxilla
+		[215] mandible
+		[216] temporo mandibular area
+		[217] paranasal area
+		[218] jaw areas
+		[219] dental areas
+		[21a] ramus area
+		[21b] molar upper and lower jaw
+		[21c] molar upper jaw
+		[21d] 3rd molar upper jaw
+		[21e] molar lower jaw
+		[21f] 3rd molar lower jaw
+		[21g] premolar upper and lower jaw
+		[21h] premolar upper jaw
+		[21i] premolar lower jaw
+		[21j] canine upper and lower jaw
+		[21k] canine upper jaw
+		[21l] canine lower jaw
+		[21m] incisor upper and lower jaw
+		[21n] incisor upper jaw
+		[21o] incisor lower jaw
+		[21p] left eye
+		[21q] right eye
+	[22] cranial base
+		[220] unspecified
+		[221] petrous bone
+		[222] sella
+	[23] neuro cranium
+		[230] unspecified
+		[231] frontal area
+		[232] parietal area
+		[233] occipital area
+		[234] temporal area
+[3] spine
+	[30] unspecified
+	[31] cervical spine
+		[310] unspecified
+		[311] dens axis
+		[312] ---
+		[313] upper cervical spine
+		[314] lower cervical spine
+		[315] C1
+		[316] C2
+		[317] C3
+		[318] C4
+		[319] C5
+		[31a] C6
+		[31b] C7
+	[32] thoracic spine
+		[320] unspecified
+		[321] cervico-thoracic conjunction
+		[322] upper thoracic spine
+		[323] middle thoracic spine
+		[324] lower thoracic spine
+		[325] T1
+		[326] T2
+		[327] T3
+		[328] T4
+		[329] T5
+		[32a] T6
+		[32b] T7
+		[32c] T8
+		[32d] T9
+		[32e] T10
+		[32f] T11
+		[32g] T12
+	[33] lumbar spine
+		[330] unspecified
+		[331] thoraco-lumbar conjunction
+		[332] upper lumbar spine
+		[333] lower lumbar spine
+		[334] L1
+		[335] L2
+		[336] L3
+		[337] L4
+		[338] L5
+	[34] sacral spine
+		[340] unspecified
+		[341] lumbo-sacral conjunction
+		[342] S1
+		[343] S2
+		[344] S3
+		[345] S4
+		[346] S5
+	[35] coccygeal bone
+		[350] unspecified
+		[351] S6
+[4] upper extremity (arm)
+	[40] unspecified
+	[41] hand
+		[410] unspecified
+		[411] finger (unspecified)
+		[412] middle hand
+		[413] carpal bones
+		[414] left hand
+		[415] right hand
+		[416] finger (left hand)
+		[417] finger (right hand)
+		[418] epiphysis fifth finger, distal/middle phalanx
+		[419] epiphysis fifth finger, middle/proximal phalanx
+		[41a] epiphysis fifth finger, phalanx/metacarpal 
+		[41b] epiphysis fifth finger, metacarpal/carpal
+		[41c] epiphysis fourth finger, distal/middle phalanx
+		[41d] epiphysis fourth finger, middle/proximal phalanx
+		[41e] epiphysis fourth finger, phalanx/metacarpal
+		[41f] epiphysis fourth finger, metacarpal/carpal
+		[41g] epiphysis third finger, distal/middle phalanx
+		[41h] epiphysis third finger, middle/proximal phalanx
+		[41i] epiphysis third finger, phalanx/metacarpal
+		[41j] epiphysis third finger, metacarpal/carpal
+		[41k] epiphysis second finger, distal/middle phalanx
+		[41l] epiphysis second finger, middle/proximal phalanx
+		[41m] epiphysis second finger, phalanx/metacarpal
+		[41n] epiphysis second finger, metacarpal/carpal
+		[41o] epiphysis thumb, distal/proximal phalanx
+		[41p] epiphysis thumb, phalanx/metacarpal
+		[41q] epiphysis thumb, metacarpal/carpal
+	[42] radio carpal joint
+		[420] unspecified
+		[421] left carpal joint
+		[422] right carpal joint
+	[43] forearm
+		[430] unspecified
+		[431] distal forearm
+		[432] proximal forearm
+		[433] left distal forearm
+		[434] right distal forearm
+		[435] left proximal forearm
+		[436] right proximal forearm
+		[437] left forearm
+		[438] right forearm
+	[44] elbow
+		[440] unspecified
+		[441] left elbow
+		[442] right elbow
+	[45] upper arm
+		[450] unspecified
+		[451] left upper arm
+		[452] right upper arm
+		[453] left proximal upper arm
+		[454] right proximal upper arm
+		[455] left distal upper arm
+		[456] right distal upper arm
+	[46] shoulder
+		[460] unspecified
+		[461] scapula
+		[462] left humero-scapular joint
+		[463] right humero-scapular joint
+		[464] left acromio-scapula joint
+		[465] right acromio-scapula joint
+		[466] left scapula
+		[467] right scapula
+[5] chest
+	[50] unspecified
+	[51] bones
+		[510] unspecified
+		[511] clavicle
+		[512] sternoclavicle region
+		[513] sternum
+		[514] right ribs
+		[515] left ribs
+		[516] left clavicle
+		[517] right clavicle
+	[52] lung
+		[520] unspecified
+		[521] upper lobe
+		[522] middle lobe
+		[523] lower lobe
+	[53] hilum
+		[530] unspecified
+	[54] mediastinum
+		[540] unspecified
+		[541] anterior mediastinum
+		[542] middle mediastinum
+		[543] posterior mediastinum
+	[55] heart
+		[550] unspecified
+	[56] diaphragm
+		[560] unspecified
+[6] breast (mamma)
+	[60] unspecified
+	[61] right breast
+		[610] unspecified
+		[611] zoom
+	[62] left breast
+		[620] unspecified
+		[621] zoom
+[7] abdomen
+	[70] unspecified
+	[71] upper abdomen
+		[710] unspecified
+		[711] upper right quadrant
+		[712] upper middle quadrant
+		[713] upper left quadrant
+	[72] middle abdomen
+		[720] unspecified
+		[721] middle right quadrant
+		[722] peri navel region
+		[723] middle left quadrant
+	[73] lower abdomen
+		[730] unspecified
+		[731] lower right quadrant
+		[732] lower middle quadrant
+		[733] lower left quadrant
+	[74] left hemi abdomen
+		[740] unspecified
+	[75] right hemi abdomen
+		[750] unspecified
+[8] pelvis
+	[80] unspecified
+	[81] sarcral bone
+		[810] unspecified
+		[811] iliosacral junction
+	[82] iliac bone
+		[820] unspecified
+	[83] pubic bone
+		[830] unspecified
+		[831] symphysis
+	[84] ischial bone
+		[840] unspecified
+[9] lower extremity (leg)
+	[90] unspecified
+	[91] foot
+		[910] unspecified
+		[911] toe
+		[912] middle foot
+		[913] tarsal bones
+		[914] left foot
+		[915] right foot
+		[916] forefoot
+		[917] calcaneus
+		[918] left forefoot
+		[919] right forefoot
+		[91a] left tarsal bones
+		[91b] right tarsal bones
+	[92] ankle joint
+		[920] unspecified
+		[921] left ankle joint
+		[922] right unkle joint
+	[93] lower leg
+		[930] unspecified
+		[931] distal lower leg
+		[932] proximal lower leg
+		[933] left distal lower leg
+		[934] right distal lower leg
+		[935] left proximal lower leg
+		[936] right proximal lower leg
+	[94] knee
+		[940] unspecified
+		[941] patella
+		[942] left knee
+		[943] right knee
+	[95] upper leg
+		[950] unspecified
+		[951] distal upper leg
+		[952] proximal upper leg
+		[953] left distal upper leg
+		[954] right distal upper leg
+		[955] left proximal upper leg
+		[956] right proximal upper leg
+	[96] hip
+		[960] unspecified
+		[961] left hip
+		[962] right hip
+[a] tissue
+	[a0] unspecified
+	[a1] aggregate of cells
+		[a10] unspecified
+	[a2] cell
+		[a20] unspecified
+	[a3] desoxyribonucleid acid (DNA)
+		[a30] unspecified
+[b] hand
+	[b0] unspecified
+	[b1] both hands
+		[b10] unspecified
+	[b2] left hand
+		[b20] unspecified
+		[b21] thumb
+		[b22] second finger
+		[b23] third finger
+		[b24] fourth finger
+		[b25] fifth finger
+	[b3] right Hand
+		[b30] unspecified
+		[b31] thumb
+		[b32] second finger
+		[b33] third finger
+		[b34] fourth finger
+		[b35] fifth finger
+
+************* biosystem *************\n[0] unspecified
+[1] cerebrospinal system
+	[10] unspecified
+	[11] central nervous system
+		[110] unspecified
+		[111] metencephalon, cerebrum
+		[112] mesencephalon, diencephalon
+		[113] neurohypophysis, posterior pituitary gland
+		[114] cerebellum
+		[115] pons
+		[116] medulla oblongata
+		[117] spinal cord, cervical
+		[118] spinal cord, thoracic
+		[119] spinal cord, lumbal
+		[11a] spinal cord, sacral (cauda equina)
+	[12] sense organs
+		[120] unspecified
+		[121] vestibular sense
+		[122] hearing sense
+		[123] gustatory sense
+		[124] tactile sense
+		[125] vision sense
+		[126] olfactory sense
+	[13] vegetative nervous system
+		[130] unspecified
+		[131] sympathic chain
+		[132] glomus jugulare
+		[133] glomus caroticum
+		[134] ganglion stellatum
+		[135] ganglion coeliacum
+		[136] organ of Zuckerkandl
+		[137] adrenal medulla
+[2] cardiovascular system
+	[20] unspecified
+	[21] heart
+		[210] unspecified
+		[211] pericardium
+		[212] atrium
+		[213] mitral valve
+		[214] tricuspidal valve
+		[215] ventricle
+		[216] aortic valve
+		[217] pulmonary valve
+	[22] arteries
+		[220] unspecified
+		[221] ascending aorta
+		[222] aortic arche
+		[223] brachiocephalic trunk
+		[224] common carotic artery
+		[225] botalli ligament & ductus arteriosus
+		[226] descending aorta
+		[227] bronchial trunk
+		[228] abdominal aorta
+		[229] celiac trunk
+		[22a] common iliac artery
+		[22b] other arteries
+	[23] veins
+		[230] unspecified
+		[231] anonymus vein
+		[232] brachiocephalic vein
+		[233] superior vena cava
+		[234] inferior vena cava
+		[235] common iliac vein
+		[236] other veins
+[3] respiratory system
+	[30] unspecified
+	[31] nose
+		[310] unspecified
+	[32] sinuses
+		[320] unspecified
+	[33] nasopharynx & epipharynx
+		[330] unspecified
+	[34] mesopharynx
+		[340] unspecified
+	[35] hypopharynx
+		[350] unspecified
+	[36] larynx
+		[360] unspecified
+	[37] trachea
+		[370] unspecified
+	[38] main bronchus
+		[380] unspecified
+	[39] bronchi
+		[390] unspecified
+	[3a] lung
+		[3a0] unspecified
+	[3b] pleura
+		[3b0] unspecified
+	[3c] ribs
+		[3c0] unspecified
+	[3d] diaphragma
+		[3d0] unspecified
+	[3e] intercostal muscles
+		[3e0] unspecified
+[4] gastrointestinal system
+	[40] unspecfied
+	[41] oropharynx
+		[410] unspecified
+		[411] oral cavity
+		[412] epipharynx
+		[413] mesopharynx
+		[414] hypopharynx
+	[42] esophagus
+		[420] unspecified
+		[421] upper esophagus sphincter
+		[422] upper third
+		[423] middle third
+		[424] lower third
+		[425] lower esophagus sphincter
+	[43] stomach
+		[430] unspecified
+		[431] cardia
+		[432] fundus
+		[433] corpus
+		[434] antrum
+		[435] pylorus
+	[44] small intestine
+		[440] unspecified
+		[441] duodenum
+		[442] jejunum
+		[443] ileum
+		[444] terminal ileum
+		[445] ileoceocal valve
+	[45] large intestine
+		[450] unspecified
+		[451] ascending colon
+		[452] transverse colon
+		[453] descending colon
+		[454] sigmoid colon
+		[455] rectum
+	[46] appendix
+		[460] unspecified
+	[47] anus
+		[470] unspecified
+	[48] liver
+		[480] unspecified
+		[481] parenchyma
+		[482] bile ducts
+		[483] portal vein
+		[484] arteries
+		[485] veins
+	[49] biliary system
+		[490] unspecified
+		[491] bile ducts
+		[492] gallbladder
+	[4a] salivary glands
+		[4a0] unspecified
+		[4a1] parotic gland
+		[4a2] sublingual gland
+		[4a3] mandibular gland
+		[4a4] pancreas
+[5] uropoietic system
+	[50] unspecified
+	[51] kidney
+		[510] unspecified
+		[511] parenchyma
+		[512] renal pelvis
+	[52] ureter
+		[520] unspecified
+	[53] urinary bladder
+		[530] unspecified
+	[54] urethra
+		[540] unspecified
+[6] reproductive system
+	[60] unspecified
+	[61] male system
+		[610] unspecified
+		[611] testes
+		[612] deferent duct & seminal vesicle
+		[613] prostate gland
+		[614] penis (incl. corpus cavernosum)
+	[62] female system
+		[620] unspecified
+		[621] ovaries
+		[622] tuba uterina
+		[623] uterus
+		[624] vagina
+		[625] breast
+[7] musculosceletal system
+	[70] unspecified
+	[71] 8 months
+		[710] unspecified
+		[711] male
+		[712] female
+	[72] 10 months
+		[720] unspecified
+		[721] male
+		[722] female
+	[73] 12 months
+		[730] unspecified
+		[731] male
+		[732] female
+	[74] 14 months
+		[740] unspecified
+		[741] male
+		[742] female
+	[75] 16 months
+		[750] unspecified
+		[751] male
+		[752] female
+	[76] 18 months
+		[760] unspecified
+		[761] male
+		[762] female
+	[77] 20 months
+		[770] unspecified
+		[771] male
+		[772] female
+	[78] 24 months
+		[780] unspecified
+		[781] male
+		[782] female
+	[79] 28 months
+		[790] unspecified
+		[791] male
+		[792] female
+	[7a] 2,5 years
+		[7a0] unspecified
+		[7a1] male
+		[7a2] female
+	[7b] 3 years
+		[7b0] unspecified
+		[7b1] male
+		[7b2] female
+	[7c] 3,5 years
+		[7c0] unspecified
+		[7c1] male
+		[7c2] female
+	[7d] 4 years
+		[7d0] unspecified
+		[7d1] male
+		[7d2] female
+	[7e] 4,5 years
+		[7e0] unspecified
+		[7e1] male
+		[7e2] female
+	[7f] 5 years
+		[7f0] unspecified
+		[7f1] male
+		[7f2] female
+	[7g] 5,5 years
+		[7g0] unspecified
+		[7g1] male
+		[7g2] female
+	[7h] 6 years
+		[7h0] unspecified
+		[7h1] male
+		[7h2] female
+	[7i] 7 years
+		[7i0] unspecified
+		[7i1] male
+		[7i2] female
+	[7j] 8 years
+		[7j0] unspecified
+		[7j1] male
+		[7j2] female
+	[7k] 9 years
+		[7k0] unspecified
+		[7k1] male
+		[7k2] female
+	[7l] 10 years
+		[7l0] unspecified
+		[7l1] male
+		[7l2] female
+	[7m] 11 years
+		[7m0] unspecified
+		[7m1] male
+		[7m2] female
+	[7n] 12 years
+		[7n0] unspecified
+		[7n1] male
+		[7n2] female
+	[7o] 13 years
+		[7o0] unspecified
+		[7o1] male
+		[7o2] female
+	[7p] 14 years
+		[7p0] unspecified
+		[7p1] male
+		[7p2] female
+	[7q] 15 years
+		[7q0] unspecified
+		[7q1] male
+		[7q2] female
+	[7r] 16 years
+		[7r0] unspecified
+		[7r1] male
+		[7r2] female
+	[7s] 17 years
+		[7s0] unspecified
+		[7s1] male
+		[7s2] female
+	[7t] 18 years
+		[7t0] unspecified
+		[7t1] male
+		[7t2] female
+	[7u] > 18 years
+		[7u0] unspecified
+		[7u1] male
+		[7u2] female
+		[7u3] male, normal
+		[7u4] female, normal
+		[7u5] male, abnormal
+		[7u6] female, abnormal
+[8] endocrinic system
+	[80] unspecified
+	[81] thyroid gland
+		[810] unspecified
+	[82] parathyroid gland
+		[820] unspecified
+	[83] adrenal gland
+		[830] unspecified
+	[84] pituitary gland
+		[840] unspecified
+	[85] hypothalamus
+		[850] unspecified
+	[86] ovaries
+		[860] unspecified
+	[87] testes
+		[870] unspecified
+	[88] pancreas
+		[880] unspecified
+[9] immunic system
+	[90] unspecified
+	[91] tonsils
+		[910] unspecified
+	[92] cervial lymph node
+		[920] unspecified
+	[93] axillary lymph node
+		[930] unspecified
+	[94] mediastinal lymph node
+		[940] unspecified
+	[95] thymus
+		[950] unspecified
+	[96] spleen
+		[960] unspecified
+	[97] retroperitoneal lymph node
+		[970] unspecified
+	[98] intraperitoneal lymph node
+		[980] unspecified
+		[981] mesenterial lymph node
+	[99] iliac lymph node
+		[990] unspecified
+	[9a] inguinal lymph node
+		[9a0] unspecified
+	[9b] bone marrow
+		[9b0] unspecified
+[a] dermal system
+	[a0] unspecified
+	[a1] skin (cutis)
+		[a10] unspecified
+		[a11] benign
+		[a12] malignant
+[b] exocrine system
+	[b0] unspecified
+[c] dental system
+	[c0] unspecified
+	[c1] dentulous system
+		[c10] unspecified
+	[c2] edentulous system
+		[c20] unspecified
+	[c3] implant system
+		[c30] unspecified
+[d] ACR-1: fat tranparent system
+	[d0] BI-RADS 0: unspecified
+	[d1] BI-RADS 1: normal
+		[d10] unspecified
+	[d2] BI-RADS 2: benign
+		[d20] unspecified
+		[d21] calcification, unspecified
+		[d22] micro-calcification
+		[d23] macro-calcification
+		[d24] circumscribed mass
+		[d25] spiculated mass
+		[d26] other mass
+		[d27] archictectural distortion
+		[d28] asymetry
+	[d3] BI-RADS 3: probably benign
+		[d30] unspecified
+		[d31] calcification, unspecified
+		[d32] micro-calcification
+		[d33] macro-calcification
+		[d34] circumscribed mass
+		[d35] spiculated mass
+		[d36] other mass
+		[d37] archictectural distortion
+		[d38] asymetry
+	[d4] BI-RADS 4: suspiciously abnormal
+		[d40] unspecified
+		[d41] calcification, unspecified
+		[d42] micro-calcification
+		[d43] macro-calcification
+		[d44] circumscribed mass
+		[d45] spiculated mass
+		[d46] other mass
+		[d47] archictectural distortion
+		[d48] asymetry
+	[d5] BI-RADS 5: malignant
+		[d50] unspecified
+		[d51] calcification, unspecified
+		[d52] micro-calcification
+		[d53] macro-calcification
+		[d54] circumscribed mass
+		[d55] spiculated mass
+		[d56] other mass
+		[d57] archictectural distortion
+		[d58] asymetry
+[e] ACR-2: fibroid glands system
+	[e0] BI-RADS 0: unspecified
+	[e1] BI-RADS 1: normal
+		[e10] unspecified
+	[e2] BI-RADS 2: benign
+		[e20] unspecified
+		[e21] calcification, unspecified
+		[e22] micro-calcification
+		[e23] macro-calcification
+		[e24] circumscribed mass
+		[e25] spiculated mass
+		[e26] other mass
+		[e27] archictectural distortion
+		[e28] asymetry
+	[e3] BI-RADS 3: probably benign
+		[e30] unspecified
+		[e31] calcification, unspecified
+		[e32] micro-calcification
+		[e33] macro-calcification
+		[e34] circumscribed mass
+		[e35] spiculated mass
+		[e36] other mass
+		[e37] archictectural distortion
+		[e38] asymetry
+	[e4] BI-RADS 4: suspiciously abnormal
+		[e40] unspecified
+		[e41] calcification, unspecified
+		[e42] micro-calcification
+		[e43] macro-calcification
+		[e44] circumscribed mass
+		[e45] spiculated mass
+		[e46] other mass
+		[e47] archictectural distortion
+		[e48] asymetry
+	[e5] BI-RADS 5: malignant
+		[e50] unspecified
+		[e51] calcification, unspecified
+		[e52] micro-calcification
+		[e53] macro-calcification
+		[e54] circumscribed mass
+		[e55] spiculated mass
+		[e56] other mass
+		[e57] archictectural distortion
+		[e58] asymetry
+[f] ACR-3: heterogeneously dense system
+	[f0] BI-RADS 0: unspecified
+	[f1] BI-RADS 1: normal
+		[f10] unspecified
+	[f2] BI-RADS 2: benign
+		[f20] unspecified
+		[f21] calcification, unspecified
+		[f22] micro-calcification
+		[f23] macro-calcification
+		[f24] circumscribed mass
+		[f25] spiculated mass
+		[f26] other mass
+		[f27] archictectural distortion
+		[f28] asymetry
+	[f3] BI-RADS 3: probably benign
+		[f30] unspecified
+		[f31] calcification, unspecified
+		[f32] micro-calcification
+		[f33] macro-calcification
+		[f34] circumscribed mass
+		[f35] spiculated mass
+		[f36] other mass
+		[f37] archictectural distortion
+		[f38] asymetry
+	[f4] BI-RADS 4: suspiciously abnormal
+		[f40] unspecified
+		[f41] calcification, unspecified
+		[f42] micro-calcification
+		[f43] macro-calcification
+		[f44] circumscribed mass
+		[f45] spiculated mass
+		[f46] other mass
+		[f47] archictectural distortion
+		[f48] asymetry
+	[f5] BI-RADS 5: malignant
+		[f50] unspecified
+		[f51] calcification, unspecified
+		[f52] micro-calcification
+		[f53] macro-calcification
+		[f54] circumscribed mass
+		[f55] spiculated mass
+		[f56] other mass
+		[f57] archictectural distortion
+		[f58] asymetry
+[g] ACR-4: extremely dense system
+	[g0] BI-RADS 0: unspecified
+	[g1] BI-RADS 1: normal
+		[g10] unspecified
+	[g2] BIRAD 2: benign
+		[g20] unspecified
+		[g21] calcification, unspecified
+		[g22] micro-calcification
+		[g23] macro-calcification
+		[g24] circumscribed mass
+		[g25] spiculated mass
+		[g26] other mass
+		[g27] archictectural distortion
+		[g28] asymetry
+	[g3] BI-RADS 3: probably benign
+		[g30] unspecified
+		[g31] calcification, unspecified
+		[g32] micro-calcification
+		[g33] macro-calcification
+		[g34] circumscribed mass
+		[g35] spiculated mass
+		[g36] other mass
+		[g37] archictectural distortion
+		[g38] asymetry
+	[g4] BI-RADS 4: suspiciously abnormal
+		[g40] unspecified
+		[g41] calcification, unspecified
+		[g42] micro-calcification
+		[g43] macro-calcification
+		[g44] circumscribed mass
+		[g45] spiculated mass
+		[g46] other mass
+		[g47] archictectural distortion
+		[g48] asymetry
+	[g5] BI-RADS 5: malignant
+		[g50] unspecified
+		[g51] calcification, unspecified
+		[g52] micro-calcification
+		[g53] macro-calcification
+		[g54] circumscribed mass
+		[g55] spiculated mass
+		[g56] other mass
+		[g57] archictectural distortion
+		[g58] asymetry
+[h] ACR-3/4: dense system
+	[h0] BI-RADS 0: unspecified
+	[h1] BI-RADS 1: normal
+		[h10] unspecified
+	[h2] BI-RADS 2: benign
+		[h20] unspecified
+		[h21] calcification, unspecified
+		[h22] micro-calcification
+		[h23] macro-calcification
+		[h24] circumscribed mass
+		[h25] spiculated mass
+		[h26] other mass
+		[h27] archictectural distortion
+		[h28] asymetry
+	[h3] BI-RADS 3: probably benign
+		[h30] unspecified
+		[h31] calcification, unspecified
+		[h32] micro-calcification
+		[h33] macro-calcification
+		[h34] circumscribed mass
+		[h35] spiculated mass
+		[h36] other mass
+		[h37] archictectural distortion
+		[h38] asymetry
+	[h4] BI-RADS 4: suspiciously abnormal
+		[h40] unspecified
+		[h41] calcification, unspecified
+		[h42] micro-calcification
+		[h43] macro-calcification
+		[h44] circumscribed mass
+		[h45] spiculated mass
+		[h46] other mass
+		[h47] archictectural distortion
+		[h48] asymetry
+	[h5] BI-RADS 5: malignant
+		[h50] unspecified
+		[h51] calcification, unspecified
+		[h52] micro-calcification
+		[h53] macro-calcification
+		[h54] circumscribed mass
+		[h55] spiculated mass
+		[h56] other mass
+		[h57] archictectural distortion
+		[h58] asymetry

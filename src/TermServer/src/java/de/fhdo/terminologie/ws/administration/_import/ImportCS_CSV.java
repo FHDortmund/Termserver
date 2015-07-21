@@ -26,8 +26,11 @@ import de.fhdo.terminologie.ws.administration.types.ImportCodeSystemRequestType;
 import de.fhdo.terminologie.ws.administration.types.ImportCodeSystemResponseType;
 import de.fhdo.terminologie.ws.authoring.CreateCodeSystem;
 import de.fhdo.terminologie.ws.authoring.CreateConcept;
+import de.fhdo.terminologie.ws.authoring.CreateConceptAssociationType;
 import de.fhdo.terminologie.ws.authoring.types.CreateCodeSystemRequestType;
 import de.fhdo.terminologie.ws.authoring.types.CreateCodeSystemResponseType;
+import de.fhdo.terminologie.ws.authoring.types.CreateConceptAssociationTypeRequestType;
+import de.fhdo.terminologie.ws.authoring.types.CreateConceptAssociationTypeResponseType;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptRequestType;
 import de.fhdo.terminologie.ws.authoring.types.CreateConceptResponseType;
 import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
@@ -247,7 +250,7 @@ public class ImportCS_CSV
           csc.setTerm(csv.get("term"));
           csc.setTermAbbrevation(csv.get("term_abbrevation"));
 
-          logger.debug("Code: " + csc.getCode() + ", Term: " + csc.getTerm());
+          //logger.debug("Code: " + csc.getCode() + ", Term: " + csc.getTerm());
 
           // Weitere Attribute prüfen
           String s_temp;
@@ -287,6 +290,9 @@ public class ImportCS_CSV
 
           // check relation
           s_temp = csv.get("relation");
+          
+          logger.debug("Code: " + csc.getCode() + ", Term: " + csc.getTerm() + ", relation: " + s_temp);
+          
           if (s_temp != null && s_temp.length() > 0)
           {
             if (relationMap.containsKey(s_temp) == false)
@@ -336,7 +342,7 @@ public class ImportCS_CSV
                 logger.debug("search finished");
               }
             }
-
+            
             if (relationMap.containsKey(s_temp))
             {
               logger.debug("found code in relationMap: " + s_temp + ", assign relation now");
@@ -364,7 +370,7 @@ public class ImportCS_CSV
                 if (s_temp2 != null)
                   reverse = s_temp2;
 
-                requestAssociation.getCodeSystemEntityVersionAssociation().setAssociationType(CreateAssociationType(s_temp, reverse, ipAddress));
+                requestAssociation.getCodeSystemEntityVersionAssociation().setAssociationType(CreateAssociationType(s_temp, reverse, ipAddress, hb_session));
               }
             }
             else
@@ -452,10 +458,12 @@ public class ImportCS_CSV
 
                 if (responseAssociation.getReturnInfos().getStatus() == ReturnType.Status.OK)
                 {
+                  logger.debug("Beziehung gespeichert: " + responseAssociation.getReturnInfos().getMessage());
                 }
                 else
                   logger.debug("Beziehung nicht gespeichert: " + responseAssociation.getReturnInfos().getMessage());
               }
+              else logger.debug("Keine Beziehung zu speichern!");
 
               if (headerMetadata != null && headerMetadata.size() > 0)
               {
@@ -620,15 +628,50 @@ public class ImportCS_CSV
 
   }
 
-  private AssociationType CreateAssociationType(String forwardName, String reverseName, String ipAddress)
+  private AssociationType CreateAssociationType(String forwardName, String reverseName, String ipAddress, org.hibernate.Session hb_session) throws Exception
   {
     initAssociationTypes(ipAddress);
     String key = forwardName + reverseName;
 
     if (associationTypeMap.containsKey(key) == false)
     {
-      // TODO diese Beziehung einpflegen
-      return null;
+      // add relation type
+      
+      CreateConceptAssociationType ccat = new CreateConceptAssociationType();
+      
+      CreateConceptAssociationTypeRequestType request = new CreateConceptAssociationTypeRequestType();
+      
+      request.setCodeSystem(null);
+      request.setCodeSystemEntity(new CodeSystemEntity());
+      
+      CodeSystemEntityVersion csev = new CodeSystemEntityVersion();
+      
+      AssociationType at = new AssociationType();
+      at.setForwardName(forwardName);
+      at.setReverseName(reverseName);
+      
+      csev.getAssociationTypes().add(at);
+      request.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev);
+      
+      CreateConceptAssociationTypeResponseType response = ccat.CreateConceptAssociationType(request, hb_session, loginInfoType);
+      
+      logger.debug(response.getReturnInfos().getMessage());
+      
+      if(response.getReturnInfos().getStatus() == ReturnType.Status.OK)
+      {
+        String code = at.getForwardName() + at.getReverseName();
+        
+        CodeSystemEntityVersion csev_new = (CodeSystemEntityVersion) response.getCodeSystemEntity().getCodeSystemEntityVersions().toArray()[0];
+        
+        at.setCodeSystemEntityVersionId(csev_new.getVersionId());
+        associationTypeMap.put(code, at);
+        
+        return at;
+      }
+      else
+      {
+        throw new Exception("Error while inserting association type: " + response.getReturnInfos().getMessage());
+      }
     }
     else
     {

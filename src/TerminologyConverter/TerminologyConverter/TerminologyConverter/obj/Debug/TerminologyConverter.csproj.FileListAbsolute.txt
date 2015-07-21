@@ -1,0 +1,9 @@
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\bin\Debug\TerminologyConverter.exe.config
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\bin\Debug\TerminologyConverter.exe
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\bin\Debug\TerminologyConverter.pdb
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\bin\Debug\C5.dll
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\bin\Debug\Plossum CommandLine.dll
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\bin\Debug\C5.pdb
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\obj\Debug\TerminologyConverter.csprojResolveAssemblyReference.cache
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\obj\Debug\TerminologyConverter.exe
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\obj\Debug\TerminologyConverter.pdb

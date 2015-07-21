@@ -1441,9 +1441,11 @@ public class ListCodeSystemConcepts
               && parameter.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().size() > 0)
           {
             CodeSystemVersionEntityMembership ms = (CodeSystemVersionEntityMembership) parameter.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().toArray()[0];
-            parameterHelper.addParameter("csvem.", "isAxis", ms.getIsAxis());
-            parameterHelper.addParameter("csvem.", "isMainClass", ms.getIsMainClass());
+            
+            //parameterHelper.addParameter("csvem.", "isAxis", ms.getIsAxis());
+            //parameterHelper.addParameter("csvem.", "isMainClass", ms.getIsMainClass());
 
+            // add condition later
             if (ms.getIsAxis() != null && ms.getIsAxis().booleanValue())
               isHierachical = true;
             if (ms.getIsMainClass() != null && ms.getIsMainClass().booleanValue())
@@ -1478,7 +1480,7 @@ public class ListCodeSystemConcepts
             }
           }
         }
-
+        
         /*if(languageCd.length() == 0)
          sql = sql.replaceAll("AND_LANGUAGE_TERM", "");
          else 
@@ -1493,6 +1495,13 @@ public class ListCodeSystemConcepts
         String where = parameterHelper.getWhere("");
         
         where += " AND csev.versionId=cse.currentVersionId";
+        
+        if(isHierachical)
+        {
+          where += " AND (csvem.isAxis=1 OR csvem.isMainClass=1) ";
+          //parameterHelper.addParameter("csvem.", "isAxis", ms.getIsAxis());
+          //parameterHelper.addParameter("csvem.", "isMainClass", ms.getIsMainClass());
+        }
 
         //sqlCount = "SELECT COUNT(DISTINCT cse.id) FROM " + sqlCount.replaceAll("WHERE_TEIL", where);
         sqlCount = sqlCount.replaceAll("WHERE_TEIL", where);

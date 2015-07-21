@@ -1,0 +1,1726 @@
+code;term;term_abbrevation;description;is_preferred;is_axis;is_mainclass;relation;association_kind;association_type;association_type_reverse;crossmapping_csv_id;translation_en;metadata_code
+T;technique;;;1;1;0;;;;;;;T
+T-0;nicht näher spezifiziert;;;1;0;0;T;2;is part of;is parent of;;unspecified;0
+T-1;Röntgen;;;1;0;0;T;2;is part of;is parent of;;x-ray;1
+T-10;nicht näher spezifiziert;;;1;0;0;T-1;2;is part of;is parent of;;unspecified;10
+T-11;Projektionsradiographie;;;1;0;0;T-1;2;is part of;is parent of;;plain radiography;11
+T-110;nicht näher spezifiziert;;;1;0;0;T-11;2;is part of;is parent of;;unspecified;110
+T-111;digital;;;1;0;0;T-11;2;is part of;is parent of;;digital;111
+T-1110;nicht näher spezifiziert;;;1;0;0;T-111;2;is part of;is parent of;;unspecified;1110
+T-1111;Übersichtsaufnahme;;;1;0;0;T-111;2;is part of;is parent of;;overview image;1111
+T-1112;Tomographie;;;1;0;0;T-111;2;is part of;is parent of;;tomography;1112
+T-1113;Hartstrahl;;;1;0;0;T-111;2;is part of;is parent of;;high beam energy;1113
+T-1114;Weichstrahl;;;1;0;0;T-111;2;is part of;is parent of;;low beam energy;1114
+T-1115;Fernaufnahme;;;1;0;0;T-111;2;is part of;is parent of;;far view projection;1115
+T-1116;Originalgröße;;;1;0;0;T-111;2;is part of;is parent of;;1:1 projection;1116
+T-1117;Vergrößerung;;;1;0;0;T-111;2;is part of;is parent of;;magnification;1117
+T-1118;Dual Energy;;;1;0;0;T-111;2;is part of;is parent of;;dual energy;1118
+T-1119;Zahnfilm;;;1;0;0;T-111;2;is part of;is parent of;;intraoral periapical;1119
+T-111a;Bißflügelaufnahme;;;1;0;0;T-111;2;is part of;is parent of;;intraoral bitewing;111a
+T-111b;Aufbißaufnahme;;;1;0;0;T-111;2;is part of;is parent of;;occlusal;111b
+T-111c;Orthopantomographie;;;1;0;0;T-111;2;is part of;is parent of;;panoramic;111c
+T-111d;Engwinkelradiographie;;;1;0;0;T-111;2;is part of;is parent of;;narrow beam radiography;111d
+T-111e;Kinderfilter;;;1;0;0;T-111;2;is part of;is parent of;;child filter;111e
+T-111f;42 Mikrometer;;;1;0;0;T-111;2;is part of;is parent of;;42 microns;111f
+T-111g;43,5 Mikrometer;;;1;0;0;T-111;2;is part of;is parent of;;43.5 microns;111g
+T-111h;50 Mikrometer;;;1;0;0;T-111;2;is part of;is parent of;;50 microns;111h
+T-111i;100 Mikrometer;;;1;0;0;T-111;2;is part of;is parent of;;100 microns;111i
+T-111j;200 Mikrometer;;;1;0;0;T-111;2;is part of;is parent of;;200 microns;111j
+T-112;analog;;;1;0;0;T-11;2;is part of;is parent of;;analog;112
+T-1120;nicht näher spezifiziert;;;1;0;0;T-112;2;is part of;is parent of;;unspecified;1120
+T-1121;Übersichtsaufnahme;;;1;0;0;T-112;2;is part of;is parent of;;overview image;1121
+T-1122;Tomographie;;;1;0;0;T-112;2;is part of;is parent of;;tomography;1122
+T-1123;Hartstrahl;;;1;0;0;T-112;2;is part of;is parent of;;high beam energy;1123
+T-1124;Weichstrahl;;;1;0;0;T-112;2;is part of;is parent of;;low beam energy;1124
+T-1125;Fernaufnahme;;;1;0;0;T-112;2;is part of;is parent of;;far view projection;1125
+T-1126;Originalgröße;;;1;0;0;T-112;2;is part of;is parent of;;1:1 projection;1126
+T-1127;Vergrößerung;;;1;0;0;T-112;2;is part of;is parent of;;magnification;1127
+T-1128;Zahnfilm;;;1;0;0;T-112;2;is part of;is parent of;;intraoral periapical;1128
+T-1129;Bißflügelaufnahme;;;1;0;0;T-112;2;is part of;is parent of;;intraoral bitewing;1129
+T-112a;Aufbißaufnahme;;;1;0;0;T-112;2;is part of;is parent of;;occlusal;112a
+T-112b;Orthopnatomographie;;;1;0;0;T-112;2;is part of;is parent of;;panoramic;112b
+T-112c;Engwinkelradiographie;;;1;0;0;T-112;2;is part of;is parent of;;narrow beam radiography;112c
+T-112d;Kinderfilter;;;1;0;0;T-112;2;is part of;is parent of;;child filter;112d
+T-112e;42 Mikrometer;;;1;0;0;T-112;2;is part of;is parent of;;42 microns;112e
+T-112f;43,5 Mikrometer;;;1;0;0;T-112;2;is part of;is parent of;;43.5 microns;112f
+T-112g;50 Mikrometer;;;1;0;0;T-112;2;is part of;is parent of;;50 microns;112g
+T-112h;100 Mikrometer;;;1;0;0;T-112;2;is part of;is parent of;;100 microns;112h
+T-112i;200 Mikrometer;;;1;0;0;T-112;2;is part of;is parent of;;200 microns;112i
+T-113;Röntgenstereometrie;;;1;0;0;T-11;2;is part of;is parent of;;x-ray stereometry;113
+T-1130;nicht näher spezifiziert;;;1;0;0;T-113;2;is part of;is parent of;;unspecified;1130
+T-114;Röntgenstereographie;;;1;0;0;T-11;2;is part of;is parent of;;x-ray stereography;114
+T-1140;nicht näher spezifiziert;;;1;0;0;T-114;2;is part of;is parent of;;unspecified;1140
+T-1141;Engwinkelradiographie;;;1;0;0;T-114;2;is part of;is parent of;;narrow beam radiography;1141
+T-115;Tomosynthese;;;1;0;0;T-11;2;is part of;is parent of;;tomosynthesis;115
+T-1150;nicht näher spezifiziert;;;1;0;0;T-115;2;is part of;is parent of;;unspecified;1150
+T-116;Xeroradiographie;;;1;0;0;T-11;2;is part of;is parent of;;xeroradiography;116
+T-1160;nicht näher spezifiziert;;;1;0;0;T-116;2;is part of;is parent of;;unspecified;1160
+T-117;Computed Radiography (CR);;;1;0;0;T-11;2;is part of;is parent of;;computed radiography (CR);117
+T-1170;nicht näher spezifiziert;;;1;0;0;T-117;2;is part of;is parent of;;unspecified;1170
+T-12;Durchleuchtung;;;1;0;0;T-1;2;is part of;is parent of;;fluoroscopy;12
+T-120;nicht näher spezifiziert;;;1;0;0;T-12;2;is part of;is parent of;;unspecified;120
+T-121;digital;;;1;0;0;T-12;2;is part of;is parent of;;digital;121
+T-1210;nicht näher spezifiziert;;;1;0;0;T-121;2;is part of;is parent of;;unspecified;1210
+T-122;analog;;;1;0;0;T-12;2;is part of;is parent of;;analog;122
+T-1220;nicht näher spezifiziert;;;1;0;0;T-122;2;is part of;is parent of;;unspecified;1220
+T-13;Angiographie;;;1;0;0;T-1;2;is part of;is parent of;;angiography;13
+T-130;nicht näher spezifiziert;;;1;0;0;T-13;2;is part of;is parent of;;unspecified;130
+T-131;digital;;;1;0;0;T-13;2;is part of;is parent of;;digital;131
+T-1310;nicht näher spezifiziert;;;1;0;0;T-131;2;is part of;is parent of;;unspecified;1310
+T-1311;Subtraktion (DSA);;;1;0;0;T-131;2;is part of;is parent of;;subtraction (DSA);1311
+T-1312;Rotationsangiographie;;;1;0;0;T-131;2;is part of;is parent of;;rotation angiography;1312
+T-1313;Pfadfindertechnik;;;1;0;0;T-131;2;is part of;is parent of;;pathfinder technique;1313
+T-132;analog;;;1;0;0;T-13;2;is part of;is parent of;;analog;132
+T-1320;nicht näher spezifiziert;;;1;0;0;T-132;2;is part of;is parent of;;unspecified;1320
+T-1321;Photosubtraktion;;;1;0;0;T-132;2;is part of;is parent of;;photo subtraction;1321
+T-14;Computertomographie (CT);;;1;0;0;T-1;2;is part of;is parent of;;computed tomography (CT);14
+T-140;nicht näher spezifiziert;;;1;0;0;T-14;2;is part of;is parent of;;unspecified;140
+T-141;konventionell;;;1;0;0;T-14;2;is part of;is parent of;;conventional CT;141
+T-1410;nicht näher spezifiziert;;;1;0;0;T-141;2;is part of;is parent of;;unspecified;1410
+T-1411;Low Dose;;;1;0;0;T-141;2;is part of;is parent of;;low dose;1411
+T-1412;High Resolution;;;1;0;0;T-141;2;is part of;is parent of;;high resolution;1412
+T-1413;Bolustracking;;;1;0;0;T-141;2;is part of;is parent of;;bolus tracking;1413
+T-142;quantitative CT;;;1;0;0;T-14;2;is part of;is parent of;;quantitative CT;142
+T-1420;nicht näher spezifiziert;;;1;0;0;T-142;2;is part of;is parent of;;unspecified;1420
+T-1421;Dual Energy;;;1;0;0;T-142;2;is part of;is parent of;;dual energy;1421
+T-143;multiplanare Reformatierung;;;1;0;0;T-14;2;is part of;is parent of;;multiplanar reformat;143
+T-1430;nicht näher spezifiziert;;;1;0;0;T-143;2;is part of;is parent of;;unspecified;1430
+T-144;interventionelle CT;;;1;0;0;T-14;2;is part of;is parent of;;interventional CT;144
+T-1440;nicht näher spezifiziert;;;1;0;0;T-144;2;is part of;is parent of;;unspecified;1440
+T-15;DEXA (quantitative Radiographie);;;1;0;0;T-1;2;is part of;is parent of;;DEXA (quantitative radiography);15
+T-150;nicht näher spezifiziert;;;1;0;0;T-15;2;is part of;is parent of;;unspecified;150
+T-151;digital;;;1;0;0;T-15;2;is part of;is parent of;;digital;151
+T-1510;nicht näher spezifiziert;;;1;0;0;T-151;2;is part of;is parent of;;unspecified;1510
+T-1511;Dual Energy;;;1;0;0;T-151;2;is part of;is parent of;;dual energy;1511
+T-16;Radiotherapie (Portalbilder);;;1;0;0;T-1;2;is part of;is parent of;;radiotherapy;16
+T-160;nicht näher spezifiziert;;;1;0;0;T-16;2;is part of;is parent of;;unspecified;160
+T-161;digital;;;1;0;0;T-16;2;is part of;is parent of;;digital;161
+T-1610;nicht näher spezifiziert;;;1;0;0;T-161;2;is part of;is parent of;;unspecified;1610
+T-162;analog;;;1;0;0;T-16;2;is part of;is parent of;;analog;162
+T-1620;nicht näher spezifiziert;;;1;0;0;T-162;2;is part of;is parent of;;unspecified;1620
+T-2;Sonographie;;;1;0;0;T;2;is part of;is parent of;;ultrasound imaging;2
+T-20;nicht näher spezifiziert;;;1;0;0;T-2;2;is part of;is parent of;;unspecified;20
+T-21;A-Mode;;;1;0;0;T-2;2;is part of;is parent of;;A-mode;21
+T-210;nicht näher spezifiziert;;;1;0;0;T-21;2;is part of;is parent of;;unspecified;210
+T-211;3,5 MHz;;;1;0;0;T-21;2;is part of;is parent of;;3.5 MHz;211
+T-2110;nicht näher spezifiziert;;;1;0;0;T-211;2;is part of;is parent of;;unspecified;2110
+T-212;5,0 MHz;;;1;0;0;T-21;2;is part of;is parent of;;5.0 MHz;212
+T-2120;nicht näher spezifiziert;;;1;0;0;T-212;2;is part of;is parent of;;unspecified;2120
+T-213;7,5 MHz;;;1;0;0;T-21;2;is part of;is parent of;;7.5 MHz;213
+T-2130;nicht näher spezifiziert;;;1;0;0;T-213;2;is part of;is parent of;;unspecified;2130
+T-214;10 MHz;;;1;0;0;T-21;2;is part of;is parent of;;10 MHz;214
+T-2140;nicht näher spezifiziert;;;1;0;0;T-214;2;is part of;is parent of;;unspecified;2140
+T-215;variable Frequenz;;;1;0;0;T-21;2;is part of;is parent of;;variable frequency;215
+T-2150;nicht näher spezifiziert;;;1;0;0;T-215;2;is part of;is parent of;;unspecified;2150
+T-22;B-Mode;;;1;0;0;T-2;2;is part of;is parent of;;B-mode;22
+T-220;nicht näher spezifiziert;;;1;0;0;T-22;2;is part of;is parent of;;unspecified;220
+T-221;Sektorbild;;;1;0;0;T-22;2;is part of;is parent of;;sector scan;221
+T-2210;nicht näher spezifiziert;;;1;0;0;T-221;2;is part of;is parent of;;unspecified;2210
+T-2211;3,5 MHz;;;1;0;0;T-221;2;is part of;is parent of;;3.5 MHz;2211
+T-2212;5,0 MHz;;;1;0;0;T-221;2;is part of;is parent of;;5.0 MHz;2212
+T-2213;7,5 MHz;;;1;0;0;T-221;2;is part of;is parent of;;7.5 MHz;2213
+T-2214;10 MHz;;;1;0;0;T-221;2;is part of;is parent of;;10 MHz;2214
+T-2215;variable Frequenz;;;1;0;0;T-221;2;is part of;is parent of;;variable frequency;2215
+T-222;Linearbild;;;1;0;0;T-22;2;is part of;is parent of;;linear scan;222
+T-2220;nicht näher spezifiziert;;;1;0;0;T-222;2;is part of;is parent of;;unspecified;2220
+T-2221;3,5 MHz;;;1;0;0;T-222;2;is part of;is parent of;;3.5 MHz;2221
+T-2222;5,0 MHz;;;1;0;0;T-222;2;is part of;is parent of;;5.0 MHz;2222
+T-2223;7,5 MHz;;;1;0;0;T-222;2;is part of;is parent of;;7.5 MHz;2223
+T-2224;10 MHz;;;1;0;0;T-222;2;is part of;is parent of;;10 MHz;2224
+T-2225;variable Frequenz;;;1;0;0;T-222;2;is part of;is parent of;;variable frequency;2225
+T-23;M-Mode;;;1;0;0;T-2;2;is part of;is parent of;;M-mode;23
+T-230;nicht näher spezifiziert;;;1;0;0;T-23;2;is part of;is parent of;;unspecified;230
+T-231;3,5 MHz;;;1;0;0;T-23;2;is part of;is parent of;;3.5 MHz;231
+T-2310;nicht näher spezifiziert;;;1;0;0;T-231;2;is part of;is parent of;;unspecified;2310
+T-232;5,0 MHz;;;1;0;0;T-23;2;is part of;is parent of;;5.0 MHz;232
+T-2320;nicht näher spezifiziert;;;1;0;0;T-232;2;is part of;is parent of;;unspecified;2320
+T-233;7,5 MHz;;;1;0;0;T-23;2;is part of;is parent of;;7.5 MHz;233
+T-2330;nicht näher spezifiziert;;;1;0;0;T-233;2;is part of;is parent of;;unspecified;2330
+T-234;10 MHz;;;1;0;0;T-23;2;is part of;is parent of;;10 MHz;234
+T-2340;nicht näher spezifiziert;;;1;0;0;T-234;2;is part of;is parent of;;unspecified;2340
+T-235;variable Frequenz;;;1;0;0;T-23;2;is part of;is parent of;;variable frequency;235
+T-2350;nicht näher spezifiziert;;;1;0;0;T-235;2;is part of;is parent of;;unspecified;2350
+T-24;Compound-Mode;;;1;0;0;T-2;2;is part of;is parent of;;compound mode;24
+T-240;nicht näher spezifiziert;;;1;0;0;T-24;2;is part of;is parent of;;unspecified;240
+T-241;3,5 MHz;;;1;0;0;T-24;2;is part of;is parent of;;3.5 MHz;241
+T-2410;nicht näher spezifiziert;;;1;0;0;T-241;2;is part of;is parent of;;unspecified;2410
+T-242;5,0 MHz;;;1;0;0;T-24;2;is part of;is parent of;;5.0 MHz;242
+T-2420;nicht näher spezifiziert;;;1;0;0;T-242;2;is part of;is parent of;;unspecified;2420
+T-243;7,5 MHz;;;1;0;0;T-24;2;is part of;is parent of;;7.5 MHz;243
+T-2430;nicht näher spezifiziert;;;1;0;0;T-243;2;is part of;is parent of;;unspecified;2430
+T-244;10 MHz;;;1;0;0;T-24;2;is part of;is parent of;;10 MHz;244
+T-2440;nicht näher spezifiziert;;;1;0;0;T-244;2;is part of;is parent of;;unspecified;2440
+T-245;variable Frequenz;;;1;0;0;T-24;2;is part of;is parent of;;variable frequency;245
+T-2450;nicht näher spezifiziert;;;1;0;0;T-245;2;is part of;is parent of;;unspecified;2450
+T-25;SieScape-Mode;;;1;0;0;T-2;2;is part of;is parent of;;SieScape mode;25
+T-250;nicht näher spezifiziert;;;1;0;0;T-25;2;is part of;is parent of;;unspecified;250
+T-251;3,5 MHz;;;1;0;0;T-25;2;is part of;is parent of;;3.5 MHz;251
+T-2510;nicht näher spezifiziert;;;1;0;0;T-251;2;is part of;is parent of;;unspecified;2510
+T-252;5,0 MHz;;;1;0;0;T-25;2;is part of;is parent of;;5.0 MHz;252
+T-2520;nicht näher spezifiziert;;;1;0;0;T-252;2;is part of;is parent of;;unspecified;2520
+T-253;7,5 MHz;;;1;0;0;T-25;2;is part of;is parent of;;7.5 MHz;253
+T-2530;nicht näher spezifiziert;;;1;0;0;T-253;2;is part of;is parent of;;unspecified;2530
+T-254;10 MHz;;;1;0;0;T-25;2;is part of;is parent of;;10 MHz;254
+T-2540;nicht näher spezifiziert;;;1;0;0;T-254;2;is part of;is parent of;;unspecified;2540
+T-255;variable Frequenz;;;1;0;0;T-25;2;is part of;is parent of;;variable frequency;255
+T-2550;nicht näher spezifiziert;;;1;0;0;T-255;2;is part of;is parent of;;unspecified;2550
+T-26;Duplex-Mode;;;1;0;0;T-2;2;is part of;is parent of;;duplex mode;26
+T-260;nicht näher spezifiziert;;;1;0;0;T-26;2;is part of;is parent of;;unspecified;260
+T-261;3,5 MHz;;;1;0;0;T-26;2;is part of;is parent of;;3.5 MHz;261
+T-2610;nicht näher spezifiziert;;;1;0;0;T-261;2;is part of;is parent of;;unspecified;2610
+T-262;5,0 MHz;;;1;0;0;T-26;2;is part of;is parent of;;5.0 MHz;262
+T-2620;nicht näher spezifiziert;;;1;0;0;T-262;2;is part of;is parent of;;unspecified;2620
+T-263;7,5 MHz;;;1;0;0;T-26;2;is part of;is parent of;;7.5 MHz;263
+T-2630;nicht näher spezifiziert;;;1;0;0;T-263;2;is part of;is parent of;;unspecified;2630
+T-264;10 MHz;;;1;0;0;T-26;2;is part of;is parent of;;10 MHz;264
+T-2640;nicht näher spezifiziert;;;1;0;0;T-264;2;is part of;is parent of;;unspecified;2640
+T-265;variable Frequenz;;;1;0;0;T-26;2;is part of;is parent of;;variable frequency;265
+T-2650;nicht näher spezifiziert;;;1;0;0;T-265;2;is part of;is parent of;;unspecified;2650
+T-27;Doppler-Mode;;;1;0;0;T-2;2;is part of;is parent of;;Doppler mode;27
+T-270;nicht näher spezifiziert;;;1;0;0;T-27;2;is part of;is parent of;;unspecified;270
+T-271;3,5 MHz;;;1;0;0;T-27;2;is part of;is parent of;;3.5 MHz;271
+T-2710;nicht näher spezifiziert;;;1;0;0;T-271;2;is part of;is parent of;;unspecified;2710
+T-272;5,0 MHz;;;1;0;0;T-27;2;is part of;is parent of;;5.0 MHz;272
+T-2720;nicht näher spezifiziert;;;1;0;0;T-272;2;is part of;is parent of;;unspecified;2720
+T-273;7,5 MHz;;;1;0;0;T-27;2;is part of;is parent of;;7.5 MHz;273
+T-2730;nicht näher spezifiziert;;;1;0;0;T-273;2;is part of;is parent of;;unspecified;2730
+T-274;10 MHz;;;1;0;0;T-27;2;is part of;is parent of;;10 MHz;274
+T-2740;nicht näher spezifiziert;;;1;0;0;T-274;2;is part of;is parent of;;unspecified;2740
+T-275;variable Frequenz;;;1;0;0;T-27;2;is part of;is parent of;;variable frequency;275
+T-2750;nicht näher spezifiziert;;;1;0;0;T-275;2;is part of;is parent of;;unspecified;2750
+T-28;3D-Darstellung;;;1;0;0;T-2;2;is part of;is parent of;;3D imaging;28
+T-280;nicht näher spezifiziert;;;1;0;0;T-28;2;is part of;is parent of;;unspecified;280
+T-281;3,5 MHz;;;1;0;0;T-28;2;is part of;is parent of;;3.5 MHz;281
+T-2810;nicht näher spezifiziert;;;1;0;0;T-281;2;is part of;is parent of;;unspecified;2810
+T-282;5,0 MHz;;;1;0;0;T-28;2;is part of;is parent of;;5.0 MHz;282
+T-2820;nicht näher spezifiziert;;;1;0;0;T-282;2;is part of;is parent of;;unspecified;2820
+T-283;7,5 MHz;;;1;0;0;T-28;2;is part of;is parent of;;7.5 MHz;283
+T-2830;nicht näher spezifiziert;;;1;0;0;T-283;2;is part of;is parent of;;unspecified;2830
+T-284;10 MHz;;;1;0;0;T-28;2;is part of;is parent of;;10 MHz;284
+T-2840;nicht näher spezifiziert;;;1;0;0;T-284;2;is part of;is parent of;;unspecified;2840
+T-285;variable Frequenz;;;1;0;0;T-28;2;is part of;is parent of;;variable frequency;285
+T-2850;nicht näher spezifiziert;;;1;0;0;T-285;2;is part of;is parent of;;unspecified;2850
+T-3;Kernspinbildgebung;;;1;0;0;T;2;is part of;is parent of;;magnetic resonance measurements;3
+T-30;nicht näher spezifiziert;;;1;0;0;T-3;2;is part of;is parent of;;unspecified;30
+T-31;Kernspintomographie (MR);;;1;0;0;T-3;2;is part of;is parent of;;magnetic resonance imaging (MRI);31
+T-310;nicht näher spezifiziert;;;1;0;0;T-31;2;is part of;is parent of;;unspecified;310
+T-311;T1-gewichtet;;;1;0;0;T-31;2;is part of;is parent of;;T1-weigthed;311
+T-3110;nicht näher spezifiziert;;;1;0;0;T-311;2;is part of;is parent of;;unspecified;3110
+T-3111;Endotechnik(-spule);;;1;0;0;T-311;2;is part of;is parent of;;endo coil;3111
+T-3112;Body-Spule;;;1;0;0;T-311;2;is part of;is parent of;;body;3112
+T-3113;Body Array;;;1;0;0;T-311;2;is part of;is parent of;;body array;3113
+T-3114;Kopfspule;;;1;0;0;T-311;2;is part of;is parent of;;head coil;3114
+T-3115;Halsspule;;;1;0;0;T-311;2;is part of;is parent of;;neck coil;3115
+T-3116;Wirbelsäulenspule;;;1;0;0;T-311;2;is part of;is parent of;;spine coil;3116
+T-3117;Loop Coil;;;1;0;0;T-311;2;is part of;is parent of;;loop coil;3117
+T-3118;Schulterspule;;;1;0;0;T-311;2;is part of;is parent of;;shoulder coil;3118
+T-3119;Knie-/Extrimitätenspule;;;1;0;0;T-311;2;is part of;is parent of;;knee coil;3119
+T-311a;Handoberflächenspule;;;1;0;0;T-311;2;is part of;is parent of;;hand / small FOV;311a
+T-311b;Mammaspule;;;1;0;0;T-311;2;is part of;is parent of;;mamma coil;311b
+T-311c;Flex, groß;;;1;0;0;T-311;2;is part of;is parent of;;flexible coil, large;311c
+T-311d;Flex, klein;;;1;0;0;T-311;2;is part of;is parent of;;flexible coil, small;311d
+T-311e;Endorektalspule;;;1;0;0;T-311;2;is part of;is parent of;;endorectal coil;311e
+T-311f;Wrap-Around-Spule;;;1;0;0;T-311;2;is part of;is parent of;;wrap around coil;311f
+T-312;T2-gewichtet;;;1;0;0;T-31;2;is part of;is parent of;;T2-weighted;312
+T-3120;nicht näher spezifiziert;;;1;0;0;T-312;2;is part of;is parent of;;unspecified;3120
+T-3121;Endotechnik(-spule);;;1;0;0;T-312;2;is part of;is parent of;;endo coil;3121
+T-3122;Body-Spule;;;1;0;0;T-312;2;is part of;is parent of;;body;3122
+T-3123;Body Array;;;1;0;0;T-312;2;is part of;is parent of;;body array;3123
+T-3124;Kopfspule;;;1;0;0;T-312;2;is part of;is parent of;;head coil;3124
+T-3125;Halsspule;;;1;0;0;T-312;2;is part of;is parent of;;neck coil;3125
+T-3126;Wirbelsäulenspule;;;1;0;0;T-312;2;is part of;is parent of;;spine coil;3126
+T-3127;Loop Coil;;;1;0;0;T-312;2;is part of;is parent of;;loop coil;3127
+T-3128;Schulterspule;;;1;0;0;T-312;2;is part of;is parent of;;shoulder coil;3128
+T-3129;Knie-/Extrimitätenspule;;;1;0;0;T-312;2;is part of;is parent of;;knee coil;3129
+T-312a;Hand Oberflächenspule;;;1;0;0;T-312;2;is part of;is parent of;;hand / small FOV;312a
+T-312b;Mammaspule;;;1;0;0;T-312;2;is part of;is parent of;;mamma coil;312b
+T-312c;Flex, groß;;;1;0;0;T-312;2;is part of;is parent of;;flexible coil, large;312c
+T-312d;Flex, klein;;;1;0;0;T-312;2;is part of;is parent of;;flexible coil, small;312d
+T-312e;Endorektalspule;;;1;0;0;T-312;2;is part of;is parent of;;endorectal coil;312e
+T-312f;Wrap-Around-Spule;;;1;0;0;T-312;2;is part of;is parent of;;wrap around coil;312f
+T-313;Protonen-gewichtet;;;1;0;0;T-31;2;is part of;is parent of;;proton-weighted;313
+T-3130;nicht näher spezifiziert;;;1;0;0;T-313;2;is part of;is parent of;;unspecified;3130
+T-3131;Endotechnik(-spule);;;1;0;0;T-313;2;is part of;is parent of;;endo coil;3131
+T-3132;Body-Spule;;;1;0;0;T-313;2;is part of;is parent of;;body;3132
+T-3133;Body Array;;;1;0;0;T-313;2;is part of;is parent of;;body array;3133
+T-3134;Kopfspule;;;1;0;0;T-313;2;is part of;is parent of;;head coil;3134
+T-3135;Halsspule;;;1;0;0;T-313;2;is part of;is parent of;;neck coil;3135
+T-3136;Wirbelsäulenspule;;;1;0;0;T-313;2;is part of;is parent of;;spine coil;3136
+T-3137;Loop Coil;;;1;0;0;T-313;2;is part of;is parent of;;loop coil;3137
+T-3138;Schulterspule;;;1;0;0;T-313;2;is part of;is parent of;;shoulder coil;3138
+T-3139;Knie-/Extrimitätenspule;;;1;0;0;T-313;2;is part of;is parent of;;knee coil;3139
+T-313a;Hand Oberflächenspule;;;1;0;0;T-313;2;is part of;is parent of;;hand / small FOV;313a
+T-313b;Mammaspule;;;1;0;0;T-313;2;is part of;is parent of;;mamma coil;313b
+T-313c;Flex, groß;;;1;0;0;T-313;2;is part of;is parent of;;flexible coil, large;313c
+T-313d;Flex, klein;;;1;0;0;T-313;2;is part of;is parent of;;flexible coil, small;313d
+T-313e;Endorektalspule;;;1;0;0;T-313;2;is part of;is parent of;;endorectal coil;313e
+T-313f;Wrap-Around-Spule;;;1;0;0;T-313;2;is part of;is parent of;;wrap around coil;313f
+T-314;Fettsupression;;;1;0;0;T-31;2;is part of;is parent of;;fat suppression;314
+T-3140;nicht näher spezifiziert;;;1;0;0;T-314;2;is part of;is parent of;;unspecified;3140
+T-3141;Endotechnik(-spule);;;1;0;0;T-314;2;is part of;is parent of;;endo coil;3141
+T-3142;Body-Spule;;;1;0;0;T-314;2;is part of;is parent of;;body;3142
+T-3143;Body Array;;;1;0;0;T-314;2;is part of;is parent of;;body array;3143
+T-3144;Kopfspule;;;1;0;0;T-314;2;is part of;is parent of;;head coil;3144
+T-3145;Halsspule;;;1;0;0;T-314;2;is part of;is parent of;;neck coil;3145
+T-3146;Wirbelsäulenspule;;;1;0;0;T-314;2;is part of;is parent of;;spine coil;3146
+T-3147;Loop Coil;;;1;0;0;T-314;2;is part of;is parent of;;loop coil;3147
+T-3148;Schulterspule;;;1;0;0;T-314;2;is part of;is parent of;;shoulder coil;3148
+T-3149;Knie-/Extrimitätenspule;;;1;0;0;T-314;2;is part of;is parent of;;knee coil;3149
+T-314a;Hand Oberflächenspule;;;1;0;0;T-314;2;is part of;is parent of;;hand / small FOV;314a
+T-314b;Mammaspule;;;1;0;0;T-314;2;is part of;is parent of;;mamma coil;314b
+T-314c;Flex, groß;;;1;0;0;T-314;2;is part of;is parent of;;flexible coil, large;314c
+T-314d;Flex, klein;;;1;0;0;T-314;2;is part of;is parent of;;flexible coil, small;314d
+T-314e;Endorektalspule;;;1;0;0;T-314;2;is part of;is parent of;;endorectal coil;314e
+T-314f;Wrap-Around-Spule;;;1;0;0;T-314;2;is part of;is parent of;;wrap around coil;314f
+T-315;Cine-Lolo;;;1;0;0;T-31;2;is part of;is parent of;;Cine-Lolo;315
+T-3150;nicht näher spezifiziert;;;1;0;0;T-315;2;is part of;is parent of;;unspecified;3150
+T-3151;Endotechnik(-spule);;;1;0;0;T-315;2;is part of;is parent of;;endo coil;3151
+T-3152;Body-Spule;;;1;0;0;T-315;2;is part of;is parent of;;body;3152
+T-3153;Body Array;;;1;0;0;T-315;2;is part of;is parent of;;body array;3153
+T-3154;Kopfspule;;;1;0;0;T-315;2;is part of;is parent of;;head coil;3154
+T-3155;Halsspule;;;1;0;0;T-315;2;is part of;is parent of;;neck coil;3155
+T-3156;Wirbelsäulenspule;;;1;0;0;T-315;2;is part of;is parent of;;spine coil;3156
+T-3157;Loop Coil;;;1;0;0;T-315;2;is part of;is parent of;;loop coil;3157
+T-3158;Schulterspule;;;1;0;0;T-315;2;is part of;is parent of;;shoulder coil;3158
+T-3159;Knie-/Extrimitätenspule;;;1;0;0;T-315;2;is part of;is parent of;;knee coil;3159
+T-315a;Hand Oberflächenspule;;;1;0;0;T-315;2;is part of;is parent of;;hand / small FOV;315a
+T-315b;Mammaspule;;;1;0;0;T-315;2;is part of;is parent of;;mamma coil;315b
+T-315c;Flex, groß;;;1;0;0;T-315;2;is part of;is parent of;;flexible coil, large;315c
+T-315d;Flex, klein;;;1;0;0;T-315;2;is part of;is parent of;;flexible coil, small;315d
+T-315e;Endorektalspule;;;1;0;0;T-315;2;is part of;is parent of;;endorectal coil;315e
+T-315f;Wrap-Around-Spule;;;1;0;0;T-315;2;is part of;is parent of;;wrap around coil;315f
+T-316;Inversion Recovery;;;1;0;0;T-31;2;is part of;is parent of;;inversion recovery;316
+T-3160;nicht näher spezifiziert;;;1;0;0;T-316;2;is part of;is parent of;;unspecified;3160
+T-3161;Endotechnik(-spule);;;1;0;0;T-316;2;is part of;is parent of;;endo coil;3161
+T-3162;Body-Spule;;;1;0;0;T-316;2;is part of;is parent of;;body;3162
+T-3163;Body Array;;;1;0;0;T-316;2;is part of;is parent of;;body array;3163
+T-3164;Kopfspule;;;1;0;0;T-316;2;is part of;is parent of;;head coil;3164
+T-3165;Halsspule;;;1;0;0;T-316;2;is part of;is parent of;;neck coil;3165
+T-3166;Wirbelsäulenspule;;;1;0;0;T-316;2;is part of;is parent of;;spine coil;3166
+T-3167;Loop Coil;;;1;0;0;T-316;2;is part of;is parent of;;loop coil;3167
+T-3168;Schulterspule;;;1;0;0;T-316;2;is part of;is parent of;;shoulder coil;3168
+T-3169;Knie-/Extrimitätenspule;;;1;0;0;T-316;2;is part of;is parent of;;knee coil;3169
+T-316a;Hand Oberflächenspule;;;1;0;0;T-316;2;is part of;is parent of;;hand / small FOV;316a
+T-316b;Mammaspule;;;1;0;0;T-316;2;is part of;is parent of;;mamma coil;316b
+T-316c;Flex, groß;;;1;0;0;T-316;2;is part of;is parent of;;flexible coil, large;316c
+T-316d;Flex, klein;;;1;0;0;T-316;2;is part of;is parent of;;flexible coil, small;316d
+T-316e;Endorektalspule;;;1;0;0;T-316;2;is part of;is parent of;;endorectal coil;316e
+T-316f;Wrap-Around-Spule;;;1;0;0;T-316;2;is part of;is parent of;;wrap around coil;316f
+T-317;FLARE;;;1;0;0;T-31;2;is part of;is parent of;;FLARE;317
+T-3170;nicht näher spezifiziert;;;1;0;0;T-317;2;is part of;is parent of;;unspecified;3170
+T-3171;Endotechnik(-spule);;;1;0;0;T-317;2;is part of;is parent of;;endo coil;3171
+T-3172;Body-Spule;;;1;0;0;T-317;2;is part of;is parent of;;body;3172
+T-3173;Body Array;;;1;0;0;T-317;2;is part of;is parent of;;body array;3173
+T-3174;Kopfspule;;;1;0;0;T-317;2;is part of;is parent of;;head coil;3174
+T-3175;Halsspule;;;1;0;0;T-317;2;is part of;is parent of;;neck coil;3175
+T-3176;Wirbelsäulenspule;;;1;0;0;T-317;2;is part of;is parent of;;spine coil;3176
+T-3177;Loop Coil;;;1;0;0;T-317;2;is part of;is parent of;;loop coil;3177
+T-3178;Schulterspule;;;1;0;0;T-317;2;is part of;is parent of;;shoulder coil;3178
+T-3179;Knie-/Extrimitätenspule;;;1;0;0;T-317;2;is part of;is parent of;;knee coil;3179
+T-317a;Hand Oberflächenspule;;;1;0;0;T-317;2;is part of;is parent of;;hand / small FOV;317a
+T-317b;Mammaspule;;;1;0;0;T-317;2;is part of;is parent of;;mamma coil;317b
+T-317c;Flex, groß;;;1;0;0;T-317;2;is part of;is parent of;;flexible coil, large;317c
+T-317d;Flex, klein;;;1;0;0;T-317;2;is part of;is parent of;;flexible coil, small;317d
+T-317e;Endorektalspule;;;1;0;0;T-317;2;is part of;is parent of;;endorectal coil;317e
+T-317f;Wrap-Around-Spule;;;1;0;0;T-317;2;is part of;is parent of;;wrap around coil;317f
+T-318;3D-FFE (hochauflösend);;;1;0;0;T-31;2;is part of;is parent of;;3D-FFE high resolution;318
+T-3180;nicht näher spezifiziert;;;1;0;0;T-318;2;is part of;is parent of;;unspecified;3180
+T-3181;Endotechnik(-spule);;;1;0;0;T-318;2;is part of;is parent of;;endo coil;3181
+T-3182;Body-Spule;;;1;0;0;T-318;2;is part of;is parent of;;body;3182
+T-3183;Body Array;;;1;0;0;T-318;2;is part of;is parent of;;body array;3183
+T-3184;Kopfspule;;;1;0;0;T-318;2;is part of;is parent of;;head coil;3184
+T-3185;Halsspule;;;1;0;0;T-318;2;is part of;is parent of;;neck coil;3185
+T-3186;Wirbelsäulenspule;;;1;0;0;T-318;2;is part of;is parent of;;spine coil;3186
+T-3187;Loop Coil;;;1;0;0;T-318;2;is part of;is parent of;;loop coil;3187
+T-3188;Schulterspule;;;1;0;0;T-318;2;is part of;is parent of;;shoulder coil;3188
+T-3189;Knie-/Extrimitätenspule;;;1;0;0;T-318;2;is part of;is parent of;;knee coil;3189
+T-318a;Hand Oberflächenspule;;;1;0;0;T-318;2;is part of;is parent of;;hand / small FOV;318a
+T-318b;Mammaspule;;;1;0;0;T-318;2;is part of;is parent of;;mamma coil;318b
+T-318c;Flex, groß;;;1;0;0;T-318;2;is part of;is parent of;;flexible coil, large;318c
+T-318d;Flex, klein;;;1;0;0;T-318;2;is part of;is parent of;;flexible coil, small;318d
+T-318e;Endorektalspule;;;1;0;0;T-318;2;is part of;is parent of;;endorectal coil;318e
+T-318f;Wrap-Around-Spule;;;1;0;0;T-318;2;is part of;is parent of;;wrap around coil;318f
+T-32;Spektroskopie;;;1;0;0;T-3;2;is part of;is parent of;;spectroscopy;32
+T-320;nicht näher spezifiziert;;;1;0;0;T-32;2;is part of;is parent of;;unspecified;320
+T-33;Angiographie;;;1;0;0;T-3;2;is part of;is parent of;;angiography (MRA);33
+T-330;nicht näher spezifiziert;;;1;0;0;T-33;2;is part of;is parent of;;unspecified;330
+T-34;funktionelle Kernspintomographie;;;1;0;0;T-3;2;is part of;is parent of;;functional MRI (fMRI);34
+T-340;nicht näher spezifiziert;;;1;0;0;T-34;2;is part of;is parent of;;unspecified;340
+T-35;Mamographie;;;1;0;0;T-3;2;is part of;is parent of;;mamography;35
+T-350;nicht näher spezifiziert;;;1;0;0;T-35;2;is part of;is parent of;;unspecified;350
+T-4;Nuklearmedizinische Bildgebung;;;1;0;0;T;2;is part of;is parent of;;nuclear medicine imaging;4
+T-40;nicht näher spezifiziert;;;1;0;0;T-4;2;is part of;is parent of;;unspecified;40
+T-41;Szintillationssonde;;;1;0;0;T-4;2;is part of;is parent of;;scintillation probe;41
+T-410;nicht näher spezifiziert;;;1;0;0;T-41;2;is part of;is parent of;;unspecified;410
+T-42;Gammakamera;;;1;0;0;T-4;2;is part of;is parent of;;gamma camera;42
+T-420;nicht näher spezifiziert;;;1;0;0;T-42;2;is part of;is parent of;;unspecified;420
+T-43;SPECT;;;1;0;0;T-4;2;is part of;is parent of;;single photon emission computed tomography (SPECT);43
+T-430;nicht näher spezifiziert;;;1;0;0;T-43;2;is part of;is parent of;;unspecified;430
+T-44;PET;;;1;0;0;T-4;2;is part of;is parent of;;positron emission tomography (PET);44
+T-440;nicht näher spezifiziert;;;1;0;0;T-44;2;is part of;is parent of;;unspecified;440
+T-441;PET-CT;;;1;0;0;T-44;2;is part of;is parent of;;PET-CT;441
+T-4410;nicht näher spezifiziert;;;1;0;0;T-441;2;is part of;is parent of;;unspecified;4410
+T-442;PET-MR;;;1;0;0;T-44;2;is part of;is parent of;;PET-MR;442
+T-4420;nicht näher spezifiziert;;;1;0;0;T-442;2;is part of;is parent of;;unspecified;4420
+T-5;Optische Verfahren;;;1;0;0;T;2;is part of;is parent of;;optical imaging;5
+T-50;nicht näher spezifiziert;;;1;0;0;T-5;2;is part of;is parent of;;unspecified;50
+T-51;Endoskopie;;;1;0;0;T-5;2;is part of;is parent of;;endoscopy;51
+T-510;nicht näher spezifiziert;;;1;0;0;T-51;2;is part of;is parent of;;unspecified;510
+T-511;starr;;;1;0;0;T-51;2;is part of;is parent of;;rigid;511
+T-5110;nicht näher spezifiziert;;;1;0;0;T-511;2;is part of;is parent of;;unspecified;5110
+T-5111;Dauerlicht;;;1;0;0;T-511;2;is part of;is parent of;;continuous light;5111
+T-5112;Stroboskopie;;;1;0;0;T-511;2;is part of;is parent of;;stroboscopy;5112
+T-512;flexibel;;;1;0;0;T-51;2;is part of;is parent of;;flexible;512
+T-5120;nicht näher spezifiziert;;;1;0;0;T-512;2;is part of;is parent of;;unspecified;5120
+T-5121;Dauerlicht;;;1;0;0;T-512;2;is part of;is parent of;;continuous light;5121
+T-5122;Stroboskopie;;;1;0;0;T-512;2;is part of;is parent of;;stroboscopy;5122
+T-513;stereoskopisch;;;1;0;0;T-51;2;is part of;is parent of;;stereoscopic;513
+T-5130;nicht näher spezifiziert;;;1;0;0;T-513;2;is part of;is parent of;;unspecified;5130
+T-5131;Dauerlicht;;;1;0;0;T-513;2;is part of;is parent of;;continuous light;5131
+T-5132;Stroboskopie;;;1;0;0;T-513;2;is part of;is parent of;;stroboscopy;5132
+T-514;durchwandernd;;;1;0;0;T-51;2;is part of;is parent of;;wireless;514
+T-5140;nicht näher spezifiziert;;;1;0;0;T-514;2;is part of;is parent of;;unspecified;5140
+T-5141;Kapsel (Endowurm);;;1;0;0;T-514;2;is part of;is parent of;;capsule;5141
+T-52;Mikroskopie;;;1;0;0;T-5;2;is part of;is parent of;;microscopy;52
+T-520;nicht näher spezifiziert;;;1;0;0;T-52;2;is part of;is parent of;;unspecified;520
+T-521;einfach;;;1;0;0;T-52;2;is part of;is parent of;;plain;521
+T-5210;nicht näher spezifiziert;;;1;0;0;T-521;2;is part of;is parent of;;unspecified;5210
+T-522;gefärbt;;;1;0;0;T-52;2;is part of;is parent of;;stained;522
+T-5220;nicht näher spezifiziert;;;1;0;0;T-522;2;is part of;is parent of;;unspecified;5220
+T-523;Fluoreszenz;;;1;0;0;T-52;2;is part of;is parent of;;fluorescence;523
+T-5230;nicht näher spezifiziert;;;1;0;0;T-523;2;is part of;is parent of;;unspecified;5230
+T-524;Elektronenmikroskopie;;;1;0;0;T-52;2;is part of;is parent of;;electron;524
+T-5240;nicht näher spezifiziert;;;1;0;0;T-524;2;is part of;is parent of;;unspecified;5240
+T-53;Photographie;;;1;0;0;T-5;2;is part of;is parent of;;photography;53
+T-530;nicht näher spezifiziert;;;1;0;0;T-53;2;is part of;is parent of;;unspecified;530
+T-54;Fundoskopie (Auge);;;1;0;0;T-5;2;is part of;is parent of;;funduscopy;54
+T-540;nicht näher spezifiziert;;;1;0;0;T-54;2;is part of;is parent of;;unspecified;540
+T-55;Laser Surface Scan;;;1;0;0;T-5;2;is part of;is parent of;;laser surface scan;55
+T-550;nicht näher spezifiziert;;;1;0;0;T-55;2;is part of;is parent of;;unspecified;550
+T-56;Thermographie;;;1;0;0;T-5;2;is part of;is parent of;;thermography;56
+T-560;nicht näher spezifiziert;;;1;0;0;T-56;2;is part of;is parent of;;unspecified;560
+T-57;Video;;;1;0;0;T-5;2;is part of;is parent of;;moving picture;57
+T-570;nicht näher spezifiziert;;;1;0;0;T-57;2;is part of;is parent of;;unspecified;570
+T-6;Biophysikalische Verf.;;;1;0;0;T;2;is part of;is parent of;;biophysical procedures;6
+T-60;nicht näher spezifiziert;;;1;0;0;T-6;2;is part of;is parent of;;unspecified;60
+T-61;elektrisch;;;1;0;0;T-6;2;is part of;is parent of;;electric;61
+T-610;nicht näher spezifiziert;;;1;0;0;T-61;2;is part of;is parent of;;unspecified;610
+T-62;magnetisch;;;1;0;0;T-6;2;is part of;is parent of;;magnetic;62
+T-620;nicht näher spezifiziert;;;1;0;0;T-62;2;is part of;is parent of;;unspecified;620
+T-63;Sonden;;;1;0;0;T-6;2;is part of;is parent of;;probes;63
+T-630;nicht näher spezifiziert;;;1;0;0;T-63;2;is part of;is parent of;;unspecified;630
+T-7;Sonstiges;;;1;0;0;T;2;is part of;is parent of;;others;7
+T-70;nicht näher spezifiziert;;;1;0;0;T-7;2;is part of;is parent of;;unspecified;70
+T-71;Workstation;;;1;0;0;T-7;2;is part of;is parent of;;workstation;71
+T-710;nicht näher spezifiziert;;;1;0;0;T-71;2;is part of;is parent of;;unspecified;710
+T-72;Hardcopy;;;1;0;0;T-7;2;is part of;is parent of;;hardcopy;72
+T-720;nicht näher spezifiziert;;;1;0;0;T-72;2;is part of;is parent of;;unspecified;720
+T-73;Secondary Capture;;;1;0;0;T-7;2;is part of;is parent of;;secondary capture;73
+T-730;nicht näher spezifiziert;;;1;0;0;T-73;2;is part of;is parent of;;unspecified;730
+T-74;Dokumentation;;;1;0;0;T-7;2;is part of;is parent of;;documentation;74
+T-740;nicht näher spezifiziert;;;1;0;0;T-74;2;is part of;is parent of;;unspecified;740
+T-741;Wert;;;1;0;0;T-74;2;is part of;is parent of;;value;741
+T-7410;nicht näher spezifiziert;;;1;0;0;T-741;2;is part of;is parent of;;unspecified;7410
+T-742;Kurve örtlich;;;1;0;0;T-74;2;is part of;is parent of;;curve local;742
+T-7420;nicht näher spezifiziert;;;1;0;0;T-742;2;is part of;is parent of;;unspecified;7420
+T-743;Kurve zeitlich;;;1;0;0;T-74;2;is part of;is parent of;;curve temporal;743
+T-7430;nicht näher spezifiziert;;;1;0;0;T-743;2;is part of;is parent of;;unspecified;7430
+T-744;Fläche komplex (3D);;;1;0;0;T-74;2;is part of;is parent of;;area complex (3D);744
+T-7440;nicht näher spezifiziert;;;1;0;0;T-744;2;is part of;is parent of;;unspecified;7440
+T-745;Bild;;;1;0;0;T-74;2;is part of;is parent of;;picture;745
+T-7450;nicht näher spezifiziert;;;1;0;0;T-745;2;is part of;is parent of;;unspecified;7450
+T-746;Serie örtlich;;;1;0;0;T-74;2;is part of;is parent of;;local series;746
+T-7460;nicht näher spezifiziert;;;1;0;0;T-746;2;is part of;is parent of;;unspecified;7460
+T-747;Serie zeitlich;;;1;0;0;T-74;2;is part of;is parent of;;temporal series;747
+T-7470;nicht näher spezifiziert;;;1;0;0;T-747;2;is part of;is parent of;;unspecified;7470
+T-748;Serie komplex (4D);;;1;0;0;T-74;2;is part of;is parent of;;complex series (4D);748
+T-7480;nicht näher spezifiziert;;;1;0;0;T-748;2;is part of;is parent of;;unspecified;7480
+T-749;Cine (Aufzeichnung);;;1;0;0;T-74;2;is part of;is parent of;;cine documentation;749
+T-7490;nicht näher spezifiziert;;;1;0;0;T-749;2;is part of;is parent of;;unspecified;7490
+T-74a;Fluoroskopie;;;1;0;0;T-74;2;is part of;is parent of;;fluoroscopy;74a
+T-74a0;nicht näher spezifiziert;;;1;0;0;T-74a;2;is part of;is parent of;;unspecified;74a0
+T-74b;Volumen (Datensatz);;;1;0;0;T-74;2;is part of;is parent of;;volume (data set);74b
+T-74b0;nicht näher spezifiziert;;;1;0;0;T-74b;2;is part of;is parent of;;unspecified;74b0
+T-74c;Volumen zeitlich (Datensatz);;;1;0;0;T-74;2;is part of;is parent of;;volume temporal (data set);74c
+T-74c0;nicht näher spezifiziert;;;1;0;0;T-74c;2;is part of;is parent of;;unspecified;74c0
+T-8;Sekundärdigitalisierung;;;1;0;0;T;2;is part of;is parent of;;secondary digitalization;8
+T-80;nicht näher spezifiziert;;;1;0;0;T-8;2;is part of;is parent of;;unspecified;80
+T-81;Laserabtastung;;;1;0;0;T-8;2;is part of;is parent of;;laser sampling;81
+T-810;nicht näher spezifiziert;;;1;0;0;T-81;2;is part of;is parent of;;unspecified;810
+T-82;LCD-Abtastung;;;1;0;0;T-8;2;is part of;is parent of;;LCD sampling;82
+T-820;nicht näher spezifiziert;;;1;0;0;T-82;2;is part of;is parent of;;unspecified;820
+T-83;Videodigitalisierung;;;1;0;0;T-8;2;is part of;is parent of;;video digitizing;83
+T-830;nicht näher spezifiziert;;;1;0;0;T-83;2;is part of;is parent of;;unspecified;830
+T-9;Abbildung;;;1;0;0;T;2;is part of;is parent of;;figure;9
+T-90;nicht näher spezifiziert;;;1;0;0;T-9;2;is part of;is parent of;;unspecified;90
+T-91;Untersuchungsaufnahme;;;1;0;0;T-9;2;is part of;is parent of;;diagnostic image;91
+T-910;nicht näher spezifiziert;;;1;0;0;T-91;2;is part of;is parent of;;unspecified;910
+T-911;schwarzweiss;;;1;0;0;T-91;2;is part of;is parent of;;grayscale;911
+T-9110;nicht näher spezifiziert;;;1;0;0;T-911;2;is part of;is parent of;;unspecified;9110
+T-9111;Original;;;1;0;0;T-911;2;is part of;is parent of;;original;9111
+T-9112;Markierung;;;1;0;0;T-911;2;is part of;is parent of;;annotation;9112
+T-912;farbig;;;1;0;0;T-91;2;is part of;is parent of;;color;912
+T-9120;nicht näher spezifiziert;;;1;0;0;T-912;2;is part of;is parent of;;unspecified;9120
+T-9121;Original;;;1;0;0;T-912;2;is part of;is parent of;;original;9121
+T-9122;Markierung;;;1;0;0;T-912;2;is part of;is parent of;;annotation;9122
+T-92;Untersuchungsvisualisierung;;;1;0;0;T-9;2;is part of;is parent of;;diagnostic visualization;92
+T-920;nicht näher spezifiziert;;;1;0;0;T-92;2;is part of;is parent of;;unspecified;920
+T-921;schwarzweiss;;;1;0;0;T-92;2;is part of;is parent of;;grayscale;921
+T-9210;nicht näher spezifiziert;;;1;0;0;T-921;2;is part of;is parent of;;unspecified;9210
+T-922;farbig;;;1;0;0;T-92;2;is part of;is parent of;;color;922
+T-9220;nicht näher spezifiziert;;;1;0;0;T-922;2;is part of;is parent of;;unspecified;9220
+T-93;Fotographie;;;1;0;0;T-9;2;is part of;is parent of;;photograph;93
+T-930;nicht näher spezifiziert;;;1;0;0;T-93;2;is part of;is parent of;;unspecified;930
+T-931;schwarzweiss;;;1;0;0;T-93;2;is part of;is parent of;;grayscale;931
+T-9310;nicht näher spezifiziert;;;1;0;0;T-931;2;is part of;is parent of;;unspecified;9310
+T-9311;Gerät;;;1;0;0;T-931;2;is part of;is parent of;;device;9311
+T-9312;Person;;;1;0;0;T-931;2;is part of;is parent of;;person;9312
+T-9313;Objekt;;;1;0;0;T-931;2;is part of;is parent of;;object;9313
+T-9314;Portrait;;;1;0;0;T-931;2;is part of;is parent of;;portrait;9314
+T-9315;sonstige;;;1;0;0;T-931;2;is part of;is parent of;;other;9315
+T-932;farbig;;;1;0;0;T-93;2;is part of;is parent of;;color;932
+T-9320;nicht näher spezifiziert;;;1;0;0;T-932;2;is part of;is parent of;;unspecified;9320
+T-9321;Gerät;;;1;0;0;T-932;2;is part of;is parent of;;device;9321
+T-9322;Person;;;1;0;0;T-932;2;is part of;is parent of;;person;9322
+T-9323;Objekt;;;1;0;0;T-932;2;is part of;is parent of;;object;9323
+T-9324;Portrait;;;1;0;0;T-932;2;is part of;is parent of;;portrait;9324
+T-9325;sonstige;;;1;0;0;T-932;2;is part of;is parent of;;other;9325
+T-94;Bildschirmfenster;;;1;0;0;T-9;2;is part of;is parent of;;screen shot;94
+T-940;nicht näher spezifiziert;;;1;0;0;T-94;2;is part of;is parent of;;unspecified;940
+T-941;schwarzweiss;;;1;0;0;T-94;2;is part of;is parent of;;grayscale;941
+T-9410;nicht näher spezifiziert;;;1;0;0;T-941;2;is part of;is parent of;;unspecified;9410
+T-942;farbig;;;1;0;0;T-94;2;is part of;is parent of;;color;942
+T-9420;nicht näher spezifiziert;;;1;0;0;T-942;2;is part of;is parent of;;unspecified;9420
+T-95;Graphik;;;1;0;0;T-9;2;is part of;is parent of;;graph;95
+T-950;nicht näher spezifiziert;;;1;0;0;T-95;2;is part of;is parent of;;unspecified;950
+T-951;schwarzweiss;;;1;0;0;T-95;2;is part of;is parent of;;grayscale;951
+T-9510;nicht näher spezifiziert;;;1;0;0;T-951;2;is part of;is parent of;;unspecified;9510
+T-952;farbig;;;1;0;0;T-95;2;is part of;is parent of;;color;952
+T-9520;nicht näher spezifiziert;;;1;0;0;T-952;2;is part of;is parent of;;unspecified;9520
+T-96;Diagramm;;;1;0;0;T-9;2;is part of;is parent of;;diagram;96
+T-960;nicht näher spezifiziert;;;1;0;0;T-96;2;is part of;is parent of;;unspecified;960
+T-961;schwarzweiss;;;1;0;0;T-96;2;is part of;is parent of;;grayscale;961
+T-9610;nicht näher spezifiziert;;;1;0;0;T-961;2;is part of;is parent of;;unspecified;9610
+T-962;farbig;;;1;0;0;T-96;2;is part of;is parent of;;color;962
+T-9620;nicht näher spezifiziert;;;1;0;0;T-962;2;is part of;is parent of;;unspecified;9620
+T-97;Zeichnung;;;1;0;0;T-9;2;is part of;is parent of;;drawing;97
+T-970;nicht näher spezifiziert;;;1;0;0;T-97;2;is part of;is parent of;;unspecified;970
+T-971;schwarzweiss;;;1;0;0;T-97;2;is part of;is parent of;;grayscale;971
+T-9710;nicht näher spezifiziert;;;1;0;0;T-971;2;is part of;is parent of;;unspecified;9710
+T-972;farbig;;;1;0;0;T-97;2;is part of;is parent of;;color;972
+T-9720;nicht näher spezifiziert;;;1;0;0;T-972;2;is part of;is parent of;;unspecified;9720
+T-98;Kollage medizinisch;;;1;0;0;T-9;2;is part of;is parent of;;multi-panel medical;98
+T-980;nicht näher spezifiziert;;;1;0;0;T-98;2;is part of;is parent of;;unspecified;980
+T-981;schwarzweiss;;;1;0;0;T-98;2;is part of;is parent of;;grayscale;981
+T-9810;nicht näher spezifiziert;;;1;0;0;T-981;2;is part of;is parent of;;unspecified;9810
+T-9811;1 Teil;;;1;0;0;T-981;2;is part of;is parent of;;1 part;9811
+T-9812;2 Teile;;;1;0;0;T-981;2;is part of;is parent of;;2 parts;9812
+T-9813;3 Teile;;;1;0;0;T-981;2;is part of;is parent of;;3 parts;9813
+T-9814;4 Teile;;;1;0;0;T-981;2;is part of;is parent of;;4 parts;9814
+T-9815;5 Teile;;;1;0;0;T-981;2;is part of;is parent of;;5 parts;9815
+T-9816;6 Teile;;;1;0;0;T-981;2;is part of;is parent of;;6 parts;9816
+T-9817;7 Teile;;;1;0;0;T-981;2;is part of;is parent of;;7 parts;9817
+T-9818;8 Teile;;;1;0;0;T-981;2;is part of;is parent of;;8 parts;9818
+T-9819;9 Teile;;;1;0;0;T-981;2;is part of;is parent of;;9 parts;9819
+T-981a;10 Teile;;;1;0;0;T-981;2;is part of;is parent of;;10 parts;981a
+T-981b;11 Teile;;;1;0;0;T-981;2;is part of;is parent of;;11 parts;981b
+T-981c;12 Teile;;;1;0;0;T-981;2;is part of;is parent of;;12 parts;981c
+T-981d;13 Teile;;;1;0;0;T-981;2;is part of;is parent of;;13 parts;981d
+T-981e;14 Teile;;;1;0;0;T-981;2;is part of;is parent of;;14 parts;981e
+T-981f;15 Teile;;;1;0;0;T-981;2;is part of;is parent of;;15 parts;981f
+T-981g;16 Teile;;;1;0;0;T-981;2;is part of;is parent of;;16 parts;981g
+T-981h;17 Teile;;;1;0;0;T-981;2;is part of;is parent of;;17 parts;981h
+T-981i;18 Teile;;;1;0;0;T-981;2;is part of;is parent of;;18 parts;981i
+T-981j;19 Teile;;;1;0;0;T-981;2;is part of;is parent of;;19 parts;981j
+T-981k;20 Teile;;;1;0;0;T-981;2;is part of;is parent of;;20 parts;981k
+T-981l;21 Teile;;;1;0;0;T-981;2;is part of;is parent of;;21 parts;981l
+T-981m;22 Teile;;;1;0;0;T-981;2;is part of;is parent of;;22 parts;981m
+T-981n;23 Teile;;;1;0;0;T-981;2;is part of;is parent of;;23 parts;981n
+T-981o;24 Teile;;;1;0;0;T-981;2;is part of;is parent of;;24 parts;981o
+T-981p;25 Teile;;;1;0;0;T-981;2;is part of;is parent of;;25 parts;981p
+T-982;farbig;;;1;0;0;T-98;2;is part of;is parent of;;color;982
+T-9820;nicht näher spezifiziert;;;1;0;0;T-982;2;is part of;is parent of;;unspecified;9820
+T-9821;1 Teil;;;1;0;0;T-982;2;is part of;is parent of;;1 part;9821
+T-9822;2 Teile;;;1;0;0;T-982;2;is part of;is parent of;;2 parts;9822
+T-9823;3 Teile;;;1;0;0;T-982;2;is part of;is parent of;;3 parts;9823
+T-9824;4 Teile;;;1;0;0;T-982;2;is part of;is parent of;;4 parts;9824
+T-9825;5 Teile;;;1;0;0;T-982;2;is part of;is parent of;;5 parts;9825
+T-9826;6 Teile;;;1;0;0;T-982;2;is part of;is parent of;;6 parts;9826
+T-9827;7 Teile;;;1;0;0;T-982;2;is part of;is parent of;;7 parts;9827
+T-9828;8 Teile;;;1;0;0;T-982;2;is part of;is parent of;;8 parts;9828
+T-9829;9 Teile;;;1;0;0;T-982;2;is part of;is parent of;;9 parts;9829
+T-982a;10 Teile;;;1;0;0;T-982;2;is part of;is parent of;;10 parts;982a
+T-982b;11 Teile;;;1;0;0;T-982;2;is part of;is parent of;;11 parts;982b
+T-982c;12 Teile;;;1;0;0;T-982;2;is part of;is parent of;;12 parts;982c
+T-982d;13 Teile;;;1;0;0;T-982;2;is part of;is parent of;;13 parts;982d
+T-982e;14 Teile;;;1;0;0;T-982;2;is part of;is parent of;;14 parts;982e
+T-982f;15 Teile;;;1;0;0;T-982;2;is part of;is parent of;;15 parts;982f
+T-982g;16 Teile;;;1;0;0;T-982;2;is part of;is parent of;;16 parts;982g
+T-982h;17 Teile;;;1;0;0;T-982;2;is part of;is parent of;;17 parts;982h
+T-982i;18 Teile;;;1;0;0;T-982;2;is part of;is parent of;;18 parts;982i
+T-982j;19 Teile;;;1;0;0;T-982;2;is part of;is parent of;;19 parts;982j
+T-982k;20 Teile;;;1;0;0;T-982;2;is part of;is parent of;;20 parts;982k
+T-982l;21 Teile;;;1;0;0;T-982;2;is part of;is parent of;;21 parts;982l
+T-982m;22 Teile;;;1;0;0;T-982;2;is part of;is parent of;;22 parts;982m
+T-982n;23 Teile;;;1;0;0;T-982;2;is part of;is parent of;;23 parts;982n
+T-982o;24 Teile;;;1;0;0;T-982;2;is part of;is parent of;;24 parts;982o
+T-982p;25 Teile;;;1;0;0;T-982;2;is part of;is parent of;;25 parts;982p
+T-99;Kollage nicht-medizinisch;;;1;0;0;T-9;2;is part of;is parent of;;multi-panel non-medical;99
+T-990;nicht näher spezifiziert;;;1;0;0;T-99;2;is part of;is parent of;;unspecified;990
+T-991;schwarzweiss;;;1;0;0;T-99;2;is part of;is parent of;;grayscale;991
+T-9910;nicht näher spezifiziert;;;1;0;0;T-991;2;is part of;is parent of;;unspecified;9910
+T-9911;1 Teil;;;1;0;0;T-991;2;is part of;is parent of;;1 part;9911
+T-9912;2 Teile;;;1;0;0;T-991;2;is part of;is parent of;;2 parts;9912
+T-9913;3 Teile;;;1;0;0;T-991;2;is part of;is parent of;;3 parts;9913
+T-9914;4 Teile;;;1;0;0;T-991;2;is part of;is parent of;;4 parts;9914
+T-9915;5 Teile;;;1;0;0;T-991;2;is part of;is parent of;;5 parts;9915
+T-9916;6 Teile;;;1;0;0;T-991;2;is part of;is parent of;;6 parts;9916
+T-9917;7 Teile;;;1;0;0;T-991;2;is part of;is parent of;;7 parts;9917
+T-9918;8 Teile;;;1;0;0;T-991;2;is part of;is parent of;;8 parts;9918
+T-9919;9 Teile;;;1;0;0;T-991;2;is part of;is parent of;;9 parts;9919
+T-991a;10 Teile;;;1;0;0;T-991;2;is part of;is parent of;;10 parts;991a
+T-991b;11 Teile;;;1;0;0;T-991;2;is part of;is parent of;;11 parts;991b
+T-991c;12 Teile;;;1;0;0;T-991;2;is part of;is parent of;;12 parts;991c
+T-991d;13 Teile;;;1;0;0;T-991;2;is part of;is parent of;;13 parts;991d
+T-991e;14 Teile;;;1;0;0;T-991;2;is part of;is parent of;;14 parts;991e
+T-991f;15 Teile;;;1;0;0;T-991;2;is part of;is parent of;;15 parts;991f
+T-991g;16 Teile;;;1;0;0;T-991;2;is part of;is parent of;;16 parts;991g
+T-991h;17 Teile;;;1;0;0;T-991;2;is part of;is parent of;;17 parts;991h
+T-991i;18 Teile;;;1;0;0;T-991;2;is part of;is parent of;;18 parts;991i
+T-991j;19 Teile;;;1;0;0;T-991;2;is part of;is parent of;;19 parts;991j
+T-991k;20 Teile;;;1;0;0;T-991;2;is part of;is parent of;;20 parts;991k
+T-991l;21 Teile;;;1;0;0;T-991;2;is part of;is parent of;;21 parts;991l
+T-991m;22 Teile;;;1;0;0;T-991;2;is part of;is parent of;;22 parts;991m
+T-991n;23 Teile;;;1;0;0;T-991;2;is part of;is parent of;;23 parts;991n
+T-991o;24 Teile;;;1;0;0;T-991;2;is part of;is parent of;;24 parts;991o
+T-991p;25 Teile;;;1;0;0;T-991;2;is part of;is parent of;;25 parts;991p
+T-992;farbig;;;1;0;0;T-99;2;is part of;is parent of;;color;992
+T-9920;nicht näher spezifiziert;;;1;0;0;T-992;2;is part of;is parent of;;unspecified;9920
+T-9921;1 Teil;;;1;0;0;T-992;2;is part of;is parent of;;1 part;9921
+T-9922;2 Teile;;;1;0;0;T-992;2;is part of;is parent of;;2 parts;9922
+T-9923;3 Teile;;;1;0;0;T-992;2;is part of;is parent of;;3 parts;9923
+T-9924;4 Teile;;;1;0;0;T-992;2;is part of;is parent of;;4 parts;9924
+T-9925;5 Teile;;;1;0;0;T-992;2;is part of;is parent of;;5 parts;9925
+T-9926;6 Teile;;;1;0;0;T-992;2;is part of;is parent of;;6 parts;9926
+T-9927;7 Teile;;;1;0;0;T-992;2;is part of;is parent of;;7 parts;9927
+T-9928;8 Teile;;;1;0;0;T-992;2;is part of;is parent of;;8 parts;9928
+T-9929;9 Teile;;;1;0;0;T-992;2;is part of;is parent of;;9 parts;9929
+T-992a;10 Teile;;;1;0;0;T-992;2;is part of;is parent of;;10 parts;992a
+T-992b;11 Teile;;;1;0;0;T-992;2;is part of;is parent of;;11 parts;992b
+T-992c;12 Teile;;;1;0;0;T-992;2;is part of;is parent of;;12 parts;992c
+T-992d;13 Teile;;;1;0;0;T-992;2;is part of;is parent of;;13 parts;992d
+T-992e;14 Teile;;;1;0;0;T-992;2;is part of;is parent of;;14 parts;992e
+T-992f;15 Teile;;;1;0;0;T-992;2;is part of;is parent of;;15 parts;992f
+T-992g;16 Teile;;;1;0;0;T-992;2;is part of;is parent of;;16 parts;992g
+T-992h;17 Teile;;;1;0;0;T-992;2;is part of;is parent of;;17 parts;992h
+T-992i;18 Teile;;;1;0;0;T-992;2;is part of;is parent of;;18 parts;992i
+T-992j;19 Teile;;;1;0;0;T-992;2;is part of;is parent of;;19 parts;992j
+T-992k;20 Teile;;;1;0;0;T-992;2;is part of;is parent of;;20 parts;992k
+T-992l;21 Teile;;;1;0;0;T-992;2;is part of;is parent of;;21 parts;992l
+T-992m;22 Teile;;;1;0;0;T-992;2;is part of;is parent of;;22 parts;992m
+T-992n;23 Teile;;;1;0;0;T-992;2;is part of;is parent of;;23 parts;992n
+T-992o;24 Teile;;;1;0;0;T-992;2;is part of;is parent of;;24 parts;992o
+T-992p;25 Teile;;;1;0;0;T-992;2;is part of;is parent of;;25 parts;992p
+T-9a;Kollage gemischt;;;1;0;0;T-9;2;is part of;is parent of;;multi-panel mixed;9a
+T-9a0;nicht näher spezifiziert;;;1;0;0;T-9a;2;is part of;is parent of;;unspecified;9a0
+T-9a1;schwarzweiss;;;1;0;0;T-9a;2;is part of;is parent of;;grayscale;9a1
+T-9a10;nicht näher spezifiziert;;;1;0;0;T-9a1;2;is part of;is parent of;;unspecified;9a10
+T-9a11;1 Teil;;;1;0;0;T-9a1;2;is part of;is parent of;;1 part;9a11
+T-9a12;2 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;2 parts;9a12
+T-9a13;3 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;3 parts;9a13
+T-9a14;4 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;4 parts;9a14
+T-9a15;5 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;5 parts;9a15
+T-9a16;6 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;6 parts;9a16
+T-9a17;7 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;7 parts;9a17
+T-9a18;8 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;8 parts;9a18
+T-9a19;9 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;9 parts;9a19
+T-9a1a;10 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;10 parts;9a1a
+T-9a1b;11 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;11 parts;9a1b
+T-9a1c;12 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;12 parts;9a1c
+T-9a1d;13 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;13 parts;9a1d
+T-9a1e;14 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;14 parts;9a1e
+T-9a1f;15 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;15 parts;9a1f
+T-9a1g;16 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;16 parts;9a1g
+T-9a1h;17 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;17 parts;9a1h
+T-9a1i;18 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;18 parts;9a1i
+T-9a1j;19 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;19 parts;9a1j
+T-9a1k;20 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;20 parts;9a1k
+T-9a1l;21 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;21 parts;9a1l
+T-9a1m;22 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;22 parts;9a1m
+T-9a1n;23 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;23 parts;9a1n
+T-9a1o;24 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;24 parts;9a1o
+T-9a1p;25 Teile;;;1;0;0;T-9a1;2;is part of;is parent of;;25 parts;9a1p
+T-9a2;farbig;;;1;0;0;T-9a;2;is part of;is parent of;;color;9a2
+T-9a20;nicht näher spezifiziert;;;1;0;0;T-9a2;2;is part of;is parent of;;unspecified;9a20
+T-9a21;1 Teil;;;1;0;0;T-9a2;2;is part of;is parent of;;1 part;9a21
+T-9a22;2 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;2 parts;9a22
+T-9a23;3 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;3 parts;9a23
+T-9a24;4 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;4 parts;9a24
+T-9a25;5 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;5 parts;9a25
+T-9a26;6 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;6 parts;9a26
+T-9a27;7 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;7 parts;9a27
+T-9a28;8 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;8 parts;9a28
+T-9a29;9 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;9 parts;9a29
+T-9a2a;10 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;10 parts;9a2a
+T-9a2b;11 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;11 parts;9a2b
+T-9a2c;12 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;12 parts;9a2c
+T-9a2d;13 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;13 parts;9a2d
+T-9a2e;14 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;14 parts;9a2e
+T-9a2f;15 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;15 parts;9a2f
+T-9a2g;16 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;16 parts;9a2g
+T-9a2h;17 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;17 parts;9a2h
+T-9a2i;18 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;18 parts;9a2i
+T-9a2j;19 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;19 parts;9a2j
+T-9a2k;20 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;20 parts;9a2k
+T-9a2l;21 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;21 parts;9a2l
+T-9a2m;22 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;22 parts;9a2m
+T-9a2n;23 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;23 parts;9a2n
+T-9a2o;24 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;24 parts;9a2o
+T-9a2p;25 Teile;;;1;0;0;T-9a2;2;is part of;is parent of;;25 parts;9a2p
+T-9b;Fremdbild;;;1;0;0;T-9;2;is part of;is parent of;;other;9b
+T-9b0;nicht näher spezifiziert;;;1;0;0;T-9b;2;is part of;is parent of;;unspecified;9b0
+T-9b1;schwarzweiss;;;1;0;0;T-9b;2;is part of;is parent of;;grayscale;9b1
+T-9b10;nicht näher spezifiziert;;;1;0;0;T-9b1;2;is part of;is parent of;;unspecified;9b10
+T-9b11;digitalisierte Tabelle;;;1;0;0;T-9b1;2;is part of;is parent of;;scanned table;9b11
+T-9b12;digitalisierte Aufzählung;;;1;0;0;T-9b1;2;is part of;is parent of;;scanned itemize;9b12
+T-9b13;digitalisierte Gleichung;;;1;0;0;T-9b1;2;is part of;is parent of;;scanned equation;9b13
+T-9b14;digitalisiertes Dokument;;;1;0;0;T-9b1;2;is part of;is parent of;;scanned document;9b14
+T-9b15;Artefakt;;;1;0;0;T-9b1;2;is part of;is parent of;;artifact;9b15
+T-9b2;farbig;;;1;0;0;T-9b;2;is part of;is parent of;;color;9b2
+T-9b20;nicht näher spezifiziert;;;1;0;0;T-9b2;2;is part of;is parent of;;unspecified;9b20
+T-9b21;digitalisierte Tabelle;;;1;0;0;T-9b2;2;is part of;is parent of;;scanned table;9b21
+T-9b22;digitalisierte Aufzählung;;;1;0;0;T-9b2;2;is part of;is parent of;;scanned itemize;9b22
+T-9b23;digitalisierte Gleichung;;;1;0;0;T-9b2;2;is part of;is parent of;;scanned equation;9b23
+T-9b24;digitalisiertes Dokument;;;1;0;0;T-9b2;2;is part of;is parent of;;scanned document;9b24
+T-9b25;Artefakt;;;1;0;0;T-9b2;2;is part of;is parent of;;artifact;9b25
+T-9c;Protein Spot;;;1;0;0;T-9;2;is part of;is parent of;;protein spot;9c
+T-9c0;nicht näher spezifiziert;;;1;0;0;T-9c;2;is part of;is parent of;;unspecified;9c0
+T-9c1;schwarzweiss;;;1;0;0;T-9c;2;is part of;is parent of;;grayscale;9c1
+T-9c10;nicht näher spezifiziert;;;1;0;0;T-9c1;2;is part of;is parent of;;unspecified;9c10
+T-9c11;Original;;;1;0;0;T-9c1;2;is part of;is parent of;;original;9c11
+T-9c12;Markierung;;;1;0;0;T-9c1;2;is part of;is parent of;;annotated;9c12
+T-9c2;farbig;;;1;0;0;T-9c;2;is part of;is parent of;;color;9c2
+T-9c20;nicht näher spezifiziert;;;1;0;0;T-9c2;2;is part of;is parent of;;unspecified;9c20
+T-9c21;Original;;;1;0;0;T-9c2;2;is part of;is parent of;;original;9c21
+T-9c22;Markierung;;;1;0;0;T-9c2;2;is part of;is parent of;;annotated;9c22
+D;direction;;;1;1;0;;;;;;;D
+D-0;nicht näher spezifiziert;;;1;0;0;D;2;is part of;is parent of;;unspecified;0
+D-1;coronar;;;1;0;0;D;2;is part of;is parent of;;coronal;1
+D-10;nicht näher spezifiziert;;;1;0;0;D-1;2;is part of;is parent of;;unspecified;10
+D-11;posterioanterior (PA);;;1;0;0;D-1;2;is part of;is parent of;;posteroanterior (PA);11
+D-110;nicht näher spezifiziert;;;1;0;0;D-11;2;is part of;is parent of;;unspecified;110
+D-111;Inspiration;;;1;0;0;D-11;2;is part of;is parent of;;inspiration;111
+D-112;Exspiration;;;1;0;0;D-11;2;is part of;is parent of;;expiration;112
+D-113;Valsalva;;;1;0;0;D-11;2;is part of;is parent of;;valsalva;113
+D-114;Phonation;;;1;0;0;D-11;2;is part of;is parent of;;phonation;114
+D-115;Stehen;;;1;0;0;D-11;2;is part of;is parent of;;upright;115
+D-116;Sitzen;;;1;0;0;D-11;2;is part of;is parent of;;sitting;116
+D-117;Rückenlage;;;1;0;0;D-11;2;is part of;is parent of;;supine;117
+D-118;Bauchlage;;;1;0;0;D-11;2;is part of;is parent of;;prone;118
+D-119;Seitenlage;;;1;0;0;D-11;2;is part of;is parent of;;lateral decubitus;119
+D-11a;Beugung, links;;;1;0;0;D-11;2;is part of;is parent of;;flexion, left;11a
+D-11b;Beugung, rechts;;;1;0;0;D-11;2;is part of;is parent of;;flexion, right;11b
+D-11c;Schluckakt;;;1;0;0;D-11;2;is part of;is parent of;;swallow;11c
+D-11d;Miktion;;;1;0;0;D-11;2;is part of;is parent of;;micturition;11d
+D-11e;Stressaufnahme;;;1;0;0;D-11;2;is part of;is parent of;;bending;11e
+D-11f;axial;;;1;0;0;D-11;2;is part of;is parent of;;axial;11f
+D-11g;linke Seite;;;1;0;0;D-11;2;is part of;is parent of;;left side;11g
+D-11h;rechte Seite;;;1;0;0;D-11;2;is part of;is parent of;;right side;11h
+D-11i;Ethnik: weiß;;;1;0;0;D-11;2;is part of;is parent of;;ethnic: caucasian;11i
+D-11j;Ethnik: asiatisch;;;1;0;0;D-11;2;is part of;is parent of;;ethnic: asian;11j
+D-11k;Ethnik: afroamerikanisch;;;1;0;0;D-11;2;is part of;is parent of;;ethnic: african-american;11k
+D-11l;Ethnik: lateinamerikanisch;;;1;0;0;D-11;2;is part of;is parent of;;ethnic: hispanic;11l
+D-12;anterioposterior (coronar);;;1;0;0;D-1;2;is part of;is parent of;;anteroposterior (AP, coronal);12
+D-120;nicht näher spezifiziert;;;1;0;0;D-12;2;is part of;is parent of;;unspecified;120
+D-121;Inspiration;;;1;0;0;D-12;2;is part of;is parent of;;inspiration;121
+D-122;Exspiration;;;1;0;0;D-12;2;is part of;is parent of;;expiration;122
+D-123;Valsalva;;;1;0;0;D-12;2;is part of;is parent of;;valsalva;123
+D-124;Phonation;;;1;0;0;D-12;2;is part of;is parent of;;phonation;124
+D-125;Stehen;;;1;0;0;D-12;2;is part of;is parent of;;upright;125
+D-126;Sitzen;;;1;0;0;D-12;2;is part of;is parent of;;sitting;126
+D-127;Rückenlage;;;1;0;0;D-12;2;is part of;is parent of;;supine;127
+D-128;Bauchlage;;;1;0;0;D-12;2;is part of;is parent of;;prone;128
+D-129;Seitenlage;;;1;0;0;D-12;2;is part of;is parent of;;lateral decubitus;129
+D-12a;Beugung, links;;;1;0;0;D-12;2;is part of;is parent of;;flexion, left;12a
+D-12b;Beugung, rechts;;;1;0;0;D-12;2;is part of;is parent of;;flexion, right;12b
+D-12c;Schluckakt;;;1;0;0;D-12;2;is part of;is parent of;;swallow;12c
+D-12d;Miktion;;;1;0;0;D-12;2;is part of;is parent of;;micturition;12d
+D-12e;Stressaufnahme;;;1;0;0;D-12;2;is part of;is parent of;;bending;12e
+D-12f;axial;;;1;0;0;D-12;2;is part of;is parent of;;axial;12f
+D-12g;linke Seite;;;1;0;0;D-12;2;is part of;is parent of;;left side;12g
+D-12h;rechte Seite;;;1;0;0;D-12;2;is part of;is parent of;;right Side;12h
+D-12i;Ethnik: weiß;;;1;0;0;D-12;2;is part of;is parent of;;ethnic: caucasian;12i
+D-12j;Ethnik: asiatisch;;;1;0;0;D-12;2;is part of;is parent of;;ethnic: asian;12j
+D-12k;Ethnik: afroamerikanisch;;;1;0;0;D-12;2;is part of;is parent of;;ethnic: african-american;12k
+D-12l;Ethnik: lateinamerikanisch;;;1;0;0;D-12;2;is part of;is parent of;;ethnic: hispanic;12l
+D-12m;aufrecht;;;1;0;0;D-12;2;is part of;is parent of;;upright;12m
+D-12n;links gekippt;;;1;0;0;D-12;2;is part of;is parent of;;left tilted;12n
+D-12o;rechts gekippt;;;1;0;0;D-12;2;is part of;is parent of;;right tilted;12o
+D-2;sagittal;;;1;0;0;D;2;is part of;is parent of;;sagittal;2
+D-20;nicht näher spezifiziert;;;1;0;0;D-2;2;is part of;is parent of;;unspecified;20
+D-21;lateral, linksanliegend;;;1;0;0;D-2;2;is part of;is parent of;;lateral, right-left;21
+D-210;nicht näher spezifiziert;;;1;0;0;D-21;2;is part of;is parent of;;unspecified;210
+D-211;Inspiration;;;1;0;0;D-21;2;is part of;is parent of;;inspiration;211
+D-212;Exspiration;;;1;0;0;D-21;2;is part of;is parent of;;expiration;212
+D-213;Valsalva;;;1;0;0;D-21;2;is part of;is parent of;;valsalva;213
+D-214;Hitzenberger (Schnupfversuch);;;1;0;0;D-21;2;is part of;is parent of;;Hitzenberg maneuver;214
+D-215;Stehen;;;1;0;0;D-21;2;is part of;is parent of;;upright;215
+D-216;Rückenlage;;;1;0;0;D-21;2;is part of;is parent of;;supine;216
+D-217;Bauchlage;;;1;0;0;D-21;2;is part of;is parent of;;prone;217
+D-218;Inklination;;;1;0;0;D-21;2;is part of;is parent of;;inclination;218
+D-219;Reklination;;;1;0;0;D-21;2;is part of;is parent of;;reclination;219
+D-21a;Schluckakt;;;1;0;0;D-21;2;is part of;is parent of;;swallow;21a
+D-21b;Defäkation;;;1;0;0;D-21;2;is part of;is parent of;;defaecation;21b
+D-21c;Miktion;;;1;0;0;D-21;2;is part of;is parent of;;micturition;21c
+D-22;lateral, rechtsanliegend;;;1;0;0;D-2;2;is part of;is parent of;;lateral, left-right;22
+D-220;nicht näher spezifiziert;;;1;0;0;D-22;2;is part of;is parent of;;unspecified;220
+D-221;Inspiration;;;1;0;0;D-22;2;is part of;is parent of;;inspiration;221
+D-222;Exspiration;;;1;0;0;D-22;2;is part of;is parent of;;expiration;222
+D-223;Valsalva;;;1;0;0;D-22;2;is part of;is parent of;;valsalva;223
+D-224;Hitzenberger (Schnupfversuch);;;1;0;0;D-22;2;is part of;is parent of;;Hitzenberg maneuver;224
+D-225;Stehen;;;1;0;0;D-22;2;is part of;is parent of;;upright;225
+D-226;Rückenlage;;;1;0;0;D-22;2;is part of;is parent of;;supine;226
+D-227;Bauchlage;;;1;0;0;D-22;2;is part of;is parent of;;prone;227
+D-228;Inklination;;;1;0;0;D-22;2;is part of;is parent of;;inclination;228
+D-229;Reklination;;;1;0;0;D-22;2;is part of;is parent of;;reclination;229
+D-22a;Schluckakt;;;1;0;0;D-22;2;is part of;is parent of;;swallow;22a
+D-22b;Defäkation;;;1;0;0;D-22;2;is part of;is parent of;;defaecation;22b
+D-22c;Miktion;;;1;0;0;D-22;2;is part of;is parent of;;micturition;22c
+D-23;mediolateral;;;1;0;0;D-2;2;is part of;is parent of;;mediolateral;23
+D-230;nicht näher spezifiziert;;;1;0;0;D-23;2;is part of;is parent of;;unspecified;230
+D-24;lateromedial;;;1;0;0;D-2;2;is part of;is parent of;;lateromedial;24
+D-240;nicht näher spezifiziert;;;1;0;0;D-24;2;is part of;is parent of;;unspecified;240
+D-3;axial;;;1;0;0;D;2;is part of;is parent of;;axial;3
+D-30;nicht näher spezifiziert;;;1;0;0;D-3;2;is part of;is parent of;;unspecified;30
+D-31;craniocaudal;;;1;0;0;D-3;2;is part of;is parent of;;craniocaudal;31
+D-310;nicht näher spezifiziert;;;1;0;0;D-31;2;is part of;is parent of;;unspecified;310
+D-311;rechtsanliegend;;;1;0;0;D-31;2;is part of;is parent of;;right adjoining;311
+D-312;linksanliegend;;;1;0;0;D-31;2;is part of;is parent of;;left adjoining;312
+D-32;caudocranial (transversal, axial);;;1;0;0;D-3;2;is part of;is parent of;;caudocranial (transversal, axial);32
+D-320;nicht näher spezifiziert;;;1;0;0;D-32;2;is part of;is parent of;;unspecified;320
+D-321;rechtsanliegend;;;1;0;0;D-32;2;is part of;is parent of;;right adjoining;321
+D-322;linksanliegend;;;1;0;0;D-32;2;is part of;is parent of;;left adjoining;322
+D-4;sonstige Orientierung;;;1;0;0;D;2;is part of;is parent of;;other orientation;4
+D-40;nicht näher spezifiziert;;;1;0;0;D-4;2;is part of;is parent of;;unspecified;40
+D-41;schräg;;;1;0;0;D-4;2;is part of;is parent of;;oblique;41
+D-410;nicht näher spezifiziert;;;1;0;0;D-41;2;is part of;is parent of;;unspecified;410
+D-411;Standardbild;;;1;0;0;D-41;2;is part of;is parent of;;single view;411
+D-412;Mehrfachbild;;;1;0;0;D-41;2;is part of;is parent of;;multi view;412
+D-413;Zoom;;;1;0;0;D-41;2;is part of;is parent of;;zoom;413
+D-42;okzipitofrontal;;;1;0;0;D-4;2;is part of;is parent of;;occipitofrontal;42
+D-420;nicht näher spezifiziert;;;1;0;0;D-42;2;is part of;is parent of;;unspecified;420
+D-43;okzipitomental;;;1;0;0;D-4;2;is part of;is parent of;;occipitomental;43
+D-430;nicht näher spezifiziert;;;1;0;0;D-43;2;is part of;is parent of;;unspecified;430
+D-44;bregmatikookzipital;;;1;0;0;D-4;2;is part of;is parent of;;bregmaticooccipital;44
+D-440;nicht näher spezifiziert;;;1;0;0;D-44;2;is part of;is parent of;;unspecified;440
+D-45;submentobregmatikal;;;1;0;0;D-4;2;is part of;is parent of;;submentobregmatical;45
+D-450;nicht näher spezifiziert;;;1;0;0;D-45;2;is part of;is parent of;;unspecified;450
+D-46;submentobregmatikofrontal;;;1;0;0;D-4;2;is part of;is parent of;;submentobregmaticofrontal;46
+D-460;nicht näher spezifiziert;;;1;0;0;D-46;2;is part of;is parent of;;unspecified;460
+D-47;bregmatikooral;;;1;0;0;D-4;2;is part of;is parent of;;bregmaticooral;47
+D-470;nicht näher spezifiziert;;;1;0;0;D-47;2;is part of;is parent of;;unspecified;470
+D-48;bregmatikosubmental;;;1;0;0;D-4;2;is part of;is parent of;;bregmaticosubmental;48
+D-480;nicht näher spezifiziert;;;1;0;0;D-48;2;is part of;is parent of;;unspecified;480
+D-49;RAO (right anterior oblique);;;1;0;0;D-4;2;is part of;is parent of;;right anterior oblique (RAO);49
+D-490;nicht näher spezifiziert;;;1;0;0;D-49;2;is part of;is parent of;;unspecified;490
+D-4a;LAO (left anterior oblique);;;1;0;0;D-4;2;is part of;is parent of;;left anterior oblique (LAO);4a
+D-4a0;nicht näher spezifiziert;;;1;0;0;D-4a;2;is part of;is parent of;;unspecified;4a0
+D-4b;frontookzipital;;;1;0;0;D-4;2;is part of;is parent of;;frontooccipital;4b
+D-4b0;nicht näher spezifiziert;;;1;0;0;D-4b;2;is part of;is parent of;;unspecified;4b0
+D-4c;senkrecht zur Kieferachse;;;1;0;0;D-4;2;is part of;is parent of;;perpendicular to the dental arch;4c
+D-4c0;nicht näher spezifiziert;;;1;0;0;D-4c;2;is part of;is parent of;;unspecified;4c0
+D-4c1;rechtsanliegend;;;1;0;0;D-4c;2;is part of;is parent of;;right adjoining;4c1
+D-4c2;linksanliegend;;;1;0;0;D-4c;2;is part of;is parent of;;left adjoining;4c2
+D-5;RSA / ap und lateral (simultan);;;1;0;0;D;2;is part of;is parent of;;RSA / ap and lateral (simultaneously);5
+D-50;nicht näher spezifiziert;;;1;0;0;D-5;2;is part of;is parent of;;unspecified;50
+A;anatomy;;;1;1;0;;;;;;;A
+A-0;nicht näher spezifiziert;;;1;0;0;A;2;is part of;is parent of;;unspecified;0
+A-1;Ganzkörper;;;1;0;0;A;2;is part of;is parent of;;whole body;1
+A-10;nicht näher spezifiziert;;;1;0;0;A-1;2;is part of;is parent of;;unspecified;10
+A-11;Rumpf;;;1;0;0;A-1;2;is part of;is parent of;;torso;11
+A-110;nicht näher spezifiziert;;;1;0;0;A-11;2;is part of;is parent of;;unspecified;110
+A-12;Extremitäten;;;1;0;0;A-1;2;is part of;is parent of;;extremities;12
+A-120;nicht näher spezifiziert;;;1;0;0;A-12;2;is part of;is parent of;;unspecified;120
+A-13;Körperoberfläche;;;1;0;0;A-1;2;is part of;is parent of;;body surface;13
+A-130;nicht näher spezifiziert;;;1;0;0;A-13;2;is part of;is parent of;;unspecified;130
+A-2;Kopf (Schädel);;;1;0;0;A;2;is part of;is parent of;;cranium;2
+A-20;nicht näher spezifiziert;;;1;0;0;A-2;2;is part of;is parent of;;unspecified;20
+A-21;Gesichtsschädel;;;1;0;0;A-2;2;is part of;is parent of;;facial cranium;21
+A-210;nicht näher spezifiziert;;;1;0;0;A-21;2;is part of;is parent of;;unspecified;210
+A-211;Stirnbereich;;;1;0;0;A-21;2;is part of;is parent of;;forehead;211
+A-212;Augenbereich;;;1;0;0;A-21;2;is part of;is parent of;;eye area;212
+A-213;Nasenbereich;;;1;0;0;A-21;2;is part of;is parent of;;nose area;213
+A-214;Oberkiefer;;;1;0;0;A-21;2;is part of;is parent of;;maxilla;214
+A-215;Unterkiefer;;;1;0;0;A-21;2;is part of;is parent of;;mandible;215
+A-216;Temporo-Mandibular-Bereich;;;1;0;0;A-21;2;is part of;is parent of;;temporo mandibular area;216
+A-217;Paranasalregion;;;1;0;0;A-21;2;is part of;is parent of;;paranasal area;217
+A-218;Kieferregion;;;1;0;0;A-21;2;is part of;is parent of;;jaw areas;218
+A-219;Zahnregion;;;1;0;0;A-21;2;is part of;is parent of;;dental areas;219
+A-21a;Kieferwinkelregion;;;1;0;0;A-21;2;is part of;is parent of;;ramus area;21a
+A-21b;Molarregion;;;1;0;0;A-21;2;is part of;is parent of;;molar upper and lower jaw;21b
+A-21c;Molarregion, Oberkiefer;;;1;0;0;A-21;2;is part of;is parent of;;molar upper jaw;21c
+A-21d;3. Molarregion, Oberkiefer;;;1;0;0;A-21;2;is part of;is parent of;;3rd molar upper jaw;21d
+A-21e;Molarregion, Unterkiefer;;;1;0;0;A-21;2;is part of;is parent of;;molar lower jaw;21e
+A-21f;3. Molarregion, Unterkiefer;;;1;0;0;A-21;2;is part of;is parent of;;3rd molar lower jaw;21f
+A-21g;Prämolarregion;;;1;0;0;A-21;2;is part of;is parent of;;premolar upper and lower jaw;21g
+A-21h;Prämolarregion, Oberkiefer;;;1;0;0;A-21;2;is part of;is parent of;;premolar upper jaw;21h
+A-21i;Prämolarregion, Unterkiefer;;;1;0;0;A-21;2;is part of;is parent of;;premolar lower jaw;21i
+A-21j;Eckzahnregion;;;1;0;0;A-21;2;is part of;is parent of;;canine upper and lower jaw;21j
+A-21k;Eckzahnregion, Oberkiefer;;;1;0;0;A-21;2;is part of;is parent of;;canine upper jaw;21k
+A-21l;Eckzahnregion, Unterkiefer;;;1;0;0;A-21;2;is part of;is parent of;;canine lower jaw;21l
+A-21m;Frontzahnregion;;;1;0;0;A-21;2;is part of;is parent of;;incisor upper and lower jaw;21m
+A-21n;Frontzahnregion, Oberkiefer;;;1;0;0;A-21;2;is part of;is parent of;;incisor upper jaw;21n
+A-21o;Frontzahnregion, Unterkiefer;;;1;0;0;A-21;2;is part of;is parent of;;incisor lower jaw;21o
+A-21p;linkes Auge;;;1;0;0;A-21;2;is part of;is parent of;;left eye;21p
+A-21q;rechtes Auge;;;1;0;0;A-21;2;is part of;is parent of;;right eye;21q
+A-22;Schädelbasis;;;1;0;0;A-2;2;is part of;is parent of;;cranial base;22
+A-220;nicht näher spezifiziert;;;1;0;0;A-22;2;is part of;is parent of;;unspecified;220
+A-221;Felsenbein;;;1;0;0;A-22;2;is part of;is parent of;;petrous bone;221
+A-222;Sella;;;1;0;0;A-22;2;is part of;is parent of;;sella;222
+A-23;Hirnschädel;;;1;0;0;A-2;2;is part of;is parent of;;neuro cranium;23
+A-230;nicht näher spezifiziert;;;1;0;0;A-23;2;is part of;is parent of;;unspecified;230
+A-231;Frontalbereich;;;1;0;0;A-23;2;is part of;is parent of;;frontal area;231
+A-232;Parietalbereich;;;1;0;0;A-23;2;is part of;is parent of;;parietal area;232
+A-233;Occipitalbereich;;;1;0;0;A-23;2;is part of;is parent of;;occipital area;233
+A-234;Temporalbereich;;;1;0;0;A-23;2;is part of;is parent of;;temporal area;234
+A-3;Wirbelsäule;;;1;0;0;A;2;is part of;is parent of;;spine;3
+A-30;nicht näher spezifiziert;;;1;0;0;A-3;2;is part of;is parent of;;unspecified;30
+A-31;Halswirbelsäule (HWS);;;1;0;0;A-3;2;is part of;is parent of;;cervical spine;31
+A-310;nicht näher spezifiziert;;;1;0;0;A-31;2;is part of;is parent of;;unspecified;310
+A-311;Dens axis;;;1;0;0;A-31;2;is part of;is parent of;;dens axis;311
+A-312;---;;;1;0;0;A-31;2;is part of;is parent of;;---;312
+A-313;obere Halswirbelsäule;;;1;0;0;A-31;2;is part of;is parent of;;upper cervical spine;313
+A-314;untere Halswirbelsäule;;;1;0;0;A-31;2;is part of;is parent of;;lower cervical spine;314
+A-315;C1 (Atlas);;;1;0;0;A-31;2;is part of;is parent of;;C1;315
+A-316;C2 (Axis);;;1;0;0;A-31;2;is part of;is parent of;;C2;316
+A-317;C3;;;1;0;0;A-31;2;is part of;is parent of;;C3;317
+A-318;C4;;;1;0;0;A-31;2;is part of;is parent of;;C4;318
+A-319;C5;;;1;0;0;A-31;2;is part of;is parent of;;C5;319
+A-31a;C6;;;1;0;0;A-31;2;is part of;is parent of;;C6;31a
+A-31b;C7;;;1;0;0;A-31;2;is part of;is parent of;;C7;31b
+A-32;Brustwirbelsäule (BWS);;;1;0;0;A-3;2;is part of;is parent of;;thoracic spine;32
+A-320;nicht näher spezifiziert;;;1;0;0;A-32;2;is part of;is parent of;;unspecified;320
+A-321;HWS/BWS-Übergang;;;1;0;0;A-32;2;is part of;is parent of;;cervico-thoracic conjunction;321
+A-322;obere Brustwirbelsäule;;;1;0;0;A-32;2;is part of;is parent of;;upper thoracic spine;322
+A-323;mittlere Brustwirbelsäule;;;1;0;0;A-32;2;is part of;is parent of;;middle thoracic spine;323
+A-324;untere Brustwirbelsäule;;;1;0;0;A-32;2;is part of;is parent of;;lower thoracic spine;324
+A-325;T1;;;1;0;0;A-32;2;is part of;is parent of;;T1;325
+A-326;T2;;;1;0;0;A-32;2;is part of;is parent of;;T2;326
+A-327;T3;;;1;0;0;A-32;2;is part of;is parent of;;T3;327
+A-328;T4;;;1;0;0;A-32;2;is part of;is parent of;;T4;328
+A-329;T5;;;1;0;0;A-32;2;is part of;is parent of;;T5;329
+A-32a;T6;;;1;0;0;A-32;2;is part of;is parent of;;T6;32a
+A-32b;T7;;;1;0;0;A-32;2;is part of;is parent of;;T7;32b
+A-32c;T8;;;1;0;0;A-32;2;is part of;is parent of;;T8;32c
+A-32d;T9;;;1;0;0;A-32;2;is part of;is parent of;;T9;32d
+A-32e;T10;;;1;0;0;A-32;2;is part of;is parent of;;T10;32e
+A-32f;T11;;;1;0;0;A-32;2;is part of;is parent of;;T11;32f
+A-32g;T12;;;1;0;0;A-32;2;is part of;is parent of;;T12;32g
+A-33;Lendenwirbelsäule (LWS);;;1;0;0;A-3;2;is part of;is parent of;;lumbar spine;33
+A-330;nicht näher spezifiziert;;;1;0;0;A-33;2;is part of;is parent of;;unspecified;330
+A-331;thorako-lumbaler Übergang;;;1;0;0;A-33;2;is part of;is parent of;;thoraco-lumbar conjunction;331
+A-332;obere Lendenwirbelsäule;;;1;0;0;A-33;2;is part of;is parent of;;upper lumbar spine;332
+A-333;untere Lendenwirbelsäule;;;1;0;0;A-33;2;is part of;is parent of;;lower lumbar spine;333
+A-334;L1;;;1;0;0;A-33;2;is part of;is parent of;;L1;334
+A-335;L2;;;1;0;0;A-33;2;is part of;is parent of;;L2;335
+A-336;L3;;;1;0;0;A-33;2;is part of;is parent of;;L3;336
+A-337;L4;;;1;0;0;A-33;2;is part of;is parent of;;L4;337
+A-338;L5;;;1;0;0;A-33;2;is part of;is parent of;;L5;338
+A-34;Kreuzbein;;;1;0;0;A-3;2;is part of;is parent of;;sacral spine;34
+A-340;nicht näher spezifiziert;;;1;0;0;A-34;2;is part of;is parent of;;unspecified;340
+A-341;lumbosacraler Übergang;;;1;0;0;A-34;2;is part of;is parent of;;lumbo-sacral conjunction;341
+A-342;S1;;;1;0;0;A-34;2;is part of;is parent of;;S1;342
+A-343;S2;;;1;0;0;A-34;2;is part of;is parent of;;S2;343
+A-344;S3;;;1;0;0;A-34;2;is part of;is parent of;;S3;344
+A-345;S4;;;1;0;0;A-34;2;is part of;is parent of;;S4;345
+A-346;S5;;;1;0;0;A-34;2;is part of;is parent of;;S5;346
+A-35;Steißbein;;;1;0;0;A-3;2;is part of;is parent of;;coccygeal bone;35
+A-350;nicht näher spezifiziert;;;1;0;0;A-35;2;is part of;is parent of;;unspecified;350
+A-351;S6;;;1;0;0;A-35;2;is part of;is parent of;;S6;351
+A-4;obere Extremität (Arm);;;1;0;0;A;2;is part of;is parent of;;upper extremity (arm);4
+A-40;nicht näher spezifiziert;;;1;0;0;A-4;2;is part of;is parent of;;unspecified;40
+A-41;Hand;;;1;0;0;A-4;2;is part of;is parent of;;hand;41
+A-410;nicht näher spezifiziert;;;1;0;0;A-41;2;is part of;is parent of;;unspecified;410
+A-411;Finger (nicht näher spezifiziert);;;1;0;0;A-41;2;is part of;is parent of;;finger (unspecified);411
+A-412;Mittelhand;;;1;0;0;A-41;2;is part of;is parent of;;middle hand;412
+A-413;Handwurzel;;;1;0;0;A-41;2;is part of;is parent of;;carpal bones;413
+A-414;linke Hand;;;1;0;0;A-41;2;is part of;is parent of;;left hand;414
+A-415;rechte Hand;;;1;0;0;A-41;2;is part of;is parent of;;right hand;415
+A-416;Finger (linke Hand);;;1;0;0;A-41;2;is part of;is parent of;;finger (left hand);416
+A-417;Finger (rechte Hand);;;1;0;0;A-41;2;is part of;is parent of;;finger (right hand);417
+A-418;Epiphyse kl. Finger, distal/intermed. Phalanx;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis fifth finger, distal/middle phalanx;418
+A-419;Epiphyse kl. Finger, intermed./proximal Phalanx;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis fifth finger, middle/proximal phalanx;419
+A-41a;Epiphyse kl. Finger, Phalanx/Mittelhand;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis fifth finger, phalanx/metacarpal;41a
+A-41b;Epiphyse kl. Finger, Mittelhand/Handwurzel;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis fifth finger, metacarpal/carpal;41b
+A-41c;Epiphyse Ringfinger, distal/intermed. Phalanx;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis fourth finger, distal/middle phalanx;41c
+A-41d;Epiphyse Ringfinger, intermed./proximal Phalanx;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis fourth finger, middle/proximal phalanx;41d
+A-41e;Epiphyse Ringfinger, Phalanx/Mittelhand;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis fourth finger, phalanx/metacarpal;41e
+A-41f;Epiphyse Ringfinger, Mittelhand/Handwurzel;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis fourth finger, metacarpal/carpal;41f
+A-41g;Epiphyse Mittelfinger, distal/intermed. Phalanx;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis third finger, distal/middle phalanx;41g
+A-41h;Epiphyse Mittelfinger, intermed./proximal Phalanx;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis third finger, middle/proximal phalanx;41h
+A-41i;Epiphyse Mittelfinger, Phalanx/Mittelhand;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis third finger, phalanx/metacarpal;41i
+A-41j;Epiphyse Mittelfinger, Mittelhand/Handwurzel;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis third finger, metacarpal/carpal;41j
+A-41k;Epiphyse Zeigefinger, distal/intermed. Phalanx;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis second finger, distal/middle phalanx;41k
+A-41l;Epiphyse Zeigefinger, intermed./proximal Phalanx;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis second finger, middle/proximal phalanx;41l
+A-41m;Epiphyse Zeigefinger, Phalanx/Mittelhand;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis second finger, phalanx/metacarpal;41m
+A-41n;Epiphyse Zeigefinger, Mittelhand/Handwurzel;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis second finger, metacarpal/carpal;41n
+A-41o;Epiphyse Daumen, distal/proximal Phalanx;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis thumb, distal/proximal phalanx;41o
+A-41p;Epiphyse Daumen, Phalanx/Mittelhand;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis thumb, phalanx/metacarpal;41p
+A-41q;Epiphyse Daumen, Mittelhand/Handwurzel;;;1;0;0;A-41;2;is part of;is parent of;;epiphysis thumb, metacarpal/carpal;41q
+A-42;Handgelenk;;;1;0;0;A-4;2;is part of;is parent of;;radio carpal joint;42
+A-420;nicht näher spezifiziert;;;1;0;0;A-42;2;is part of;is parent of;;unspecified;420
+A-421;linkes Handgelenk;;;1;0;0;A-42;2;is part of;is parent of;;left carpal joint;421
+A-422;rechtes Handgelenk;;;1;0;0;A-42;2;is part of;is parent of;;right carpal joint;422
+A-43;Unterarm;;;1;0;0;A-4;2;is part of;is parent of;;forearm;43
+A-430;nicht näher spezifiziert;;;1;0;0;A-43;2;is part of;is parent of;;unspecified;430
+A-431;distaler Unterarm;;;1;0;0;A-43;2;is part of;is parent of;;distal forearm;431
+A-432;proximaler Unterarm;;;1;0;0;A-43;2;is part of;is parent of;;proximal forearm;432
+A-433;linker distaler Unterarm;;;1;0;0;A-43;2;is part of;is parent of;;left distal forearm;433
+A-434;rechter distaler Unterarm;;;1;0;0;A-43;2;is part of;is parent of;;right distal forearm;434
+A-435;linker proximaler Unterarm;;;1;0;0;A-43;2;is part of;is parent of;;left proximal forearm;435
+A-436;rechter proximaler Unterarm;;;1;0;0;A-43;2;is part of;is parent of;;right proximal forearm;436
+A-437;linker Unterarm;;;1;0;0;A-43;2;is part of;is parent of;;left forearm;437
+A-438;rechter Unterarm;;;1;0;0;A-43;2;is part of;is parent of;;right forearm;438
+A-44;Ellenbogen;;;1;0;0;A-4;2;is part of;is parent of;;elbow;44
+A-440;nicht näher spezifiziert;;;1;0;0;A-44;2;is part of;is parent of;;unspecified;440
+A-441;linker Ellenbogen;;;1;0;0;A-44;2;is part of;is parent of;;left elbow;441
+A-442;rechter Ellenbogen;;;1;0;0;A-44;2;is part of;is parent of;;right elbow;442
+A-45;Oberarm;;;1;0;0;A-4;2;is part of;is parent of;;upper arm;45
+A-450;nicht näher spezifiziert;;;1;0;0;A-45;2;is part of;is parent of;;unspecified;450
+A-451;linker Oberarm;;;1;0;0;A-45;2;is part of;is parent of;;left upper arm;451
+A-452;rechter Oberarm;;;1;0;0;A-45;2;is part of;is parent of;;right upper arm;452
+A-453;linker proximaler Oberarm;;;1;0;0;A-45;2;is part of;is parent of;;left proximal upper arm;453
+A-454;rechter proximaler Oberarm;;;1;0;0;A-45;2;is part of;is parent of;;right proximal upper arm;454
+A-455;linker distaler Oberarm;;;1;0;0;A-45;2;is part of;is parent of;;left distal upper arm;455
+A-456;rechter distaler Oberarm;;;1;0;0;A-45;2;is part of;is parent of;;right distal upper arm;456
+A-46;Schulter;;;1;0;0;A-4;2;is part of;is parent of;;shoulder;46
+A-460;nicht näher spezifiziert;;;1;0;0;A-46;2;is part of;is parent of;;unspecified;460
+A-461;Scapula;;;1;0;0;A-46;2;is part of;is parent of;;scapula;461
+A-462;linkes Humeroscapulargelenk;;;1;0;0;A-46;2;is part of;is parent of;;left humero-scapular joint;462
+A-463;rechtes Humeroscapulargelenk;;;1;0;0;A-46;2;is part of;is parent of;;right humero-scapular joint;463
+A-464;linkes Acromioklavikulargelenk;;;1;0;0;A-46;2;is part of;is parent of;;left acromio-scapula joint;464
+A-465;rechtes Acromioklavikulargelenk;;;1;0;0;A-46;2;is part of;is parent of;;right acromio-scapula joint;465
+A-466;linke Scapula;;;1;0;0;A-46;2;is part of;is parent of;;left scapula;466
+A-467;rechte Scapula;;;1;0;0;A-46;2;is part of;is parent of;;right scapula;467
+A-5;Thorax;;;1;0;0;A;2;is part of;is parent of;;chest;5
+A-50;nicht näher spezifiziert;;;1;0;0;A-5;2;is part of;is parent of;;unspecified;50
+A-51;Knochen;;;1;0;0;A-5;2;is part of;is parent of;;bones;51
+A-510;nicht näher spezifiziert;;;1;0;0;A-51;2;is part of;is parent of;;unspecified;510
+A-511;Schlüsselbein;;;1;0;0;A-51;2;is part of;is parent of;;clavicle;511
+A-512;Sternoclaviculärregion;;;1;0;0;A-51;2;is part of;is parent of;;sternoclavicle region;512
+A-513;Brustbein;;;1;0;0;A-51;2;is part of;is parent of;;sternum;513
+A-514;rechte Rippen;;;1;0;0;A-51;2;is part of;is parent of;;right ribs;514
+A-515;linke Rippen;;;1;0;0;A-51;2;is part of;is parent of;;left ribs;515
+A-516;linkes Schlüsselbein;;;1;0;0;A-51;2;is part of;is parent of;;left clavicle;516
+A-517;rechtes Schlüsselbein;;;1;0;0;A-51;2;is part of;is parent of;;right clavicle;517
+A-52;Lungen;;;1;0;0;A-5;2;is part of;is parent of;;lung;52
+A-520;nicht näher spezifiziert;;;1;0;0;A-52;2;is part of;is parent of;;unspecified;520
+A-521;Oberlappen;;;1;0;0;A-52;2;is part of;is parent of;;upper lobe;521
+A-522;Mittellappen;;;1;0;0;A-52;2;is part of;is parent of;;middle lobe;522
+A-523;Unterlappen;;;1;0;0;A-52;2;is part of;is parent of;;lower lobe;523
+A-53;Hilus;;;1;0;0;A-5;2;is part of;is parent of;;hilum;53
+A-530;nicht näher spezifiziert;;;1;0;0;A-53;2;is part of;is parent of;;unspecified;530
+A-54;Mediastinum;;;1;0;0;A-5;2;is part of;is parent of;;mediastinum;54
+A-540;nicht näher spezifiziert;;;1;0;0;A-54;2;is part of;is parent of;;unspecified;540
+A-541;vorderes Mediastinum;;;1;0;0;A-54;2;is part of;is parent of;;anterior mediastinum;541
+A-542;mittleres Mediastinum;;;1;0;0;A-54;2;is part of;is parent of;;middle mediastinum;542
+A-543;hinteres Mediastinum;;;1;0;0;A-54;2;is part of;is parent of;;posterior mediastinum;543
+A-55;Herz;;;1;0;0;A-5;2;is part of;is parent of;;heart;55
+A-550;nicht näher spezifiziert;;;1;0;0;A-55;2;is part of;is parent of;;unspecified;550
+A-56;Zwerchfell;;;1;0;0;A-5;2;is part of;is parent of;;diaphragm;56
+A-560;nicht näher spezifiziert;;;1;0;0;A-56;2;is part of;is parent of;;unspecified;560
+A-6;Brust (Mamma);;;1;0;0;A;2;is part of;is parent of;;breast (mamma);6
+A-60;nicht näher spezifiziert;;;1;0;0;A-6;2;is part of;is parent of;;unspecified;60
+A-61;rechte Brust;;;1;0;0;A-6;2;is part of;is parent of;;right breast;61
+A-610;nicht näher spezifiziert;;;1;0;0;A-61;2;is part of;is parent of;;unspecified;610
+A-611;Vergrößerung;;;1;0;0;A-61;2;is part of;is parent of;;zoom;611
+A-62;linke Brust;;;1;0;0;A-6;2;is part of;is parent of;;left breast;62
+A-620;nicht näher spezifiziert;;;1;0;0;A-62;2;is part of;is parent of;;unspecified;620
+A-621;Vergrößerung;;;1;0;0;A-62;2;is part of;is parent of;;zoom;621
+A-7;Bauch (Abdomen);;;1;0;0;A;2;is part of;is parent of;;abdomen;7
+A-70;nicht näher spezifiziert;;;1;0;0;A-7;2;is part of;is parent of;;unspecified;70
+A-71;Oberbauch;;;1;0;0;A-7;2;is part of;is parent of;;upper abdomen;71
+A-710;nicht näher spezifiziert;;;1;0;0;A-71;2;is part of;is parent of;;unspecified;710
+A-711;rechter Oberbauch;;;1;0;0;A-71;2;is part of;is parent of;;upper right quadrant;711
+A-712;mittlerer Oberbauch;;;1;0;0;A-71;2;is part of;is parent of;;upper middle quadrant;712
+A-713;linker Oberbauch;;;1;0;0;A-71;2;is part of;is parent of;;upper left quadrant;713
+A-72;Mittelbauch;;;1;0;0;A-7;2;is part of;is parent of;;middle abdomen;72
+A-720;nicht näher spezifiziert;;;1;0;0;A-72;2;is part of;is parent of;;unspecified;720
+A-721;rechter Mittelbauch;;;1;0;0;A-72;2;is part of;is parent of;;middle right quadrant;721
+A-722;mittlerer Mittelbauch (Nabelregion);;;1;0;0;A-72;2;is part of;is parent of;;peri navel region;722
+A-723;linker Mittelbauch;;;1;0;0;A-72;2;is part of;is parent of;;middle left quadrant;723
+A-73;Unterbauch;;;1;0;0;A-7;2;is part of;is parent of;;lower abdomen;73
+A-730;nicht näher spezifiziert;;;1;0;0;A-73;2;is part of;is parent of;;unspecified;730
+A-731;rechter Unterbauch;;;1;0;0;A-73;2;is part of;is parent of;;lower right quadrant;731
+A-732;mittlerer Unterbauch;;;1;0;0;A-73;2;is part of;is parent of;;lower middle quadrant;732
+A-733;linker Unterbauch;;;1;0;0;A-73;2;is part of;is parent of;;lower left quadrant;733
+A-74;linkes Hemiabdomen;;;1;0;0;A-7;2;is part of;is parent of;;left hemi abdomen;74
+A-740;nicht näher spezifiziert;;;1;0;0;A-74;2;is part of;is parent of;;unspecified;740
+A-75;rechtes Hemiabdomen;;;1;0;0;A-7;2;is part of;is parent of;;right hemi abdomen;75
+A-750;nicht näher spezifiziert;;;1;0;0;A-75;2;is part of;is parent of;;unspecified;750
+A-8;Becken (Pelvis);;;1;0;0;A;2;is part of;is parent of;;pelvis;8
+A-80;nicht näher spezifiziert;;;1;0;0;A-8;2;is part of;is parent of;;unspecified;80
+A-81;Kreuzbein;;;1;0;0;A-8;2;is part of;is parent of;;sarcral bone;81
+A-810;nicht näher spezifiziert;;;1;0;0;A-81;2;is part of;is parent of;;unspecified;810
+A-811;Iliosacral-Übergang;;;1;0;0;A-81;2;is part of;is parent of;;iliosacral junction;811
+A-82;Darmbeinschaufel;;;1;0;0;A-8;2;is part of;is parent of;;iliac bone;82
+A-820;nicht näher spezifiziert;;;1;0;0;A-82;2;is part of;is parent of;;unspecified;820
+A-83;Schambein;;;1;0;0;A-8;2;is part of;is parent of;;pubic bone;83
+A-830;nicht näher spezifiziert;;;1;0;0;A-83;2;is part of;is parent of;;unspecified;830
+A-831;Symphyse;;;1;0;0;A-83;2;is part of;is parent of;;symphysis;831
+A-84;Sitzbein;;;1;0;0;A-8;2;is part of;is parent of;;ischial bone;84
+A-840;nicht näher spezifiziert;;;1;0;0;A-84;2;is part of;is parent of;;unspecified;840
+A-9;untere Extremität (Bein);;;1;0;0;A;2;is part of;is parent of;;lower extremity (leg);9
+A-90;nicht näher spezifiziert;;;1;0;0;A-9;2;is part of;is parent of;;unspecified;90
+A-91;Fuß;;;1;0;0;A-9;2;is part of;is parent of;;foot;91
+A-910;nicht näher spezifiziert;;;1;0;0;A-91;2;is part of;is parent of;;unspecified;910
+A-911;Zehe;;;1;0;0;A-91;2;is part of;is parent of;;toe;911
+A-912;Mittelfuß;;;1;0;0;A-91;2;is part of;is parent of;;middle foot;912
+A-913;Fußwurzel;;;1;0;0;A-91;2;is part of;is parent of;;tarsal bones;913
+A-914;linker Fuß;;;1;0;0;A-91;2;is part of;is parent of;;left foot;914
+A-915;rechter Fuß;;;1;0;0;A-91;2;is part of;is parent of;;right foot;915
+A-916;Vorfuß;;;1;0;0;A-91;2;is part of;is parent of;;forefoot;916
+A-917;Ferse;;;1;0;0;A-91;2;is part of;is parent of;;calcaneus;917
+A-918;linker Vorfuß;;;1;0;0;A-91;2;is part of;is parent of;;left forefoot;918
+A-919;rechter Vorfuß;;;1;0;0;A-91;2;is part of;is parent of;;right forefoot;919
+A-91a;linke Fußwurzel;;;1;0;0;A-91;2;is part of;is parent of;;left tarsal bones;91a
+A-91b;rechte Fußwurzel;;;1;0;0;A-91;2;is part of;is parent of;;right tarsal bones;91b
+A-92;Sprunggelenk;;;1;0;0;A-9;2;is part of;is parent of;;ankle joint;92
+A-920;nicht näher spezifiziert;;;1;0;0;A-92;2;is part of;is parent of;;unspecified;920
+A-921;linkes Sprunggelenk;;;1;0;0;A-92;2;is part of;is parent of;;left ankle joint;921
+A-922;rechtes Sprunggelenk;;;1;0;0;A-92;2;is part of;is parent of;;right unkle joint;922
+A-93;Unterschenkel;;;1;0;0;A-9;2;is part of;is parent of;;lower leg;93
+A-930;nicht näher spezifiziert;;;1;0;0;A-93;2;is part of;is parent of;;unspecified;930
+A-931;distaler Unterschenkel;;;1;0;0;A-93;2;is part of;is parent of;;distal lower leg;931
+A-932;proximaler Unterschenkel;;;1;0;0;A-93;2;is part of;is parent of;;proximal lower leg;932
+A-933;linker distaler Unterschenkel;;;1;0;0;A-93;2;is part of;is parent of;;left distal lower leg;933
+A-934;rechter distaler Unterschenken;;;1;0;0;A-93;2;is part of;is parent of;;right distal lower leg;934
+A-935;linker proximaler Unterschenkel;;;1;0;0;A-93;2;is part of;is parent of;;left proximal lower leg;935
+A-936;rechter proximaler Unterschenken;;;1;0;0;A-93;2;is part of;is parent of;;right proximal lower leg;936
+A-94;Knie;;;1;0;0;A-9;2;is part of;is parent of;;knee;94
+A-940;nicht näher spezifiziert;;;1;0;0;A-94;2;is part of;is parent of;;unspecified;940
+A-941;Kniescheibe (Patella);;;1;0;0;A-94;2;is part of;is parent of;;patella;941
+A-942;linkes Knie;;;1;0;0;A-94;2;is part of;is parent of;;left knee;942
+A-943;rechtes Knie;;;1;0;0;A-94;2;is part of;is parent of;;right knee;943
+A-95;Oberschenkel;;;1;0;0;A-9;2;is part of;is parent of;;upper leg;95
+A-950;nicht näher spezifiziert;;;1;0;0;A-95;2;is part of;is parent of;;unspecified;950
+A-951;distaler Oberschenkel;;;1;0;0;A-95;2;is part of;is parent of;;distal upper leg;951
+A-952;proximaler Oberschenkel;;;1;0;0;A-95;2;is part of;is parent of;;proximal upper leg;952
+A-953;linker distaler Oberschenkel;;;1;0;0;A-95;2;is part of;is parent of;;left distal upper leg;953
+A-954;rechter distaler Oberschenkel;;;1;0;0;A-95;2;is part of;is parent of;;right distal upper leg;954
+A-955;linker proximlaer Oberschenkel;;;1;0;0;A-95;2;is part of;is parent of;;left proximal upper leg;955
+A-956;rechter proximaler Oberschenkel;;;1;0;0;A-95;2;is part of;is parent of;;right proximal upper leg;956
+A-96;Hüfte;;;1;0;0;A-9;2;is part of;is parent of;;hip;96
+A-960;nicht näher spezifiziert;;;1;0;0;A-96;2;is part of;is parent of;;unspecified;960
+A-961;linke Hüfte;;;1;0;0;A-96;2;is part of;is parent of;;left hip;961
+A-962;rechte Hüfte;;;1;0;0;A-96;2;is part of;is parent of;;right hip;962
+A-a;Gewebe;;;1;0;0;A;2;is part of;is parent of;;tissue;a
+A-a0;nicht näher spezifiziert;;;1;0;0;A-a;2;is part of;is parent of;;unspecified;a0
+A-a1;Zellverband;;;1;0;0;A-a;2;is part of;is parent of;;aggregate of cells;a1
+A-a10;nicht näher spezifiziert;;;1;0;0;A-a1;2;is part of;is parent of;;unspecified;a10
+A-a2;Zelle;;;1;0;0;A-a;2;is part of;is parent of;;cell;a2
+A-a20;nicht näher spezifiziert;;;1;0;0;A-a2;2;is part of;is parent of;;unspecified;a20
+A-a3;Desoxyribonukleinsäure (DNS);;;1;0;0;A-a;2;is part of;is parent of;;desoxyribonucleid acid (DNA);a3
+A-a30;nicht näher spezifiziert;;;1;0;0;A-a3;2;is part of;is parent of;;unspecified;a30
+A-b;Hand;;;1;0;0;A;2;is part of;is parent of;;hand;b
+A-b0;nicht näher spezifiziert;;;1;0;0;A-b;2;is part of;is parent of;;unspecified;b0
+A-b1;beide Hände;;;1;0;0;A-b;2;is part of;is parent of;;both hands;b1
+A-b10;nicht näher spezifiziert;;;1;0;0;A-b1;2;is part of;is parent of;;unspecified;b10
+A-b2;linke Hand;;;1;0;0;A-b;2;is part of;is parent of;;left hand;b2
+A-b20;nicht näher spezifiziert;;;1;0;0;A-b2;2;is part of;is parent of;;unspecified;b20
+A-b21;Daumen;;;1;0;0;A-b2;2;is part of;is parent of;;thumb;b21
+A-b22;Zeigefinger;;;1;0;0;A-b2;2;is part of;is parent of;;second finger;b22
+A-b23;Mittelfinger;;;1;0;0;A-b2;2;is part of;is parent of;;third finger;b23
+A-b24;Ringfinger;;;1;0;0;A-b2;2;is part of;is parent of;;fourth finger;b24
+A-b25;kleiner Finger;;;1;0;0;A-b2;2;is part of;is parent of;;fifth finger;b25
+A-b3;rechte Hand;;;1;0;0;A-b;2;is part of;is parent of;;right Hand;b3
+A-b30;nicht näher spezifiziert;;;1;0;0;A-b3;2;is part of;is parent of;;unspecified;b30
+A-b31;Daumen;;;1;0;0;A-b3;2;is part of;is parent of;;thumb;b31
+A-b32;Zeigefinger;;;1;0;0;A-b3;2;is part of;is parent of;;second finger;b32
+A-b33;Mittelfinger;;;1;0;0;A-b3;2;is part of;is parent of;;third finger;b33
+A-b34;Ringfinger;;;1;0;0;A-b3;2;is part of;is parent of;;fourth finger;b34
+A-b35;kleiner Finger;;;1;0;0;A-b3;2;is part of;is parent of;;fifth finger;b35
+B;biosystem;;;1;1;0;;;;;;unspecified;B
+B-0;nicht näher spezifiziert;;;1;0;0;B;2;is part of;is parent of;;0
+B-1;Zerebrospinales System;;;1;0;0;B;2;is part of;is parent of;;cerebrospinal system;1
+B-10;nicht näher spezifiziert;;;1;0;0;B-1;2;is part of;is parent of;;unspecified;10
+B-11;ZNS;;;1;0;0;B-1;2;is part of;is parent of;;central nervous system;11
+B-110;nicht näher spezifiziert;;;1;0;0;B-11;2;is part of;is parent of;;unspecified;110
+B-111;Metencephalon, Großhirn;;;1;0;0;B-11;2;is part of;is parent of;;metencephalon, cerebrum;111
+B-112;Mesencephalon, Zwischenhirn;;;1;0;0;B-11;2;is part of;is parent of;;mesencephalon, diencephalon;112
+B-113;Neurohypophyse;;;1;0;0;B-11;2;is part of;is parent of;;neurohypophysis, posterior pituitary gland;113
+B-114;Cerebellum;;;1;0;0;B-11;2;is part of;is parent of;;cerebellum;114
+B-115;Pons;;;1;0;0;B-11;2;is part of;is parent of;;pons;115
+B-116;Medulla oblongata;;;1;0;0;B-11;2;is part of;is parent of;;medulla oblongata;116
+B-117;Rückenmark, cervikal;;;1;0;0;B-11;2;is part of;is parent of;;spinal cord, cervical;117
+B-118;Rückenmark, thorakal;;;1;0;0;B-11;2;is part of;is parent of;;spinal cord, thoracic;118
+B-119;Rückenmark, lumbal;;;1;0;0;B-11;2;is part of;is parent of;;spinal cord, lumbal;119
+B-11a;Rückenmark, sacral (Cauda Equina);;;1;0;0;B-11;2;is part of;is parent of;;spinal cord, sacral (cauda equina);11a
+B-12;Sinnesorgane;;;1;0;0;B-1;2;is part of;is parent of;;sense organs;12
+B-120;nicht näher spezifiziert;;;1;0;0;B-12;2;is part of;is parent of;;unspecified;120
+B-121;Gleichgewichtsorgan;;;1;0;0;B-12;2;is part of;is parent of;;vestibular sense;121
+B-122;Hörorgan;;;1;0;0;B-12;2;is part of;is parent of;;hearing sense;122
+B-123;Geschmacksorgan;;;1;0;0;B-12;2;is part of;is parent of;;gustatory sense;123
+B-124;Tastorgan;;;1;0;0;B-12;2;is part of;is parent of;;tactile sense;124
+B-125;Sehorgan (Auge);;;1;0;0;B-12;2;is part of;is parent of;;vision sense;125
+B-126;Geruchsorgan;;;1;0;0;B-12;2;is part of;is parent of;;olfactory sense;126
+B-13;Vegetatives Nervensystem;;;1;0;0;B-1;2;is part of;is parent of;;vegetative nervous system;13
+B-130;nicht näher spezifiziert;;;1;0;0;B-13;2;is part of;is parent of;;unspecified;130
+B-131;Grenzstrang;;;1;0;0;B-13;2;is part of;is parent of;;sympathic chain;131
+B-132;Glomus jugulare;;;1;0;0;B-13;2;is part of;is parent of;;glomus jugulare;132
+B-133;Glomus caroticum;;;1;0;0;B-13;2;is part of;is parent of;;glomus caroticum;133
+B-134;Ganglion stellatum;;;1;0;0;B-13;2;is part of;is parent of;;ganglion stellatum;134
+B-135;Ganglion coeliacum;;;1;0;0;B-13;2;is part of;is parent of;;ganglion coeliacum;135
+B-136;Zuckerkandlsches Organ;;;1;0;0;B-13;2;is part of;is parent of;;organ of Zuckerkandl;136
+B-137;Nebennierenmark;;;1;0;0;B-13;2;is part of;is parent of;;adrenal medulla;137
+B-2;Kardiovaskuläres System;;;1;0;0;B;2;is part of;is parent of;;cardiovascular system;2
+B-20;nicht näher spezifiziert;;;1;0;0;B-2;2;is part of;is parent of;;unspecified;20
+B-21;Herz;;;1;0;0;B-2;2;is part of;is parent of;;heart;21
+B-210;nicht näher spezifiziert;;;1;0;0;B-21;2;is part of;is parent of;;unspecified;210
+B-211;Pericard;;;1;0;0;B-21;2;is part of;is parent of;;pericardium;211
+B-212;Vorhof (links, Herzohr, rechts);;;1;0;0;B-21;2;is part of;is parent of;;atrium;212
+B-213;Valvula mitralis;;;1;0;0;B-21;2;is part of;is parent of;;mitral valve;213
+B-214;Valvula tricuspidalis;;;1;0;0;B-21;2;is part of;is parent of;;tricuspidal valve;214
+B-215;Ventrikel (links/rechts);;;1;0;0;B-21;2;is part of;is parent of;;ventricle;215
+B-216;Aortenklappe;;;1;0;0;B-21;2;is part of;is parent of;;aortic valve;216
+B-217;Pulmonalklappe;;;1;0;0;B-21;2;is part of;is parent of;;pulmonary valve;217
+B-22;Arterien;;;1;0;0;B-2;2;is part of;is parent of;;arteries;22
+B-220;nicht näher spezifiziert;;;1;0;0;B-22;2;is part of;is parent of;;unspecified;220
+B-221;Aorta ascendens;;;1;0;0;B-22;2;is part of;is parent of;;ascending aorta;221
+B-222;Arcus aortae;;;1;0;0;B-22;2;is part of;is parent of;;aortic arche;222
+B-223;Truncus brachiocephalicus;;;1;0;0;B-22;2;is part of;is parent of;;brachiocephalic trunk;223
+B-224;Arteria carotis communis;;;1;0;0;B-22;2;is part of;is parent of;;common carotic artery;224
+B-225;Ligamentum Botalli & Ductus Botalli;;;1;0;0;B-22;2;is part of;is parent of;;botalli ligament & ductus arteriosus;225
+B-226;Aorta descendens;;;1;0;0;B-22;2;is part of;is parent of;;descending aorta;226
+B-227;Truncus bronchialis;;;1;0;0;B-22;2;is part of;is parent of;;bronchial trunk;227
+B-228;Aorta abdominalis;;;1;0;0;B-22;2;is part of;is parent of;;abdominal aorta;228
+B-229;Truncus coeliacus;;;1;0;0;B-22;2;is part of;is parent of;;celiac trunk;229
+B-22a;Arteria iliaca communis;;;1;0;0;B-22;2;is part of;is parent of;;common iliac artery;22a
+B-22b;sonstige Arterien;;;1;0;0;B-22;2;is part of;is parent of;;other arteries;22b
+B-23;Venen;;;1;0;0;B-2;2;is part of;is parent of;;veins;23
+B-230;nicht näher spezifiziert;;;1;0;0;B-23;2;is part of;is parent of;;unspecified;230
+B-231;Vena anonyma;;;1;0;0;B-23;2;is part of;is parent of;;anonymus vein;231
+B-232;Vena brachiocephalica;;;1;0;0;B-23;2;is part of;is parent of;;brachiocephalic vein;232
+B-233;Vena cava superior;;;1;0;0;B-23;2;is part of;is parent of;;superior vena cava;233
+B-234;Vena cava inferior;;;1;0;0;B-23;2;is part of;is parent of;;inferior vena cava;234
+B-235;Vena iliaca communis;;;1;0;0;B-23;2;is part of;is parent of;;common iliac vein;235
+B-236;sonstige Venen;;;1;0;0;B-23;2;is part of;is parent of;;other veins;236
+B-3;Respiratorisches System;;;1;0;0;B;2;is part of;is parent of;;respiratory system;3
+B-30;nicht näher spezifiziert;;;1;0;0;B-3;2;is part of;is parent of;;unspecified;30
+B-31;Nase;;;1;0;0;B-3;2;is part of;is parent of;;nose;31
+B-310;nicht näher spezifiziert;;;1;0;0;B-31;2;is part of;is parent of;;unspecified;310
+B-32;Nasennebenhöhlen;;;1;0;0;B-3;2;is part of;is parent of;;sinuses;32
+B-320;nicht näher spezifiziert;;;1;0;0;B-32;2;is part of;is parent of;;unspecified;320
+B-33;Nasopharynx & Epipharynx;;;1;0;0;B-3;2;is part of;is parent of;;nasopharynx & epipharynx;33
+B-330;nicht näher spezifiziert;;;1;0;0;B-33;2;is part of;is parent of;;unspecified;330
+B-34;Mesopharynx;;;1;0;0;B-3;2;is part of;is parent of;;mesopharynx;34
+B-340;nicht näher spezifiziert;;;1;0;0;B-34;2;is part of;is parent of;;unspecified;340
+B-35;Hypopharynx;;;1;0;0;B-3;2;is part of;is parent of;;hypopharynx;35
+B-350;nicht näher spezifiziert;;;1;0;0;B-35;2;is part of;is parent of;;unspecified;350
+B-36;Larynx;;;1;0;0;B-3;2;is part of;is parent of;;larynx;36
+B-360;nicht näher spezifiziert;;;1;0;0;B-36;2;is part of;is parent of;;unspecified;360
+B-37;Trachea;;;1;0;0;B-3;2;is part of;is parent of;;trachea;37
+B-370;nicht näher spezifiziert;;;1;0;0;B-37;2;is part of;is parent of;;unspecified;370
+B-38;Hauptbronchus;;;1;0;0;B-3;2;is part of;is parent of;;main bronchus;38
+B-380;nicht näher spezifiziert;;;1;0;0;B-38;2;is part of;is parent of;;unspecified;380
+B-39;Bronchien;;;1;0;0;B-3;2;is part of;is parent of;;bronchi;39
+B-390;nicht näher spezifiziert;;;1;0;0;B-39;2;is part of;is parent of;;unspecified;390
+B-3a;Lunge;;;1;0;0;B-3;2;is part of;is parent of;;lung;3a
+B-3a0;nicht näher spezifiziert;;;1;0;0;B-3a;2;is part of;is parent of;;unspecified;3a0
+B-3b;Pleura;;;1;0;0;B-3;2;is part of;is parent of;;pleura;3b
+B-3b0;nicht näher spezifiziert;;;1;0;0;B-3b;2;is part of;is parent of;;unspecified;3b0
+B-3c;Rippen;;;1;0;0;B-3;2;is part of;is parent of;;ribs;3c
+B-3c0;nicht näher spezifiziert;;;1;0;0;B-3c;2;is part of;is parent of;;unspecified;3c0
+B-3d;Zwerchfell;;;1;0;0;B-3;2;is part of;is parent of;;diaphragma;3d
+B-3d0;nicht näher spezifiziert;;;1;0;0;B-3d;2;is part of;is parent of;;unspecified;3d0
+B-3e;Intercostalmuskulatur;;;1;0;0;B-3;2;is part of;is parent of;;intercostal muscles;3e
+B-3e0;nicht näher spezifiziert;;;1;0;0;B-3e;2;is part of;is parent of;;unspecified;3e0
+B-4;Gastrointestinales System;;;1;0;0;B;2;is part of;is parent of;;gastrointestinal system;4
+B-40;nicht näher spezifiziert;;;1;0;0;B-4;2;is part of;is parent of;;unspecfied;40
+B-41;Oropharynx;;;1;0;0;B-4;2;is part of;is parent of;;oropharynx;41
+B-410;nicht näher spezifiziert;;;1;0;0;B-41;2;is part of;is parent of;;unspecified;410
+B-411;Mundhöhle;;;1;0;0;B-41;2;is part of;is parent of;;oral cavity;411
+B-412;Epipharynx;;;1;0;0;B-41;2;is part of;is parent of;;epipharynx;412
+B-413;Mesopharynx;;;1;0;0;B-41;2;is part of;is parent of;;mesopharynx;413
+B-414;Hypopharynx;;;1;0;0;B-41;2;is part of;is parent of;;hypopharynx;414
+B-42;Oesophagus;;;1;0;0;B-4;2;is part of;is parent of;;esophagus;42
+B-420;nicht näher spezifiziert;;;1;0;0;B-42;2;is part of;is parent of;;unspecified;420
+B-421;oberer Ösophagussphincter;;;1;0;0;B-42;2;is part of;is parent of;;upper esophagus sphincter;421
+B-422;oberes Drittel;;;1;0;0;B-42;2;is part of;is parent of;;upper third;422
+B-423;mittleres Drittel;;;1;0;0;B-42;2;is part of;is parent of;;middle third;423
+B-424;unteres Drittel;;;1;0;0;B-42;2;is part of;is parent of;;lower third;424
+B-425;unterer Ösophagussphincter;;;1;0;0;B-42;2;is part of;is parent of;;lower esophagus sphincter;425
+B-43;Magen;;;1;0;0;B-4;2;is part of;is parent of;;stomach;43
+B-430;nicht näher spezifiziert;;;1;0;0;B-43;2;is part of;is parent of;;unspecified;430
+B-431;Cardia;;;1;0;0;B-43;2;is part of;is parent of;;cardia;431
+B-432;Fundus;;;1;0;0;B-43;2;is part of;is parent of;;fundus;432
+B-433;Corpus;;;1;0;0;B-43;2;is part of;is parent of;;corpus;433
+B-434;Antrum;;;1;0;0;B-43;2;is part of;is parent of;;antrum;434
+B-435;Pylorus;;;1;0;0;B-43;2;is part of;is parent of;;pylorus;435
+B-44;Dünndarm;;;1;0;0;B-4;2;is part of;is parent of;;small intestine;44
+B-440;nicht näher spezifiziert;;;1;0;0;B-44;2;is part of;is parent of;;unspecified;440
+B-441;Duodenum;;;1;0;0;B-44;2;is part of;is parent of;;duodenum;441
+B-442;Jejunum;;;1;0;0;B-44;2;is part of;is parent of;;jejunum;442
+B-443;Ileum;;;1;0;0;B-44;2;is part of;is parent of;;ileum;443
+B-444;terminales Ileum;;;1;0;0;B-44;2;is part of;is parent of;;terminal ileum;444
+B-445;Bauhinsche Klappe;;;1;0;0;B-44;2;is part of;is parent of;;ileoceocal valve;445
+B-45;Dickdarm;;;1;0;0;B-4;2;is part of;is parent of;;large intestine;45
+B-450;nicht näher spezifiziert;;;1;0;0;B-45;2;is part of;is parent of;;unspecified;450
+B-451;Colon ascendens;;;1;0;0;B-45;2;is part of;is parent of;;ascending colon;451
+B-452;Colon transversum;;;1;0;0;B-45;2;is part of;is parent of;;transverse colon;452
+B-453;Colon descendens;;;1;0;0;B-45;2;is part of;is parent of;;descending colon;453
+B-454;Colon sigmoideum;;;1;0;0;B-45;2;is part of;is parent of;;sigmoid colon;454
+B-455;Rektum;;;1;0;0;B-45;2;is part of;is parent of;;rectum;455
+B-46;Appendix;;;1;0;0;B-4;2;is part of;is parent of;;appendix;46
+B-460;nicht näher spezifiziert;;;1;0;0;B-46;2;is part of;is parent of;;unspecified;460
+B-47;Anus;;;1;0;0;B-4;2;is part of;is parent of;;anus;47
+B-470;nicht näher spezifiziert;;;1;0;0;B-47;2;is part of;is parent of;;unspecified;470
+B-48;Leber;;;1;0;0;B-4;2;is part of;is parent of;;liver;48
+B-480;nicht näher spezifiziert;;;1;0;0;B-48;2;is part of;is parent of;;unspecified;480
+B-481;Parenchym;;;1;0;0;B-48;2;is part of;is parent of;;parenchyma;481
+B-482;Gallenwege;;;1;0;0;B-48;2;is part of;is parent of;;bile ducts;482
+B-483;Pfortader;;;1;0;0;B-48;2;is part of;is parent of;;portal vein;483
+B-484;Arterien;;;1;0;0;B-48;2;is part of;is parent of;;arteries;484
+B-485;Venen;;;1;0;0;B-48;2;is part of;is parent of;;veins;485
+B-49;Gallensystem;;;1;0;0;B-4;2;is part of;is parent of;;biliary system;49
+B-490;nicht näher spezifiziert;;;1;0;0;B-49;2;is part of;is parent of;;unspecified;490
+B-491;Gallenwege;;;1;0;0;B-49;2;is part of;is parent of;;bile ducts;491
+B-492;Gallenblase;;;1;0;0;B-49;2;is part of;is parent of;;gallbladder;492
+B-4a;Speicheldrüsen;;;1;0;0;B-4;2;is part of;is parent of;;salivary glands;4a
+B-4a0;nicht näher spezifiziert;;;1;0;0;B-4a;2;is part of;is parent of;;unspecified;4a0
+B-4a1;Glandular parotis;;;1;0;0;B-4a;2;is part of;is parent of;;parotic gland;4a1
+B-4a2;Glandular sublingualis;;;1;0;0;B-4a;2;is part of;is parent of;;sublingual gland;4a2
+B-4a3;Glandular submandibularis;;;1;0;0;B-4a;2;is part of;is parent of;;mandibular gland;4a3
+B-4a4;Pankreas;;;1;0;0;B-4a;2;is part of;is parent of;;pancreas;4a4
+B-5;Uropoetisches System;;;1;0;0;B;2;is part of;is parent of;;uropoietic system;5
+B-50;nicht näher spezifiziert;;;1;0;0;B-5;2;is part of;is parent of;;unspecified;50
+B-51;Niere;;;1;0;0;B-5;2;is part of;is parent of;;kidney;51
+B-510;nicht näher spezifiziert;;;1;0;0;B-51;2;is part of;is parent of;;unspecified;510
+B-511;Parenchym;;;1;0;0;B-51;2;is part of;is parent of;;parenchyma;511
+B-512;Nierenbecken;;;1;0;0;B-51;2;is part of;is parent of;;renal pelvis;512
+B-52;Ureter;;;1;0;0;B-5;2;is part of;is parent of;;ureter;52
+B-520;nicht näher spezifiziert;;;1;0;0;B-52;2;is part of;is parent of;;unspecified;520
+B-53;Harnblase;;;1;0;0;B-5;2;is part of;is parent of;;urinary bladder;53
+B-530;nicht näher spezifiziert;;;1;0;0;B-53;2;is part of;is parent of;;unspecified;530
+B-54;Urethra;;;1;0;0;B-5;2;is part of;is parent of;;urethra;54
+B-540;nicht näher spezifiziert;;;1;0;0;B-54;2;is part of;is parent of;;unspecified;540
+B-6;Reproduktionssystem;;;1;0;0;B;2;is part of;is parent of;;reproductive system;6
+B-60;nicht näher spezifiziert;;;1;0;0;B-6;2;is part of;is parent of;;unspecified;60
+B-61;männliches System;;;1;0;0;B-6;2;is part of;is parent of;;male system;61
+B-610;nicht näher spezifiziert;;;1;0;0;B-61;2;is part of;is parent of;;unspecified;610
+B-611;Testes;;;1;0;0;B-61;2;is part of;is parent of;;testes;611
+B-612;Samenleiter & Samenblase;;;1;0;0;B-61;2;is part of;is parent of;;deferent duct & seminal vesicle;612
+B-613;Prostata;;;1;0;0;B-61;2;is part of;is parent of;;prostate gland;613
+B-614;Penis (inkl. Corpus Cavernosum);;;1;0;0;B-61;2;is part of;is parent of;;penis (incl. corpus cavernosum);614
+B-62;weibliches System;;;1;0;0;B-6;2;is part of;is parent of;;female system;62
+B-620;nicht näher spezifiziert;;;1;0;0;B-62;2;is part of;is parent of;;unspecified;620
+B-621;Ovarien;;;1;0;0;B-62;2;is part of;is parent of;;ovaries;621
+B-622;Eileiter;;;1;0;0;B-62;2;is part of;is parent of;;tuba uterina;622
+B-623;Uterus;;;1;0;0;B-62;2;is part of;is parent of;;uterus;623
+B-624;Vagina;;;1;0;0;B-62;2;is part of;is parent of;;vagina;624
+B-625;Mamma;;;1;0;0;B-62;2;is part of;is parent of;;breast;625
+B-7;Muskuloskeletales System;;;1;0;0;B;2;is part of;is parent of;;musculosceletal system;7
+B-70;nicht näher spezifiziert;;;1;0;0;B-7;2;is part of;is parent of;;unspecified;70
+B-71;8 Monate;;;1;0;0;B-7;2;is part of;is parent of;;8 months;71
+B-710;nicht näher spezifiziert;;;1;0;0;B-71;2;is part of;is parent of;;unspecified;710
+B-711;männlich;;;1;0;0;B-71;2;is part of;is parent of;;male;711
+B-712;weiblich;;;1;0;0;B-71;2;is part of;is parent of;;female;712
+B-72;10 Monate;;;1;0;0;B-7;2;is part of;is parent of;;10 months;72
+B-720;nicht näher spezifiziert;;;1;0;0;B-72;2;is part of;is parent of;;unspecified;720
+B-721;männlich;;;1;0;0;B-72;2;is part of;is parent of;;male;721
+B-722;weiblich;;;1;0;0;B-72;2;is part of;is parent of;;female;722
+B-73;12 Monate;;;1;0;0;B-7;2;is part of;is parent of;;12 months;73
+B-730;nicht näher spezifiziert;;;1;0;0;B-73;2;is part of;is parent of;;unspecified;730
+B-731;männlich;;;1;0;0;B-73;2;is part of;is parent of;;male;731
+B-732;weiblich;;;1;0;0;B-73;2;is part of;is parent of;;female;732
+B-74;14 Monate;;;1;0;0;B-7;2;is part of;is parent of;;14 months;74
+B-740;nicht näher spezifiziert;;;1;0;0;B-74;2;is part of;is parent of;;unspecified;740
+B-741;männlich;;;1;0;0;B-74;2;is part of;is parent of;;male;741
+B-742;weiblich;;;1;0;0;B-74;2;is part of;is parent of;;female;742
+B-75;16 Monate;;;1;0;0;B-7;2;is part of;is parent of;;16 months;75
+B-750;nicht näher spezifiziert;;;1;0;0;B-75;2;is part of;is parent of;;unspecified;750
+B-751;männlich;;;1;0;0;B-75;2;is part of;is parent of;;male;751
+B-752;weiblich;;;1;0;0;B-75;2;is part of;is parent of;;female;752
+B-76;18 Monate;;;1;0;0;B-7;2;is part of;is parent of;;18 months;76
+B-760;nicht näher spezifiziert;;;1;0;0;B-76;2;is part of;is parent of;;unspecified;760
+B-761;männlich;;;1;0;0;B-76;2;is part of;is parent of;;male;761
+B-762;weiblich;;;1;0;0;B-76;2;is part of;is parent of;;female;762
+B-77;20 Monate;;;1;0;0;B-7;2;is part of;is parent of;;20 months;77
+B-770;nicht näher spezifiziert;;;1;0;0;B-77;2;is part of;is parent of;;unspecified;770
+B-771;männlich;;;1;0;0;B-77;2;is part of;is parent of;;male;771
+B-772;weiblich;;;1;0;0;B-77;2;is part of;is parent of;;female;772
+B-78;24 Monate;;;1;0;0;B-7;2;is part of;is parent of;;24 months;78
+B-780;nicht näher spezifiziert;;;1;0;0;B-78;2;is part of;is parent of;;unspecified;780
+B-781;männlich;;;1;0;0;B-78;2;is part of;is parent of;;male;781
+B-782;weiblich;;;1;0;0;B-78;2;is part of;is parent of;;female;782
+B-79;28 Monate;;;1;0;0;B-7;2;is part of;is parent of;;28 months;79
+B-790;nicht näher spezifiziert;;;1;0;0;B-79;2;is part of;is parent of;;unspecified;790
+B-791;männlich;;;1;0;0;B-79;2;is part of;is parent of;;male;791
+B-792;weiblich;;;1;0;0;B-79;2;is part of;is parent of;;female;792
+B-7a;2,5 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;2,5 years;7a
+B-7a0;nicht näher spezifiziert;;;1;0;0;B-7a;2;is part of;is parent of;;unspecified;7a0
+B-7a1;männlich;;;1;0;0;B-7a;2;is part of;is parent of;;male;7a1
+B-7a2;weiblich;;;1;0;0;B-7a;2;is part of;is parent of;;female;7a2
+B-7b;3 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;3 years;7b
+B-7b0;nicht näher spezifiziert;;;1;0;0;B-7b;2;is part of;is parent of;;unspecified;7b0
+B-7b1;männlich;;;1;0;0;B-7b;2;is part of;is parent of;;male;7b1
+B-7b2;weiblich;;;1;0;0;B-7b;2;is part of;is parent of;;female;7b2
+B-7c;3,5 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;3,5 years;7c
+B-7c0;nicht näher spezifiziert;;;1;0;0;B-7c;2;is part of;is parent of;;unspecified;7c0
+B-7c1;männlich;;;1;0;0;B-7c;2;is part of;is parent of;;male;7c1
+B-7c2;weiblich;;;1;0;0;B-7c;2;is part of;is parent of;;female;7c2
+B-7d;4 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;4 years;7d
+B-7d0;nicht näher spezifiziert;;;1;0;0;B-7d;2;is part of;is parent of;;unspecified;7d0
+B-7d1;männlich;;;1;0;0;B-7d;2;is part of;is parent of;;male;7d1
+B-7d2;weiblich;;;1;0;0;B-7d;2;is part of;is parent of;;female;7d2
+B-7e;4,5 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;4,5 years;7e
+B-7e0;nicht näher spezifiziert;;;1;0;0;B-7e;2;is part of;is parent of;;unspecified;7e0
+B-7e1;männlich;;;1;0;0;B-7e;2;is part of;is parent of;;male;7e1
+B-7e2;weiblich;;;1;0;0;B-7e;2;is part of;is parent of;;female;7e2
+B-7f;5 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;5 years;7f
+B-7f0;nicht näher spezifiziert;;;1;0;0;B-7f;2;is part of;is parent of;;unspecified;7f0
+B-7f1;männlich;;;1;0;0;B-7f;2;is part of;is parent of;;male;7f1
+B-7f2;weiblich;;;1;0;0;B-7f;2;is part of;is parent of;;female;7f2
+B-7g;5,5 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;5,5 years;7g
+B-7g0;nicht näher spezifiziert;;;1;0;0;B-7g;2;is part of;is parent of;;unspecified;7g0
+B-7g1;männlich;;;1;0;0;B-7g;2;is part of;is parent of;;male;7g1
+B-7g2;weiblich;;;1;0;0;B-7g;2;is part of;is parent of;;female;7g2
+B-7h;6 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;6 years;7h
+B-7h0;nicht näher spezifiziert;;;1;0;0;B-7h;2;is part of;is parent of;;unspecified;7h0
+B-7h1;männlich;;;1;0;0;B-7h;2;is part of;is parent of;;male;7h1
+B-7h2;weiblich;;;1;0;0;B-7h;2;is part of;is parent of;;female;7h2
+B-7i;7 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;7 years;7i
+B-7i0;nicht näher spezifiziert;;;1;0;0;B-7i;2;is part of;is parent of;;unspecified;7i0
+B-7i1;männlich;;;1;0;0;B-7i;2;is part of;is parent of;;male;7i1
+B-7i2;weiblich;;;1;0;0;B-7i;2;is part of;is parent of;;female;7i2
+B-7j;8 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;8 years;7j
+B-7j0;nicht näher spezifiziert;;;1;0;0;B-7j;2;is part of;is parent of;;unspecified;7j0
+B-7j1;männlich;;;1;0;0;B-7j;2;is part of;is parent of;;male;7j1
+B-7j2;weiblich;;;1;0;0;B-7j;2;is part of;is parent of;;female;7j2
+B-7k;9 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;9 years;7k
+B-7k0;nicht näher spezifiziert;;;1;0;0;B-7k;2;is part of;is parent of;;unspecified;7k0
+B-7k1;männlich;;;1;0;0;B-7k;2;is part of;is parent of;;male;7k1
+B-7k2;weiblich;;;1;0;0;B-7k;2;is part of;is parent of;;female;7k2
+B-7l;10 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;10 years;7l
+B-7l0;nicht näher spezifiziert;;;1;0;0;B-7l;2;is part of;is parent of;;unspecified;7l0
+B-7l1;männlich;;;1;0;0;B-7l;2;is part of;is parent of;;male;7l1
+B-7l2;weiblich;;;1;0;0;B-7l;2;is part of;is parent of;;female;7l2
+B-7m;11 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;11 years;7m
+B-7m0;nicht näher spezifiziert;;;1;0;0;B-7m;2;is part of;is parent of;;unspecified;7m0
+B-7m1;männlich;;;1;0;0;B-7m;2;is part of;is parent of;;male;7m1
+B-7m2;weiblich;;;1;0;0;B-7m;2;is part of;is parent of;;female;7m2
+B-7n;12 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;12 years;7n
+B-7n0;nicht näher spezifiziert;;;1;0;0;B-7n;2;is part of;is parent of;;unspecified;7n0
+B-7n1;männlich;;;1;0;0;B-7n;2;is part of;is parent of;;male;7n1
+B-7n2;weiblich;;;1;0;0;B-7n;2;is part of;is parent of;;female;7n2
+B-7o;13 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;13 years;7o
+B-7o0;nicht näher spezifiziert;;;1;0;0;B-7o;2;is part of;is parent of;;unspecified;7o0
+B-7o1;männlich;;;1;0;0;B-7o;2;is part of;is parent of;;male;7o1
+B-7o2;weiblich;;;1;0;0;B-7o;2;is part of;is parent of;;female;7o2
+B-7p;14 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;14 years;7p
+B-7p0;nicht näher spezifiziert;;;1;0;0;B-7p;2;is part of;is parent of;;unspecified;7p0
+B-7p1;männlich;;;1;0;0;B-7p;2;is part of;is parent of;;male;7p1
+B-7p2;weiblich;;;1;0;0;B-7p;2;is part of;is parent of;;female;7p2
+B-7q;15 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;15 years;7q
+B-7q0;nicht näher spezifiziert;;;1;0;0;B-7q;2;is part of;is parent of;;unspecified;7q0
+B-7q1;männlich;;;1;0;0;B-7q;2;is part of;is parent of;;male;7q1
+B-7q2;weiblich;;;1;0;0;B-7q;2;is part of;is parent of;;female;7q2
+B-7r;16 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;16 years;7r
+B-7r0;nicht näher spezifiziert;;;1;0;0;B-7r;2;is part of;is parent of;;unspecified;7r0
+B-7r1;männlich;;;1;0;0;B-7r;2;is part of;is parent of;;male;7r1
+B-7r2;weiblich;;;1;0;0;B-7r;2;is part of;is parent of;;female;7r2
+B-7s;17 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;17 years;7s
+B-7s0;nicht näher spezifiziert;;;1;0;0;B-7s;2;is part of;is parent of;;unspecified;7s0
+B-7s1;männlich;;;1;0;0;B-7s;2;is part of;is parent of;;male;7s1
+B-7s2;weiblich;;;1;0;0;B-7s;2;is part of;is parent of;;female;7s2
+B-7t;18 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;18 years;7t
+B-7t0;nicht näher spezifiziert;;;1;0;0;B-7t;2;is part of;is parent of;;unspecified;7t0
+B-7t1;männlich;;;1;0;0;B-7t;2;is part of;is parent of;;male;7t1
+B-7t2;weiblich;;;1;0;0;B-7t;2;is part of;is parent of;;female;7t2
+B-7u;> 18 Jahre;;;1;0;0;B-7;2;is part of;is parent of;;> 18 years;7u
+B-7u0;nicht näher spezifiziert;;;1;0;0;B-7u;2;is part of;is parent of;;unspecified;7u0
+B-7u1;männlich;;;1;0;0;B-7u;2;is part of;is parent of;;male;7u1
+B-7u2;weiblich;;;1;0;0;B-7u;2;is part of;is parent of;;female;7u2
+B-7u3;männlich, normal;;;1;0;0;B-7u;2;is part of;is parent of;;male, normal;7u3
+B-7u4;weiblich, normal;;;1;0;0;B-7u;2;is part of;is parent of;;female, normal;7u4
+B-7u5;männlich, abnormal;;;1;0;0;B-7u;2;is part of;is parent of;;male, abnormal;7u5
+B-7u6;weiblich, abnormal;;;1;0;0;B-7u;2;is part of;is parent of;;female, abnormal;7u6
+B-8;Endokrines System;;;1;0;0;B;2;is part of;is parent of;;endocrinic system;8
+B-80;nicht näher spezifiziert;;;1;0;0;B-8;2;is part of;is parent of;;unspecified;80
+B-81;Schilddrüse;;;1;0;0;B-8;2;is part of;is parent of;;thyroid gland;81
+B-810;nicht näher spezifiziert;;;1;0;0;B-81;2;is part of;is parent of;;unspecified;810
+B-82;Nebenschilddrüse;;;1;0;0;B-8;2;is part of;is parent of;;parathyroid gland;82
+B-820;nicht näher spezifiziert;;;1;0;0;B-82;2;is part of;is parent of;;unspecified;820
+B-83;Nebenniere;;;1;0;0;B-8;2;is part of;is parent of;;adrenal gland;83
+B-830;nicht näher spezifiziert;;;1;0;0;B-83;2;is part of;is parent of;;unspecified;830
+B-84;Hypophyse;;;1;0;0;B-8;2;is part of;is parent of;;pituitary gland;84
+B-840;nicht näher spezifiziert;;;1;0;0;B-84;2;is part of;is parent of;;unspecified;840
+B-85;Hypothalamus;;;1;0;0;B-8;2;is part of;is parent of;;hypothalamus;85
+B-850;nicht näher spezifiziert;;;1;0;0;B-85;2;is part of;is parent of;;unspecified;850
+B-86;Ovarien;;;1;0;0;B-8;2;is part of;is parent of;;ovaries;86
+B-860;nicht näher spezifiziert;;;1;0;0;B-86;2;is part of;is parent of;;unspecified;860
+B-87;Testes;;;1;0;0;B-8;2;is part of;is parent of;;testes;87
+B-870;nicht näher spezifiziert;;;1;0;0;B-87;2;is part of;is parent of;;unspecified;870
+B-88;Pankreas;;;1;0;0;B-8;2;is part of;is parent of;;pancreas;88
+B-880;nicht näher spezifiziert;;;1;0;0;B-88;2;is part of;is parent of;;unspecified;880
+B-9;Immun-Zelluläres System;;;1;0;0;B;2;is part of;is parent of;;immunic system;9
+B-90;nicht näher spezifiziert;;;1;0;0;B-9;2;is part of;is parent of;;unspecified;90
+B-91;Tonsillen;;;1;0;0;B-9;2;is part of;is parent of;;tonsils;91
+B-910;nicht näher spezifiziert;;;1;0;0;B-91;2;is part of;is parent of;;unspecified;910
+B-92;Hals-LK;;;1;0;0;B-9;2;is part of;is parent of;;cervial lymph node;92
+B-920;nicht näher spezifiziert;;;1;0;0;B-92;2;is part of;is parent of;;unspecified;920
+B-93;Axilla-LK;;;1;0;0;B-9;2;is part of;is parent of;;axillary lymph node;93
+B-930;nicht näher spezifiziert;;;1;0;0;B-93;2;is part of;is parent of;;unspecified;930
+B-94;Mediastinal-LK;;;1;0;0;B-9;2;is part of;is parent of;;mediastinal lymph node;94
+B-940;nicht näher spezifiziert;;;1;0;0;B-94;2;is part of;is parent of;;unspecified;940
+B-95;Thymus (nur bei Kindern);;;1;0;0;B-9;2;is part of;is parent of;;thymus;95
+B-950;nicht näher spezifiziert;;;1;0;0;B-95;2;is part of;is parent of;;unspecified;950
+B-96;Milz;;;1;0;0;B-9;2;is part of;is parent of;;spleen;96
+B-960;nicht näher spezifiziert;;;1;0;0;B-96;2;is part of;is parent of;;unspecified;960
+B-97;Retroperitoneal-LK;;;1;0;0;B-9;2;is part of;is parent of;;retroperitoneal lymph node;97
+B-970;nicht näher spezifiziert;;;1;0;0;B-97;2;is part of;is parent of;;unspecified;970
+B-98;Intraperitoneal-LK;;;1;0;0;B-9;2;is part of;is parent of;;intraperitoneal lymph node;98
+B-980;nicht näher spezifiziert;;;1;0;0;B-98;2;is part of;is parent of;;unspecified;980
+B-981;(mesenterial-LK);;;1;0;0;B-98;2;is part of;is parent of;;mesenterial lymph node;981
+B-99;Becken-LK;;;1;0;0;B-9;2;is part of;is parent of;;iliac lymph node;99
+B-990;nicht näher spezifiziert;;;1;0;0;B-99;2;is part of;is parent of;;unspecified;990
+B-9a;Leisten-LK;;;1;0;0;B-9;2;is part of;is parent of;;inguinal lymph node;9a
+B-9a0;nicht näher spezifiziert;;;1;0;0;B-9a;2;is part of;is parent of;;unspecified;9a0
+B-9b;Knochenmark;;;1;0;0;B-9;2;is part of;is parent of;;bone marrow;9b
+B-9b0;nicht näher spezifiziert;;;1;0;0;B-9b;2;is part of;is parent of;;unspecified;9b0
+B-a;Dermales System;;;1;0;0;B;2;is part of;is parent of;;dermal system;a
+B-a0;nicht näher spezifiziert;;;1;0;0;B-a;2;is part of;is parent of;;unspecified;a0
+B-a1;Oberhaut (cutis);;;1;0;0;B-a;2;is part of;is parent of;;skin (cutis);a1
+B-a10;nicht näher spezifiziert;;;1;0;0;B-a1;2;is part of;is parent of;;unspecified;a10
+B-a11;benigne;;;1;0;0;B-a1;2;is part of;is parent of;;benign;a11
+B-a12;maligne;;;1;0;0;B-a1;2;is part of;is parent of;;malignant;a12
+B-b;Exokrines System;;;1;0;0;B;2;is part of;is parent of;;exocrine system;b
+B-b0;nicht näher spezifiziert;;;1;0;0;B-b;2;is part of;is parent of;;unspecified;b0
+B-c;Zahnsystem;;;1;0;0;B;2;is part of;is parent of;;dental system;c
+B-c0;nicht näher spezifiziert;;;1;0;0;B-c;2;is part of;is parent of;;unspecified;c0
+B-c1;bezahntes System;;;1;0;0;B-c;2;is part of;is parent of;;dentulous system;c1
+B-c10;nicht näher spezifiziert;;;1;0;0;B-c1;2;is part of;is parent of;;unspecified;c10
+B-c2;unbezahntes System;;;1;0;0;B-c;2;is part of;is parent of;;edentulous system;c2
+B-c20;nicht näher spezifiziert;;;1;0;0;B-c2;2;is part of;is parent of;;unspecified;c20
+B-c3;Implantatsystem;;;1;0;0;B-c;2;is part of;is parent of;;implant system;c3
+B-c30;nicht näher spezifiziert;;;1;0;0;B-c3;2;is part of;is parent of;;unspecified;c30
+B-d;ACR-1: Fettransparentes Mamasystem;;;1;0;0;B;2;is part of;is parent of;;ACR-1: fat tranparent system;d
+B-d0;BI-RADS 0: nicht näher spezifiziert;;;1;0;0;B-d;2;is part of;is parent of;;BI-RADS 0: unspecified;d0
+B-d1;BI-RADS 1: normal;;;1;0;0;B-d;2;is part of;is parent of;;BI-RADS 1: normal;d1
+B-d10;nicht näher spezifiziert;;;1;0;0;B-d1;2;is part of;is parent of;;unspecified;d10
+B-d2;BI-RADS 2: gutartig;;;1;0;0;B-d;2;is part of;is parent of;;BI-RADS 2: benign;d2
+B-d20;nicht näher spezifiziert;;;1;0;0;B-d2;2;is part of;is parent of;;unspecified;d20
+B-d21;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-d2;2;is part of;is parent of;;calcification, unspecified;d21
+B-d22;Mikro-Kalzifikation;;;1;0;0;B-d2;2;is part of;is parent of;;micro-calcification;d22
+B-d23;Makro-Kalzifikation;;;1;0;0;B-d2;2;is part of;is parent of;;macro-calcification;d23
+B-d24;Tumor, glatt;;;1;0;0;B-d2;2;is part of;is parent of;;circumscribed mass;d24
+B-d25;Tumor, strahlig;;;1;0;0;B-d2;2;is part of;is parent of;;spiculated mass;d25
+B-d26;Tumor, sonstig;;;1;0;0;B-d2;2;is part of;is parent of;;other mass;d26
+B-d27;sonstige Strukturstörung;;;1;0;0;B-d2;2;is part of;is parent of;;archictectural distortion;d27
+B-d28;Asymetrie;;;1;0;0;B-d2;2;is part of;is parent of;;asymetry;d28
+B-d3;BI-RADS 3: wahrscheinlich gutartig;;;1;0;0;B-d;2;is part of;is parent of;;BI-RADS 3: probably benign;d3
+B-d30;nicht näher spezifiziert;;;1;0;0;B-d3;2;is part of;is parent of;;unspecified;d30
+B-d31;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-d3;2;is part of;is parent of;;calcification, unspecified;d31
+B-d32;Mikro-Kalzifikation;;;1;0;0;B-d3;2;is part of;is parent of;;micro-calcification;d32
+B-d33;Makro-Kalzifikation;;;1;0;0;B-d3;2;is part of;is parent of;;macro-calcification;d33
+B-d34;Tumor, glatt;;;1;0;0;B-d3;2;is part of;is parent of;;circumscribed mass;d34
+B-d35;Tumor, strahlig;;;1;0;0;B-d3;2;is part of;is parent of;;spiculated mass;d35
+B-d36;Tumor, sonstig;;;1;0;0;B-d3;2;is part of;is parent of;;other mass;d36
+B-d37;sonstige Strukturstörung;;;1;0;0;B-d3;2;is part of;is parent of;;archictectural distortion;d37
+B-d38;Asymetrie;;;1;0;0;B-d3;2;is part of;is parent of;;asymetry;d38
+B-d4;BI-RADS 4: wahrscheinlich bösartig;;;1;0;0;B-d;2;is part of;is parent of;;BI-RADS 4: suspiciously abnormal;d4
+B-d40;nicht näher spezifiziert;;;1;0;0;B-d4;2;is part of;is parent of;;unspecified;d40
+B-d41;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-d4;2;is part of;is parent of;;calcification, unspecified;d41
+B-d42;Mikro-Kalzifikation;;;1;0;0;B-d4;2;is part of;is parent of;;micro-calcification;d42
+B-d43;Makro-Kalzifikation;;;1;0;0;B-d4;2;is part of;is parent of;;macro-calcification;d43
+B-d44;Tumor, glatt;;;1;0;0;B-d4;2;is part of;is parent of;;circumscribed mass;d44
+B-d45;Tumor, strahlig;;;1;0;0;B-d4;2;is part of;is parent of;;spiculated mass;d45
+B-d46;Tumor, sonstig;;;1;0;0;B-d4;2;is part of;is parent of;;other mass;d46
+B-d47;sonstige Strukturstörung;;;1;0;0;B-d4;2;is part of;is parent of;;archictectural distortion;d47
+B-d48;Asymetrie;;;1;0;0;B-d4;2;is part of;is parent of;;asymetry;d48
+B-d5;BI-RADS 5: bösartig;;;1;0;0;B-d;2;is part of;is parent of;;BI-RADS 5: malignant;d5
+B-d50;nicht näher spezifiziert;;;1;0;0;B-d5;2;is part of;is parent of;;unspecified;d50
+B-d51;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-d5;2;is part of;is parent of;;calcification, unspecified;d51
+B-d52;Mikro-Kalzifikation;;;1;0;0;B-d5;2;is part of;is parent of;;micro-calcification;d52
+B-d53;Makro-Kalzifikation;;;1;0;0;B-d5;2;is part of;is parent of;;macro-calcification;d53
+B-d54;Tumor, glatt;;;1;0;0;B-d5;2;is part of;is parent of;;circumscribed mass;d54
+B-d55;Tumor, strahlig;;;1;0;0;B-d5;2;is part of;is parent of;;spiculated mass;d55
+B-d56;Tumor, sonstig;;;1;0;0;B-d5;2;is part of;is parent of;;other mass;d56
+B-d57;sonstige Strukturstörung;;;1;0;0;B-d5;2;is part of;is parent of;;archictectural distortion;d57
+B-d58;Asymetrie;;;1;0;0;B-d5;2;is part of;is parent of;;asymetry;d58
+B-e;ACR-2: Fibroglanduläres Mamasystem;;;1;0;0;B;2;is part of;is parent of;;ACR-2: fibroid glands system;e
+B-e0;BI-RADS 0: nicht näher spezifiziert;;;1;0;0;B-e;2;is part of;is parent of;;BI-RADS 0: unspecified;e0
+B-e1;BI-RADS 1: normal;;;1;0;0;B-e;2;is part of;is parent of;;BI-RADS 1: normal;e1
+B-e10;nicht näher spezifiziert;;;1;0;0;B-e1;2;is part of;is parent of;;unspecified;e10
+B-e2;BI-RADS 2: gutartig;;;1;0;0;B-e;2;is part of;is parent of;;BI-RADS 2: benign;e2
+B-e20;nicht näher spezifiziert;;;1;0;0;B-e2;2;is part of;is parent of;;unspecified;e20
+B-e21;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-e2;2;is part of;is parent of;;calcification, unspecified;e21
+B-e22;Mikro-Kalzifikation;;;1;0;0;B-e2;2;is part of;is parent of;;micro-calcification;e22
+B-e23;Makro-Kalzifikation;;;1;0;0;B-e2;2;is part of;is parent of;;macro-calcification;e23
+B-e24;Tumor, glatt;;;1;0;0;B-e2;2;is part of;is parent of;;circumscribed mass;e24
+B-e25;Tumor, strahlig;;;1;0;0;B-e2;2;is part of;is parent of;;spiculated mass;e25
+B-e26;Tumor, sonstig;;;1;0;0;B-e2;2;is part of;is parent of;;other mass;e26
+B-e27;sonstige Strukturstörung;;;1;0;0;B-e2;2;is part of;is parent of;;archictectural distortion;e27
+B-e28;Asymetrie;;;1;0;0;B-e2;2;is part of;is parent of;;asymetry;e28
+B-e3;BI-RADS 3: wahrscheinlich gutartig;;;1;0;0;B-e;2;is part of;is parent of;;BI-RADS 3: probably benign;e3
+B-e30;nicht näher spezifiziert;;;1;0;0;B-e3;2;is part of;is parent of;;unspecified;e30
+B-e31;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-e3;2;is part of;is parent of;;calcification, unspecified;e31
+B-e32;Mikro-Kalzifikation;;;1;0;0;B-e3;2;is part of;is parent of;;micro-calcification;e32
+B-e33;Makro-Kalzifikation;;;1;0;0;B-e3;2;is part of;is parent of;;macro-calcification;e33
+B-e34;Tumor, glatt;;;1;0;0;B-e3;2;is part of;is parent of;;circumscribed mass;e34
+B-e35;Tumor, strahlig;;;1;0;0;B-e3;2;is part of;is parent of;;spiculated mass;e35
+B-e36;Tumor, sonstig;;;1;0;0;B-e3;2;is part of;is parent of;;other mass;e36
+B-e37;sonstige Strukturstörung;;;1;0;0;B-e3;2;is part of;is parent of;;archictectural distortion;e37
+B-e38;Asymetrie;;;1;0;0;B-e3;2;is part of;is parent of;;asymetry;e38
+B-e4;BI-RADS 4: wahrscheinlich bösartig;;;1;0;0;B-e;2;is part of;is parent of;;BI-RADS 4: suspiciously abnormal;e4
+B-e40;nicht näher spezifiziert;;;1;0;0;B-e4;2;is part of;is parent of;;unspecified;e40
+B-e41;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-e4;2;is part of;is parent of;;calcification, unspecified;e41
+B-e42;Mikro-Kalzifikation;;;1;0;0;B-e4;2;is part of;is parent of;;micro-calcification;e42
+B-e43;Makro-Kalzifikation;;;1;0;0;B-e4;2;is part of;is parent of;;macro-calcification;e43
+B-e44;Tumor, glatt;;;1;0;0;B-e4;2;is part of;is parent of;;circumscribed mass;e44
+B-e45;Tumor, strahlig;;;1;0;0;B-e4;2;is part of;is parent of;;spiculated mass;e45
+B-e46;Tumor, sonstig;;;1;0;0;B-e4;2;is part of;is parent of;;other mass;e46
+B-e47;sonstige Strukturstörung;;;1;0;0;B-e4;2;is part of;is parent of;;archictectural distortion;e47
+B-e48;Asymetrie;;;1;0;0;B-e4;2;is part of;is parent of;;asymetry;e48
+B-e5;BI-RADS 5: bösartig;;;1;0;0;B-e;2;is part of;is parent of;;BI-RADS 5: malignant;e5
+B-e50;nicht näher spezifiziert;;;1;0;0;B-e5;2;is part of;is parent of;;unspecified;e50
+B-e51;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-e5;2;is part of;is parent of;;calcification, unspecified;e51
+B-e52;Mikro-Kalzifikation;;;1;0;0;B-e5;2;is part of;is parent of;;micro-calcification;e52
+B-e53;Makro-Kalzifikation;;;1;0;0;B-e5;2;is part of;is parent of;;macro-calcification;e53
+B-e54;Tumor, glatt;;;1;0;0;B-e5;2;is part of;is parent of;;circumscribed mass;e54
+B-e55;Tumor, strahlig;;;1;0;0;B-e5;2;is part of;is parent of;;spiculated mass;e55
+B-e56;Tumor, sonstig;;;1;0;0;B-e5;2;is part of;is parent of;;other mass;e56
+B-e57;sonstige Strukturstörung;;;1;0;0;B-e5;2;is part of;is parent of;;archictectural distortion;e57
+B-e58;Asymetrie;;;1;0;0;B-e5;2;is part of;is parent of;;asymetry;e58
+B-f;ACR-3: Heterogen dichtes Mamasystem;;;1;0;0;B;2;is part of;is parent of;;ACR-3: heterogeneously dense system;f
+B-f0;BI-RADS 0: nicht näher spezifiziert;;;1;0;0;B-f;2;is part of;is parent of;;BI-RADS 0: unspecified;f0
+B-f1;BI-RADS 1: normal;;;1;0;0;B-f;2;is part of;is parent of;;BI-RADS 1: normal;f1
+B-f10;nicht näher spezifiziert;;;1;0;0;B-f1;2;is part of;is parent of;;unspecified;f10
+B-f2;BI-RADS 2: gutartig;;;1;0;0;B-f;2;is part of;is parent of;;BI-RADS 2: benign;f2
+B-f20;nicht näher spezifiziert;;;1;0;0;B-f2;2;is part of;is parent of;;unspecified;f20
+B-f21;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-f2;2;is part of;is parent of;;calcification, unspecified;f21
+B-f22;Mikro-Kalzifikation;;;1;0;0;B-f2;2;is part of;is parent of;;micro-calcification;f22
+B-f23;Makro-Kalzifikation;;;1;0;0;B-f2;2;is part of;is parent of;;macro-calcification;f23
+B-f24;Tumor, glatt;;;1;0;0;B-f2;2;is part of;is parent of;;circumscribed mass;f24
+B-f25;Tumor, strahlig;;;1;0;0;B-f2;2;is part of;is parent of;;spiculated mass;f25
+B-f26;Tumor, sonstig;;;1;0;0;B-f2;2;is part of;is parent of;;other mass;f26
+B-f27;sonstige Strukturstörung;;;1;0;0;B-f2;2;is part of;is parent of;;archictectural distortion;f27
+B-f28;Asymetrie;;;1;0;0;B-f2;2;is part of;is parent of;;asymetry;f28
+B-f3;BI-RADS 3: wahrscheinlich gutartig;;;1;0;0;B-f;2;is part of;is parent of;;BI-RADS 3: probably benign;f3
+B-f30;nicht näher spezifiziert;;;1;0;0;B-f3;2;is part of;is parent of;;unspecified;f30
+B-f31;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-f3;2;is part of;is parent of;;calcification, unspecified;f31
+B-f32;Mikro-Kalzifikation;;;1;0;0;B-f3;2;is part of;is parent of;;micro-calcification;f32
+B-f33;Makro-Kalzifikation;;;1;0;0;B-f3;2;is part of;is parent of;;macro-calcification;f33
+B-f34;Tumor, glatt;;;1;0;0;B-f3;2;is part of;is parent of;;circumscribed mass;f34
+B-f35;Tumor, strahlig;;;1;0;0;B-f3;2;is part of;is parent of;;spiculated mass;f35
+B-f36;Tumor, sonstig;;;1;0;0;B-f3;2;is part of;is parent of;;other mass;f36
+B-f37;sonstige Strukturstörung;;;1;0;0;B-f3;2;is part of;is parent of;;archictectural distortion;f37
+B-f38;Asymetrie;;;1;0;0;B-f3;2;is part of;is parent of;;asymetry;f38
+B-f4;BI-RADS 4: wahrscheinlich bösartig;;;1;0;0;B-f;2;is part of;is parent of;;BI-RADS 4: suspiciously abnormal;f4
+B-f40;nicht näher spezifiziert;;;1;0;0;B-f4;2;is part of;is parent of;;unspecified;f40
+B-f41;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-f4;2;is part of;is parent of;;calcification, unspecified;f41
+B-f42;Mikro-Kalzifikation;;;1;0;0;B-f4;2;is part of;is parent of;;micro-calcification;f42
+B-f43;Makro-Kalzifikation;;;1;0;0;B-f4;2;is part of;is parent of;;macro-calcification;f43
+B-f44;Tumor, glatt;;;1;0;0;B-f4;2;is part of;is parent of;;circumscribed mass;f44
+B-f45;Tumor, strahlig;;;1;0;0;B-f4;2;is part of;is parent of;;spiculated mass;f45
+B-f46;Tumor, sonstig;;;1;0;0;B-f4;2;is part of;is parent of;;other mass;f46
+B-f47;sonstige Strukturstörung;;;1;0;0;B-f4;2;is part of;is parent of;;archictectural distortion;f47
+B-f48;Asymetrie;;;1;0;0;B-f4;2;is part of;is parent of;;asymetry;f48
+B-f5;BI-RADS 5: bösartig;;;1;0;0;B-f;2;is part of;is parent of;;BI-RADS 5: malignant;f5
+B-f50;nicht näher spezifiziert;;;1;0;0;B-f5;2;is part of;is parent of;;unspecified;f50
+B-f51;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-f5;2;is part of;is parent of;;calcification, unspecified;f51
+B-f52;Mikro-Kalzifikation;;;1;0;0;B-f5;2;is part of;is parent of;;micro-calcification;f52
+B-f53;Makro-Kalzifikation;;;1;0;0;B-f5;2;is part of;is parent of;;macro-calcification;f53
+B-f54;Tumor, glatt;;;1;0;0;B-f5;2;is part of;is parent of;;circumscribed mass;f54
+B-f55;Tumor, strahlig;;;1;0;0;B-f5;2;is part of;is parent of;;spiculated mass;f55
+B-f56;Tumor, sonstig;;;1;0;0;B-f5;2;is part of;is parent of;;other mass;f56
+B-f57;sonstige Strukturstörung;;;1;0;0;B-f5;2;is part of;is parent of;;archictectural distortion;f57
+B-f58;Asymetrie;;;1;0;0;B-f5;2;is part of;is parent of;;asymetry;f58
+B-g;ACR-4: Extrem dichtes Mamasystem;;;1;0;0;B;2;is part of;is parent of;;ACR-4: extremely dense system;g
+B-g0;BI-RADS 0: nicht näher spezifiziert;;;1;0;0;B-g;2;is part of;is parent of;;BI-RADS 0: unspecified;g0
+B-g1;BI-RADS 1: normal;;;1;0;0;B-g;2;is part of;is parent of;;BI-RADS 1: normal;g1
+B-g10;nicht näher spezifiziert;;;1;0;0;B-g1;2;is part of;is parent of;;unspecified;g10
+B-g2;BI-RADS 2: gutartig;;;1;0;0;B-g;2;is part of;is parent of;;BIRAD 2: benign;g2
+B-g20;nicht näher spezifiziert;;;1;0;0;B-g2;2;is part of;is parent of;;unspecified;g20
+B-g21;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-g2;2;is part of;is parent of;;calcification, unspecified;g21
+B-g22;Mikro-Kalzifikation;;;1;0;0;B-g2;2;is part of;is parent of;;micro-calcification;g22
+B-g23;Makro-Kalzifikation;;;1;0;0;B-g2;2;is part of;is parent of;;macro-calcification;g23
+B-g24;Tumor, glatt;;;1;0;0;B-g2;2;is part of;is parent of;;circumscribed mass;g24
+B-g25;Tumor, strahlig;;;1;0;0;B-g2;2;is part of;is parent of;;spiculated mass;g25
+B-g26;Tumor, sonstig;;;1;0;0;B-g2;2;is part of;is parent of;;other mass;g26
+B-g27;sonstige Strukturstörung;;;1;0;0;B-g2;2;is part of;is parent of;;archictectural distortion;g27
+B-g28;Asymetrie;;;1;0;0;B-g2;2;is part of;is parent of;;asymetry;g28
+B-g3;BI-RADS 3: wahrscheinlich gutartig;;;1;0;0;B-g;2;is part of;is parent of;;BI-RADS 3: probably benign;g3
+B-g30;nicht näher spezifiziert;;;1;0;0;B-g3;2;is part of;is parent of;;unspecified;g30
+B-g31;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-g3;2;is part of;is parent of;;calcification, unspecified;g31
+B-g32;Mikro-Kalzifikation;;;1;0;0;B-g3;2;is part of;is parent of;;micro-calcification;g32
+B-g33;Makro-Kalzifikation;;;1;0;0;B-g3;2;is part of;is parent of;;macro-calcification;g33
+B-g34;Tumor, glatt;;;1;0;0;B-g3;2;is part of;is parent of;;circumscribed mass;g34
+B-g35;Tumor, strahlig;;;1;0;0;B-g3;2;is part of;is parent of;;spiculated mass;g35
+B-g36;Tumor, sonstig;;;1;0;0;B-g3;2;is part of;is parent of;;other mass;g36
+B-g37;sonstige Strukturstörung;;;1;0;0;B-g3;2;is part of;is parent of;;archictectural distortion;g37
+B-g38;Asymetrie;;;1;0;0;B-g3;2;is part of;is parent of;;asymetry;g38
+B-g4;BI-RADS 4: wahrscheinlich bösartig;;;1;0;0;B-g;2;is part of;is parent of;;BI-RADS 4: suspiciously abnormal;g4
+B-g40;nicht näher spezifiziert;;;1;0;0;B-g4;2;is part of;is parent of;;unspecified;g40
+B-g41;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-g4;2;is part of;is parent of;;calcification, unspecified;g41
+B-g42;Mikro-Kalzifikation;;;1;0;0;B-g4;2;is part of;is parent of;;micro-calcification;g42
+B-g43;Makro-Kalzifikation;;;1;0;0;B-g4;2;is part of;is parent of;;macro-calcification;g43
+B-g44;Tumor, glatt;;;1;0;0;B-g4;2;is part of;is parent of;;circumscribed mass;g44
+B-g45;Tumor, strahlig;;;1;0;0;B-g4;2;is part of;is parent of;;spiculated mass;g45
+B-g46;Tumor, sonstig;;;1;0;0;B-g4;2;is part of;is parent of;;other mass;g46
+B-g47;sonstige Strukturstörung;;;1;0;0;B-g4;2;is part of;is parent of;;archictectural distortion;g47
+B-g48;Asymetrie;;;1;0;0;B-g4;2;is part of;is parent of;;asymetry;g48
+B-g5;BI-RADS 5: bösartig;;;1;0;0;B-g;2;is part of;is parent of;;BI-RADS 5: malignant;g5
+B-g50;nicht näher spezifiziert;;;1;0;0;B-g5;2;is part of;is parent of;;unspecified;g50
+B-g51;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-g5;2;is part of;is parent of;;calcification, unspecified;g51
+B-g52;Mikro-Kalzifikation;;;1;0;0;B-g5;2;is part of;is parent of;;micro-calcification;g52
+B-g53;Makro-Kalzifikation;;;1;0;0;B-g5;2;is part of;is parent of;;macro-calcification;g53
+B-g54;Tumor, glatt;;;1;0;0;B-g5;2;is part of;is parent of;;circumscribed mass;g54
+B-g55;Tumor, strahlig;;;1;0;0;B-g5;2;is part of;is parent of;;spiculated mass;g55
+B-g56;Tumor, sonstig;;;1;0;0;B-g5;2;is part of;is parent of;;other mass;g56
+B-g57;sonstige Strukturstörung;;;1;0;0;B-g5;2;is part of;is parent of;;archictectural distortion;g57
+B-g58;Asymetrie;;;1;0;0;B-g5;2;is part of;is parent of;;asymetry;g58
+B-h;ACR-3/4: Dichtes Mamasystem;;;1;0;0;B;2;is part of;is parent of;;ACR-3/4: dense system;h
+B-h0;BI-RADS 0: nicht näher spezifiziert;;;1;0;0;B-h;2;is part of;is parent of;;BI-RADS 0: unspecified;h0
+B-h1;BI-RADS 1: normal;;;1;0;0;B-h;2;is part of;is parent of;;BI-RADS 1: normal;h1
+B-h10;nicht näher spezifiziert;;;1;0;0;B-h1;2;is part of;is parent of;;unspecified;h10
+B-h2;BI-RADS 2: gutartig;;;1;0;0;B-h;2;is part of;is parent of;;BI-RADS 2: benign;h2
+B-h20;nicht näher spezifiziert;;;1;0;0;B-h2;2;is part of;is parent of;;unspecified;h20
+B-h21;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-h2;2;is part of;is parent of;;calcification, unspecified;h21
+B-h22;Mikro-Kalzifikation;;;1;0;0;B-h2;2;is part of;is parent of;;micro-calcification;h22
+B-h23;Makro-Kalzifikation;;;1;0;0;B-h2;2;is part of;is parent of;;macro-calcification;h23
+B-h24;Tumor, glatt;;;1;0;0;B-h2;2;is part of;is parent of;;circumscribed mass;h24
+B-h25;Tumor, strahlig;;;1;0;0;B-h2;2;is part of;is parent of;;spiculated mass;h25
+B-h26;Tumor, sonstig;;;1;0;0;B-h2;2;is part of;is parent of;;other mass;h26
+B-h27;sonstige Strukturstörung;;;1;0;0;B-h2;2;is part of;is parent of;;archictectural distortion;h27
+B-h28;Asymetrie;;;1;0;0;B-h2;2;is part of;is parent of;;asymetry;h28
+B-h3;BI-RADS 3: wahrscheinlich gutartig;;;1;0;0;B-h;2;is part of;is parent of;;BI-RADS 3: probably benign;h3
+B-h30;nicht näher spezifiziert;;;1;0;0;B-h3;2;is part of;is parent of;;unspecified;h30
+B-h31;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-h3;2;is part of;is parent of;;calcification, unspecified;h31
+B-h32;Mikro-Kalzifikation;;;1;0;0;B-h3;2;is part of;is parent of;;micro-calcification;h32
+B-h33;Makro-Kalzifikation;;;1;0;0;B-h3;2;is part of;is parent of;;macro-calcification;h33
+B-h34;Tumor, glatt;;;1;0;0;B-h3;2;is part of;is parent of;;circumscribed mass;h34
+B-h35;Tumor, strahlig;;;1;0;0;B-h3;2;is part of;is parent of;;spiculated mass;h35
+B-h36;Tumor, sonstig;;;1;0;0;B-h3;2;is part of;is parent of;;other mass;h36
+B-h37;sonstige Strukturstörung;;;1;0;0;B-h3;2;is part of;is parent of;;archictectural distortion;h37
+B-h38;Asymetrie;;;1;0;0;B-h3;2;is part of;is parent of;;asymetry;h38
+B-h4;BI-RADS 4: wahrscheinlich bösartig;;;1;0;0;B-h;2;is part of;is parent of;;BI-RADS 4: suspiciously abnormal;h4
+B-h40;nicht näher spezifiziert;;;1;0;0;B-h4;2;is part of;is parent of;;unspecified;h40
+B-h41;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-h4;2;is part of;is parent of;;calcification, unspecified;h41
+B-h42;Mikro-Kalzifikation;;;1;0;0;B-h4;2;is part of;is parent of;;micro-calcification;h42
+B-h43;Makro-Kalzifikation;;;1;0;0;B-h4;2;is part of;is parent of;;macro-calcification;h43
+B-h44;Tumor, glatt;;;1;0;0;B-h4;2;is part of;is parent of;;circumscribed mass;h44
+B-h45;Tumor, strahlig;;;1;0;0;B-h4;2;is part of;is parent of;;spiculated mass;h45
+B-h46;Tumor, sonstig;;;1;0;0;B-h4;2;is part of;is parent of;;other mass;h46
+B-h47;sonstige Strukturstörung;;;1;0;0;B-h4;2;is part of;is parent of;;archictectural distortion;h47
+B-h48;Asymetrie;;;1;0;0;B-h4;2;is part of;is parent of;;asymetry;h48
+B-h5;BI-RADS 5: bösartig;;;1;0;0;B-h;2;is part of;is parent of;;BI-RADS 5: malignant;h5
+B-h50;nicht näher spezifiziert;;;1;0;0;B-h5;2;is part of;is parent of;;unspecified;h50
+B-h51;Kalzifikation, nicht näher spezifiziert;;;1;0;0;B-h5;2;is part of;is parent of;;calcification, unspecified;h51
+B-h52;Mikro-Kalzifikation;;;1;0;0;B-h5;2;is part of;is parent of;;micro-calcification;h52
+B-h53;Makro-Kalzifikation;;;1;0;0;B-h5;2;is part of;is parent of;;macro-calcification;h53
+B-h54;Tumor, glatt;;;1;0;0;B-h5;2;is part of;is parent of;;circumscribed mass;h54
+B-h55;Tumor, strahlig;;;1;0;0;B-h5;2;is part of;is parent of;;spiculated mass;h55
+B-h56;Tumor, sonstig;;;1;0;0;B-h5;2;is part of;is parent of;;other mass;h56
+B-h57;sonstige Strukturstörung;;;1;0;0;B-h5;2;is part of;is parent of;;archictectural distortion;h57
+B-h58;Asymetrie;;;1;0;0;B-h5;2;is part of;is parent of;;asymetry;h58

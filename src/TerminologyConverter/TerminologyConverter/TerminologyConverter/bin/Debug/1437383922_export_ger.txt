@@ -1,0 +1,1728 @@
+************* technique *************
+[0] nicht näher spezifiziert
+[1] Röntgen
+	[10] nicht näher spezifiziert
+	[11] Projektionsradiographie
+		[110] nicht näher spezifiziert
+		[111] digital
+			[1110] nicht näher spezifiziert
+			[1111] Übersichtsaufnahme
+			[1112] Tomographie
+			[1113] Hartstrahl
+			[1114] Weichstrahl
+			[1115] Fernaufnahme
+			[1116] Originalgröße
+			[1117] Vergrößerung
+			[1118] Dual Energy
+			[1119] Zahnfilm
+			[111a] Bißflügelaufnahme
+			[111b] Aufbißaufnahme
+			[111c] Orthopantomographie
+			[111d] Engwinkelradiographie
+			[111e] Kinderfilter
+			[111f] 42 Mikrometer
+			[111g] 43,5 Mikrometer
+			[111h] 50 Mikrometer
+			[111i] 100 Mikrometer
+			[111j] 200 Mikrometer
+		[112] analog
+			[1120] nicht näher spezifiziert
+			[1121] Übersichtsaufnahme
+			[1122] Tomographie
+			[1123] Hartstrahl
+			[1124] Weichstrahl
+			[1125] Fernaufnahme
+			[1126] Originalgröße
+			[1127] Vergrößerung
+			[1128] Zahnfilm
+			[1129] Bißflügelaufnahme
+			[112a] Aufbißaufnahme
+			[112b] Orthopnatomographie
+			[112c] Engwinkelradiographie
+			[112d] Kinderfilter
+			[112e] 42 Mikrometer
+			[112f] 43,5 Mikrometer
+			[112g] 50 Mikrometer
+			[112h] 100 Mikrometer
+			[112i] 200 Mikrometer
+		[113] Röntgenstereometrie
+			[1130] nicht näher spezifiziert
+		[114] Röntgenstereographie
+			[1140] nicht näher spezifiziert
+			[1141] Engwinkelradiographie
+		[115] Tomosynthese
+			[1150] nicht näher spezifiziert
+		[116] Xeroradiographie
+			[1160] nicht näher spezifiziert
+		[117] Computed Radiography (CR)
+			[1170] nicht näher spezifiziert
+	[12] Durchleuchtung
+		[120] nicht näher spezifiziert
+		[121] digital
+			[1210] nicht näher spezifiziert
+		[122] analog
+			[1220] nicht näher spezifiziert
+	[13] Angiographie
+		[130] nicht näher spezifiziert
+		[131] digital
+			[1310] nicht näher spezifiziert
+			[1311] Subtraktion (DSA)
+			[1312] Rotationsangiographie
+			[1313] Pfadfindertechnik
+		[132] analog
+			[1320] nicht näher spezifiziert
+			[1321] Photosubtraktion
+	[14] Computertomographie (CT)
+		[140] nicht näher spezifiziert
+		[141] konventionell
+			[1410] nicht näher spezifiziert
+			[1411] Low Dose
+			[1412] High Resolution
+			[1413] Bolustracking
+		[142] quantitative CT
+			[1420] nicht näher spezifiziert
+			[1421] Dual Energy
+		[143] multiplanare Reformatierung
+			[1430] nicht näher spezifiziert
+		[144] interventionelle CT
+			[1440] nicht näher spezifiziert
+	[15] DEXA (quantitative Radiographie)
+		[150] nicht näher spezifiziert
+		[151] digital
+			[1510] nicht näher spezifiziert
+			[1511] Dual Energy
+	[16] Radiotherapie (Portalbilder)
+		[160] nicht näher spezifiziert
+		[161] digital
+			[1610] nicht näher spezifiziert
+		[162] analog
+			[1620] nicht näher spezifiziert
+[2] Sonographie
+	[20] nicht näher spezifiziert
+	[21] A-Mode
+		[210] nicht näher spezifiziert
+		[211] 3,5 MHz
+			[2110] nicht näher spezifiziert
+		[212] 5,0 MHz
+			[2120] nicht näher spezifiziert
+		[213] 7,5 MHz
+			[2130] nicht näher spezifiziert
+		[214] 10 MHz
+			[2140] nicht näher spezifiziert
+		[215] variable Frequenz
+			[2150] nicht näher spezifiziert
+	[22] B-Mode
+		[220] nicht näher spezifiziert
+		[221] Sektorbild
+			[2210] nicht näher spezifiziert
+			[2211] 3,5 MHz
+			[2212] 5,0 MHz
+			[2213] 7,5 MHz
+			[2214] 10 MHz
+			[2215] variable Frequenz
+		[222] Linearbild
+			[2220] nicht näher spezifiziert
+			[2221] 3,5 MHz
+			[2222] 5,0 MHz
+			[2223] 7,5 MHz
+			[2224] 10 MHz
+			[2225] variable Frequenz
+	[23] M-Mode
+		[230] nicht näher spezifiziert
+		[231] 3,5 MHz
+			[2310] nicht näher spezifiziert
+		[232] 5,0 MHz
+			[2320] nicht näher spezifiziert
+		[233] 7,5 MHz
+			[2330] nicht näher spezifiziert
+		[234] 10 MHz
+			[2340] nicht näher spezifiziert
+		[235] variable Frequenz
+			[2350] nicht näher spezifiziert
+	[24] Compound-Mode
+		[240] nicht näher spezifiziert
+		[241] 3,5 MHz
+			[2410] nicht näher spezifiziert
+		[242] 5,0 MHz
+			[2420] nicht näher spezifiziert
+		[243] 7,5 MHz
+			[2430] nicht näher spezifiziert
+		[244] 10 MHz
+			[2440] nicht näher spezifiziert
+		[245] variable Frequenz
+			[2450] nicht näher spezifiziert
+	[25] SieScape-Mode
+		[250] nicht näher spezifiziert
+		[251] 3,5 MHz
+			[2510] nicht näher spezifiziert
+		[252] 5,0 MHz
+			[2520] nicht näher spezifiziert
+		[253] 7,5 MHz
+			[2530] nicht näher spezifiziert
+		[254] 10 MHz
+			[2540] nicht näher spezifiziert
+		[255] variable Frequenz
+			[2550] nicht näher spezifiziert
+	[26] Duplex-Mode
+		[260] nicht näher spezifiziert
+		[261] 3,5 MHz
+			[2610] nicht näher spezifiziert
+		[262] 5,0 MHz
+			[2620] nicht näher spezifiziert
+		[263] 7,5 MHz
+			[2630] nicht näher spezifiziert
+		[264] 10 MHz
+			[2640] nicht näher spezifiziert
+		[265] variable Frequenz
+			[2650] nicht näher spezifiziert
+	[27] Doppler-Mode
+		[270] nicht näher spezifiziert
+		[271] 3,5 MHz
+			[2710] nicht näher spezifiziert
+		[272] 5,0 MHz
+			[2720] nicht näher spezifiziert
+		[273] 7,5 MHz
+			[2730] nicht näher spezifiziert
+		[274] 10 MHz
+			[2740] nicht näher spezifiziert
+		[275] variable Frequenz
+			[2750] nicht näher spezifiziert
+	[28] 3D-Darstellung
+		[280] nicht näher spezifiziert
+		[281] 3,5 MHz
+			[2810] nicht näher spezifiziert
+		[282] 5,0 MHz
+			[2820] nicht näher spezifiziert
+		[283] 7,5 MHz
+			[2830] nicht näher spezifiziert
+		[284] 10 MHz
+			[2840] nicht näher spezifiziert
+		[285] variable Frequenz
+			[2850] nicht näher spezifiziert
+[3] Kernspinbildgebung
+	[30] nicht näher spezifiziert
+	[31] Kernspintomographie (MR)
+		[310] nicht näher spezifiziert
+		[311] T1-gewichtet
+			[3110] nicht näher spezifiziert
+			[3111] Endotechnik(-spule)
+			[3112] Body-Spule
+			[3113] Body Array
+			[3114] Kopfspule
+			[3115] Halsspule
+			[3116] Wirbelsäulenspule
+			[3117] Loop Coil
+			[3118] Schulterspule
+			[3119] Knie-/Extrimitätenspule
+			[311a] Handoberflächenspule
+			[311b] Mammaspule
+			[311c] Flex, groß
+			[311d] Flex, klein
+			[311e] Endorektalspule
+			[311f] Wrap-Around-Spule
+		[312] T2-gewichtet
+			[3120] nicht näher spezifiziert
+			[3121] Endotechnik(-spule)
+			[3122] Body-Spule
+			[3123] Body Array
+			[3124] Kopfspule
+			[3125] Halsspule
+			[3126] Wirbelsäulenspule
+			[3127] Loop Coil
+			[3128] Schulterspule
+			[3129] Knie-/Extrimitätenspule
+			[312a] Hand Oberflächenspule
+			[312b] Mammaspule
+			[312c] Flex, groß
+			[312d] Flex, klein
+			[312e] Endorektalspule
+			[312f] Wrap-Around-Spule
+		[313] Protonen-gewichtet
+			[3130] nicht näher spezifiziert
+			[3131] Endotechnik(-spule)
+			[3132] Body-Spule
+			[3133] Body Array
+			[3134] Kopfspule
+			[3135] Halsspule
+			[3136] Wirbelsäulenspule
+			[3137] Loop Coil
+			[3138] Schulterspule
+			[3139] Knie-/Extrimitätenspule
+			[313a] Hand Oberflächenspule
+			[313b] Mammaspule
+			[313c] Flex, groß
+			[313d] Flex, klein
+			[313e] Endorektalspule
+			[313f] Wrap-Around-Spule
+		[314] Fettsupression
+			[3140] nicht näher spezifiziert
+			[3141] Endotechnik(-spule)
+			[3142] Body-Spule
+			[3143] Body Array
+			[3144] Kopfspule
+			[3145] Halsspule
+			[3146] Wirbelsäulenspule
+			[3147] Loop Coil
+			[3148] Schulterspule
+			[3149] Knie-/Extrimitätenspule
+			[314a] Hand Oberflächenspule
+			[314b] Mammaspule
+			[314c] Flex, groß
+			[314d] Flex, klein
+			[314e] Endorektalspule
+			[314f] Wrap-Around-Spule
+		[315] Cine-Lolo
+			[3150] nicht näher spezifiziert
+			[3151] Endotechnik(-spule)
+			[3152] Body-Spule
+			[3153] Body Array
+			[3154] Kopfspule
+			[3155] Halsspule
+			[3156] Wirbelsäulenspule
+			[3157] Loop Coil
+			[3158] Schulterspule
+			[3159] Knie-/Extrimitätenspule
+			[315a] Hand Oberflächenspule
+			[315b] Mammaspule
+			[315c] Flex, groß
+			[315d] Flex, klein
+			[315e] Endorektalspule
+			[315f] Wrap-Around-Spule
+		[316] Inversion Recovery
+			[3160] nicht näher spezifiziert
+			[3161] Endotechnik(-spule)
+			[3162] Body-Spule
+			[3163] Body Array
+			[3164] Kopfspule
+			[3165] Halsspule
+			[3166] Wirbelsäulenspule
+			[3167] Loop Coil
+			[3168] Schulterspule
+			[3169] Knie-/Extrimitätenspule
+			[316a] Hand Oberflächenspule
+			[316b] Mammaspule
+			[316c] Flex, groß
+			[316d] Flex, klein
+			[316e] Endorektalspule
+			[316f] Wrap-Around-Spule
+		[317] FLARE
+			[3170] nicht näher spezifiziert
+			[3171] Endotechnik(-spule)
+			[3172] Body-Spule
+			[3173] Body Array
+			[3174] Kopfspule
+			[3175] Halsspule
+			[3176] Wirbelsäulenspule
+			[3177] Loop Coil
+			[3178] Schulterspule
+			[3179] Knie-/Extrimitätenspule
+			[317a] Hand Oberflächenspule
+			[317b] Mammaspule
+			[317c] Flex, groß
+			[317d] Flex, klein
+			[317e] Endorektalspule
+			[317f] Wrap-Around-Spule
+		[318] 3D-FFE (hochauflösend)
+			[3180] nicht näher spezifiziert
+			[3181] Endotechnik(-spule)
+			[3182] Body-Spule
+			[3183] Body Array
+			[3184] Kopfspule
+			[3185] Halsspule
+			[3186] Wirbelsäulenspule
+			[3187] Loop Coil
+			[3188] Schulterspule
+			[3189] Knie-/Extrimitätenspule
+			[318a] Hand Oberflächenspule
+			[318b] Mammaspule
+			[318c] Flex, groß
+			[318d] Flex, klein
+			[318e] Endorektalspule
+			[318f] Wrap-Around-Spule
+	[32] Spektroskopie
+		[320] nicht näher spezifiziert
+	[33] Angiographie
+		[330] nicht näher spezifiziert
+	[34] funktionelle Kernspintomographie
+		[340] nicht näher spezifiziert
+	[35] Mamographie
+		[350] nicht näher spezifiziert
+[4] Nuklearmedizinische Bildgebung
+	[40] nicht näher spezifiziert
+	[41] Szintillationssonde
+		[410] nicht näher spezifiziert
+	[42] Gammakamera
+		[420] nicht näher spezifiziert
+	[43] SPECT
+		[430] nicht näher spezifiziert
+	[44] PET
+		[440] nicht näher spezifiziert
+		[441] PET-CT
+			[4410] nicht näher spezifiziert
+		[442] PET-MR
+			[4420] nicht näher spezifiziert
+[5] Optische Verfahren
+	[50] nicht näher spezifiziert
+	[51] Endoskopie
+		[510] nicht näher spezifiziert
+		[511] starr
+			[5110] nicht näher spezifiziert
+			[5111] Dauerlicht
+			[5112] Stroboskopie
+		[512] flexibel
+			[5120] nicht näher spezifiziert
+			[5121] Dauerlicht
+			[5122] Stroboskopie
+		[513] stereoskopisch
+			[5130] nicht näher spezifiziert
+			[5131] Dauerlicht
+			[5132] Stroboskopie
+		[514] durchwandernd
+			[5140] nicht näher spezifiziert
+			[5141] Kapsel (Endowurm)
+	[52] Mikroskopie
+		[520] nicht näher spezifiziert
+		[521] einfach
+			[5210] nicht näher spezifiziert
+		[522] gefärbt
+			[5220] nicht näher spezifiziert
+		[523] Fluoreszenz
+			[5230] nicht näher spezifiziert
+		[524] Elektronenmikroskopie
+			[5240] nicht näher spezifiziert
+	[53] Photographie
+		[530] nicht näher spezifiziert
+	[54] Fundoskopie (Auge)
+		[540] nicht näher spezifiziert
+	[55] Laser Surface Scan
+		[550] nicht näher spezifiziert
+	[56] Thermographie
+		[560] nicht näher spezifiziert
+	[57] Video
+		[570] nicht näher spezifiziert
+[6] Biophysikalische Verf.
+	[60] nicht näher spezifiziert
+	[61] elektrisch
+		[610] nicht näher spezifiziert
+	[62] magnetisch
+		[620] nicht näher spezifiziert
+	[63] Sonden
+		[630] nicht näher spezifiziert
+[7] Sonstiges
+	[70] nicht näher spezifiziert
+	[71] Workstation
+		[710] nicht näher spezifiziert
+	[72] Hardcopy
+		[720] nicht näher spezifiziert
+	[73] Secondary Capture
+		[730] nicht näher spezifiziert
+	[74] Dokumentation
+		[740] nicht näher spezifiziert
+		[741] Wert
+			[7410] nicht näher spezifiziert
+		[742] Kurve örtlich
+			[7420] nicht näher spezifiziert
+		[743] Kurve zeitlich
+			[7430] nicht näher spezifiziert
+		[744] Fläche komplex (3D)
+			[7440] nicht näher spezifiziert
+		[745] Bild
+			[7450] nicht näher spezifiziert
+		[746] Serie örtlich
+			[7460] nicht näher spezifiziert
+		[747] Serie zeitlich
+			[7470] nicht näher spezifiziert
+		[748] Serie komplex (4D)
+			[7480] nicht näher spezifiziert
+		[749] Cine (Aufzeichnung)
+			[7490] nicht näher spezifiziert
+		[74a] Fluoroskopie
+			[74a0] nicht näher spezifiziert
+		[74b] Volumen (Datensatz)
+			[74b0] nicht näher spezifiziert
+		[74c] Volumen zeitlich (Datensatz)
+			[74c0] nicht näher spezifiziert
+[8] Sekundärdigitalisierung
+	[80] nicht näher spezifiziert
+	[81] Laserabtastung
+		[810] nicht näher spezifiziert
+	[82] LCD-Abtastung
+		[820] nicht näher spezifiziert
+	[83] Videodigitalisierung
+		[830] nicht näher spezifiziert
+[9] Abbildung
+	[90] nicht näher spezifiziert
+	[91] Untersuchungsaufnahme
+		[910] nicht näher spezifiziert
+		[911] schwarzweiss
+			[9110] nicht näher spezifiziert
+			[9111] Original
+			[9112] Markierung
+		[912] farbig
+			[9120] nicht näher spezifiziert
+			[9121] Original
+			[9122] Markierung
+	[92] Untersuchungsvisualisierung
+		[920] nicht näher spezifiziert
+		[921] schwarzweiss
+			[9210] nicht näher spezifiziert
+		[922] farbig
+			[9220] nicht näher spezifiziert
+	[93] Fotographie
+		[930] nicht näher spezifiziert
+		[931] schwarzweiss
+			[9310] nicht näher spezifiziert
+			[9311] Gerät
+			[9312] Person
+			[9313] Objekt
+			[9314] Portrait
+			[9315] sonstige
+		[932] farbig
+			[9320] nicht näher spezifiziert
+			[9321] Gerät
+			[9322] Person
+			[9323] Objekt
+			[9324] Portrait
+			[9325] sonstige
+	[94] Bildschirmfenster
+		[940] nicht näher spezifiziert
+		[941] schwarzweiss
+			[9410] nicht näher spezifiziert
+		[942] farbig
+			[9420] nicht näher spezifiziert
+	[95] Graphik
+		[950] nicht näher spezifiziert
+		[951] schwarzweiss
+			[9510] nicht näher spezifiziert
+		[952] farbig
+			[9520] nicht näher spezifiziert
+	[96] Diagramm
+		[960] nicht näher spezifiziert
+		[961] schwarzweiss
+			[9610] nicht näher spezifiziert
+		[962] farbig
+			[9620] nicht näher spezifiziert
+	[97] Zeichnung
+		[970] nicht näher spezifiziert
+		[971] schwarzweiss
+			[9710] nicht näher spezifiziert
+		[972] farbig
+			[9720] nicht näher spezifiziert
+	[98] Kollage medizinisch
+		[980] nicht näher spezifiziert
+		[981] schwarzweiss
+			[9810] nicht näher spezifiziert
+			[9811] 1 Teil
+			[9812] 2 Teile
+			[9813] 3 Teile
+			[9814] 4 Teile
+			[9815] 5 Teile
+			[9816] 6 Teile
+			[9817] 7 Teile
+			[9818] 8 Teile
+			[9819] 9 Teile
+			[981a] 10 Teile
+			[981b] 11 Teile
+			[981c] 12 Teile
+			[981d] 13 Teile
+			[981e] 14 Teile
+			[981f] 15 Teile
+			[981g] 16 Teile
+			[981h] 17 Teile
+			[981i] 18 Teile
+			[981j] 19 Teile
+			[981k] 20 Teile
+			[981l] 21 Teile
+			[981m] 22 Teile
+			[981n] 23 Teile
+			[981o] 24 Teile
+			[981p] 25 Teile
+		[982] farbig
+			[9820] nicht näher spezifiziert
+			[9821] 1 Teil
+			[9822] 2 Teile
+			[9823] 3 Teile
+			[9824] 4 Teile
+			[9825] 5 Teile
+			[9826] 6 Teile
+			[9827] 7 Teile
+			[9828] 8 Teile
+			[9829] 9 Teile
+			[982a] 10 Teile
+			[982b] 11 Teile
+			[982c] 12 Teile
+			[982d] 13 Teile
+			[982e] 14 Teile
+			[982f] 15 Teile
+			[982g] 16 Teile
+			[982h] 17 Teile
+			[982i] 18 Teile
+			[982j] 19 Teile
+			[982k] 20 Teile
+			[982l] 21 Teile
+			[982m] 22 Teile
+			[982n] 23 Teile
+			[982o] 24 Teile
+			[982p] 25 Teile
+	[99] Kollage nicht-medizinisch
+		[990] nicht näher spezifiziert
+		[991] schwarzweiss
+			[9910] nicht näher spezifiziert
+			[9911] 1 Teil
+			[9912] 2 Teile
+			[9913] 3 Teile
+			[9914] 4 Teile
+			[9915] 5 Teile
+			[9916] 6 Teile
+			[9917] 7 Teile
+			[9918] 8 Teile
+			[9919] 9 Teile
+			[991a] 10 Teile
+			[991b] 11 Teile
+			[991c] 12 Teile
+			[991d] 13 Teile
+			[991e] 14 Teile
+			[991f] 15 Teile
+			[991g] 16 Teile
+			[991h] 17 Teile
+			[991i] 18 Teile
+			[991j] 19 Teile
+			[991k] 20 Teile
+			[991l] 21 Teile
+			[991m] 22 Teile
+			[991n] 23 Teile
+			[991o] 24 Teile
+			[991p] 25 Teile
+		[992] farbig
+			[9920] nicht näher spezifiziert
+			[9921] 1 Teil
+			[9922] 2 Teile
+			[9923] 3 Teile
+			[9924] 4 Teile
+			[9925] 5 Teile
+			[9926] 6 Teile
+			[9927] 7 Teile
+			[9928] 8 Teile
+			[9929] 9 Teile
+			[992a] 10 Teile
+			[992b] 11 Teile
+			[992c] 12 Teile
+			[992d] 13 Teile
+			[992e] 14 Teile
+			[992f] 15 Teile
+			[992g] 16 Teile
+			[992h] 17 Teile
+			[992i] 18 Teile
+			[992j] 19 Teile
+			[992k] 20 Teile
+			[992l] 21 Teile
+			[992m] 22 Teile
+			[992n] 23 Teile
+			[992o] 24 Teile
+			[992p] 25 Teile
+	[9a] Kollage gemischt
+		[9a0] nicht näher spezifiziert
+		[9a1] schwarzweiss
+			[9a10] nicht näher spezifiziert
+			[9a11] 1 Teil
+			[9a12] 2 Teile
+			[9a13] 3 Teile
+			[9a14] 4 Teile
+			[9a15] 5 Teile
+			[9a16] 6 Teile
+			[9a17] 7 Teile
+			[9a18] 8 Teile
+			[9a19] 9 Teile
+			[9a1a] 10 Teile
+			[9a1b] 11 Teile
+			[9a1c] 12 Teile
+			[9a1d] 13 Teile
+			[9a1e] 14 Teile
+			[9a1f] 15 Teile
+			[9a1g] 16 Teile
+			[9a1h] 17 Teile
+			[9a1i] 18 Teile
+			[9a1j] 19 Teile
+			[9a1k] 20 Teile
+			[9a1l] 21 Teile
+			[9a1m] 22 Teile
+			[9a1n] 23 Teile
+			[9a1o] 24 Teile
+			[9a1p] 25 Teile
+		[9a2] farbig
+			[9a20] nicht näher spezifiziert
+			[9a21] 1 Teil
+			[9a22] 2 Teile
+			[9a23] 3 Teile
+			[9a24] 4 Teile
+			[9a25] 5 Teile
+			[9a26] 6 Teile
+			[9a27] 7 Teile
+			[9a28] 8 Teile
+			[9a29] 9 Teile
+			[9a2a] 10 Teile
+			[9a2b] 11 Teile
+			[9a2c] 12 Teile
+			[9a2d] 13 Teile
+			[9a2e] 14 Teile
+			[9a2f] 15 Teile
+			[9a2g] 16 Teile
+			[9a2h] 17 Teile
+			[9a2i] 18 Teile
+			[9a2j] 19 Teile
+			[9a2k] 20 Teile
+			[9a2l] 21 Teile
+			[9a2m] 22 Teile
+			[9a2n] 23 Teile
+			[9a2o] 24 Teile
+			[9a2p] 25 Teile
+	[9b] Fremdbild
+		[9b0] nicht näher spezifiziert
+		[9b1] schwarzweiss
+			[9b10] nicht näher spezifiziert
+			[9b11] digitalisierte Tabelle
+			[9b12] digitalisierte Aufzählung
+			[9b13] digitalisierte Gleichung
+			[9b14] digitalisiertes Dokument
+			[9b15] Artefakt
+		[9b2] farbig
+			[9b20] nicht näher spezifiziert
+			[9b21] digitalisierte Tabelle
+			[9b22] digitalisierte Aufzählung
+			[9b23] digitalisierte Gleichung
+			[9b24] digitalisiertes Dokument
+			[9b25] Artefakt
+	[9c] Protein Spot
+		[9c0] nicht näher spezifiziert
+		[9c1] schwarzweiss
+			[9c10] nicht näher spezifiziert
+			[9c11] Original
+			[9c12] Markierung
+		[9c2] farbig
+			[9c20] nicht näher spezifiziert
+			[9c21] Original
+			[9c22] Markierung
+
+************* direction *************
+[0] nicht näher spezifiziert
+[1] coronar
+	[10] nicht näher spezifiziert
+	[11] posterioanterior (PA)
+		[110] nicht näher spezifiziert
+		[111] Inspiration
+		[112] Exspiration
+		[113] Valsalva
+		[114] Phonation
+		[115] Stehen
+		[116] Sitzen
+		[117] Rückenlage
+		[118] Bauchlage
+		[119] Seitenlage
+		[11a] Beugung, links
+		[11b] Beugung, rechts
+		[11c] Schluckakt
+		[11d] Miktion
+		[11e] Stressaufnahme
+		[11f] axial
+		[11g] linke Seite
+		[11h] rechte Seite
+		[11i] Ethnik: weiß
+		[11j] Ethnik: asiatisch
+		[11k] Ethnik: afroamerikanisch
+		[11l] Ethnik: lateinamerikanisch
+	[12] anterioposterior (coronar)
+		[120] nicht näher spezifiziert
+		[121] Inspiration
+		[122] Exspiration
+		[123] Valsalva
+		[124] Phonation
+		[125] Stehen
+		[126] Sitzen
+		[127] Rückenlage
+		[128] Bauchlage
+		[129] Seitenlage
+		[12a] Beugung, links
+		[12b] Beugung, rechts
+		[12c] Schluckakt
+		[12d] Miktion
+		[12e] Stressaufnahme
+		[12f] axial
+		[12g] linke Seite
+		[12h] rechte Seite
+		[12i] Ethnik: weiß
+		[12j] Ethnik: asiatisch
+		[12k] Ethnik: afroamerikanisch
+		[12l] Ethnik: lateinamerikanisch
+		[12m] aufrecht
+		[12n] links gekippt
+		[12o] rechts gekippt
+[2] sagittal
+	[20] nicht näher spezifiziert
+	[21] lateral, linksanliegend
+		[210] nicht näher spezifiziert
+		[211] Inspiration
+		[212] Exspiration
+		[213] Valsalva
+		[214] Hitzenberger (Schnupfversuch)
+		[215] Stehen
+		[216] Rückenlage
+		[217] Bauchlage
+		[218] Inklination
+		[219] Reklination
+		[21a] Schluckakt
+		[21b] Defäkation
+		[21c] Miktion
+	[22] lateral, rechtsanliegend
+		[220] nicht näher spezifiziert
+		[221] Inspiration
+		[222] Exspiration
+		[223] Valsalva
+		[224] Hitzenberger (Schnupfversuch)
+		[225] Stehen
+		[226] Rückenlage
+		[227] Bauchlage
+		[228] Inklination
+		[229] Reklination
+		[22a] Schluckakt
+		[22b] Defäkation
+		[22c] Miktion
+	[23] mediolateral
+		[230] nicht näher spezifiziert
+	[24] lateromedial
+		[240] nicht näher spezifiziert
+[3] axial
+	[30] nicht näher spezifiziert
+	[31] craniocaudal
+		[310] nicht näher spezifiziert
+		[311] rechtsanliegend
+		[312] linksanliegend
+	[32] caudocranial (transversal, axial)
+		[320] nicht näher spezifiziert
+		[321] rechtsanliegend
+		[322] linksanliegend
+[4] sonstige Orientierung
+	[40] nicht näher spezifiziert
+	[41] schräg
+		[410] nicht näher spezifiziert
+		[411] Standardbild
+		[412] Mehrfachbild
+		[413] Zoom
+	[42] okzipitofrontal
+		[420] nicht näher spezifiziert
+	[43] okzipitomental
+		[430] nicht näher spezifiziert
+	[44] bregmatikookzipital
+		[440] nicht näher spezifiziert
+	[45] submentobregmatikal
+		[450] nicht näher spezifiziert
+	[46] submentobregmatikofrontal
+		[460] nicht näher spezifiziert
+	[47] bregmatikooral
+		[470] nicht näher spezifiziert
+	[48] bregmatikosubmental
+		[480] nicht näher spezifiziert
+	[49] RAO (right anterior oblique)
+		[490] nicht näher spezifiziert
+	[4a] LAO (left anterior oblique)
+		[4a0] nicht näher spezifiziert
+	[4b] frontookzipital
+		[4b0] nicht näher spezifiziert
+	[4c] senkrecht zur Kieferachse
+		[4c0] nicht näher spezifiziert
+		[4c1] rechtsanliegend
+		[4c2] linksanliegend
+[5] RSA / ap und lateral (simultan)
+	[50] nicht näher spezifiziert
+
+************* anatomy *************
+[0] nicht näher spezifiziert
+[1] Ganzkörper
+	[10] nicht näher spezifiziert
+	[11] Rumpf
+		[110] nicht näher spezifiziert
+	[12] Extremitäten
+		[120] nicht näher spezifiziert
+	[13] Körperoberfläche
+		[130] nicht näher spezifiziert
+[2] Kopf (Schädel)
+	[20] nicht näher spezifiziert
+	[21] Gesichtsschädel
+		[210] nicht näher spezifiziert
+		[211] Stirnbereich
+		[212] Augenbereich
+		[213] Nasenbereich
+		[214] Oberkiefer
+		[215] Unterkiefer
+		[216] Temporo-Mandibular-Bereich
+		[217] Paranasalregion
+		[218] Kieferregion
+		[219] Zahnregion
+		[21a] Kieferwinkelregion
+		[21b] Molarregion
+		[21c] Molarregion, Oberkiefer
+		[21d] 3. Molarregion, Oberkiefer
+		[21e] Molarregion, Unterkiefer
+		[21f] 3. Molarregion, Unterkiefer
+		[21g] Prämolarregion
+		[21h] Prämolarregion, Oberkiefer
+		[21i] Prämolarregion, Unterkiefer
+		[21j] Eckzahnregion
+		[21k] Eckzahnregion, Oberkiefer
+		[21l] Eckzahnregion, Unterkiefer
+		[21m] Frontzahnregion
+		[21n] Frontzahnregion, Oberkiefer
+		[21o] Frontzahnregion, Unterkiefer
+		[21p] linkes Auge
+		[21q] rechtes Auge
+	[22] Schädelbasis
+		[220] nicht näher spezifiziert
+		[221] Felsenbein
+		[222] Sella
+	[23] Hirnschädel
+		[230] nicht näher spezifiziert
+		[231] Frontalbereich
+		[232] Parietalbereich
+		[233] Occipitalbereich
+		[234] Temporalbereich
+[3] Wirbelsäule
+	[30] nicht näher spezifiziert
+	[31] Halswirbelsäule (HWS)
+		[310] nicht näher spezifiziert
+		[311] Dens axis
+		[312] ---
+		[313] obere Halswirbelsäule
+		[314] untere Halswirbelsäule
+		[315] C1 (Atlas)
+		[316] C2 (Axis)
+		[317] C3
+		[318] C4
+		[319] C5
+		[31a] C6
+		[31b] C7
+	[32] Brustwirbelsäule (BWS)
+		[320] nicht näher spezifiziert
+		[321] HWS/BWS-Übergang
+		[322] obere Brustwirbelsäule
+		[323] mittlere Brustwirbelsäule
+		[324] untere Brustwirbelsäule
+		[325] T1
+		[326] T2
+		[327] T3
+		[328] T4
+		[329] T5
+		[32a] T6
+		[32b] T7
+		[32c] T8
+		[32d] T9
+		[32e] T10
+		[32f] T11
+		[32g] T12
+	[33] Lendenwirbelsäule (LWS)
+		[330] nicht näher spezifiziert
+		[331] thorako-lumbaler Übergang
+		[332] obere Lendenwirbelsäule
+		[333] untere Lendenwirbelsäule
+		[334] L1
+		[335] L2
+		[336] L3
+		[337] L4
+		[338] L5
+	[34] Kreuzbein
+		[340] nicht näher spezifiziert
+		[341] lumbosacraler Übergang
+		[342] S1
+		[343] S2
+		[344] S3
+		[345] S4
+		[346] S5
+	[35] Steißbein
+		[350] nicht näher spezifiziert
+		[351] S6
+[4] obere Extremität (Arm)
+	[40] nicht näher spezifiziert
+	[41] Hand
+		[410] nicht näher spezifiziert
+		[411] Finger (nicht näher spezifiziert)
+		[412] Mittelhand
+		[413] Handwurzel
+		[414] linke Hand
+		[415] rechte Hand
+		[416] Finger (linke Hand)
+		[417] Finger (rechte Hand)
+		[418] Epiphyse kl. Finger, distal/intermed. Phalanx
+		[419] Epiphyse kl. Finger, intermed./proximal Phalanx
+		[41a] Epiphyse kl. Finger, Phalanx/Mittelhand
+		[41b] Epiphyse kl. Finger, Mittelhand/Handwurzel
+		[41c] Epiphyse Ringfinger, distal/intermed. Phalanx
+		[41d] Epiphyse Ringfinger, intermed./proximal Phalanx
+		[41e] Epiphyse Ringfinger, Phalanx/Mittelhand
+		[41f] Epiphyse Ringfinger, Mittelhand/Handwurzel
+		[41g] Epiphyse Mittelfinger, distal/intermed. Phalanx
+		[41h] Epiphyse Mittelfinger, intermed./proximal Phalanx
+		[41i] Epiphyse Mittelfinger, Phalanx/Mittelhand
+		[41j] Epiphyse Mittelfinger, Mittelhand/Handwurzel
+		[41k] Epiphyse Zeigefinger, distal/intermed. Phalanx
+		[41l] Epiphyse Zeigefinger, intermed./proximal Phalanx
+		[41m] Epiphyse Zeigefinger, Phalanx/Mittelhand
+		[41n] Epiphyse Zeigefinger, Mittelhand/Handwurzel
+		[41o] Epiphyse Daumen, distal/proximal Phalanx
+		[41p] Epiphyse Daumen, Phalanx/Mittelhand
+		[41q] Epiphyse Daumen, Mittelhand/Handwurzel
+	[42] Handgelenk
+		[420] nicht näher spezifiziert
+		[421] linkes Handgelenk
+		[422] rechtes Handgelenk
+	[43] Unterarm
+		[430] nicht näher spezifiziert
+		[431] distaler Unterarm
+		[432] proximaler Unterarm
+		[433] linker distaler Unterarm
+		[434] rechter distaler Unterarm
+		[435] linker proximaler Unterarm
+		[436] rechter proximaler Unterarm
+		[437] linker Unterarm
+		[438] rechter Unterarm
+	[44] Ellenbogen
+		[440] nicht näher spezifiziert
+		[441] linker Ellenbogen
+		[442] rechter Ellenbogen
+	[45] Oberarm
+		[450] nicht näher spezifiziert
+		[451] linker Oberarm
+		[452] rechter Oberarm
+		[453] linker proximaler Oberarm
+		[454] rechter proximaler Oberarm
+		[455] linker distaler Oberarm
+		[456] rechter distaler Oberarm
+	[46] Schulter
+		[460] nicht näher spezifiziert
+		[461] Scapula
+		[462] linkes Humeroscapulargelenk
+		[463] rechtes Humeroscapulargelenk
+		[464] linkes Acromioklavikulargelenk
+		[465] rechtes Acromioklavikulargelenk
+		[466] linke Scapula
+		[467] rechte Scapula
+[5] Thorax
+	[50] nicht näher spezifiziert
+	[51] Knochen
+		[510] nicht näher spezifiziert
+		[511] Schlüsselbein
+		[512] Sternoclaviculärregion
+		[513] Brustbein
+		[514] rechte Rippen
+		[515] linke Rippen
+		[516] linkes Schlüsselbein
+		[517] rechtes Schlüsselbein
+	[52] Lungen
+		[520] nicht näher spezifiziert
+		[521] Oberlappen
+		[522] Mittellappen
+		[523] Unterlappen
+	[53] Hilus
+		[530] nicht näher spezifiziert
+	[54] Mediastinum
+		[540] nicht näher spezifiziert
+		[541] vorderes Mediastinum
+		[542] mittleres Mediastinum
+		[543] hinteres Mediastinum
+	[55] Herz
+		[550] nicht näher spezifiziert
+	[56] Zwerchfell
+		[560] nicht näher spezifiziert
+[6] Brust (Mamma)
+	[60] nicht näher spezifiziert
+	[61] rechte Brust
+		[610] nicht näher spezifiziert
+		[611] Vergrößerung
+	[62] linke Brust
+		[620] nicht näher spezifiziert
+		[621] Vergrößerung
+[7] Bauch (Abdomen)
+	[70] nicht näher spezifiziert
+	[71] Oberbauch
+		[710] nicht näher spezifiziert
+		[711] rechter Oberbauch
+		[712] mittlerer Oberbauch
+		[713] linker Oberbauch
+	[72] Mittelbauch
+		[720] nicht näher spezifiziert
+		[721] rechter Mittelbauch
+		[722] mittlerer Mittelbauch (Nabelregion)
+		[723] linker Mittelbauch
+	[73] Unterbauch
+		[730] nicht näher spezifiziert
+		[731] rechter Unterbauch
+		[732] mittlerer Unterbauch
+		[733] linker Unterbauch
+	[74] linkes Hemiabdomen
+		[740] nicht näher spezifiziert
+	[75] rechtes Hemiabdomen
+		[750] nicht näher spezifiziert
+[8] Becken (Pelvis)
+	[80] nicht näher spezifiziert
+	[81] Kreuzbein
+		[810] nicht näher spezifiziert
+		[811] Iliosacral-Übergang
+	[82] Darmbeinschaufel
+		[820] nicht näher spezifiziert
+	[83] Schambein
+		[830] nicht näher spezifiziert
+		[831] Symphyse
+	[84] Sitzbein
+		[840] nicht näher spezifiziert
+[9] untere Extremität (Bein)
+	[90] nicht näher spezifiziert
+	[91] Fuß
+		[910] nicht näher spezifiziert
+		[911] Zehe
+		[912] Mittelfuß
+		[913] Fußwurzel
+		[914] linker Fuß
+		[915] rechter Fuß
+		[916] Vorfuß
+		[917] Ferse
+		[918] linker Vorfuß
+		[919] rechter Vorfuß
+		[91a] linke Fußwurzel
+		[91b] rechte Fußwurzel
+	[92] Sprunggelenk
+		[920] nicht näher spezifiziert
+		[921] linkes Sprunggelenk
+		[922] rechtes Sprunggelenk
+	[93] Unterschenkel
+		[930] nicht näher spezifiziert
+		[931] distaler Unterschenkel
+		[932] proximaler Unterschenkel
+		[933] linker distaler Unterschenkel
+		[934] rechter distaler Unterschenken
+		[935] linker proximaler Unterschenkel
+		[936] rechter proximaler Unterschenken
+	[94] Knie
+		[940] nicht näher spezifiziert
+		[941] Kniescheibe (Patella)
+		[942] linkes Knie
+		[943] rechtes Knie
+	[95] Oberschenkel
+		[950] nicht näher spezifiziert
+		[951] distaler Oberschenkel
+		[952] proximaler Oberschenkel
+		[953] linker distaler Oberschenkel
+		[954] rechter distaler Oberschenkel
+		[955] linker proximlaer Oberschenkel
+		[956] rechter proximaler Oberschenkel
+	[96] Hüfte
+		[960] nicht näher spezifiziert
+		[961] linke Hüfte
+		[962] rechte Hüfte
+[a] Gewebe
+	[a0] nicht näher spezifiziert
+	[a1] Zellverband
+		[a10] nicht näher spezifiziert
+	[a2] Zelle
+		[a20] nicht näher spezifiziert
+	[a3] Desoxyribonukleinsäure (DNS)
+		[a30] nicht näher spezifiziert
+[b] Hand
+	[b0] nicht näher spezifiziert
+	[b1] beide Hände
+		[b10] nicht näher spezifiziert
+	[b2] linke Hand
+		[b20] nicht näher spezifiziert
+		[b21] Daumen
+		[b22] Zeigefinger
+		[b23] Mittelfinger
+		[b24] Ringfinger
+		[b25] kleiner Finger
+	[b3] rechte Hand
+		[b30] nicht näher spezifiziert
+		[b31] Daumen
+		[b32] Zeigefinger
+		[b33] Mittelfinger
+		[b34] Ringfinger
+		[b35] kleiner Finger
+
+************* biosystem *************
+[0] nicht näher spezifiziert
+[1] Zerebrospinales System
+	[10] nicht näher spezifiziert
+	[11] ZNS
+		[110] nicht näher spezifiziert
+		[111] Metencephalon, Großhirn
+		[112] Mesencephalon, Zwischenhirn
+		[113] Neurohypophyse
+		[114] Cerebellum
+		[115] Pons
+		[116] Medulla oblongata
+		[117] Rückenmark, cervikal
+		[118] Rückenmark, thorakal
+		[119] Rückenmark, lumbal
+		[11a] Rückenmark, sacral (Cauda Equina)
+	[12] Sinnesorgane
+		[120] nicht näher spezifiziert
+		[121] Gleichgewichtsorgan
+		[122] Hörorgan
+		[123] Geschmacksorgan
+		[124] Tastorgan
+		[125] Sehorgan (Auge)
+		[126] Geruchsorgan
+	[13] Vegetatives Nervensystem
+		[130] nicht näher spezifiziert
+		[131] Grenzstrang
+		[132] Glomus jugulare
+		[133] Glomus caroticum
+		[134] Ganglion stellatum
+		[135] Ganglion coeliacum
+		[136] Zuckerkandlsches Organ
+		[137] Nebennierenmark
+[2] Kardiovaskuläres System
+	[20] nicht näher spezifiziert
+	[21] Herz
+		[210] nicht näher spezifiziert
+		[211] Pericard
+		[212] Vorhof (links, Herzohr, rechts)
+		[213] Valvula mitralis
+		[214] Valvula tricuspidalis
+		[215] Ventrikel (links/rechts)
+		[216] Aortenklappe
+		[217] Pulmonalklappe
+	[22] Arterien
+		[220] nicht näher spezifiziert
+		[221] Aorta ascendens
+		[222] Arcus aortae
+		[223] Truncus brachiocephalicus
+		[224] Arteria carotis communis
+		[225] Ligamentum Botalli & Ductus Botalli
+		[226] Aorta descendens
+		[227] Truncus bronchialis
+		[228] Aorta abdominalis
+		[229] Truncus coeliacus
+		[22a] Arteria iliaca communis
+		[22b] sonstige Arterien
+	[23] Venen
+		[230] nicht näher spezifiziert
+		[231] Vena anonyma
+		[232] Vena brachiocephalica
+		[233] Vena cava superior
+		[234] Vena cava inferior
+		[235] Vena iliaca communis
+		[236] sonstige Venen
+[3] Respiratorisches System
+	[30] nicht näher spezifiziert
+	[31] Nase
+		[310] nicht näher spezifiziert
+	[32] Nasennebenhöhlen
+		[320] nicht näher spezifiziert
+	[33] Nasopharynx & Epipharynx
+		[330] nicht näher spezifiziert
+	[34] Mesopharynx
+		[340] nicht näher spezifiziert
+	[35] Hypopharynx
+		[350] nicht näher spezifiziert
+	[36] Larynx
+		[360] nicht näher spezifiziert
+	[37] Trachea
+		[370] nicht näher spezifiziert
+	[38] Hauptbronchus
+		[380] nicht näher spezifiziert
+	[39] Bronchien
+		[390] nicht näher spezifiziert
+	[3a] Lunge
+		[3a0] nicht näher spezifiziert
+	[3b] Pleura
+		[3b0] nicht näher spezifiziert
+	[3c] Rippen
+		[3c0] nicht näher spezifiziert
+	[3d] Zwerchfell
+		[3d0] nicht näher spezifiziert
+	[3e] Intercostalmuskulatur
+		[3e0] nicht näher spezifiziert
+[4] Gastrointestinales System
+	[40] nicht näher spezifiziert
+	[41] Oropharynx
+		[410] nicht näher spezifiziert
+		[411] Mundhöhle
+		[412] Epipharynx
+		[413] Mesopharynx
+		[414] Hypopharynx
+	[42] Oesophagus
+		[420] nicht näher spezifiziert
+		[421] oberer Ösophagussphincter
+		[422] oberes Drittel
+		[423] mittleres Drittel
+		[424] unteres Drittel
+		[425] unterer Ösophagussphincter
+	[43] Magen
+		[430] nicht näher spezifiziert
+		[431] Cardia
+		[432] Fundus
+		[433] Corpus
+		[434] Antrum
+		[435] Pylorus
+	[44] Dünndarm
+		[440] nicht näher spezifiziert
+		[441] Duodenum
+		[442] Jejunum
+		[443] Ileum
+		[444] terminales Ileum
+		[445] Bauhinsche Klappe
+	[45] Dickdarm
+		[450] nicht näher spezifiziert
+		[451] Colon ascendens
+		[452] Colon transversum
+		[453] Colon descendens
+		[454] Colon sigmoideum
+		[455] Rektum
+	[46] Appendix
+		[460] nicht näher spezifiziert
+	[47] Anus
+		[470] nicht näher spezifiziert
+	[48] Leber
+		[480] nicht näher spezifiziert
+		[481] Parenchym
+		[482] Gallenwege
+		[483] Pfortader
+		[484] Arterien
+		[485] Venen
+	[49] Gallensystem
+		[490] nicht näher spezifiziert
+		[491] Gallenwege
+		[492] Gallenblase
+	[4a] Speicheldrüsen
+		[4a0] nicht näher spezifiziert
+		[4a1] Glandular parotis
+		[4a2] Glandular sublingualis
+		[4a3] Glandular submandibularis
+		[4a4] Pankreas
+[5] Uropoetisches System
+	[50] nicht näher spezifiziert
+	[51] Niere
+		[510] nicht näher spezifiziert
+		[511] Parenchym
+		[512] Nierenbecken
+	[52] Ureter
+		[520] nicht näher spezifiziert
+	[53] Harnblase
+		[530] nicht näher spezifiziert
+	[54] Urethra
+		[540] nicht näher spezifiziert
+[6] Reproduktionssystem
+	[60] nicht näher spezifiziert
+	[61] männliches System
+		[610] nicht näher spezifiziert
+		[611] Testes
+		[612] Samenleiter & Samenblase
+		[613] Prostata
+		[614] Penis (inkl. Corpus Cavernosum)
+	[62] weibliches System
+		[620] nicht näher spezifiziert
+		[621] Ovarien
+		[622] Eileiter
+		[623] Uterus
+		[624] Vagina
+		[625] Mamma
+[7] Muskuloskeletales System
+	[70] nicht näher spezifiziert
+	[71] 8 Monate
+		[710] nicht näher spezifiziert
+		[711] männlich
+		[712] weiblich
+	[72] 10 Monate
+		[720] nicht näher spezifiziert
+		[721] männlich
+		[722] weiblich
+	[73] 12 Monate
+		[730] nicht näher spezifiziert
+		[731] männlich
+		[732] weiblich
+	[74] 14 Monate
+		[740] nicht näher spezifiziert
+		[741] männlich
+		[742] weiblich
+	[75] 16 Monate
+		[750] nicht näher spezifiziert
+		[751] männlich
+		[752] weiblich
+	[76] 18 Monate
+		[760] nicht näher spezifiziert
+		[761] männlich
+		[762] weiblich
+	[77] 20 Monate
+		[770] nicht näher spezifiziert
+		[771] männlich
+		[772] weiblich
+	[78] 24 Monate
+		[780] nicht näher spezifiziert
+		[781] männlich
+		[782] weiblich
+	[79] 28 Monate
+		[790] nicht näher spezifiziert
+		[791] männlich
+		[792] weiblich
+	[7a] 2,5 Jahre
+		[7a0] nicht näher spezifiziert
+		[7a1] männlich
+		[7a2] weiblich
+	[7b] 3 Jahre
+		[7b0] nicht näher spezifiziert
+		[7b1] männlich
+		[7b2] weiblich
+	[7c] 3,5 Jahre
+		[7c0] nicht näher spezifiziert
+		[7c1] männlich
+		[7c2] weiblich
+	[7d] 4 Jahre
+		[7d0] nicht näher spezifiziert
+		[7d1] männlich
+		[7d2] weiblich
+	[7e] 4,5 Jahre
+		[7e0] nicht näher spezifiziert
+		[7e1] männlich
+		[7e2] weiblich
+	[7f] 5 Jahre
+		[7f0] nicht näher spezifiziert
+		[7f1] männlich
+		[7f2] weiblich
+	[7g] 5,5 Jahre
+		[7g0] nicht näher spezifiziert
+		[7g1] männlich
+		[7g2] weiblich
+	[7h] 6 Jahre
+		[7h0] nicht näher spezifiziert
+		[7h1] männlich
+		[7h2] weiblich
+	[7i] 7 Jahre
+		[7i0] nicht näher spezifiziert
+		[7i1] männlich
+		[7i2] weiblich
+	[7j] 8 Jahre
+		[7j0] nicht näher spezifiziert
+		[7j1] männlich
+		[7j2] weiblich
+	[7k] 9 Jahre
+		[7k0] nicht näher spezifiziert
+		[7k1] männlich
+		[7k2] weiblich
+	[7l] 10 Jahre
+		[7l0] nicht näher spezifiziert
+		[7l1] männlich
+		[7l2] weiblich
+	[7m] 11 Jahre
+		[7m0] nicht näher spezifiziert
+		[7m1] männlich
+		[7m2] weiblich
+	[7n] 12 Jahre
+		[7n0] nicht näher spezifiziert
+		[7n1] männlich
+		[7n2] weiblich
+	[7o] 13 Jahre
+		[7o0] nicht näher spezifiziert
+		[7o1] männlich
+		[7o2] weiblich
+	[7p] 14 Jahre
+		[7p0] nicht näher spezifiziert
+		[7p1] männlich
+		[7p2] weiblich
+	[7q] 15 Jahre
+		[7q0] nicht näher spezifiziert
+		[7q1] männlich
+		[7q2] weiblich
+	[7r] 16 Jahre
+		[7r0] nicht näher spezifiziert
+		[7r1] männlich
+		[7r2] weiblich
+	[7s] 17 Jahre
+		[7s0] nicht näher spezifiziert
+		[7s1] männlich
+		[7s2] weiblich
+	[7t] 18 Jahre
+		[7t0] nicht näher spezifiziert
+		[7t1] männlich
+		[7t2] weiblich
+	[7u] > 18 Jahre
+		[7u0] nicht näher spezifiziert
+		[7u1] männlich
+		[7u2] weiblich
+		[7u3] männlich, normal
+		[7u4] weiblich, normal
+		[7u5] männlich, abnormal
+		[7u6] weiblich, abnormal
+[8] Endokrines System
+	[80] nicht näher spezifiziert
+	[81] Schilddrüse
+		[810] nicht näher spezifiziert
+	[82] Nebenschilddrüse
+		[820] nicht näher spezifiziert
+	[83] Nebenniere
+		[830] nicht näher spezifiziert
+	[84] Hypophyse
+		[840] nicht näher spezifiziert
+	[85] Hypothalamus
+		[850] nicht näher spezifiziert
+	[86] Ovarien
+		[860] nicht näher spezifiziert
+	[87] Testes
+		[870] nicht näher spezifiziert
+	[88] Pankreas
+		[880] nicht näher spezifiziert
+[9] Immun-Zelluläres System
+	[90] nicht näher spezifiziert
+	[91] Tonsillen
+		[910] nicht näher spezifiziert
+	[92] Hals-LK
+		[920] nicht näher spezifiziert
+	[93] Axilla-LK
+		[930] nicht näher spezifiziert
+	[94] Mediastinal-LK
+		[940] nicht näher spezifiziert
+	[95] Thymus (nur bei Kindern)
+		[950] nicht näher spezifiziert
+	[96] Milz
+		[960] nicht näher spezifiziert
+	[97] Retroperitoneal-LK
+		[970] nicht näher spezifiziert
+	[98] Intraperitoneal-LK
+		[980] nicht näher spezifiziert
+		[981] (mesenterial-LK)
+	[99] Becken-LK
+		[990] nicht näher spezifiziert
+	[9a] Leisten-LK
+		[9a0] nicht näher spezifiziert
+	[9b] Knochenmark
+		[9b0] nicht näher spezifiziert
+[a] Dermales System
+	[a0] nicht näher spezifiziert
+	[a1] Oberhaut (cutis)
+		[a10] nicht näher spezifiziert
+		[a11] benigne
+		[a12] maligne
+[b] Exokrines System
+	[b0] nicht näher spezifiziert
+[c] Zahnsystem
+	[c0] nicht näher spezifiziert
+	[c1] bezahntes System
+		[c10] nicht näher spezifiziert
+	[c2] unbezahntes System
+		[c20] nicht näher spezifiziert
+	[c3] Implantatsystem
+		[c30] nicht näher spezifiziert
+[d] ACR-1: Fettransparentes Mamasystem
+	[d0] BI-RADS 0: nicht näher spezifiziert
+	[d1] BI-RADS 1: normal
+		[d10] nicht näher spezifiziert
+	[d2] BI-RADS 2: gutartig
+		[d20] nicht näher spezifiziert
+		[d21] Kalzifikation, nicht näher spezifiziert
+		[d22] Mikro-Kalzifikation
+		[d23] Makro-Kalzifikation
+		[d24] Tumor, glatt
+		[d25] Tumor, strahlig
+		[d26] Tumor, sonstig
+		[d27] sonstige Strukturstörung
+		[d28] Asymetrie
+	[d3] BI-RADS 3: wahrscheinlich gutartig
+		[d30] nicht näher spezifiziert
+		[d31] Kalzifikation, nicht näher spezifiziert
+		[d32] Mikro-Kalzifikation
+		[d33] Makro-Kalzifikation
+		[d34] Tumor, glatt
+		[d35] Tumor, strahlig
+		[d36] Tumor, sonstig
+		[d37] sonstige Strukturstörung
+		[d38] Asymetrie
+	[d4] BI-RADS 4: wahrscheinlich bösartig
+		[d40] nicht näher spezifiziert
+		[d41] Kalzifikation, nicht näher spezifiziert
+		[d42] Mikro-Kalzifikation
+		[d43] Makro-Kalzifikation
+		[d44] Tumor, glatt
+		[d45] Tumor, strahlig
+		[d46] Tumor, sonstig
+		[d47] sonstige Strukturstörung
+		[d48] Asymetrie
+	[d5] BI-RADS 5: bösartig
+		[d50] nicht näher spezifiziert
+		[d51] Kalzifikation, nicht näher spezifiziert
+		[d52] Mikro-Kalzifikation
+		[d53] Makro-Kalzifikation
+		[d54] Tumor, glatt
+		[d55] Tumor, strahlig
+		[d56] Tumor, sonstig
+		[d57] sonstige Strukturstörung
+		[d58] Asymetrie
+[e] ACR-2: Fibroglanduläres Mamasystem
+	[e0] BI-RADS 0: nicht näher spezifiziert
+	[e1] BI-RADS 1: normal
+		[e10] nicht näher spezifiziert
+	[e2] BI-RADS 2: gutartig
+		[e20] nicht näher spezifiziert
+		[e21] Kalzifikation, nicht näher spezifiziert
+		[e22] Mikro-Kalzifikation
+		[e23] Makro-Kalzifikation
+		[e24] Tumor, glatt
+		[e25] Tumor, strahlig
+		[e26] Tumor, sonstig
+		[e27] sonstige Strukturstörung
+		[e28] Asymetrie
+	[e3] BI-RADS 3: wahrscheinlich gutartig
+		[e30] nicht näher spezifiziert
+		[e31] Kalzifikation, nicht näher spezifiziert
+		[e32] Mikro-Kalzifikation
+		[e33] Makro-Kalzifikation
+		[e34] Tumor, glatt
+		[e35] Tumor, strahlig
+		[e36] Tumor, sonstig
+		[e37] sonstige Strukturstörung
+		[e38] Asymetrie
+	[e4] BI-RADS 4: wahrscheinlich bösartig
+		[e40] nicht näher spezifiziert
+		[e41] Kalzifikation, nicht näher spezifiziert
+		[e42] Mikro-Kalzifikation
+		[e43] Makro-Kalzifikation
+		[e44] Tumor, glatt
+		[e45] Tumor, strahlig
+		[e46] Tumor, sonstig
+		[e47] sonstige Strukturstörung
+		[e48] Asymetrie
+	[e5] BI-RADS 5: bösartig
+		[e50] nicht näher spezifiziert
+		[e51] Kalzifikation, nicht näher spezifiziert
+		[e52] Mikro-Kalzifikation
+		[e53] Makro-Kalzifikation
+		[e54] Tumor, glatt
+		[e55] Tumor, strahlig
+		[e56] Tumor, sonstig
+		[e57] sonstige Strukturstörung
+		[e58] Asymetrie
+[f] ACR-3: Heterogen dichtes Mamasystem
+	[f0] BI-RADS 0: nicht näher spezifiziert
+	[f1] BI-RADS 1: normal
+		[f10] nicht näher spezifiziert
+	[f2] BI-RADS 2: gutartig
+		[f20] nicht näher spezifiziert
+		[f21] Kalzifikation, nicht näher spezifiziert
+		[f22] Mikro-Kalzifikation
+		[f23] Makro-Kalzifikation
+		[f24] Tumor, glatt
+		[f25] Tumor, strahlig
+		[f26] Tumor, sonstig
+		[f27] sonstige Strukturstörung
+		[f28] Asymetrie
+	[f3] BI-RADS 3: wahrscheinlich gutartig
+		[f30] nicht näher spezifiziert
+		[f31] Kalzifikation, nicht näher spezifiziert
+		[f32] Mikro-Kalzifikation
+		[f33] Makro-Kalzifikation
+		[f34] Tumor, glatt
+		[f35] Tumor, strahlig
+		[f36] Tumor, sonstig
+		[f37] sonstige Strukturstörung
+		[f38] Asymetrie
+	[f4] BI-RADS 4: wahrscheinlich bösartig
+		[f40] nicht näher spezifiziert
+		[f41] Kalzifikation, nicht näher spezifiziert
+		[f42] Mikro-Kalzifikation
+		[f43] Makro-Kalzifikation
+		[f44] Tumor, glatt
+		[f45] Tumor, strahlig
+		[f46] Tumor, sonstig
+		[f47] sonstige Strukturstörung
+		[f48] Asymetrie
+	[f5] BI-RADS 5: bösartig
+		[f50] nicht näher spezifiziert
+		[f51] Kalzifikation, nicht näher spezifiziert
+		[f52] Mikro-Kalzifikation
+		[f53] Makro-Kalzifikation
+		[f54] Tumor, glatt
+		[f55] Tumor, strahlig
+		[f56] Tumor, sonstig
+		[f57] sonstige Strukturstörung
+		[f58] Asymetrie
+[g] ACR-4: Extrem dichtes Mamasystem
+	[g0] BI-RADS 0: nicht näher spezifiziert
+	[g1] BI-RADS 1: normal
+		[g10] nicht näher spezifiziert
+	[g2] BI-RADS 2: gutartig
+		[g20] nicht näher spezifiziert
+		[g21] Kalzifikation, nicht näher spezifiziert
+		[g22] Mikro-Kalzifikation
+		[g23] Makro-Kalzifikation
+		[g24] Tumor, glatt
+		[g25] Tumor, strahlig
+		[g26] Tumor, sonstig
+		[g27] sonstige Strukturstörung
+		[g28] Asymetrie
+	[g3] BI-RADS 3: wahrscheinlich gutartig
+		[g30] nicht näher spezifiziert
+		[g31] Kalzifikation, nicht näher spezifiziert
+		[g32] Mikro-Kalzifikation
+		[g33] Makro-Kalzifikation
+		[g34] Tumor, glatt
+		[g35] Tumor, strahlig
+		[g36] Tumor, sonstig
+		[g37] sonstige Strukturstörung
+		[g38] Asymetrie
+	[g4] BI-RADS 4: wahrscheinlich bösartig
+		[g40] nicht näher spezifiziert
+		[g41] Kalzifikation, nicht näher spezifiziert
+		[g42] Mikro-Kalzifikation
+		[g43] Makro-Kalzifikation
+		[g44] Tumor, glatt
+		[g45] Tumor, strahlig
+		[g46] Tumor, sonstig
+		[g47] sonstige Strukturstörung
+		[g48] Asymetrie
+	[g5] BI-RADS 5: bösartig
+		[g50] nicht näher spezifiziert
+		[g51] Kalzifikation, nicht näher spezifiziert
+		[g52] Mikro-Kalzifikation
+		[g53] Makro-Kalzifikation
+		[g54] Tumor, glatt
+		[g55] Tumor, strahlig
+		[g56] Tumor, sonstig
+		[g57] sonstige Strukturstörung
+		[g58] Asymetrie
+[h] ACR-3/4: Dichtes Mamasystem
+	[h0] BI-RADS 0: nicht näher spezifiziert
+	[h1] BI-RADS 1: normal
+		[h10] nicht näher spezifiziert
+	[h2] BI-RADS 2: gutartig
+		[h20] nicht näher spezifiziert
+		[h21] Kalzifikation, nicht näher spezifiziert
+		[h22] Mikro-Kalzifikation
+		[h23] Makro-Kalzifikation
+		[h24] Tumor, glatt
+		[h25] Tumor, strahlig
+		[h26] Tumor, sonstig
+		[h27] sonstige Strukturstörung
+		[h28] Asymetrie
+	[h3] BI-RADS 3: wahrscheinlich gutartig
+		[h30] nicht näher spezifiziert
+		[h31] Kalzifikation, nicht näher spezifiziert
+		[h32] Mikro-Kalzifikation
+		[h33] Makro-Kalzifikation
+		[h34] Tumor, glatt
+		[h35] Tumor, strahlig
+		[h36] Tumor, sonstig
+		[h37] sonstige Strukturstörung
+		[h38] Asymetrie
+	[h4] BI-RADS 4: wahrscheinlich bösartig
+		[h40] nicht näher spezifiziert
+		[h41] Kalzifikation, nicht näher spezifiziert
+		[h42] Mikro-Kalzifikation
+		[h43] Makro-Kalzifikation
+		[h44] Tumor, glatt
+		[h45] Tumor, strahlig
+		[h46] Tumor, sonstig
+		[h47] sonstige Strukturstörung
+		[h48] Asymetrie
+	[h5] BI-RADS 5: bösartig
+		[h50] nicht näher spezifiziert
+		[h51] Kalzifikation, nicht näher spezifiziert
+		[h52] Mikro-Kalzifikation
+		[h53] Makro-Kalzifikation
+		[h54] Tumor, glatt
+		[h55] Tumor, strahlig
+		[h56] Tumor, sonstig
+		[h57] sonstige Strukturstörung
+		[h58] Asymetrie
