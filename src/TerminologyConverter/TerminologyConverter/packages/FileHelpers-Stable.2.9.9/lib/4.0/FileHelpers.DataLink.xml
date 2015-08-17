@@ -1,0 +1,539 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FileHelpers.DataLink</name>
+    </assembly>
+    <members>
+        <member name="T:FileHelpers.DataLink.FileDataLink">
+            <summary>
+            This class has the responsibility to enable the two directional
+            transformation.
+            <list type="bullet">
+            <item> File &lt;-&gt; DataStorage </item>
+            </list>
+            </summary>
+            <remarks>
+            <para>Uses an <see cref="P:FileHelpers.DataLink.FileDataLink.DataStorage"/> to accomplish this task.</para>
+            <para>See in the <a href="class_diagram.html">Class Diagram</a>
+            and in the <a href="example_datalink.html">DataLink Sample</a>
+            for more Info.</para>
+            </remarks>
+            <seealso href="quick_start.html">Quick Start Guide</seealso>
+            <seealso href="class_diagram.html">Class Diagram</seealso>
+            <seealso href="examples.html">Examples of Use</seealso>
+            <seealso href="example_datalink.html">Example of the DataLink</seealso>
+            <seealso href="attributes.html">Attributes List</seealso>
+        </member>
+        <member name="M:FileHelpers.DataLink.FileDataLink.#ctor(FileHelpers.DataLink.DataStorage)">
+            <summary>Create a new instance of the class.</summary>
+            <param name="provider">The <see cref="T:FileHelpers.DataLink.DataStorage"/>
+            used to performs the transformation.</param>
+        </member>
+        <member name="M:FileHelpers.DataLink.FileDataLink.ExtractToFile(System.String)">
+            <summary>
+            Extract records from the data source and insert them to the
+            specified file using the DataLinkProvider
+            <see cref="M:FileHelpers.DataLink.DataStorage.ExtractRecords"/> method.
+            </summary>
+            <param name="fileName">The files where the records be written.</param>
+            <returns>True if the operation is successful. False otherwise.</returns>
+        </member>
+        <member name="M:FileHelpers.DataLink.FileDataLink.ExtractToStream(System.IO.StreamWriter)">
+            <summary>
+            Extract records from the data source and insert them to the
+            specified stream using the DataLinkProvider
+            <see cref="M:FileHelpers.DataLink.DataStorage.ExtractRecords"/> method.
+            </summary>
+            <param name="writer">The stream where the records be written.</param>
+            <returns>The extracted records</returns>
+        </member>
+        <member name="M:FileHelpers.DataLink.FileDataLink.InsertFromFile(System.String)">
+            <summary>
+            Extract records from a file and insert them to the data source
+            using the DataLinkProvider
+            <see cref="M:FileHelpers.DataLink.DataStorage.InsertRecords(System.Object[])"/> method.
+            </summary>
+            <param name="fileName">The file with the source records.</param>
+            <returns>True if the operation is successful. False otherwise.</returns>
+        </member>
+        <member name="M:FileHelpers.DataLink.FileDataLink.InsertFromStream(System.IO.StreamReader)">
+            <summary>
+            Extract records from a stream and insert them to the data source
+            using the DataLinkProvider
+            <see cref="M:FileHelpers.DataLink.DataStorage.InsertRecords(System.Object[])"/> method.
+            </summary>
+            <param name="reader">The stream with the source records.</param>
+            <returns>True if the operation is successful. False otherwise.</returns>
+        </member>
+        <member name="M:FileHelpers.DataLink.FileDataLink.EasyExtractToFile(FileHelpers.DataLink.DataStorage,System.String)">
+            <summary>The short way to Extract the records from a DataStorage to a file</summary>
+            <param name="storage">The DataStorage from where get the records</param>
+            <param name="filename">The file where to write the records to.</param>
+            <returns>The Extracted records.</returns>
+        </member>
+        <member name="M:FileHelpers.DataLink.FileDataLink.EasyInsertFromFile(FileHelpers.DataLink.DataStorage,System.String)">
+            <summary>The short way to Insert Records from a file to a DataStorage</summary>
+            <param name="storage">The DataStorage where store the records.</param>
+            <param name="filename">The file with the SourceRecords</param>
+            <returns>The Inserted records</returns>
+        </member>
+        <member name="P:FileHelpers.DataLink.FileDataLink.FileHelperEngine">
+            <summary> The internal <see cref="T:FileHelpers.FileHelperEngine"/>
+            used to the file or stream ops. </summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.FileDataLink.DataStorage">
+            <summary> The internal <see cref="T:FileHelpers.DataLink.IDataLinkProvider"/> used to the link ops. </summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.FileDataLink.LastExtractedRecords">
+            <summary>
+            An array of the last records extracted from the data source to a file.
+            </summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.FileDataLink.LastInsertedRecords">
+            <summary>
+            An array of the last records inserted in the data source that comes from a file.
+            </summary>
+        </member>
+        <member name="T:FileHelpers.DataLink.GenericDataLink">
+            <summary>
+            This class has the responsibility to enable the two directional
+            transformation.
+            <list type="bullet">
+            <item> DataStorage &lt;-&gt; DataStorage </item>
+            </list>
+            </summary>
+            <remarks>
+            <para>Uses two <see cref="T:FileHelpers.DataLink.DataStorage"/> types to accomplish this task.</para>
+            </remarks>
+            <seealso href="quick_start.html">Quick Start Guide</seealso>
+            <seealso href="class_diagram.html">Class Diagram</seealso>
+            <seealso href="examples.html">Examples of Use</seealso>
+            <seealso href="example_datalink.html">Example of the DataLink</seealso>
+            <seealso href="attributes.html">Attributes List</seealso>
+        </member>
+        <member name="M:FileHelpers.DataLink.GenericDataLink.#ctor(FileHelpers.DataLink.DataStorage,FileHelpers.DataLink.DataStorage)">
+            <summary>Create a new instance of the class.</summary>
+            <param name="provider1">The First <see cref="T:FileHelpers.DataLink.DataStorage"/>
+            used to insert/extract records .</param>
+            <param name="provider2">The Second <see cref="T:FileHelpers.DataLink.DataStorage"/>
+            used to insert/extract records .</param>
+        </member>
+        <member name="M:FileHelpers.DataLink.GenericDataLink.CopyDataFrom1To2">
+            <summary>
+            Extract the records from DataStorage1 and
+            Insert them to the DataStorage2.
+            </summary>
+            <returns>The Copied records.</returns>
+        </member>
+        <member name="M:FileHelpers.DataLink.GenericDataLink.CopyDataFrom2To1">
+            <summary>
+            Extract the records from DataStorage2 and
+            Insert them to the DataStorage1.
+            </summary>
+            <returns>The Copied records.</returns>
+        </member>
+        <member name="P:FileHelpers.DataLink.GenericDataLink.DataStorage1">
+            <summary>
+            The first <see cref="T:FileHelpers.DataLink.DataStorage"/> of the
+            <see cref="T:FileHelpers.DataLink.GenericDataLink"/>.
+            </summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.GenericDataLink.DataStorage2">
+            <summary>
+            The second <see cref="T:FileHelpers.DataLink.DataStorage"/> of the
+            <see cref="T:FileHelpers.DataLink.GenericDataLink"/>.
+            </summary>
+        </member>
+        <member name="T:FileHelpers.DataLink.AccessStorage">
+            <summary>
+            This is a base class that implements the <see cref="T:FileHelpers.DataLink.DataStorage"/> for
+            Microsoft Access Files.
+            </summary>
+        </member>
+        <member name="T:FileHelpers.DataLink.DatabaseStorage">
+            <summary>
+            This class implements the <see cref="T:FileHelpers.DataLink.DataStorage"/> and is the base
+            class for Data Base storages.
+            </summary>
+        </member>
+        <member name="T:FileHelpers.DataLink.DataStorage">
+            <summary>
+            Base class for all the Storage classes of the library or the custom
+            Storage classes.
+            </summary>
+        </member>
+        <member name="M:FileHelpers.DataLink.DataStorage.OnProgress(FileHelpers.Events.ProgressEventArgs)">
+            <summary>
+            Raises the Progress Event
+            </summary>
+            <param name="e">The Event Args</param>
+        </member>
+        <member name="M:FileHelpers.DataLink.DataStorage.ExtractRecords">
+            <summary>
+            Returns the records from the DataSource (DB, Excel, etc)
+            </summary>
+            <returns>The extracted records.</returns>
+        </member>
+        <member name="M:FileHelpers.DataLink.DataStorage.ExtractRecordsAsDT">
+            <summary>
+            Returns the records from the DataSource (DB, Excel, etc)
+            </summary>
+            <returns>The extracted records as a DataTable.</returns>
+        </member>
+        <member name="M:FileHelpers.DataLink.DataStorage.InsertRecords(System.Object[])">
+            <summary>
+            Inserts the records into the DataSource (DB, Excel, etc)
+            </summary>
+            <param name="records">Records to insert.</param>
+        </member>
+        <member name="F:FileHelpers.DataLink.DataStorage.mErrorManager">
+            <summary>
+            The Object responsible for managing the errors.
+            </summary>
+        </member>
+        <member name="M:FileHelpers.DataLink.DataStorage.AddError(System.Int32,System.Exception,System.String)">
+            <summary>
+            Add an error to the ErrorCollection.
+            </summary>
+            <param name="lineNumber">The line when the error occurs.</param>
+            <param name="ex">The exception thrown, can be null.</param>
+            <param name="recordLine">The record values</param>
+        </member>
+        <member name="M:FileHelpers.DataLink.DataStorage.#ctor(System.Type)">
+            <summary>
+            Creates an instance DataStorage for Type
+            </summary>
+            <param name="recordClass">Type of the record object</param>
+        </member>
+        <member name="M:FileHelpers.DataLink.DataStorage.ValuesToRecord(System.Object[])">
+            <summary>
+            Returns a record created from an Array of values
+            </summary>
+            <param name="values">The values used to created the record.</param>
+            <returns>The record created from 'values'</returns>
+        </member>
+        <member name="M:FileHelpers.DataLink.DataStorage.RecordToValues(System.Object)">
+            <summary>
+            Returns an array of values based on a record.
+            </summary>
+            <param name="record">The source record.</param>
+            <returns>An array with the values of each field</returns>
+        </member>
+        <member name="E:FileHelpers.DataLink.DataStorage.Progress">
+            <summary>Called to notify progress.</summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.DataStorage.RecordType">
+            <summary>
+            Returns the class that represent the records in the file.
+            </summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.DataStorage.ErrorManager">
+            <summary>
+            The Object responsible for managing the errors.
+            </summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.DataStorage.RecordFieldCount">
+            <summary>
+            The number of fields in the record class.
+            </summary>
+        </member>
+        <member name="M:FileHelpers.DataLink.DatabaseStorage.#ctor(System.Type)">
+            <summary>Default constructor.</summary>
+            <param name="recordType">The Record Type.</param>
+        </member>
+        <member name="M:FileHelpers.DataLink.DatabaseStorage.FillRecord(System.Object[])">
+            <summary>
+            This method receives the fields values as an array and returns
+            a record object.
+            </summary>
+            <param name="fieldValues">The record fields values.</param>
+            <returns>The record object.</returns>
+        </member>
+        <member name="M:FileHelpers.DataLink.DatabaseStorage.GetSelectSql">
+            <summary>
+            Must return the Select SQL used to Fetch the records to Extract.
+            </summary>
+            <returns>The SQL statement.</returns>
+        </member>
+        <member name="M:FileHelpers.DataLink.DatabaseStorage.GetInsertSql(System.Object)">
+            <summary>
+            Return a SQL string with the insert statement for the records.
+            </summary>
+            <param name="record">The record to insert.</param>
+            <returns>The SQL string to used to insert the record.</returns>
+        </member>
+        <member name="M:FileHelpers.DataLink.DatabaseStorage.CreateConnection">
+            <summary>Create connection object for the datasource.</summary>
+            <returns>An Connection Object.</returns>
+        </member>
+        <member name="M:FileHelpers.DataLink.DatabaseStorage.ExtractRecords">
+            <summary>
+            Must return the records from the DataSource (DB, Excel, etc)
+            </summary>
+            <returns>The extracted records.</returns>
+        </member>
+        <member name="M:FileHelpers.DataLink.DatabaseStorage.InsertRecords(System.Object[])">
+            <summary>
+            Insert the records in a DataSource (DB, Excel, etc)
+            </summary>
+            <param name="records">The records to insert.</param>
+        </member>
+        <member name="P:FileHelpers.DataLink.DatabaseStorage.SelectSql">
+            <summary>
+            Get or set the SQL statement used to get the records.
+            </summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.DatabaseStorage.ExecuteInBatch">
+            <summary>
+            Indicates if the underlying Connection allows more than one
+            instruction per execute.
+            </summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.DatabaseStorage.InsertSqlCallback">
+            <summary>
+            Delegate used to get the SQL for the insert or update statement.
+            </summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.DatabaseStorage.FillRecordCallback">
+            <summary>
+            Delegate used to fill the values of a new record from the db.
+            </summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.DatabaseStorage.ExecuteInBatchSize">
+            <summary>
+            Indicates the max number of instruction for each execution. High
+            numbers helps reduce the round trips to the db and so
+            improves performance.
+            </summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.DatabaseStorage.TransactionMode">
+            <summary>
+            Define the Transaction Level used when inserting records.
+            </summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.DatabaseStorage.ConnectionString">
+            <summary>
+            The connection string used for this storage.
+            </summary>
+        </member>
+        <member name="M:FileHelpers.DataLink.AccessStorage.#ctor(System.Type)">
+            <summary>
+            Creates a new AccessStorage.
+            </summary>
+            <param name="recordType">The Type of the Records</param>
+        </member>
+        <member name="M:FileHelpers.DataLink.AccessStorage.#ctor(System.Type,System.String)">
+            <summary>
+            Creates a new AccessStorage using the indicated file.
+            </summary>
+            <param name="recordType">The Type of the Records</param>
+            <param name="accessFile">The MS Access file.</param>
+        </member>
+        <member name="M:FileHelpers.DataLink.AccessStorage.CreateConnection">
+            <summary>
+            Create the connection object.
+            </summary>
+            <returns>An Abstract Connection Object.</returns>
+        </member>
+        <member name="P:FileHelpers.DataLink.AccessStorage.AccessFileName">
+            <summary>
+            The file full path of the Microsoft Access File.
+            </summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.AccessStorage.AccessFilePassword">
+            <summary>
+            The password for the access database.
+            </summary>
+        </member>
+        <member name="T:FileHelpers.DataLink.InsertSqlHandler">
+            <summary>
+            Delegate used by the <see cref="T:FileHelpers.DataLink.DatabaseStorage"/> to get the SQL for
+            the insert or update statement.
+            </summary>
+            <param name="record">The record to insert</param>
+            <return>The SQL string to insert the record.</return>
+        </member>
+        <member name="T:FileHelpers.DataLink.FillRecordHandler">
+            <summary>
+            Delegate used by the <see cref="T:FileHelpers.DataLink.DatabaseStorage"/> to fill the values
+            of a new record from the db (you only need to assign the values.
+            </summary>
+            <param name="record">The record to fill.</param>
+            <param name="fieldValues">
+            The values read from the database, you need to use these to fill the record.
+            </param>
+        </member>
+        <member name="T:FileHelpers.DataLink.FileStorage">
+            <summary>
+            This class implements the <see cref="T:FileHelpers.DataLink.DataStorage"/>
+            for plain text files.
+            </summary>
+        </member>
+        <member name="F:FileHelpers.DataLink.FileStorage.mEngine">
+            <summary>
+            Engine to use for processing
+            </summary>
+        </member>
+        <member name="F:FileHelpers.DataLink.FileStorage.mFileName">
+            <summary>
+            Filename being written to
+            </summary>
+        </member>
+        <member name="M:FileHelpers.DataLink.FileStorage.#ctor(System.Type,System.String)">
+            <summary>
+            Create simple FileStorage object to work with the specified type.</summary>
+            <param name="type">The record class.</param>
+            <param name="fileName">The target filename.</param>
+        </member>
+        <member name="M:FileHelpers.DataLink.FileStorage.ExtractRecords">
+            <summary>
+            Must Return the records from the DataSource (DB, Excel, etc)
+            </summary>
+            <returns>The extracted records.</returns>
+        </member>
+        <member name="M:FileHelpers.DataLink.FileStorage.InsertRecords(System.Object[])">
+            <summary>
+            Insert the records in a DataSource (DB, Excel, etc)
+            </summary>
+            <param name="records">The records to insert.</param>
+        </member>
+        <member name="P:FileHelpers.DataLink.FileStorage.Engine">
+            <summary>The engine behind the FileStorage.</summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.FileStorage.FileName">
+            <summary>The target file name.</summary>
+        </member>
+        <member name="T:FileHelpers.DataLink.GenericDatabaseStorage`1">
+            <summary>
+            This is a base class that implements the storage for <b>any</b> DB with
+            ADO.NET support.
+            </summary>
+            <typeparam name="ConnectionClass">The ADO.NET connection class</typeparam>
+        </member>
+        <member name="M:FileHelpers.DataLink.GenericDatabaseStorage`1.#ctor(System.Type,System.String)">
+            <summary>
+            Creates an object that implements the storage for <b>any</b> DB
+            with ADO.NET support.
+            </summary>        
+            <param name="recordType">The record type to use.</param>
+            <param name="connectionString">The connection string to </param>
+        </member>
+        <member name="M:FileHelpers.DataLink.GenericDatabaseStorage`1.CreateConnection">
+            <summary>
+            Connect to a data source using the defined connection string
+            </summary>
+            <returns>Database connection object</returns>
+        </member>
+        <member name="P:FileHelpers.DataLink.GenericDatabaseStorage`1.ExecuteInBatch">
+            <summary>
+            Do we get data in batches or single records
+            </summary>
+        </member>
+        <member name="T:FileHelpers.DataLink.OleDbStorage">
+            <summary>
+            This is a base class that implements the <see cref="T:FileHelpers.DataLink.DataStorage"/> for
+            Microsoft Access Files.
+            </summary>
+        </member>
+        <member name="M:FileHelpers.DataLink.OleDbStorage.#ctor(System.Type,System.String)">
+            <summary>
+            Create a new OleDbStorage based in the record type and in the connection string.
+            </summary>
+            <param name="recordType">The Type of the records.</param>
+            <param name="oleDbConnString">The connection string used to create the OleDbConnection.</param>
+        </member>
+        <member name="M:FileHelpers.DataLink.OleDbStorage.CreateConnection">
+            <summary>Must create an abstract connection object.</summary>
+            <returns>An Abstract Connection Object.</returns>
+        </member>
+        <member name="T:FileHelpers.DataLink.SqlServerStorage">
+            <summary>
+            This is a base class that implements the <see cref="T:FileHelpers.DataLink.DataStorage"/> for
+            Microsoft SqlServer.
+            </summary>
+        </member>
+        <member name="M:FileHelpers.DataLink.SqlServerStorage.#ctor(System.Type)">
+            <summary>
+            Create a new instance of the SqlServerStorage based on the record
+            type provided.
+            </summary>
+            <param name="recordType">The type of the record class.</param>
+        </member>
+        <member name="M:FileHelpers.DataLink.SqlServerStorage.#ctor(System.Type,System.String)">
+            <summary>
+            Create a new instance of the SqlServerStorage based on the record
+            type provided.
+            </summary>
+            <param name="recordType">The type of the record class.</param>
+            <param name="connectionStr">
+            The full connection string used to connect to the SQL server.
+            </param>
+        </member>
+        <member name="M:FileHelpers.DataLink.SqlServerStorage.#ctor(System.Type,System.String,System.String)">
+            <summary>
+            Create a new instance of the SqlServerStorage based on the record
+            type provided (uses windows auth)
+            </summary>
+            <param name="recordType">The type of the record class.</param>
+            <param name="server">The server name or IP of the sqlserver</param>
+            <param name="database">The database name into the server.</param>
+        </member>
+        <member name="M:FileHelpers.DataLink.SqlServerStorage.#ctor(System.Type,System.String,System.String,System.String,System.String)">
+            <summary>
+            Create a new instance of the SqlServerStorage based on the record
+            type provided (uses SqlServer auth)
+            </summary>
+            <param name="recordType">The type of the record class.</param>
+            <param name="server">The server name or IP of the sqlserver</param>
+            <param name="database">The database name into the server.</param>
+            <param name="user">The SQL username to login into the server.</param>
+            <param name="pass">The pass of the SQL username to login into the server.</param>
+        </member>
+        <member name="M:FileHelpers.DataLink.SqlServerStorage.CreateConnection">
+            <summary>Create a connection object to the database</summary>
+            <returns>SQL server Connection Object.</returns>
+        </member>
+        <member name="P:FileHelpers.DataLink.SqlServerStorage.ServerName">
+            <summary> The server name or IP of the SqlServer </summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.SqlServerStorage.DatabaseName">
+            <summary> The name of the database. </summary> 
+        </member>
+        <member name="P:FileHelpers.DataLink.SqlServerStorage.UserName">
+            <summary> The user name used to logon into the SqlServer. (leave empty for WindowsAuth)</summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.SqlServerStorage.UserPass">
+            <summary> The user pass used to logon into the SqlServer. (leave empty for WindowsAuth)</summary>
+        </member>
+        <member name="P:FileHelpers.DataLink.SqlServerStorage.ExecuteInBatch">
+            <summary>do we get groups of records or singularly</summary>
+        </member>
+        <member name="T:FileHelpers.DataLink.TransactionMode">
+            <summary>
+            Define the different Modes of Transaction that are
+            used by the <see cref="T:FileHelpers.DataLink.DatabaseStorage"/>
+            </summary>
+        </member>
+        <member name="F:FileHelpers.DataLink.TransactionMode.NoTransaction">
+            <summary>No transaction used.</summary>
+        </member>
+        <member name="F:FileHelpers.DataLink.TransactionMode.UseDefault">
+            <summary>Default Transaction Mode.</summary>
+        </member>
+        <member name="F:FileHelpers.DataLink.TransactionMode.UseChaosLevel">
+            <summary>Chaos Level Transaction Mode.</summary>
+        </member>
+        <member name="F:FileHelpers.DataLink.TransactionMode.UseReadCommitted">
+            <summary>ReadCommitted Transaction Mode.</summary>
+        </member>
+        <member name="F:FileHelpers.DataLink.TransactionMode.UseReadUnCommitted">
+            <summary>ReadUnCommitted Transaction Mode.</summary>
+        </member>
+        <member name="F:FileHelpers.DataLink.TransactionMode.UseRepeatableRead">
+            <summary>Repeatable Transaction Mode.</summary>
+        </member>
+        <member name="F:FileHelpers.DataLink.TransactionMode.UseSerializable">
+            <summary>Serializable Transaction Mode.</summary>
+        </member>
+    </members>
+</doc>

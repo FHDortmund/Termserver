@@ -30,6 +30,7 @@ import de.fhdo.list.GenericList;
 import de.fhdo.list.GenericListCellType;
 import de.fhdo.list.GenericListHeaderType;
 import de.fhdo.list.GenericListRowType;
+import de.fhdo.list.IGenericListActions;
 import de.fhdo.list.IUpdateData;
 import de.fhdo.logging.LoggingOutput;
 import de.fhdo.models.CodesystemGenericTreeModel;
@@ -88,7 +89,7 @@ import types.termserver.fhdo.de.ValueSetMetadataValue;
  *
  * @author Robert Mützner <robert.muetzner@fh-dortmund.de>
  */
-public class PopupConcept extends Window implements AfterCompose, IUpdateData
+public class PopupConcept extends Window implements AfterCompose, IUpdateData, IGenericListActions
 {
 
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
@@ -108,6 +109,8 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
   {
     this.showAllMetadata = showAllMetadata;
   }
+
+  PopupConceptTranslations translations = null;
 
   public static enum EDITMODES
   {
@@ -143,7 +146,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
   private long codeSystemId, valueSetId;
 
   GenericList genericListMetadata = null;
-  GenericList genericListTranslation = null;
+  
 
   private long csevAssociatedVersionId = 0;
 
@@ -498,7 +501,10 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
       }
       else if (selPanel.getId().equals("tabpanelTranslations"))
       {
-        initListTranslation();
+        if(translations == null)
+          translations = new PopupConceptTranslations(editMode);
+        
+        translations.initListTranslation(csc, this);
       }
       else if (selPanel.getId().equals("tabpanelCrossmappings"))
       {
@@ -639,60 +645,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
     return row;
   }
 
-  private void initListTranslation()
-  {
-    if (genericListTranslation == null)
-    {
-      logger.debug("initListTranslation()");
-
-      // Header
-      List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-      header.add(new GenericListHeaderType(Labels.getLabel("common.language"), 160, "", true, "String", true, true, false, false));
-      header.add(new GenericListHeaderType(Labels.getLabel("common.translation"), 0, "", true, "String", true, true, false, false));
-      header.add(new GenericListHeaderType(Labels.getLabel("common.abbrevation"), 150, "", true, "String", true, true, false, false));
-
-      List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
-
-      logger.debug("Anzahl: " + csc.getCodeSystemConceptTranslations().size());
-
-      for (CodeSystemConceptTranslation data : csc.getCodeSystemConceptTranslations())
-      {
-        GenericListRowType row = createRowFromTranslation(data);
-        dataList.add(row);
-      }
-
-      // Liste initialisieren
-      Include inc = (Include) getFellow("incListTranslation");
-      Window winGenericList = (Window) inc.getFellow("winGenericList");
-      genericListTranslation = (GenericList) winGenericList;
-      genericListTranslation.setListId("translation");
-
-      //genericList.setListActions(this);
-      genericListTranslation.setButton_new(false);
-      genericListTranslation.setButton_edit(false);
-      genericListTranslation.setButton_delete(false);
-      genericListTranslation.setListHeader(header);
-      genericListTranslation.setDataList(dataList);
-
-      // show list count in tab header
-      ((Tab) getFellow("tabTranslations")).setLabel(Labels.getLabel("common.translations") + " (" + dataList.size() + ")");
-    }
-  }
-
-  private GenericListRowType createRowFromTranslation(CodeSystemConceptTranslation data)
-  {
-    GenericListRowType row = new GenericListRowType();
-
-    GenericListCellType[] cells = new GenericListCellType[3];
-    cells[0] = new GenericListCellType(DomainHelper.getInstance().getDomainValueDisplayText(Definitions.DOMAINID_LANGUAGECODES, data.getLanguageCd()), false, "");
-    cells[1] = new GenericListCellType(data.getTerm(), false, "");
-    cells[2] = new GenericListCellType(data.getTermAbbrevation(), false, "");
-
-    row.setData(data);
-    row.setCells(cells);
-
-    return row;
-  }
+  
 
   public void onOkClicked()
   {
@@ -756,6 +709,14 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
           logger.debug("add metadata with id: " + mv.getMetadataParameter().getId() + ", value: " + mv.getParameterValue());
         }
       }
+      
+      // add translations to request
+      logger.debug("translation size: " + csc.getCodeSystemConceptTranslations().size());
+      //csc.getCodeSystemConceptTranslations().clear();
+      //csc.getCodeSystemConceptTranslations().addAll(translations.getTranslationList());
+      
+      translations.completeList();
+      logger.debug("size t: " + csc.getCodeSystemConceptTranslations().size());
 
       // -> status date can't be updated manually
       switch (editMode)
@@ -1461,6 +1422,30 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData
   public void setUpdateListener(IUpdateModal updateListener)
   {
     this.updateListener = updateListener;
+  }
+  
+  public void onNewClicked(String listId)
+  {
+    if(listId != null && listId.equals("translation"))
+    {
+      translations.addRow();
+    }
+  }
+
+  public void onEditClicked(String string, Object o)
+  {
+  }
+
+  public void onDeleted(String listId, Object o)
+  {
+    if(listId != null && listId.equals("translation"))
+    {
+      translations.removeRow(o);
+    }
+  }
+
+  public void onSelected(String string, Object o)
+  {
   }
 
 }

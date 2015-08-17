@@ -30,7 +30,7 @@ namespace TerminologyConverter.Converter
     }
 
 
-    public void CreateFile()
+    public void CreateFile(String name)
     {
       List<String> fileContent = new List<string>();
 
@@ -59,7 +59,7 @@ namespace TerminologyConverter.Converter
 
       fileContent.Insert(0, CreateHeader(languageList, metadataList));
 
-      File.WriteAllLines("irma.csv", fileContent.ToArray(), Encoding.Default);
+      File.WriteAllLines(name, fileContent.ToArray(), Encoding.Default);
     }
 
     private String CreateHeader(List<String> languageList, List<String> metadataList)

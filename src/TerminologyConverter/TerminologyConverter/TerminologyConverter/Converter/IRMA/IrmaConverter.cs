@@ -61,9 +61,7 @@ namespace TerminologyConverter.Converter.IRMA
         if (string.IsNullOrEmpty(fileENG) == false)
           ParseFile(fileENG, csv, "en");
 
-        csv.CreateFile();
-        
-
+        csv.CreateFile("irma.csv");
 
       }
       catch(Exception ex)

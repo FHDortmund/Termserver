@@ -7,3 +7,9 @@ C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\
 C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\obj\Debug\TerminologyConverter.csprojResolveAssemblyReference.cache
 C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\obj\Debug\TerminologyConverter.exe
 C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\obj\Debug\TerminologyConverter.pdb
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\bin\Debug\FileHelpers.DataLink.dll
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\bin\Debug\FileHelpers.dll
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\bin\Debug\FileHelpers.ExcelStorage.dll
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\bin\Debug\FileHelpers.xml
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\bin\Debug\FileHelpers.DataLink.xml
+C:\FH\FH_Projekte\Terminologieserver_GitHub\Termserver\src\TerminologyConverter\TerminologyConverter\TerminologyConverter\bin\Debug\FileHelpers.ExcelStorage.xml

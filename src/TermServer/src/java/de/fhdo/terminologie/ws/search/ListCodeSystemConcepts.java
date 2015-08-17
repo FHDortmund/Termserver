@@ -1434,6 +1434,14 @@ public class ListCodeSystemConcepts
         // sonst sind SQL-Injections möglich
         HQLParameterHelper parameterHelper = new HQLParameterHelper();
         parameterHelper.addParameter("", "csvem.codeSystemVersionId", codeSystemVersionId);
+        
+        boolean param_wholeWords = false;
+        
+        if(parameter.getSearchParameter() != null)
+        {
+          if(parameter.getSearchParameter().getWholeWords() != null)
+            param_wholeWords = parameter.getSearchParameter().getWholeWords();
+        }
 
         if (parameter != null && parameter.getCodeSystemEntity() != null)
         {
@@ -1462,16 +1470,16 @@ public class ListCodeSystemConcepts
             if (csev.getCodeSystemConcepts() != null && csev.getCodeSystemConcepts().size() > 0)
             {
               CodeSystemConcept csc = (CodeSystemConcept) csev.getCodeSystemConcepts().toArray()[0];
-              parameterHelper.addParameter("csc.", "code", csc.getCode());
-              parameterHelper.addParameter("csc.", "term", csc.getTerm());
-              parameterHelper.addParameter("csc.", "termAbbrevation", csc.getTermAbbrevation());
+              parameterHelper.addParameter("csc.", "code", csc.getCode(), param_wholeWords);
+              parameterHelper.addParameter("csc.", "term", csc.getTerm(), param_wholeWords);
+              parameterHelper.addParameter("csc.", "termAbbrevation", csc.getTermAbbrevation(), param_wholeWords);
               parameterHelper.addParameter("csc.", "isPreferred", csc.getIsPreferred());
 
               if (csc.getCodeSystemConceptTranslations() != null && csc.getCodeSystemConceptTranslations().size() > 0)
               {
                 CodeSystemConceptTranslation csct = (CodeSystemConceptTranslation) csc.getCodeSystemConceptTranslations().toArray()[0];
-                parameterHelper.addParameter("csct.", "term", csct.getTerm());
-                parameterHelper.addParameter("csct.", "termAbbrevation", csct.getTermAbbrevation());
+                parameterHelper.addParameter("csct.", "term", csct.getTerm(), param_wholeWords);
+                parameterHelper.addParameter("csct.", "termAbbrevation", csct.getTermAbbrevation(), param_wholeWords);
                 if (csct.getLanguageCd() != null && csct.getLanguageCd().length() > 0)
                 {
                   languageCd = csct.getLanguageCd();

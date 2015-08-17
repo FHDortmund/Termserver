@@ -34,7 +34,7 @@ namespace TerminologyConverter
       }
       //Console.WriteLine("Hello {0}!", options.Name);
 
-      Converter.Converter conv = new Converter.Converter(parser, options.Format);
+      Converter.Converter conv = new Converter.Converter(parser, options);
       String ret = conv.StartConverting();
 
       Console.WriteLine(ret);

@@ -36,12 +36,14 @@ public class HQLParameterHelper
     public String prefix;
     public String operator;
     public String fieldName;
+    public boolean wholeWords;
 
     public HQLObject(Object obj, String prefix, String fieldName)
     {
       this.obj = obj;
       this.prefix = prefix;
       this.fieldName = fieldName;
+      this.wholeWords = false;
       
       if(obj instanceof String)
         this.operator = " LIKE ";
@@ -55,7 +57,39 @@ public class HQLParameterHelper
       this.prefix = prefix;
       this.operator = operator;
       this.fieldName = fieldName;
+      this.wholeWords = false;
     }
+
+    public HQLObject(Object obj, String prefix, String fieldName, boolean wholeWords)
+    {
+      this.obj = obj;
+      this.prefix = prefix;
+      this.fieldName = fieldName;
+      this.wholeWords = wholeWords;
+      
+      if(obj instanceof String)
+      {
+        if(this.wholeWords)
+          this.operator = " = ";
+        else this.operator = " LIKE ";
+      }
+      else if(obj instanceof java.util.Date)
+        this.operator = " >= ";
+      else this.operator = " = ";
+    }
+
+    public HQLObject(Object obj, String prefix, String operator, String fieldName, boolean wholeWords)
+    {
+      this.obj = obj;
+      this.prefix = prefix;
+      this.operator = operator;
+      this.fieldName = fieldName;
+      this.wholeWords = wholeWords;
+    }
+    
+    
+    
+    
   }
   
   private Map<String, HQLObject> parameterMap;
@@ -81,6 +115,15 @@ public class HQLParameterHelper
     }
   }
   
+  public void addParameter(String Prefix, String FieldName, Object Value, boolean wholeWords)
+  {
+    if(Value != null && Value.toString().length() > 0)
+    {
+      parameterMap.put(FieldName, new HQLObject(Value, Prefix, FieldName, wholeWords));
+      logger.debug("addParameter, Fieldname: " + FieldName + ", Value: " + Value + ", Prefix: " + Prefix);
+    }
+  }
+  
   /**
    * Fügt einen Parameter hinzu, welcher im Wehre-Teil der HQL-Abfrage erscheinen soll
    * @param Prefix Prefix der Tabelle aus der HQL-Anweisung
@@ -90,8 +133,15 @@ public class HQLParameterHelper
    */
   public void addParameter(String Prefix, String FieldName, Object Value, String Operator)
   {
+    addParameter(Prefix, FieldName, Value, Operator, false);
+    //if(Value != null && Value.toString().length() > 0)
+    //  parameterMap.put(Prefix + FieldName, new HQLObject(Value, Prefix, FieldName, Operator));
+  }
+  
+  public void addParameter(String Prefix, String FieldName, Object Value, String Operator, boolean wholeWords)
+  {
     if(Value != null && Value.toString().length() > 0)
-      parameterMap.put(Prefix + FieldName, new HQLObject(Value, Prefix, FieldName, Operator));
+      parameterMap.put(Prefix + FieldName, new HQLObject(Value, Prefix, FieldName, Operator, wholeWords));
   }
   
   
@@ -133,7 +183,9 @@ public class HQLParameterHelper
       
       if(obj.obj instanceof String)
       {
-        s = "%" + obj.obj.toString() + "%";
+        if(obj.wholeWords)
+          s = obj.obj.toString();
+        else s = "%" + obj.obj.toString() + "%";
       }
       else if(obj.obj instanceof java.util.Date)
       {
@@ -178,7 +230,14 @@ public class HQLParameterHelper
       
       if(obj.obj instanceof String)
       {
-        s = "%" + obj.obj.toString() + "%";
+        if(obj.wholeWords)
+        {
+          s = obj.obj.toString();
+        }
+        else
+        {
+          s = "%" + obj.obj.toString() + "%";
+        }
         q.setString("s_" + obj.fieldName, s);
       }
       else if(obj.obj instanceof java.util.Date)

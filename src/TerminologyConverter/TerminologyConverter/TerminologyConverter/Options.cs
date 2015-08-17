@@ -9,7 +9,7 @@ namespace TerminologyConverter
 {
   [CommandLineManager(ApplicationName = "Terminology Converter",
     Copyright = "Copyright (c) Robert Mützner")]
-  class Options
+  public class Options
   {
     [CommandLineOption(Description = "Displays this help text")]
     public bool Help = false;
@@ -28,5 +28,9 @@ namespace TerminologyConverter
     }
 
     private string format;
+
+
+    [CommandLineOption(Description = "Filename to convert")]
+    public String Filename = "";
   }
 }

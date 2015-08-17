@@ -16,6 +16,7 @@
  */
 package de.fhdo.terminologie.ws.authoring;
 
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.Definitions;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.CodeSystemConcept;
@@ -305,8 +306,8 @@ public class MaintainConcept
                     //Wenn zusätzlich neues csct => neu anlegen...
                     csct_New = new CodeSystemConceptTranslation();
                     csct_New.setCodeSystemConcept(csc_Request);
-                    csct_New.setTerm("");
-                    csct_New.setLanguageCd(null);
+                    csct_New.setTerm(csct_Request.getTerm());
+                    csct_New.setLanguageCd(csct_Request.getLanguageCd());
                     hb_session.save(csct_New);
                   }
 
@@ -405,7 +406,8 @@ public class MaintainConcept
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         response.getReturnInfos().setMessage("Fehler bei 'MaintainConcept', Hibernate: " + e.getLocalizedMessage());
-        logger.error(response.getReturnInfos().getMessage());
+        //logger.error(response.getReturnInfos().getMessage());
+        LoggingOutput.outputException(e, this);
       }
       finally
       {
@@ -434,7 +436,8 @@ public class MaintainConcept
       response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
       response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
       response.getReturnInfos().setMessage("Fehler bei 'MaintainConcept': " + e.getLocalizedMessage());
-      logger.error(response.getReturnInfos().getMessage());
+      //logger.error(response.getReturnInfos().getMessage());
+      LoggingOutput.outputException(e, this);
     }
     return response;
   }
