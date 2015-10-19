@@ -90,7 +90,7 @@ public class Statusrel  implements java.io.Serializable {
     }
 
 @ManyToMany(fetch=FetchType.LAZY)
-    @JoinTable(name="role2action", catalog="collab", joinColumns = { 
+    @JoinTable(name="role2action", joinColumns = { 
         @JoinColumn(name="statusRelId", nullable=false, updatable=false) }, inverseJoinColumns = { 
         @JoinColumn(name="roleId", nullable=false, updatable=false) })
     public Set<Role> getRoles() {

@@ -107,7 +107,7 @@ public class Status  implements java.io.Serializable {
     }
 
 @ManyToMany(fetch=FetchType.LAZY)
-    @JoinTable(name="role2status", catalog="collab", joinColumns = { 
+    @JoinTable(name="role2status", joinColumns = { 
         @JoinColumn(name="statusId", nullable=false, updatable=false) }, inverseJoinColumns = { 
         @JoinColumn(name="roleId", nullable=false, updatable=false) })
     public Set<Role> getRoles() {

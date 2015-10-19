@@ -213,7 +213,7 @@ public class DomainValue  implements java.io.Serializable {
     }
 
 @ManyToMany(fetch=FetchType.LAZY)
-    @JoinTable(name="domainvalue2domainvalue", catalog="collab", joinColumns = { 
+    @JoinTable(name="domainvalue2domainvalue", joinColumns = { 
         @JoinColumn(name="domain_value_id_child", nullable=false, updatable=false) }, inverseJoinColumns = { 
         @JoinColumn(name="domain_value_id_parent", nullable=false, updatable=false) })
     public Set<DomainValue> getDomainValuesForDomainValueIdParent() {
@@ -225,7 +225,7 @@ public class DomainValue  implements java.io.Serializable {
     }
 
 @ManyToMany(fetch=FetchType.LAZY)
-    @JoinTable(name="domainvalue2domainvalue", catalog="collab", joinColumns = { 
+    @JoinTable(name="domainvalue2domainvalue", joinColumns = { 
         @JoinColumn(name="domain_value_id_parent", nullable=false, updatable=false) }, inverseJoinColumns = { 
         @JoinColumn(name="domain_value_id_child", nullable=false, updatable=false) })
     public Set<DomainValue> getDomainValuesForDomainValueIdChild() {

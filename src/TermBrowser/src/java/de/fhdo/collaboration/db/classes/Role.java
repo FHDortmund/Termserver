@@ -107,7 +107,7 @@ public class Role  implements java.io.Serializable {
     }
 
 @ManyToMany(fetch=FetchType.LAZY)
-    @JoinTable(name="role2collaborationuser", catalog="collab", joinColumns = { 
+    @JoinTable(name="role2collaborationuser", joinColumns = { 
         @JoinColumn(name="roleId", nullable=false, updatable=false) }, inverseJoinColumns = { 
         @JoinColumn(name="collaborationUserId", nullable=false, updatable=false) })
     public Set<Collaborationuser> getCollaborationusers() {
@@ -128,7 +128,7 @@ public class Role  implements java.io.Serializable {
     }
 
 @ManyToMany(fetch=FetchType.LAZY)
-    @JoinTable(name="role2action", catalog="collab", joinColumns = { 
+    @JoinTable(name="role2action", joinColumns = { 
         @JoinColumn(name="roleId", nullable=false, updatable=false) }, inverseJoinColumns = { 
         @JoinColumn(name="statusRelId", nullable=false, updatable=false) })
     public Set<Statusrel> getStatusrels() {
@@ -140,7 +140,7 @@ public class Role  implements java.io.Serializable {
     }
 
 @ManyToMany(fetch=FetchType.LAZY)
-    @JoinTable(name="role2status", catalog="collab", joinColumns = { 
+    @JoinTable(name="role2status", joinColumns = { 
         @JoinColumn(name="roleId", nullable=false, updatable=false) }, inverseJoinColumns = { 
         @JoinColumn(name="statusId", nullable=false, updatable=false) })
     public Set<Status> getStatuses() {

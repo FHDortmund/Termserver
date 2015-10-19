@@ -416,7 +416,7 @@ public class Collaborationuser implements java.io.Serializable
   }
 
   @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(name = "role2collaborationuser", catalog = "collab", joinColumns =
+  @JoinTable(name = "role2collaborationuser", joinColumns =
          {
            @JoinColumn(name = "collaborationUserId", nullable = false, updatable = false)
   }, inverseJoinColumns =
