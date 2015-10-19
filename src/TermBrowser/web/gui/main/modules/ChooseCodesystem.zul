@@ -9,7 +9,7 @@
       <center border="0">
         <tabbox id="tabboxFilter" vflex="true">
           <tabs>
-            <tab id="tabCS" label="${labels.common.codeSystems}" />
+            <tab id="tabCS" label="${labels.common.codeSystems}"/>
             <tab id="tabVS" label="${labels.common.valueSets}"/>
           </tabs>
           <tabpanels>                  

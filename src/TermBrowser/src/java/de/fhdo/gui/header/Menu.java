@@ -57,6 +57,7 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
     }
 
     //isCollaboration = SessionHelper.isCollaborationActive();
+    
     isCollaboration = PropertiesHelper.getInstance().isCollaborationActive();
 
     if (isCollaboration)
@@ -67,6 +68,16 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
     {
       headerStr = Labels.getLabel("common.terminologyBrowser");
     }
+    
+    // TODO check, if editor (valueset, association) is opened
+    String url = Executions.getCurrent().getDesktop().getRequestPath();
+    logger.debug("context: " + url);
+    if(url.contains("ValuesetEditor.zul"))
+    {
+      headerStr = Labels.getLabel("common.valuesetEditor");
+    }
+    
+    
     logger.debug("isCollaboration: " + isCollaboration);
   }
 
@@ -250,6 +261,16 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
   {
     if (SessionHelper.isUserLoggedIn())
       redirect("/gui/main/modules/AssociationEditor.zul", Labels.getLabel("menu.pleaseWait"), null);
+    else
+    {
+      Messagebox.show(Labels.getLabel("menu.loginRequiredForAssociationEditor"));
+    }
+  }
+  
+  public void viewValuesetEditor()
+  {
+    if (SessionHelper.isUserLoggedIn())
+      redirect("/gui/main/modules/ValuesetEditor.zul", Labels.getLabel("menu.pleaseWait"), null);
     else
     {
       Messagebox.show(Labels.getLabel("menu.loginRequiredForAssociationEditor"));

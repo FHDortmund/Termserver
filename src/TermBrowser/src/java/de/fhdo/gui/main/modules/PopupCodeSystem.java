@@ -231,8 +231,8 @@ public class PopupCodeSystem extends Window implements AfterCompose, IUpdateData
       }
 
       // check mandatory fields
-      if (codeSystemVersion.getValidityRange() <= 0)
-        Messagebox.show(Labels.getLabel("popupCodeSystem.editCodeSystemValidityRangeFailed"), "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+      //if (codeSystemVersion.getValidityRange() != null && codeSystemVersion.getValidityRange() <= 0)
+      //  Messagebox.show(Labels.getLabel("popupCodeSystem.editCodeSystemValidityRangeFailed"), "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
     }
 
     boolean success = false;

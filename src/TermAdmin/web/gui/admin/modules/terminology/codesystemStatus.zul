@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <!--<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winCSStatus"?>-->
+
+  <window id="winCSStatus" title="Codesystem-Version - Status" width="500px"  height="250px" border="normal"
+          use="de.fhdo.gui.admin.modules.terminology.CodesystemStatus" closable="true"
+          sizable="true">
+    <borderlayout>
+      <center border="0">
+        <grid>
+          <columns>
+            <column width="130px" align="right" label=""/>
+            <column label=""/>
+          </columns>
+          <rows>
+            <row>
+              <label value="Status:"/>
+              <combobox id="cbStatus" readonly="true"/>
+            </row>
+              
+<!--            <row>
+              <label value="Gültigkeitsbereich:"/>
+              <combobox id="cbValidityDomain" model="@{winCSStatus.validityDomainList}"
+                        selectedItem="@{winCSStatus.sysParam.domainValueByValidityDomain}" value="@{winCSStatus.sysParam.domainValueByValidityDomain.domainDisplay}"
+                        readonly="true" width="98%">
+                <comboitem self="@{each=itemType2}" label="@{itemType2.domainDisplay}" value="@{itemType2.domainCode}" />
+              </combobox>
+            </row>-->
+          </rows>
+        </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right">
+          <button label="OK" onClick="winCSStatus.onOkClicked()" autodisable="self" />
+          <button label="Abbrechen" onClick="winCSStatus.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

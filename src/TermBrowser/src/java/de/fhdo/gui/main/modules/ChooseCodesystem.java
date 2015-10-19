@@ -16,30 +16,21 @@
  */
 package de.fhdo.gui.main.modules;
 
+import de.fhdo.helper.ArgumentHelper;
 import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.PropertiesHelper;
 import de.fhdo.interfaces.IUpdate;
-import de.fhdo.list.IDoubleClick;
 import de.fhdo.models.CodesystemGenericTreeModel;
 import de.fhdo.models.ValuesetGenericTreeModel;
 import de.fhdo.tree.GenericTree;
 import de.fhdo.tree.GenericTreeRowType;
 import de.fhdo.tree.IGenericTreeActions;
-import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Include;
 import org.zkoss.zul.Label;
-import org.zkoss.zul.Menuitem;
-import org.zkoss.zul.Menupopup;
-import org.zkoss.zul.Menuseparator;
 import org.zkoss.zul.Tabbox;
 import org.zkoss.zul.Window;
-import types.termserver.fhdo.de.CodeSystem;
-import types.termserver.fhdo.de.ValueSet;
 
 /**
  *
@@ -52,21 +43,36 @@ public class ChooseCodesystem extends Window implements AfterCompose, IGenericTr
   
   private GenericTree genericTreeCS = null;
   private GenericTree genericTreeVS = null;
+  
+  private boolean allowCS, allowVS;
 
   public ChooseCodesystem()
   {
+    allowCS = ArgumentHelper.getWindowArgumentBool("allowCS", true);
+    allowVS = ArgumentHelper.getWindowArgumentBool("allowVS", true);
     
+    logger.debug("allowCS: " + allowCS);
+    logger.debug("allowVS: " + allowVS);
   }
 
   public void afterCompose()
   {
+    getFellow("tabCS").setVisible(allowCS);
+    getFellow("tabVS").setVisible(allowVS);
+    
     createTabContent_CS();
     createTabContent_VS();
+    
+    if(allowCS == false)
+    {
+      // preselect value set selection
+      ((Tabbox)getFellow("tabboxFilter")).setSelectedIndex(1);
+    }
   }
   
   private void createTabContent_CS()
   {
-    if (genericTreeCS != null)
+    if (genericTreeCS != null || allowCS == false)
       return;
 
     logger.debug("createTabContent_CS()");
@@ -104,7 +110,7 @@ public class ChooseCodesystem extends Window implements AfterCompose, IGenericTr
 
   private void createTabContent_VS()
   {
-    if (genericTreeVS != null)
+    if (genericTreeVS != null || allowVS == false)
       return;
 
     logger.debug("createTabContent_VS()");
@@ -180,6 +186,7 @@ public class ChooseCodesystem extends Window implements AfterCompose, IGenericTr
   {
   }
 
+  
   
 
   

@@ -231,11 +231,11 @@ public class PopupValueSet extends Window implements AfterCompose
       }
 
       // check mandatory fields
-      if (valueSetVersion.getValidityRange() <= 0)
+      /*if (valueSetVersion.getValidityRange() <= 0)
       {
         Messagebox.show(Labels.getLabel("popupValueSet.editValueSetValidityRangeFailed"), "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
         return;
-      }
+      }*/
       if (valueSetVersion.getName() == null || valueSetVersion.getName().length() == 0)
       {
         Messagebox.show(Labels.getLabel("common.mandatoryFields"), Labels.getLabel("common.requiredField"), Messagebox.OK, Messagebox.EXCLAMATION);

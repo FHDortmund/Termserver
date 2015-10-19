@@ -18,6 +18,7 @@
         <menupopup>
           <menuitem label="${labels.common.mainview}"          onClick="win.gotoMainView()"  image="/rsc/img/design/house_16x16.png"></menuitem>
           <menuitem label="${labels.common.associationEditor}" onClick="win.viewAssociationEditor()"  image="/rsc/img/design/reload_16x16.png" ></menuitem>
+          <menuitem label="${labels.common.valuesetEditor}" onClick="win.viewValuesetEditor()"  image="/rsc/img/design/editor_16x16.png" ></menuitem>
           <menuseparator/>
           <menuitem id="menuitemAdminSettings"  label="${labels.menu.admin}" onClick="win.callAdmin()" image="/rsc/img/design/tools_16x16.png"></menuitem>
           <menuitem id="menuitemDetails"  label="${labels.menu.showUserDetails}" onClick="win.showUADetails()" image="/rsc/img/symbols/user_16x16.png" visible ="false" ></menuitem>

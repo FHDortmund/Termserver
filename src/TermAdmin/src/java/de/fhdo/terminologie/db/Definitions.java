@@ -51,6 +51,59 @@ public class Definitions
   public final static String APP_KEY = "TERMSERVER";
   
   
+  public static enum STATUS_CODES
+  {
+    INACTIVE(0), ACTIVE(1), DELETED(2);
+    private int code;
+
+    private STATUS_CODES(int c)
+    {
+      code = c;
+    }
+
+    public int getCode()
+    {
+      return code;
+    }
+    
+    public static String readLabel(int status)
+    {
+      if(status == STATUS_CODES.ACTIVE.code)
+        return "aktiv";
+      else if(status == STATUS_CODES.INACTIVE.code)
+        return "inaktiv";
+      else if(status == STATUS_CODES.DELETED.code)
+        return "gelöscht";
+      
+      return "unbekannt";
+    }
+
+    public static boolean isStatusCodeValid(Integer StatusCode)
+    {
+      STATUS_CODES[] codes = STATUS_CODES.values();
+
+      for (int i = 0; i < codes.length; ++i)
+      {
+        if (codes[i].getCode() == StatusCode)
+          return true;
+      }
+      return false;
+    }
+
+    public static String readStatusCodes()
+    {
+      String s = "";
+      STATUS_CODES[] codes = STATUS_CODES.values();
+
+      for (int i = 0; i < codes.length; ++i)
+      {
+        s += "\n" + codes[i].name() + " (" + codes[i].getCode() + ")";
+      }
+      return s;
+    }
+  }
+  
+  
   /*public final static long TECHNICALTYPE_DOCUMENT = 2196;
   public final static long TECHNICALTYPE_LINK = 2197;
   public final static long TECHNICALTYPE_NOTE = 2198;*/

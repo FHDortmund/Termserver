@@ -18,6 +18,7 @@ package de.fhdo.gui.main.content;
 
 import de.fhdo.gui.main.modules.AssociationEditor;
 import de.fhdo.gui.main.modules.ChooseCodesystem;
+import de.fhdo.gui.main.modules.ValuesetEditor;
 import de.fhdo.helper.ArgumentHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.interfaces.IUpdate;
@@ -30,6 +31,7 @@ import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Center;
 import org.zkoss.zul.Include;
+import org.zkoss.zul.North;
 import org.zkoss.zul.Window;
 import types.termserver.fhdo.de.CodeSystem;
 import types.termserver.fhdo.de.CodeSystemVersion;
@@ -50,11 +52,22 @@ public class ContentAssociationEditor extends Window implements AfterCompose, IU
   private IUpdate updateListener;
   
   private AssociationEditor associationEditor;
+  private ValuesetEditor valuesetEditor;
+  
+  private boolean allowCS, allowVS;
+  private String title;
   
   public ContentAssociationEditor()
   {
     windowId = ArgumentHelper.getWindowParameterString("id");
     logger.debug("windowId: " + windowId);
+    title = "";
+    
+    allowCS = ArgumentHelper.getWindowParameterBool("allowCS", true);
+    allowVS = ArgumentHelper.getWindowParameterBool("allowVS", true);
+    
+    logger.debug("allowCS: " + allowCS);
+    logger.debug("allowVS: " + allowVS);
     
     Object o = SessionHelper.getValue("selectedCS" + windowId, null);
     if(o != null)
@@ -75,6 +88,18 @@ public class ContentAssociationEditor extends Window implements AfterCompose, IU
       associationEditor = (AssociationEditor) Executions.getCurrent().getAttribute("associationEditor");
       logger.debug("[ContentAssociationEditor.java] AssociationEditor found");
     }
+    if(Executions.getCurrent().hasAttribute("valuesetEditor"))
+    {
+      valuesetEditor = (ValuesetEditor) Executions.getCurrent().getAttribute("valuesetEditor");
+      logger.debug("[ContentAssociationEditor.java] ValuesetEditor found");
+    }
+    
+    
+    
+    if(Executions.getCurrent().hasAttribute("title"))
+    {
+      title = (String) Executions.getCurrent().getAttribute("title");
+    }
     
     
     
@@ -85,6 +110,9 @@ public class ContentAssociationEditor extends Window implements AfterCompose, IU
   public void afterCompose()
   {
     loadData();
+    
+    if(title != null && title.length() > 0)
+      ((North)getFellow("title")).setTitle(title);
     
     Clients.clearBusy();
   }
@@ -101,6 +129,8 @@ public class ContentAssociationEditor extends Window implements AfterCompose, IU
     try
     {
       Map data = new HashMap();
+      data.put("allowCS", allowCS);
+      data.put("allowVS", allowVS);
       Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/ChooseCodesystem.zul", null, data);
       ((ChooseCodesystem) w).setUpdateListener(this);
 
@@ -159,7 +189,7 @@ public class ContentAssociationEditor extends Window implements AfterCompose, IU
     if (cs == null)
       return;
 
-    logger.debug("openCodeSystem with id: " + cs.getId());
+    logger.debug("openCodeSystem with id: " + cs.getId() + ", windowId: " + windowId);
 
     // remember choice
     SessionHelper.setValue("selectedCS" + windowId, cs);
@@ -176,7 +206,9 @@ public class ContentAssociationEditor extends Window implements AfterCompose, IU
     inc.setDynamicProperty("codeSystem", cs);
     inc.setDynamicProperty("updateListener", updateListener);
     inc.setDynamicProperty("associationEditor", associationEditor);
+    inc.setDynamicProperty("valuesetEditor", valuesetEditor);
     
+    logger.debug("src: " + "/gui/main/content/ContentConcepts.zul?dragAndDrop=true&lookForward=true&windowId=" + windowId);
     inc.setSrc("/gui/main/content/ContentConcepts.zul?dragAndDrop=true&lookForward=true&windowId=" + windowId);
   }
 
@@ -201,8 +233,10 @@ public class ContentAssociationEditor extends Window implements AfterCompose, IU
     inc.clearDynamicProperties();
     inc.setDynamicProperty("valueSet", vs);
     inc.setDynamicProperty("updateListener", updateListener);
+    inc.setDynamicProperty("associationEditor", associationEditor);
+    inc.setDynamicProperty("valuesetEditor", valuesetEditor);
 
-    inc.setSrc("/gui/main/content/ContentConcepts.zul?dragAndDrop=true");
+    inc.setSrc("/gui/main/content/ContentConcepts.zul?dragAndDrop=true&dragAndDropTree=true&windowId=" + windowId);
   }
 
   /**

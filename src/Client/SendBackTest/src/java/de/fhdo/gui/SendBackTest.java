@@ -28,7 +28,7 @@ public class SendBackTest extends Window
 
   public static void openBrowser(String title, String codeSystemName, String sendbackMethodName, Window wBrowser, Window parent)
   {
-    String uri = "http://localhost:8080/TermBrowser/gui/main/main.zul?loadType=CodeSystem&loadName=ICD&hideMenu=1&hideStatusbar=1&hideSelection=1&sendBack=true";
+    String uri = "http://193.25.22.69:8080/TermBrowser/gui/main/main.zul?loadType=CodeSystem&loadName=ICD&hideMenu=1&hideStatusbar=1&hideSelection=1&sendBack=true";
 
     // create window
     wBrowser.setHeight("90%");

@@ -80,6 +80,24 @@ public class ArgumentHelper
     return b;
   }
   
+  public static boolean getWindowArgumentBool(String argName, boolean Default)
+  {
+    boolean b = Default;
+    try
+    {
+      Object o = getWindowArgument(argName);
+
+      if (o != null)
+        b = (Boolean) o;
+    }
+    catch (Exception e)
+    {
+      LoggingOutput.outputException(e, ArgumentHelper.class);
+    }
+
+    return b;
+  }
+  
   public static int getWindowArgumentInt(String argName)
   {
     int l = 0;
@@ -159,6 +177,22 @@ public class ArgumentHelper
     }
 
     return false;
+  }
+  
+  public static boolean getWindowParameterBool(String argName, boolean Default)
+  {
+    try
+    {
+      Object o = Executions.getCurrent().getParameter(argName);
+      if(o != null)
+        return Boolean.parseBoolean(o.toString());
+    }
+    catch (Exception e)
+    {
+      LoggingOutput.outputException(e, ArgumentHelper.class);
+    }
+
+    return Default;
   }
   
 }

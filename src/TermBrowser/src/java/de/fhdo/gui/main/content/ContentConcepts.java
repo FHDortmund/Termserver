@@ -24,6 +24,7 @@ import de.fhdo.gui.main.modules.PopupCodeSystem;
 import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.gui.main.modules.PopupExport;
 import de.fhdo.gui.main.modules.PopupValueSet;
+import de.fhdo.gui.main.modules.ValuesetEditor;
 import de.fhdo.helper.ArgumentHelper;
 import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.ParameterHelper;
@@ -104,11 +105,13 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
   private boolean sendBack = false;
   private boolean dragAndDrop = false;
-  
+  private boolean dragAndDropTree = false;
+
   private boolean collaborationActive = false;
 
   private IUpdate updateListener = null;
   private AssociationEditor associationEditor;
+  private ValuesetEditor valuesetEditor;
 
   private TreeAndContent treeAndContent;
 
@@ -119,7 +122,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     Executions.getCurrent().setAttribute("instance", this);
 
     getURLParameter();
-    
+
     collaborationActive = SessionHelper.isCollaborationActive();
 
     // loading dynamic parameters
@@ -127,7 +130,20 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     valueSet = (ValueSet) Executions.getCurrent().getAttribute("valueSet");
     treeAndContent = (TreeAndContent) Executions.getCurrent().getAttribute("parent");
 
-    String windowId = ArgumentHelper.getWindowParameterString("id");
+    String windowId = "";
+//    if(ArgumentHelper.getWindowParameter("id") != null)
+//    {
+//      windowId = ArgumentHelper.getWindowParameterString("id");
+//    }
+//    else 
+    windowId = ParameterHelper.getString("windowId");
+    if (windowId == null || windowId.length() == 0)
+    {
+      windowId = ArgumentHelper.getWindowParameterString("windowId");
+    }
+    //dragAndDrop = ParameterHelper.getBoolean("dragAndDrop", false);
+
+    logger.debug("windowId: " + windowId);
 
     if (Executions.getCurrent().hasAttribute("updateListener"))
     {
@@ -148,6 +164,24 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
           associationEditor.setContentConcepts2(this);
       }
     }
+
+    if (Executions.getCurrent().hasAttribute("valuesetEditor"))
+    {
+      valuesetEditor = (ValuesetEditor) Executions.getCurrent().getAttribute("valuesetEditor");
+      logger.debug("[ContentConcepts.java] ValuesetEditor found");
+
+      if (windowId != null)
+      {
+        if (windowId.equals("1"))
+          valuesetEditor.setContentConcepts1(this);
+        else
+          valuesetEditor.setContentConcepts2(this);
+      }
+      else
+        logger.warn("windowId is null");
+    }
+    else
+      logger.debug("no valuesetEditor found");
 
     codeSystemVersion = null;
     valueSetVersion = null;
@@ -231,7 +265,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
           }
           else
           {
-            logger.debug("Version given with id: " + valueSetVersion.getVersionId());
+            logger.debug("Valuset-Version given with id: " + valueSetVersion.getVersionId());
           }
         }
       }
@@ -244,7 +278,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
           if (vsv.getVersionId().longValue() == valueSet.getCurrentVersionId().longValue())
           {
             valueSetVersion = vsv;
-            logger.debug("Version given with id: " + valueSetVersion.getVersionId());
+            logger.debug("Valuset-Version given with id: " + valueSetVersion.getVersionId());
             break;
           }
         }
@@ -295,6 +329,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     }
 
     dragAndDrop = ParameterHelper.getBoolean("dragAndDrop", false);
+    dragAndDropTree = ParameterHelper.getBoolean("dragAndDropTree", false);
 
     logger.debug("sendBack: " + isSendBack());
     logger.debug("paramSearch: " + paramSearch);
@@ -302,6 +337,9 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     logger.debug("paramLoadName: " + paramLoadName);
     logger.debug("paramLoadId: " + paramLoadId);
     logger.debug("paramLoadOid: " + paramLoadOid);
+
+    logger.debug("dragAndDrop: " + dragAndDrop);
+    logger.debug("dragAndDropTree: " + dragAndDropTree);
 
     if (paramLoadId > 0
         || (paramLoadType != null && paramLoadType != TreeAndContent.LOADTYPE.NONE)
@@ -328,8 +366,8 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       Collections.sort(list, new ComparatorCodesystemVersions(true));
 
       cbVersions.setModel(new ListModelList<CodeSystemVersion>(list));
-      if (codeSystemVersion != null)
-        selectedVersionId = codeSystemVersion.getVersionId();
+      if (getCodeSystemVersion() != null)
+        selectedVersionId = getCodeSystemVersion().getVersionId();
 
       // select cached version
       //for(CodeSystemVersion csv_list : cbVersions.getItems())
@@ -338,8 +376,8 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     else if (valueSet != null)
     {
       cbVersions.setModel(new ListModelList<ValueSetVersion>(valueSet.getValueSetVersions()));
-      if (valueSetVersion != null)
-        selectedVersionId = valueSetVersion.getVersionId();
+      if (getValueSetVersion() != null)
+        selectedVersionId = getValueSetVersion().getVersionId();
     }
 
     final long selectedVersionIdFinal = selectedVersionId;
@@ -402,7 +440,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       codeSystemVersion = csv;
 
       logger.debug("CS-ID: " + codeSystem.getId());
-      logger.debug("CSV-ID: " + codeSystemVersion.getVersionId());
+      logger.debug("CSV-ID: " + getCodeSystemVersion().getVersionId());
     }
     else if (o instanceof ValueSetVersion)
     {
@@ -417,9 +455,17 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     }
 
     // change title string
-    treeAndContent.setTitleCenter();
+    if (treeAndContent != null)
+      treeAndContent.setTitleCenter();
 
     loadConcepts();
+  }
+
+  public void reload()
+  {
+    logger.debug("reload()");
+    //loadConcepts();
+    concepts.initData();
   }
 
   private void loadConcepts()
@@ -431,23 +477,24 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     //if(concepts == null)
     concepts = new ConceptsTree(treeConcepts, this);
     concepts.setDragAndDrop(dragAndDrop);
+    concepts.setDragAndDropTree(dragAndDropTree);
     concepts.setUpdateDropListener(updateListener);
-    
-    ((Treecol)getFellow("tcTerm")).setSortAscending(new ComparatorConceptDesignationAscending());
-    ((Treecol)getFellow("tcTerm")).setSortDescending(new ComparatorConceptDesignationDescending());
-    
-    ((Treecol)getFellow("tcCode")).setSortAscending(new ComparatorConceptCodeAscending());
-    ((Treecol)getFellow("tcCode")).setSortDescending(new ComparatorConceptCodeDescending());
+
+    ((Treecol) getFellow("tcTerm")).setSortAscending(new ComparatorConceptDesignationAscending());
+    ((Treecol) getFellow("tcTerm")).setSortDescending(new ComparatorConceptDesignationDescending());
+
+    ((Treecol) getFellow("tcCode")).setSortAscending(new ComparatorConceptCodeAscending());
+    ((Treecol) getFellow("tcCode")).setSortDescending(new ComparatorConceptCodeDescending());
 
     if (codeSystem != null)
       concepts.setCodeSystemId(codeSystem.getId());
     else if (valueSet != null)
       concepts.setValueSetId(valueSet.getId());
 
-    if (codeSystemVersion != null)
-      concepts.setCodeSystemVersionId(codeSystemVersion.getVersionId());
-    else if (valueSetVersion != null)
-      concepts.setValueSetVersionId(valueSetVersion.getVersionId());
+    if (getCodeSystemVersion() != null)
+      concepts.setCodeSystemVersionId(getCodeSystemVersion().getVersionId());
+    else if (getValueSetVersion() != null)
+      concepts.setValueSetVersionId(getValueSetVersion().getVersionId());
 
     concepts.initData();
 
@@ -474,13 +521,13 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
   public void onNewClicked()
   {
-    if (SessionHelper.isUserLoggedIn())
+    if (allowEditing())
       getConcepts().createConcept(PopupConcept.HIERARCHYMODE.ROOT, 0);
   }
 
   public void onNewSubClicked()
   {
-    if (SessionHelper.isUserLoggedIn())
+    if (allowEditing())
     {
       CodeSystemEntityVersion csev = getConcepts().getSelection();
       if (csev != null)
@@ -490,7 +537,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
   public void onEditClicked()
   {
-    if (SessionHelper.isUserLoggedIn())
+    if (allowEditing())
       getConcepts().maintainConcept();
   }
 
@@ -501,13 +548,24 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
   public void onDeleteClicked()
   {
-    if (SessionHelper.isUserLoggedIn())
-      getConcepts().deleteConcept();
+    if (valuesetEditor != null)
+    {
+      concepts.deleteConcept();
+    }
+    else
+    {
+      boolean allowDeleting = allowEditing();
+
+      if (allowDeleting)
+      {
+        concepts.deleteConcept();
+      }
+    }
   }
 
   public void onDeleteVersionClicked()
   {
-    if (SessionHelper.isUserLoggedIn())
+    if (allowEditing())
     {
       try
       {
@@ -520,7 +578,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
             request.setLoginToken(SessionHelper.getSessionId());
             request.setCodeSystem(new CodeSystem());
             CodeSystemVersion csv = new CodeSystemVersion();
-            csv.setVersionId(codeSystemVersion.getVersionId());
+            csv.setVersionId(getCodeSystemVersion().getVersionId());
             csv.setStatus(Definitions.STATUS_CODESYSTEMVERSION_INVISIBLE);
             request.getCodeSystem().getCodeSystemVersions().add(csv);
 
@@ -548,7 +606,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
             request.setLoginToken(SessionHelper.getSessionId());
             request.setValueSet(new ValueSet());
             ValueSetVersion vsv = new ValueSetVersion();
-            vsv.setVersionId(valueSetVersion.getVersionId());
+            vsv.setVersionId(getValueSetVersion().getVersionId());
             vsv.setStatus(Definitions.STATUS_CODESYSTEMVERSION_INVISIBLE);
             request.getValueSet().getValueSetVersions().add(vsv);
 
@@ -597,7 +655,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
         logger.debug("show codeSystem version details");
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("CS", codeSystem);
-        data.put("CSV", codeSystemVersion);
+        data.put("CSV", getCodeSystemVersion());
         data.put("EditMode", PopupCodeSystem.EDITMODES.DETAILSONLY);
 
         Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupCodeSystem.zul", this, data);
@@ -609,7 +667,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
         logger.debug("show valueSet version details");
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("VS", valueSet);
-        data.put("VSV", valueSetVersion);
+        data.put("VSV", getValueSetVersion());
         data.put("EditMode", PopupValueSet.EDITMODES.DETAILSONLY);
 
         Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupValueSet.zul", this, data);
@@ -629,7 +687,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
   public void onEditVersionClicked()
   {
-    if (SessionHelper.isUserLoggedIn())
+    if (allowEditing())
     {
       try
       {
@@ -638,7 +696,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
           logger.debug("show codeSystem version");
           Map<String, Object> data = new HashMap<String, Object>();
           data.put("CS", codeSystem);
-          data.put("CSV", codeSystemVersion);
+          data.put("CSV", getCodeSystemVersion());
           data.put("EditMode", PopupCodeSystem.EDITMODES.MAINTAIN);
 
           Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupCodeSystem.zul", this, data);
@@ -650,7 +708,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
           logger.debug("show valueSet version");
           Map<String, Object> data = new HashMap<String, Object>();
           data.put("VS", valueSet);
-          data.put("VSV", valueSetVersion);
+          data.put("VSV", getValueSetVersion());
           data.put("EditMode", PopupValueSet.EDITMODES.MAINTAIN);
 
           Window w = (Window) Executions.getCurrent().createComponents("/gui/main/modules/PopupValueSet.zul", this, data);
@@ -678,15 +736,15 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   public void onExportClicked()
   {
     logger.debug("onExportClicked()");
-    if (codeSystemVersion != null)
+    if (getCodeSystemVersion() != null)
     {
-      codeSystemVersion.setCodeSystem(codeSystem);
-      PopupExport.doModal(codeSystemVersion, null);
+      getCodeSystemVersion().setCodeSystem(codeSystem);
+      PopupExport.doModal(getCodeSystemVersion(), null);
     }
-    else if (valueSetVersion != null)
+    else if (getValueSetVersion() != null)
     {
-      valueSetVersion.setValueSet(valueSet);
-      PopupExport.doModal(null, valueSetVersion);
+      getValueSetVersion().setValueSet(valueSet);
+      PopupExport.doModal(null, getValueSetVersion());
     }
   }
 
@@ -783,71 +841,90 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     getConcepts().onPaging((PagingEvent) event);
   }
 
+  private boolean allowEditing()
+  {
+    boolean loggedIn = SessionHelper.isUserLoggedIn();
+
+    if (associationEditor != null || valuesetEditor != null)
+    {
+      // no editing allowed here
+      loggedIn = false;
+    }
+    return loggedIn;
+  }
+
   private void showButtons()
   {
     CodeSystemEntityVersion csev = getConcepts().getSelection();
     //((Button) getFellow("buttonDetails")).setDisabled(csev == null);
 
     // edit, new, ...
-    boolean loggedIn = SessionHelper.isUserLoggedIn();
-    
-    boolean isCodesystem = codeSystemVersion != null;
-    boolean isValueset = valueSetVersion != null;
-    
-    
-    ComponentHelper.setVisible("buttonNew", loggedIn && PropertiesHelper.getInstance().isGuiEditConceptsShowNewRoot() && isCodesystem, this);
-    ComponentHelper.setVisibleAndDisabled("buttonNewSub", loggedIn && PropertiesHelper.getInstance().isGuiEditConceptsShowNewSub() && isCodesystem, csev == null, this);
-    ComponentHelper.setVisibleAndDisabled("buttonEdit", loggedIn && PropertiesHelper.getInstance().isGuiEditConceptsShowEdit() && isCodesystem, csev == null, this);
-    ComponentHelper.setVisibleAndDisabled("buttonDelete", loggedIn && PropertiesHelper.getInstance().isGuiEditConceptsShowDelete() && isCodesystem, csev == null, this);
+    boolean allowEditing = allowEditing();
+
+    boolean isCodesystem = getCodeSystemVersion() != null;
+    boolean isValueset = getValueSetVersion() != null;
+
+    boolean allowDeleting = SessionHelper.isUserLoggedIn() && valuesetEditor != null && isValueset;
+
+    logger.debug("showButtons()");
+    logger.debug("allowEditing: " + allowEditing);
+    logger.debug("isCodesystem: " + isCodesystem);
+    logger.debug("isValueset: " + isValueset);
+    logger.debug("allowDeleting: " + allowDeleting);
+
+    ComponentHelper.setVisible("buttonNew", allowEditing && PropertiesHelper.getInstance().isGuiEditConceptsShowNewRoot() && isCodesystem, this);
+    ComponentHelper.setVisibleAndDisabled("buttonNewSub", allowEditing && PropertiesHelper.getInstance().isGuiEditConceptsShowNewSub() && isCodesystem, csev == null, this);
+    ComponentHelper.setVisibleAndDisabled("buttonEdit", allowEditing && PropertiesHelper.getInstance().isGuiEditConceptsShowEdit() && isCodesystem, csev == null, this);
+    ComponentHelper.setVisibleAndDisabled("buttonDelete", (allowEditing && PropertiesHelper.getInstance().isGuiEditConceptsShowDelete() && isCodesystem) || allowDeleting, csev == null, this);
     ComponentHelper.setVisibleAndDisabled("buttonDetails", PropertiesHelper.getInstance().isGuiEditConceptsShowDetails(), csev == null, this);
 
     // show button, if concept can be send back
     ComponentHelper.setVisibleAndDisabled("buttonAssumeConcept", isSendBack(), csev == null, this);
 
-    ComponentHelper.setVisible("buttonEditVersion", loggedIn, this);
-    ComponentHelper.setVisible("buttonDeleteVersion", loggedIn, this);
+    ComponentHelper.setVisible("buttonEditVersion", allowEditing, this);
+    ComponentHelper.setVisible("buttonDeleteVersion", allowEditing, this);
 
     // hide buttons, when in SELECT-Mode
     ComponentHelper.setVisible("buttonExport", externMode == false, this);
-    
+
     // Collaboration
     boolean collabLoggedIn = SessionHelper.isCollaborationLoggedIn();
     ComponentHelper.setVisible("divCollaboration", collaborationActive, this);
-    
-    if(collaborationActive)
+
+    if (collaborationActive)
     {
       ComponentHelper.setVisibleAndDisabled("buttonCollabNewSub", collabLoggedIn && isCodesystem, csev == null, this);
       ComponentHelper.setVisibleAndDisabled("buttonCollabEdit", collabLoggedIn && isCodesystem, csev == null, this);
       ComponentHelper.setVisibleAndDisabled("buttonCollabDelete", collabLoggedIn && isCodesystem, csev == null, this);
     }
-    
-  
-    
 
     //ComponentHelper.setVisible("buttonDeleteVersion", loggedIn, this);
     //ComponentHelper.setVisibleAndDisabled("buttonDeleteVersion", loggedIn, csev == null, this);
   }
-  
+
   public void onCollabNewClicked()
   {
-    if(codeSystem != null)
+    if (codeSystem != null)
     {
-      ProposalHelper.createProposalConcept(codeSystem, codeSystemVersion, this);
+      ProposalHelper.createProposalConcept(codeSystem, getCodeSystemVersion(), this);
     }
-    
-    if(valueSet != null)
+
+    if (valueSet != null)
     {
       // TODO
     }
   }
+
   public void onCollabNewSubClicked()
   {
     // TODO
   }
+
   public void onCollabEditClicked()
   {
     // TODO
   }
+
   public void onCollabDeletedClicked()
   {
     // TODO
@@ -921,6 +998,38 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   public boolean isSendBack()
   {
     return sendBack;
+  }
+
+  /**
+   * @return the dragAndDropTree
+   */
+  public boolean isDragAndDropTree()
+  {
+    return dragAndDropTree;
+  }
+
+  /**
+   * @param dragAndDropTree the dragAndDropTree to set
+   */
+  public void setDragAndDropTree(boolean dragAndDropTree)
+  {
+    this.dragAndDropTree = dragAndDropTree;
+  }
+
+  /**
+   * @return the codeSystemVersion
+   */
+  public CodeSystemVersion getCodeSystemVersion()
+  {
+    return codeSystemVersion;
+  }
+
+  /**
+   * @return the valueSetVersion
+   */
+  public ValueSetVersion getValueSetVersion()
+  {
+    return valueSetVersion;
   }
 
 }

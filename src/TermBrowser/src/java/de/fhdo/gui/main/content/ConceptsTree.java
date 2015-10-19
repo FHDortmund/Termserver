@@ -17,6 +17,7 @@
 package de.fhdo.gui.main.content;
 
 import de.fhdo.Definitions;
+import de.fhdo.gui.main.modules.PopupCodeSystem;
 import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.DateTimeHelper;
@@ -26,6 +27,8 @@ import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.interfaces.IUpdate;
 import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.logging.LoggingOutput;
+import de.fhdo.terminologie.ws.authoring.RemoveValueSetContentRequestType;
+import de.fhdo.terminologie.ws.authoring.RemoveValueSetContentResponseType;
 import de.fhdo.terminologie.ws.authoring.UpdateConceptStatusRequestType;
 import de.fhdo.terminologie.ws.authoring.UpdateConceptStatusResponse;
 import de.fhdo.terminologie.ws.conceptassociation.ListConceptAssociationsRequestType;
@@ -51,6 +54,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.event.DropEvent;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -62,6 +66,7 @@ import org.zkoss.zul.Paging;
 import org.zkoss.zul.Tree;
 import org.zkoss.zul.TreeNode;
 import org.zkoss.zul.Treeitem;
+import org.zkoss.zul.Treerow;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.event.PagingEvent;
 import types.termserver.fhdo.de.CodeSystem;
@@ -89,8 +94,9 @@ public class ConceptsTree implements IUpdateModal
   private String searchTerm, searchCode;
   private SearchType searchOptions;
   private Boolean searchPreferred = null;
-  private boolean dragAndDrop = false;
+  private boolean dragAndDrop = false, dragAndDropTree = false;
   private IUpdate updateDropListener = null;
+  private boolean onDropListenerAdded = false;
 
   private enum DISPLAY_MODE
   {
@@ -242,6 +248,59 @@ public class ConceptsTree implements IUpdateModal
       logger.debug("set model and renderer");
       treeConcepts.setItemRenderer(new TreeitemRendererCSEV(this, searchActive, dragAndDrop, updateDropListener));
       treeConcepts.setModel(treeModel);
+
+      logger.debug("dragAndDropTree: " + dragAndDropTree);
+
+      if (dragAndDropTree)
+      {
+        treeConcepts.setDroppable("true");
+
+        // add drop possibility
+        //if (treeConcepts.getEventListeners(Events.ON_DROP) == null)
+        if(onDropListenerAdded == false)
+        {
+          logger.debug("add ONDROP listener");
+          
+          treeConcepts.addEventListener(Events.ON_DROP, new EventListener<DropEvent>()
+          {
+            public void onEvent(DropEvent event) throws Exception
+            {
+              if (updateDropListener != null)
+              {
+                logger.debug("dragged type: " + event.getDragged().getClass().getCanonicalName());
+
+                if (event.getDragged() instanceof Treerow)
+                {
+                  Treerow row = (Treerow) event.getDragged();
+
+                  logger.debug("dragged type row.getParent(): " + event.getDragged().getClass().getCanonicalName());
+                  if (row.getParent() instanceof Treeitem)
+                  {
+                    CodeSystemEntityVersion csev = ((Treeitem) row.getParent()).getValue();
+
+                  //Object target = event.getTarget();
+                    //if (target instanceof Tree)
+                    {
+                      // add mapping
+                      CodeSystemEntityVersionAssociation cseva = new CodeSystemEntityVersionAssociation();
+                      cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(csev);
+                      cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId2(null);
+
+                      updateDropListener.update(cseva);
+                    }
+                  }
+                }
+              }
+              else
+                logger.debug("Dropped, but updateListener not set");
+
+            }
+          });
+          
+          onDropListenerAdded = true;
+        }
+        else logger.debug("ONDROP listener already added");
+      }
     }
 
     showMessage(msg);
@@ -505,7 +564,17 @@ public class ConceptsTree implements IUpdateModal
   {
     CodeSystemEntityVersion csev = getSelection();
     if (csev != null)
-      deleteConcept(csev.getVersionId());
+    {
+      if(contentType == CONTENT_TYPE.VALUESET)
+      {
+        // remove from value set
+        removeConceptFromValueset(csev.getVersionId());
+      }
+      else
+      {
+        deleteConcept(csev.getVersionId());
+      }
+    }
   }
 
   public void deleteConcept(long csev_id)
@@ -527,6 +596,65 @@ public class ConceptsTree implements IUpdateModal
       request.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev);
 
       UpdateConceptStatusResponse.Return response = WebServiceHelper.updateConceptStatus(request);
+
+      if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
+      {
+        // remove item from tree
+        Treeitem treeItem = treeConcepts.getSelectedItem();
+        if (treeItem != null)
+        {
+          TreeNode selectedTreeNode = (TreeNode) treeItem.getAttribute("treenode");
+
+          if (selectedTreeNode != null)
+          {
+            TreeNode parentNode = selectedTreeNode.getParent();
+            logger.debug("Anzahl Node-Kinder: " + parentNode.getChildCount());
+            if (parentNode.getChildCount() > 1)
+            {
+              parentNode.remove(selectedTreeNode);
+            }
+            else
+            {
+              // Sonderfall (!)
+              treeItem.detach();
+              parentNode.remove(selectedTreeNode);
+            }
+          }
+        }
+
+      }
+      else
+      {
+        Messagebox.show(response.getReturnInfos().getMessage());
+      }
+    }
+
+  }
+  
+  public void removeConceptFromValueset(long csev_id)
+  {
+    logger.debug("removeConceptFromValueset, csev-id: " + csev_id + ", vsv-id: " + valueSetVersionId);
+
+    if (Messagebox.show(Labels.getLabel("common.removeConcept"), Labels.getLabel("treeitemRendererCSEV.miRemoveFromVS"), Messagebox.YES | Messagebox.NO, Messagebox.QUESTION)
+        == Messagebox.YES)
+    {
+      RemoveValueSetContentRequestType request = new RemoveValueSetContentRequestType();
+      request.setLoginToken(SessionHelper.getSessionId());
+      
+      // add valueset to request
+      request.setValueSet(new ValueSet());
+      ValueSetVersion vsv = new ValueSetVersion();
+      vsv.setVersionId(valueSetVersionId);
+      request.getValueSet().getValueSetVersions().add(vsv);
+      
+      // add csev-id to request
+      CodeSystemEntityVersion csev = new CodeSystemEntityVersion();
+      csev.setVersionId(csev_id);
+      CodeSystemEntity cse = new CodeSystemEntity();
+      cse.getCodeSystemEntityVersions().add(csev);
+      request.getCodeSystemEntity().add(cse);
+      
+      RemoveValueSetContentResponseType response = WebServiceHelper.removeValueSetContent(request);
 
       if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
       {
@@ -993,7 +1121,7 @@ public class ConceptsTree implements IUpdateModal
       {
         CodeSystemEntity cse = (CodeSystemEntity) o;
 
-      //TreeNode newTreeNode = new TreeNode(csev);
+        //TreeNode newTreeNode = new TreeNode(csev);
         //TreeNode tn = new DefaultTreeNode(null, createTreeNodeCSEList(cseList));
         CodeSystemEntityVersion csev = cse.getCodeSystemEntityVersions().get(0);
         csev.setCodeSystemEntity(cse);
@@ -1088,7 +1216,7 @@ public class ConceptsTree implements IUpdateModal
             tnRoot.add(tn);
           }
 
-        //treeConcepts.getModel().
+          //treeConcepts.getModel().
           // addChildElement
         }
 
@@ -1224,5 +1352,21 @@ public class ConceptsTree implements IUpdateModal
   public void setUpdateDropListener(IUpdate updateDropListener)
   {
     this.updateDropListener = updateDropListener;
+  }
+
+  /**
+   * @return the dragAndDropTree
+   */
+  public boolean isDragAndDropTree()
+  {
+    return dragAndDropTree;
+  }
+
+  /**
+   * @param dragAndDropTree the dragAndDropTree to set
+   */
+  public void setDragAndDropTree(boolean dragAndDropTree)
+  {
+    this.dragAndDropTree = dragAndDropTree;
   }
 }

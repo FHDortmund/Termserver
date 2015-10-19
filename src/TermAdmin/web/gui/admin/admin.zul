@@ -19,6 +19,7 @@
                       onSelect="win.onNavigationSelect(event)">
                 <tabs id="tabbox_tabs" width="160px">
                   <tab label="Benutzer" id="tabBenutzer"/>
+                  <tab label="Terminologien" id="tabCS"/>
                   <tab label="Terminologie-Import" id="tabImport"/>
                   <tab label="Domänen" id="tabDomains"/>
                   <tab label="Metadaten" id="tabMetadata"/>
@@ -32,6 +33,9 @@
                 <tabpanels id="tabbox_tabpanels">
                   <tabpanel>
                     <include id="incBenutzer"/>
+                  </tabpanel>
+                  <tabpanel>
+                    <include id="incCS"/>
                   </tabpanel>
                   <tabpanel>
                     <include id="incImport"/>
