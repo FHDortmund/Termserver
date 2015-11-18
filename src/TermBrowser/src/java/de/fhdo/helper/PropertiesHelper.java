@@ -23,9 +23,9 @@ import java.util.Properties;
  *
  * @author Robert Mützner <robert.muetzner@fh-dortmund.de>
  */
-
 public class PropertiesHelper
 {
+
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
   private static PropertiesHelper instance;
 
@@ -49,15 +49,15 @@ public class PropertiesHelper
   private String termserverUrl;
   private String termserverServiceName;
   private boolean collaborationActive = false;
-  
+
   private boolean guiCodesystemMinimal;
   private boolean guiCodesystemVersionMinimal;
   private boolean guiConceptMinimal;
-  
+
   private boolean guiCodesystemExpandable;
   private boolean guiCodesystemVersionExpandable;
   private boolean guiConceptExpandable;
-  
+
   private boolean guiConceptShowMetadata;
   private boolean guiConceptShowTranslations;
   private boolean guiConceptShowCrossMappings;
@@ -66,28 +66,28 @@ public class PropertiesHelper
 
   private boolean guiShowCodesystems;
   private boolean guiShowValuesets;
-  
+
   private boolean guiEditCodesystemsShowNew;
   private boolean guiEditCodesystemsShowEdit;
   private boolean guiEditCodesystemsShowDetails;
-  
+
   private boolean guiEditConceptsShowNewRoot;
   private boolean guiEditConceptsShowNewSub;
   private boolean guiEditConceptsShowEdit;
   private boolean guiEditConceptsShowDelete;
   private boolean guiEditConceptsShowDetails;
-  
+
   private int expandTreeAutoCount = 50;
-  
+
   private long associationTaxonomyDefaultVersionId = 4;
   private long associationCrossmappingDefaultVersionId = 0;
   private long associationLinkDefaultVersionId = 0;
-  
+
   private boolean guiShowOnlyVisibleConcepts;
   private boolean guiAllowShowingInvisibleConcepts;
-  
-  
-  
+
+  private String imgPath;
+
   public static PropertiesHelper getInstance()
   {
     if (instance == null)
@@ -100,7 +100,7 @@ public class PropertiesHelper
   {
     loadData();
   }
-  
+
   public void reset()
   {
     loadData();
@@ -122,49 +122,52 @@ public class PropertiesHelper
       login_classname = config.getProperty("login.classname", "de.fhdo.authorization.UsernamePasswordMethod");
       termserverUrl = config.getProperty("termserver.url", "http://localhost:8080/");
       termserverServiceName = config.getProperty("termserver.serviceName", "TermServer/");
-      
+
+      imgPath = config.getProperty("images.path", "/rsc/img/");
+      configureImages();
+
       collaborationActive = getBooleanValue(config.getProperty("collaboration.active", "false"));
-      
+
       guiCodesystemExpandable = getBooleanValue(config.getProperty("gui.codesystem.expandable", "false"));
       guiCodesystemMinimal = getBooleanValue(config.getProperty("gui.codesystem.minimal", "false"));
       guiCodesystemVersionExpandable = getBooleanValue(config.getProperty("gui.codesystem_version.expandable", "false"));
       guiCodesystemVersionMinimal = getBooleanValue(config.getProperty("gui.codesystem_version.minimal", "false"));
       guiConceptExpandable = getBooleanValue(config.getProperty("gui.concept.expandable", "false"));
       guiConceptMinimal = getBooleanValue(config.getProperty("gui.concept.minimal", "false"));
-      
+
       guiConceptShowMetadata = getBooleanValue(config.getProperty("gui.concept.showMetadata", "true"));
       guiConceptShowTranslations = getBooleanValue(config.getProperty("gui.concept.showTranslations", "true"));
       guiConceptShowCrossMappings = getBooleanValue(config.getProperty("gui.concept.showCrossMappings", "true"));
       guiConceptShowLinkedConcepts = getBooleanValue(config.getProperty("gui.concept.showLinkedConcepts", "true"));
       guiConceptShowOntologies = getBooleanValue(config.getProperty("gui.concept.showOntologies", "true"));
-      
+
       associationTaxonomyDefaultVersionId = getLongValue(config.getProperty("association.taxonomy.default.versionId", "4"), 4);
       associationCrossmappingDefaultVersionId = getLongValue(config.getProperty("association.crossmapping.default.versionId", "0"), 0);
       associationLinkDefaultVersionId = getLongValue(config.getProperty("association.link.default.versionId", "0"), 0);
-      
+
       expandTreeAutoCount = getIntValue("gui.tree.expandTreeAutoCount", 50);
-      
+
       guiShowOnlyVisibleConcepts = getBooleanValue(config.getProperty("gui.showOnlyVisibleConcepts", "true"));
       guiAllowShowingInvisibleConcepts = getBooleanValue(config.getProperty("gui.allowShowingInvisibleConcepts", "false"));
-      
+
       guiShowCodesystems = getBooleanValue(config.getProperty("gui.showCodesystems", "true"));
       guiShowValuesets = getBooleanValue(config.getProperty("gui.showValuesets", "true"));
       guiEditCodesystemsShowNew = getBooleanValue(config.getProperty("gui.edit.codesystems.showNew", "true"));
       guiEditCodesystemsShowEdit = getBooleanValue(config.getProperty("gui.edit.codesystems.showEdit", "true"));
       guiEditCodesystemsShowDetails = getBooleanValue(config.getProperty("gui.edit.codesystems.showDetails", "true"));
-      
+
       guiEditConceptsShowNewRoot = getBooleanValue(config.getProperty("gui.edit.concepts.showNewRoot", "true"));
       guiEditConceptsShowNewSub = getBooleanValue(config.getProperty("gui.edit.concepts.showNewSub", "true"));
       guiEditConceptsShowEdit = getBooleanValue(config.getProperty("gui.edit.concepts.showEdit", "true"));
       guiEditConceptsShowDelete = getBooleanValue(config.getProperty("gui.edit.concepts.showDelete", "true"));
       guiEditConceptsShowDetails = getBooleanValue(config.getProperty("gui.edit.concepts.showDetails", "true"));
-      
+
       logger.debug("login_classname: " + login_classname);
       logger.debug("termserverUrl: " + termserverUrl);
       logger.debug("termserverServiceName: " + termserverServiceName);
       logger.debug("collaborationActive: " + collaborationActive);
       logger.debug("expandTreeAutoCount: " + expandTreeAutoCount);
-      
+
       logger.debug("guiShowOnlyVisibleConcepts: " + guiShowOnlyVisibleConcepts);
       logger.debug("guiAllowShowingInvisibleConcepts: " + guiAllowShowingInvisibleConcepts);
     }
@@ -184,14 +187,14 @@ public class PropertiesHelper
     {
       return Boolean.parseBoolean(s);
     }
-    catch(Exception ex)
+    catch (Exception ex)
     {
-      
+
     }
 
     return false;
   }
-  
+
   private long getLongValue(String s, long defaultValue)
   {
     if (s == null || s.length() == 0)
@@ -201,18 +204,32 @@ public class PropertiesHelper
     {
       return Long.parseLong(s);
     }
-    catch(Exception ex)
+    catch (Exception ex)
     {
-      
+
     }
 
     return defaultValue;
   }
-  
+
+  private void configureImages()
+  {
+    if (imgPath != null)
+    {
+      if (imgPath.equalsIgnoreCase("/rsc/img/") == false)
+      {
+        // copy images in original folder
+        
+        
+      }
+    }
+  }
+
   private int getIntValue(String s)
   {
     return getIntValue(s, 0);
   }
+
   private int getIntValue(String s, int defaultValue)
   {
     if (s == null || s.length() == 0)
@@ -222,9 +239,9 @@ public class PropertiesHelper
     {
       return Integer.parseInt(s);
     }
-    catch(Exception ex)
+    catch (Exception ex)
     {
-      
+
     }
 
     return defaultValue;
@@ -335,7 +352,8 @@ public class PropertiesHelper
   }
 
   /**
-   * @param associationTaxonomyDefaultVersionId the associationTaxonomyDefaultVersionId to set
+   * @param associationTaxonomyDefaultVersionId the
+   * associationTaxonomyDefaultVersionId to set
    */
   public void setAssociationTaxonomyDefaultVersionId(long associationTaxonomyDefaultVersionId)
   {
@@ -351,7 +369,8 @@ public class PropertiesHelper
   }
 
   /**
-   * @param associationCrossmappingDefaultVersionId the associationCrossmappingDefaultVersionId to set
+   * @param associationCrossmappingDefaultVersionId the
+   * associationCrossmappingDefaultVersionId to set
    */
   public void setAssociationCrossmappingDefaultVersionId(long associationCrossmappingDefaultVersionId)
   {
@@ -367,7 +386,8 @@ public class PropertiesHelper
   }
 
   /**
-   * @param associationLinkDefaultVersionId the associationLinkDefaultVersionId to set
+   * @param associationLinkDefaultVersionId the associationLinkDefaultVersionId
+   * to set
    */
   public void setAssociationLinkDefaultVersionId(long associationLinkDefaultVersionId)
   {
@@ -508,6 +528,22 @@ public class PropertiesHelper
   public boolean isGuiEditConceptsShowDetails()
   {
     return guiEditConceptsShowDetails;
+  }
+
+  /**
+   * @return the imgPathRel
+   */
+  public String getImgPath()
+  {
+    return imgPath;
+  }
+
+  /**
+   * @param imgPath the imgPath to set
+   */
+  public void setImgPath(String imgPath)
+  {
+    this.imgPath = imgPath;
   }
 
 }

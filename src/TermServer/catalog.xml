@@ -2,8 +2,8 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
     <system systemId="file:/C:/FH/Projekte/Termserver/src/TerminologieserverCTS2/schemes/claml_Schema.xsd" uri="src/conf/xml-resources/jaxb/clamlBindingXSD/claml_Schema.xsd"/>
     <system systemId="file:/D:/FH_Projekte/Terminologieserver/src/TerminologieserverCTS2/schemes/keytabs.xsd" uri="src/conf/xml-resources/jaxb/kbvKeytabs/keytabs.xsd"/>
-    <system systemId="http://193.25.22.68:8080/LoginServer/Authorization?wsdl" uri="src/conf/xml-resources/web-service-references/Authorization/wsdl/193.25.22.68_8080/LoginServer/Authorization.wsdl"/>
-    <system systemId="http://193.25.22.68:8080/LoginServer/Authorization?xsd=1" uri="src/conf/xml-resources/web-service-references/Authorization/wsdl/193.25.22.68_8080/LoginServer/Authorization.xsd_1.xsd"/>
+    <!--<system systemId="http://193.25.22.68:8080/LoginServer/Authorization?wsdl" uri="src/conf/xml-resources/web-service-references/Authorization/wsdl/193.25.22.68_8080/LoginServer/Authorization.wsdl"/>
+    <system systemId="http://193.25.22.68:8080/LoginServer/Authorization?xsd=1" uri="src/conf/xml-resources/web-service-references/Authorization/wsdl/193.25.22.68_8080/LoginServer/Authorization.xsd_1.xsd"/>-->
     <!--<system systemId="file:/C:/FH/FH/FH/Standards/IHE/HPD%20(Health%20Provider%20Directory)/WSDL/ihe-profiles/src/wsdl/SVS_ValueSetRepository.wsdl" uri="src/conf/xml-resources/web-services/SVS_ValueSetRepository/wsdl/SVS_ValueSetRepository.wsdl"/>
     <system systemId="file:/C:/FH/FH/FH/Standards/IHE/HPD%20(Health%20Provider%20Directory)/WSDL/ihe-profiles/src/schema/IHE/SVS.xsd" uri="src/conf/xml-resources/web-services/SVS_ValueSetRepository/schema/IHE/SVS.xsd"/>
     <system systemId="http://www.w3.org/2001/xml.xsd" uri="src/conf/xml-resources/web-services/SVS_ValueSetRepository/wsdl/www.w3.org/2001/xml.xsd"/>

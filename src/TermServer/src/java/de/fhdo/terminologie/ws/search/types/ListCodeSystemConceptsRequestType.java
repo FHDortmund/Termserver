@@ -60,6 +60,10 @@ public class ListCodeSystemConceptsRequestType
   @XmlElement(required = false)
   private Boolean loadTranslation;
   
+  @XmlElement(required = false)
+  private Boolean hierarchicalOutput;
+  
+  
   
   /**
    * @return the login
@@ -203,5 +207,21 @@ public class ListCodeSystemConceptsRequestType
   public void setLoadTranslation(Boolean loadTranslation)
   {
     this.loadTranslation = loadTranslation;
+  }
+
+  /**
+   * @return the hierarchicalOutput
+   */
+  public Boolean getHierarchicalOutput()
+  {
+    return hierarchicalOutput;
+  }
+
+  /**
+   * @param hierarchicalOutput the hierarchicalOutput to set
+   */
+  public void setHierarchicalOutput(Boolean hierarchicalOutput)
+  {
+    this.hierarchicalOutput = hierarchicalOutput;
   }
 }

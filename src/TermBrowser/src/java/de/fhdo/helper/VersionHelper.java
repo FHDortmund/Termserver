@@ -53,7 +53,7 @@ public class VersionHelper
 
     if (lastDate == null || termserverVersion.length() == 0 || (new Date().getTime() > lastDate.getTime() + RELOAD_AFTER_MS))
     {
-      logger.debug("Lade Version vom Terminologieserver (WebService-Aufruf)");
+      logger.debug("Lade Version vom Terminologieserver (WebService-Aufruf):");
 
       logger.debug("LastDate: " + lastDate);
       logger.debug("termserverVersion: " + termserverVersion);
@@ -74,6 +74,12 @@ public class VersionHelper
   {
     if (lastDate == null || termserverVersion.length() == 0 || lastDate.getTime() + RELOAD_AFTER_MS > new Date().getTime())
     {
+      logger.debug("Lade Datum vom Terminologieserver (WebService-Aufruf):");
+
+      logger.debug("LastDate: " + lastDate);
+      logger.debug("termserverVersion: " + termserverVersion);
+      logger.debug("RELOAD_AFTER_MS: " + RELOAD_AFTER_MS);
+      
       GetTermserverVersionResponse.Return ret = WebServiceHelper.getVersion();
       termserverVersion = ret.getVersion();
       termserverDate = DateTimeHelper.ConvertXMLGregorianCalenderToDate(ret.getDate());

@@ -20,6 +20,7 @@ import de.fhdo.terminologie.Definitions;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.AssociationType;
 import de.fhdo.terminologie.db.hibernate.CodeSystemConcept;
+import de.fhdo.terminologie.db.hibernate.CodeSystemConceptTranslation;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntity;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersion;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersionAssociation;
@@ -165,11 +166,46 @@ public class ListConceptAssociations
           parameterHelper.addParameter("csev.", "statusVisibility", Definitions.STATUS_CODES.ACTIVE.getCode());
         }
 
+        // Translations
+        String languageCd = "";
+
+        if (parameter.getCodeSystemEntity().getCodeSystemEntityVersions() != null
+                && parameter.getCodeSystemEntity().getCodeSystemEntityVersions().size() > 0)
+        {
+          CodeSystemEntityVersion csev = (CodeSystemEntityVersion) parameter.getCodeSystemEntity().getCodeSystemEntityVersions().toArray()[0];
+          if (loggedIn)
+          {
+            parameterHelper.addParameter("csev.", "statusVisibilityDate", csev.getStatusVisibilityDate());
+            parameterHelper.addParameter("csev.", "statusVisibility", csev.getStatusVisibility());
+          }
+
+          if (csev.getCodeSystemConcepts() != null && csev.getCodeSystemConcepts().size() > 0)
+          {
+            CodeSystemConcept csc = (CodeSystemConcept) csev.getCodeSystemConcepts().toArray()[0];
+
+            if (csc.getCodeSystemConceptTranslations() != null && csc.getCodeSystemConceptTranslations().size() > 0)
+            {
+              CodeSystemConceptTranslation csct = (CodeSystemConceptTranslation) csc.getCodeSystemConceptTranslations().toArray()[0];
+
+              if (csct.getLanguageCd() != null && csct.getLanguageCd().length() > 0)
+              {
+                languageCd = csct.getLanguageCd();
+                if(languageCd != null && languageCd.length() > 0)
+                {
+                  hql += " left join term.codeSystemConceptTranslations csct ";
+                  //parameterHelper.addParameter("csct.", "languageCd", languageCd);
+                }
+              }
+            }
+          }
+        }
+        
+        logger.debug("languageCd: " + languageCd);
+        
+
         // Parameter hinzufügen (immer mit AND verbunden)
         hql += parameterHelper.getWhere("");
 
-        
-        
         if (logger.isDebugEnabled())
           logger.debug("HQL: " + hql);
 
@@ -178,10 +214,13 @@ public class ListConceptAssociations
 
         // Die Parameter können erst hier gesetzt werden (übernimmt Helper)
         parameterHelper.applyParameter(q);
+        
+        //if(languageCd != null && languageCd.length() > 0)
+        //  q.setString("languageCd", languageCd);
 
         // Datenbank-Aufruf durchführen
         list = (java.util.List<CodeSystemConcept>) q.list();
-        
+
         if (logger.isDebugEnabled())
           logger.debug("size: " + list.size());
 
@@ -192,12 +231,12 @@ public class ListConceptAssociations
         // Ergebnisliste befüllen
         //Iterator<CodeSystemConcept> it = list.iterator();
         //while (it.hasNext())
-        for(CodeSystemConcept term : list)
+        for (CodeSystemConcept csc : list)
         {
           // CodeSystemEntityVersion lesen
-          CodeSystemEntityVersion csev = term.getCodeSystemEntityVersion();
-          
-          logger.debug("term found: " + term.getCode());
+          CodeSystemEntityVersion csev = csc.getCodeSystemEntityVersion();
+
+          logger.debug("term found: " + csc.getCode());
 
           if (csev != null)
           {
@@ -283,9 +322,22 @@ public class ListConceptAssociations
 
             // der Version wieder das Concept hinzufügen und die Verbindungen null setzen
             csev.setCodeSystemConcepts(new HashSet<CodeSystemConcept>());
-            term.setCodeSystemEntityVersion(null);
-            term.setCodeSystemConceptTranslations(null);
-            csev.getCodeSystemConcepts().add(term);
+            csc.setCodeSystemEntityVersion(null);
+            
+            if(languageCd.length() == 0)
+            {
+              csc.setCodeSystemConceptTranslations(null);
+            }
+            else
+            {
+              // remove circle problems
+              for (CodeSystemConceptTranslation trans : csc.getCodeSystemConceptTranslations())
+              {
+                trans.setCodeSystemConcept(null);
+              }
+            }
+            
+            csev.getCodeSystemConcepts().add(csc);
 
             // Assoziation lesen und Verbindungen auf null setzen
             if (parameter.getReverse())
@@ -324,7 +376,7 @@ public class ListConceptAssociations
             else
             {
               //logger.debug("ass size: " + csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2().size());
-              
+
               if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2() != null
                       && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2().size() > 0)
               {
@@ -383,7 +435,7 @@ public class ListConceptAssociations
 
           // Die Parameter können erst hier gesetzt werden (übernimmt Helper)
           parameterHelper.applyParameter(q2);
-          
+
           logger.debug("SQL: " + q2.getQueryString());
 
           // Datenbank-Aufruf durchführen

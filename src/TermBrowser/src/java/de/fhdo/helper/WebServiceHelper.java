@@ -121,12 +121,14 @@ import types.termserver.fhdo.de.CodeSystemVersion;
  */
 public class WebServiceHelper
 {
-
+  private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
   // Administration //////////////////////////////////////////////////////////
 
   private static String optimizeUrl(String url)
   {
-    if (url.startsWith("http://") == false)
+    logger.debug("optimizeUrl: " + url);
+    
+    if (url.startsWith("http://") == false && url.startsWith("https://") == false)
       return "http://" + url;
     if (url.endsWith("/") == false)
       return url + "/";
@@ -910,7 +912,7 @@ public class WebServiceHelper
     }
     catch (Exception ex)
     {
-      Logger.getLogger(WebServiceHelper.class.getName()).log(Level.SEVERE, null, ex);
+      LoggingOutput.outputException(ex, WebServiceHelper.class);
 
       // Standard Service ?ffnen
       service = new Search_Service();
@@ -1280,9 +1282,15 @@ public class WebServiceHelper
     Search port;
     try
     {
-      String url = PropertiesHelper.getInstance().getTermserverUrl();
+      String s_url = optimizeUrl(PropertiesHelper.getInstance().getTermserverUrl());
+      String s_url2 = s_url + PropertiesHelper.getInstance().getTermserverServiceName() + "Search?wsdl";
       // Service mit bestimmter URL ?ffnen
-      service = new Search_Service(new URL(optimizeUrl(url) + PropertiesHelper.getInstance().getTermserverServiceName() + "Search?wsdl"),
+      //URL url = 
+      
+      logger.debug("getVersion - URL: " + s_url2);
+      
+      //service = new Search_Service(new URL(optimizeUrl(url) + PropertiesHelper.getInstance().getTermserverServiceName() + "Search?wsdl"),
+      service = new Search_Service(new URL(s_url2),
               new QName("http://search.ws.terminologie.fhdo.de/", "Search"));
     }
     catch (Exception ex)
@@ -1447,7 +1455,7 @@ public class WebServiceHelper
     catch (Exception ex)
     {
       Logger.getLogger(WebServiceHelper.class.getName()).log(Level.SEVERE, null, ex);
-
+ 
       // Standard Service ?ffnen
       service = new Authoring_Service();
     }
