@@ -38,7 +38,7 @@ public class DB
   // =================================================================
   // Die DB-Versionsnummer muss bei jeder Änderung hochgesetzt werden!
   // =================================================================
-  private static final int CURRENT_DB_VERSION = 3;
+  private static final int CURRENT_DB_VERSION = 4;
   // =================================================================
 
   /**
@@ -87,6 +87,19 @@ public class DB
         if (currentVersion < 3)
         {
           hb_session.createSQLQuery("ALTER TABLE value_set_version ADD COLUMN virtualCodeSystemVersionId BIGINT NULL DEFAULT NULL;").executeUpdate();
+          
+          updated = true;
+        }
+        
+        if (currentVersion < 4)
+        {
+          hb_session.createSQLQuery("ALTER TABLE licenced_user CHANGE COLUMN validFrom validFrom TIMESTAMP NULL DEFAULT NULL;").executeUpdate();
+          hb_session.createSQLQuery("ALTER TABLE licenced_user CHANGE COLUMN validTo validTo TIMESTAMP NULL DEFAULT NULL;").executeUpdate();
+          //hb_session.createSQLQuery("ALTER TABLE licenced_user MODIFY validTo TIMESTAMP;").executeUpdate();
+          
+          //CHANGE COLUMN `validFrom` `validFrom` TIMESTAMP NULL DEFAULT NULL COMMENT '' ,
+          //CHANGE COLUMN `validTo` `validTo` TIMESTAMP NULL DEFAULT NULL COMMENT '' 
+
           
           updated = true;
         }

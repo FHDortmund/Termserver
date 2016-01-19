@@ -18,6 +18,7 @@ package de.fhdo.terminologie.ws.search;
 
 import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.Definitions;
+import de.fhdo.terminologie.Definitions.ASSOCIATION_KIND;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.AssociationType;
 import de.fhdo.terminologie.db.hibernate.CodeSystem;
@@ -140,6 +141,12 @@ public class ListCodeSystemConcepts
       {
         LoggingOutput.outputException(e, this);
       }
+    }
+    
+    if(loggedIn)
+    {
+      if (parameter.getPagingParameter() != null && parameter.getPagingParameter().getUserPaging() != null)
+        maxPageSize = Integer.valueOf(parameter.getPagingParameter().getPageSize());
     }
 
     boolean traverseConceptsToRoot = false;
@@ -354,6 +361,8 @@ public class ListCodeSystemConcepts
             CodeSystemEntityVersion csev = (CodeSystemEntityVersion) parameter.getCodeSystemEntity().getCodeSystemEntityVersions().toArray()[0];
             parameterHelper.addParameter("csev.", "statusVisibilityDate", csev.getStatusVisibilityDate());
             parameterHelper.addParameter("csev.", "statusVisibility", csev.getStatusVisibility());
+
+            parameterHelper.addParameter("csev.", "isLeaf", csev.getIsLeaf());
 
             if (csev.getCodeSystemConcepts() != null && csev.getCodeSystemConcepts().size() > 0)
             {
@@ -759,6 +768,8 @@ public class ListCodeSystemConcepts
               }
             }
 
+            
+
             csev.setCodeSystemConcepts(new HashSet<CodeSystemConcept>());
             csev.getCodeSystemConcepts().add(csc);
             cse.setCodeSystemEntityVersions(new HashSet<CodeSystemEntityVersion>());
@@ -773,8 +784,14 @@ public class ListCodeSystemConcepts
 
             if (hierarchicalOutput)
             {
-              addSubConcepts(csev, hb_session, parameter);
+              addSubConcepts(csev, hb_session, parameter, 999);
             }
+            if (parameter.getUpperLevels() != null && parameter.getUpperLevels() > 0)
+            {
+              //addSubConcepts(csev, hb_session, parameter, 1, true);
+              loadUpperConcepts(csev, hb_session, parameter.getUpperLevels());
+            }
+            
           }
 
           // Treffermenge prüfen            
@@ -867,15 +884,31 @@ public class ListCodeSystemConcepts
     return response;
   }
 
-  private void addSubConcepts(CodeSystemEntityVersion csev, Session hb_session, ListCodeSystemConceptsRequestType parameter)
+  private void addSubConcepts(CodeSystemEntityVersion csev, Session hb_session, ListCodeSystemConceptsRequestType parameter, int level)
   {
+    addSubConcepts(csev, hb_session, parameter, level, false);
+  }
+
+  private void addSubConcepts(CodeSystemEntityVersion csev, Session hb_session, ListCodeSystemConceptsRequestType parameter, int level, boolean reverse)
+  {
+    if(level <= 0)
+      return; // finished
+    
+    logger.debug("addSubConcepts for csev-id: " + csev.getVersionId() + ", reverse: " + reverse + ", level: " + level);
+    
     // build request
     ListConceptAssociationsRequestType request = new ListConceptAssociationsRequestType();
     request.setLoginToken(parameter.getLoginToken());
 
+    if (reverse)
+      request.setReverse(reverse);
+
     //request.setCodeSystemEntity(parameter.getCodeSystemEntity());
     //if(request.getCodeSystemEntity() == null)
     request.setCodeSystemEntity(new CodeSystemEntity());
+    
+    request.setCodeSystemEntityVersionAssociation(new CodeSystemEntityVersionAssociation());
+    request.getCodeSystemEntityVersionAssociation().setAssociationKind(ASSOCIATION_KIND.TAXONOMY.getCode());
 
     CodeSystemEntityVersion csevRequest = new CodeSystemEntityVersion();
     csevRequest.setVersionId(csev.getVersionId());
@@ -887,6 +920,7 @@ public class ListCodeSystemConcepts
       CodeSystemEntityVersion csevParameter = (CodeSystemEntityVersion) parameter.getCodeSystemEntity().getCodeSystemEntityVersions().toArray()[0];
       if (csevParameter.getCodeSystemConcepts() != null)
       {
+        logger.debug("special filter!");
         csevRequest.setCodeSystemConcepts(csevParameter.getCodeSystemConcepts());
       }
     }
@@ -894,18 +928,33 @@ public class ListCodeSystemConcepts
     // load sub concepts via intern webservice
     ListConceptAssociations lca = new ListConceptAssociations();
     ListConceptAssociationsResponseType response = lca.ListConceptAssociations(request, hb_session, "");
+    
+    logger.debug("lca-response: " + response.getReturnInfos().getMessage() + ", size: " + response.getReturnInfos().getCount());
 
     HashSet<CodeSystemEntityVersionAssociation> newList = new HashSet<CodeSystemEntityVersionAssociation>(response.getCodeSystemEntityVersionAssociation());
     for (CodeSystemEntityVersionAssociation ass : newList)
     {
-      if (ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId2() != null)
+      if (reverse)
       {
-        addSubConcepts(ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId2(), hb_session, parameter);
+        if (ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId1() != null)
+        {
+          addSubConcepts(ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId1(), hb_session, parameter, level - 1, reverse);
+        }
+      }
+      else
+      {
+        if (ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId2() != null)
+        {
+          addSubConcepts(ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId2(), hb_session, parameter, level - 1, reverse);
+        }
       }
     }
 
     //csev.setCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2(new HashSet<CodeSystemEntityVersionAssociation>(response.getCodeSystemEntityVersionAssociation()));
-    csev.setCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2(newList);
+    logger.debug("adding size: " + newList.size());
+    if (reverse)
+      csev.setCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1(newList);
+    else csev.setCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2(newList);
 
     // add translations
     if (parameter.isLoadTranslation() != null && parameter.isLoadTranslation().booleanValue())
@@ -927,13 +976,13 @@ public class ListCodeSystemConcepts
 
   private void loadTranslationToConcept(CodeSystemEntityVersion csev, Session hb_session)
   {
-    if(csev.getCodeSystemConcepts() == null || csev.getCodeSystemConcepts().size() == 0)
+    if (csev.getCodeSystemConcepts() == null || csev.getCodeSystemConcepts().size() == 0)
       return;
-    
+
     CodeSystemConcept csc = (CodeSystemConcept) csev.getCodeSystemConcepts().toArray()[0];
     loadTranslationToConcept(csc, hb_session);
   }
-  
+
   private void loadTranslationToConcept(CodeSystemConcept csc, Session hb_session)
   {
     String hql = "from CodeSystemConceptTranslation csct "
@@ -948,6 +997,46 @@ public class ListCodeSystemConcepts
     {
       trans.setCodeSystemConcept(null);
     }
+  }
+  
+  private void loadUpperConcepts(CodeSystemEntityVersion csev, Session hb_session, int level)
+  {
+    logger.debug("loadUpperConcepts for: " + csev.getVersionId() + ", level: " + level);
+    
+    String hql = "from CodeSystemEntityVersionAssociation cseva "
+            + " where codeSystemEntityVersionId2=:csev_id AND associationKind=" + ASSOCIATION_KIND.TAXONOMY.getCode();
+
+    Query query = hb_session.createQuery(hql);
+    query.setLong("csev_id", csev.getVersionId());
+    
+    csev.setCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1(
+            new HashSet<CodeSystemEntityVersionAssociation>(query.list()));
+    
+    // remove circle problems
+    for (CodeSystemEntityVersionAssociation cseva : csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1())
+    {
+      cseva.setAssociationType(null);
+      cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId2(null);
+      cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setAssociationTypes(null);
+      
+      cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setCodeSystemEntity(null);
+      cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1(null);
+      cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2(null);
+      cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setCodeSystemMetadataValues(null);
+      cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setConceptValueSetMemberships(null);
+      cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setValueSetMetadataValues(null);
+      
+      //cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setCodeSystemConcepts(null);
+      for(CodeSystemConcept csc : cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().getCodeSystemConcepts())
+      {
+        csc.setCodeSystemConceptTranslations(null);
+        csc.setCodeSystemEntityVersion(null);
+      }
+      
+      if(level > 1)
+        loadUpperConcepts(cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1(), hb_session, level -1);
+    }
+    
   }
 
   private void addTranslationToConcept(CodeSystemConcept csc, Object[] item)

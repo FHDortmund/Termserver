@@ -294,9 +294,13 @@ public class LizenzDetails extends Window implements AfterCompose, IGenericListA
 
       // Datumsangaben speichern
       if (showValidFrom == false)
+      {
         licencedUser.setValidFrom(null);
+      }
       if (showValidTo == false)
+      {
         licencedUser.setValidTo(null);
+      }
 
       // Lizenz-Typ
       if (showLicenceType)

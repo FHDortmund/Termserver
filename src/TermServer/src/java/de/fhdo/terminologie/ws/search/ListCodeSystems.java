@@ -149,11 +149,29 @@ public class ListCodeSystems
             hql += " AND ";
           else hql += " WHERE ";
           
-          hql += " (csv.underLicence = 0 OR ";
+          /*hql += " (csv.underLicence = 0 OR ";
           hql += " (lu.validFrom < '" + HQLParameterHelper.getSQLDateStr(new java.util.Date()) + "'";
           hql += " AND lu.validTo > '" + HQLParameterHelper.getSQLDateStr(new java.util.Date()) + "'";
           hql += " AND lu.id.codeSystemVersionId=csv.versionId";
           hql += " AND lu.id.userId=" + loginInfoType.getUserId();
+          hql += " ))";*/
+          hql += " (csv.underLicence = 0 OR ";
+          hql += " ";
+          hql += " (";
+          hql += "   (";
+          hql += "     (";
+          hql += "       lu.validFrom is NULL OR ";
+          hql += "       lu.validFrom < '" + HQLParameterHelper.getSQLDateStr(new java.util.Date()) + "'";
+          hql += "     )";
+          hql += "     AND";
+          hql += "     (";
+          hql += "       lu.validTo is NULL OR ";
+          hql += "       lu.validTo > '" + HQLParameterHelper.getSQLDateStr(new java.util.Date()) + "'";
+          hql += "     )";
+          // hql += "       AND lu.validTo > '" + HQLParameterHelper.getSQLDateStr(new java.util.Date()) + "'";
+          hql += "   )";
+          hql += "   AND lu.id.codeSystemVersionId=csv.versionId";
+          hql += "   AND lu.id.userId=" + loginInfoType.getUserId();
           hql += " ))";
         }
         

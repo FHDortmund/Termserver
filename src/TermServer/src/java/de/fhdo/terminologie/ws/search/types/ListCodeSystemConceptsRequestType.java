@@ -63,6 +63,10 @@ public class ListCodeSystemConceptsRequestType
   @XmlElement(required = false)
   private Boolean hierarchicalOutput;
   
+  @XmlElement(required = false)
+  private Integer upperLevels;
+  
+  
   
   
   /**
@@ -223,5 +227,21 @@ public class ListCodeSystemConceptsRequestType
   public void setHierarchicalOutput(Boolean hierarchicalOutput)
   {
     this.hierarchicalOutput = hierarchicalOutput;
+  }
+
+  /**
+   * @return the upperLevels
+   */
+  public Integer getUpperLevels()
+  {
+    return upperLevels;
+  }
+
+  /**
+   * @param upperLevels the upperLevels to set
+   */
+  public void setUpperLevels(Integer upperLevels)
+  {
+    this.upperLevels = upperLevels;
   }
 }

@@ -20,10 +20,13 @@ import de.fhdo.collaboration.db.HibernateUtil;
 import de.fhdo.collaboration.db.classes.Collaborationuser;
 import de.fhdo.gui.main.TreeAndContent;
 import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.hibernate.Session;
 import org.zkoss.zk.ui.Sessions;
+import types.termserver.fhdo.de.CodeSystem;
+import types.termserver.fhdo.de.DomainValue;
 
 /**
  *
@@ -43,6 +46,11 @@ public class SessionHelper
     session.setAttribute("user_name", "");
     session.setAttribute("is_admin", false);
     session.setAttribute("session_id", "");
+
+    // force reloading cs list for navigation (licences may changed)
+    session.setAttribute("CodesystemList", null);
+    session.setAttribute("DomainValueList", null);
+    session.setAttribute("CodesystemListCount", 0);
 
     // RightsHelper.getInstance().clear();
   }
@@ -249,7 +257,7 @@ public class SessionHelper
     long id = getCollaborationUserID(httpSession);
     return id > 0;
   }
-  
+
   public static boolean isCollaborationLoggedIn()
   {
     long id = getCollaborationUserID();
@@ -296,33 +304,33 @@ public class SessionHelper
     else
       return null;
   }
-  
+
   public static boolean getBoolValue(String Name, boolean Default)
   {
     org.zkoss.zk.ui.Session session = Sessions.getCurrent();
     if (session != null)
     {
       Object o = session.getAttribute(Name);
-      if(o != null)
-        return (Boolean)o;
+      if (o != null)
+        return (Boolean) o;
     }
-    
+
     return Default;
   }
-  
+
   public static String getStringValue(String Name, String Default)
   {
     org.zkoss.zk.ui.Session session = Sessions.getCurrent();
     if (session != null)
     {
       Object o = session.getAttribute(Name);
-      if(o != null)
+      if (o != null)
         return o.toString();
     }
-    
+
     return Default;
   }
-  
+
   public static String getStringValue(String Name)
   {
     return getStringValue(Name, "");
@@ -403,6 +411,67 @@ public class SessionHelper
     return active;
   }
 
+  public static List<CodeSystem> getCodesystemList()
+  {
+    return getCodesystemList(null);
+  }
+
+  public static List<CodeSystem> getCodesystemList(HttpSession httpSession)
+  {
+    Object o = getValue("CodesystemList", httpSession);
+    if (o != null)
+    {
+      return (List<CodeSystem>) o;
+    }
+    return null;
+    //return new LinkedList<CodeSystem>();
+  }
+
+  public static void setCodesystemList(List<CodeSystem> list)
+  {
+    setValue("CodesystemList", list);
+  }
+
+  public static List<DomainValue> getDomainValueList()
+  {
+    return getDomainValueList(null);
+  }
+
+  public static List<DomainValue> getDomainValueList(HttpSession httpSession)
+  {
+    Object o = getValue("DomainValueList", httpSession);
+    if (o != null)
+    {
+      return (List<DomainValue>) o;
+    }
+    return null;
+  }
+
+  public static void setDomainValueList(List<DomainValue> list)
+  {
+    setValue("DomainValueList", list);
+  }
+
+  public static int getCodesystemListCount()
+  {
+    return getCodesystemListCount(null);
+  }
+
+  public static int getCodesystemListCount(HttpSession httpSession)
+  {
+    Object o = getValue("CodesystemListCount", httpSession);
+    if (o != null)
+    {
+      return (Integer) o;
+    }
+    return 0;
+  }
+
+  public static void setCodesystemListCount(int value)
+  {
+    setValue("CodesystemListCount", value);
+  }
+
 //// Neue Settings für UserAccounts //////////////////////////////////////////
 //    
 //    // Anzeigen von Crossmapping?
@@ -442,7 +511,7 @@ public class SessionHelper
     String role = "";
     //Nur die Benutzer hohlen welche noch nicht zur Termserver DB "zugeordnet" sind!!!
     Session hb_session = HibernateUtil.getSessionFactory().openSession();
-        //hb_session_kollab.getTransaction().begin();
+    //hb_session_kollab.getTransaction().begin();
 
     String hqlC = "select distinct cu from Collaborationuser cu where cu.hidden=false AND deleted=0";
 
@@ -472,16 +541,16 @@ public class SessionHelper
     }
     return role;
   }
-  
+
   public static TreeAndContent.MODE getMainViewMode()
   {
     Object o = getValue("VIEW_MODE");
-    if(o != null)
+    if (o != null)
       return (TreeAndContent.MODE) o;
-    
+
     return TreeAndContent.MODE.CODESYSTEMS;
   }
-  
+
   public static void setMainViewMode(TreeAndContent.MODE mode)
   {
     setValue("VIEW_MODE", mode);

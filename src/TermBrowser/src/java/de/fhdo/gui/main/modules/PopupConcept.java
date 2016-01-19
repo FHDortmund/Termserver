@@ -146,7 +146,6 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
   private long codeSystemId, valueSetId;
 
   GenericList genericListMetadata = null;
-  
 
   private long csevAssociatedVersionId = 0;
 
@@ -224,7 +223,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
 
     setWindowTitle();
     showDetailsVisibilty();
-    
+
     // show tabs
     getFellow("tabMetadata").setVisible(PropertiesHelper.getInstance().isGuiConceptShowMetadata());
     getFellow("tabTranslations").setVisible(PropertiesHelper.getInstance().isGuiConceptShowTranslations());
@@ -234,7 +233,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
 
     // fill domain values with selected codes
     DomainHelper.getInstance().fillCombobox((Combobox) getFellow("cbStatus"), de.fhdo.Definitions.DOMAINID_STATUS,
-        csev == null ? "" : "" + csev.getStatusVisibility());
+            csev == null ? "" : "" + csev.getStatusVisibility());
 
     // load data without bindings (dates, ...)
     if (csev.getStatusVisibilityDate() != null)
@@ -245,7 +244,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
       ((Datebox) getFellow("dateBoxReleasedAt")).setValue(new Date(csev.getEffectiveDate().toGregorianCalendar().getTimeInMillis()));
 
     ComponentHelper.setVisible("divId", editMode == EDITMODES.CREATE_NEW_VERSION || editMode == EDITMODES.MAINTAIN
-        || editMode == EDITMODES.DETAILSONLY, this);
+            || editMode == EDITMODES.DETAILSONLY, this);
 
     initListMetadata();
 
@@ -501,9 +500,9 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
       }
       else if (selPanel.getId().equals("tabpanelTranslations"))
       {
-        if(translations == null)
+        if (translations == null)
           translations = new PopupConceptTranslations(editMode);
-        
+
         translations.initListTranslation(csc, this);
       }
       else if (selPanel.getId().equals("tabpanelCrossmappings"))
@@ -645,8 +644,6 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
     return row;
   }
 
-  
-
   public void onOkClicked()
   {
     logger.debug("onOkClicked() - save data...");
@@ -659,7 +656,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
      codeSystemVersion.setExpirationDate(null);*/
     // check mandatory fields
     if ((csc.getCode() == null || csc.getCode().length() == 0)
-        || (csc.getTerm() == null || csc.getTerm().length() == 0))
+            || (csc.getTerm() == null || csc.getTerm().length() == 0))
     {
       Messagebox.show(Labels.getLabel("common.mandatoryFields"), Labels.getLabel("common.requiredField"), Messagebox.OK, Messagebox.EXCLAMATION);
       return;
@@ -709,14 +706,19 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
           logger.debug("add metadata with id: " + mv.getMetadataParameter().getId() + ", value: " + mv.getParameterValue());
         }
       }
-      
+
       // add translations to request
       logger.debug("translation size: " + csc.getCodeSystemConceptTranslations().size());
       //csc.getCodeSystemConceptTranslations().clear();
       //csc.getCodeSystemConceptTranslations().addAll(translations.getTranslationList());
-      
-      translations.completeList();
-      logger.debug("size t: " + csc.getCodeSystemConceptTranslations().size());
+
+      if (translations != null)
+      {
+        translations.completeList();
+
+        if(csc.getCodeSystemConceptTranslations() != null)
+          logger.debug("size t: " + csc.getCodeSystemConceptTranslations().size());
+      }
 
       // -> status date can't be updated manually
       switch (editMode)
@@ -734,7 +736,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
     }
     catch (Exception ex)
     {
-      Messagebox.show(ex.getLocalizedMessage());
+      Messagebox.show("Fehler: " + ex.getLocalizedMessage());
       LoggingOutput.outputException(ex, this);
 
       success = false;
@@ -742,9 +744,9 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
 
     logger.debug("update tree view...");
     logger.debug("editMode: " + editMode);
-    
+
     Checkbox cbNewVersion = (Checkbox) getFellow("cbNewVersion");
-    
+
     if (editMode == EDITMODES.CREATE_NEW_VERSION || (editMode == EDITMODES.MAINTAIN && cbNewVersion.isChecked()))
     {
       updateListener.update(null, true);
@@ -755,9 +757,9 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
     {
 
       if (updateListener != null
-          && (editMode == EDITMODES.MAINTAIN
-          || editMode == EDITMODES.CREATE_NEW_VERSION
-          || editMode == EDITMODES.CREATE))
+              && (editMode == EDITMODES.MAINTAIN
+              || editMode == EDITMODES.CREATE_NEW_VERSION
+              || editMode == EDITMODES.CREATE))
       {
         // update tree
         updateListener.update(cse, editMode == EDITMODES.MAINTAIN || editMode == EDITMODES.CREATE_NEW_VERSION);
@@ -962,9 +964,9 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
         logger.debug("to id: " + csevAssociatedVersionId);
 
         CreateConceptAssociationResponse.Return responseAssociation
-            = createAssociation(csevAssociatedVersionId, csev.getVersionId(),
-                Definitions.ASSOCIATION_KIND.TAXONOMY.getCode(),
-                PropertiesHelper.getInstance().getAssociationTaxonomyDefaultVersionId());
+                = createAssociation(csevAssociatedVersionId, csev.getVersionId(),
+                        Definitions.ASSOCIATION_KIND.TAXONOMY.getCode(),
+                        PropertiesHelper.getInstance().getAssociationTaxonomyDefaultVersionId());
 
         try
         {
@@ -1089,7 +1091,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
     logger.debug("onCellUpdated()");
 
     if (cellIndex == 1 && row != null && row.getData() != null && row.getData() instanceof MetadataParameter
-        && data != null && data instanceof String)
+            && data != null && data instanceof String)
     {
       logger.debug("set value in list");
 
@@ -1223,7 +1225,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
       if (response.getReturnInfos().getStatus() == Status.OK)
       {
         if (response.getCodeSystemEntity() != null && response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships() != null
-            && response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().size() > 0)
+                && response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().size() > 0)
         {
           long csvId = response.getCodeSystemEntity().getCodeSystemVersionEntityMemberships().get(0).getId().getCodeSystemVersionId();
           if (csvId > 0)
@@ -1274,7 +1276,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
   private void initAssociations()
   {
     if (listCrossmappings == null || listLinkedConcepts == null
-        || listOntologies == null)
+            || listOntologies == null)
     {
       // List concept associations (all)
       logger.debug("initAssociations()");
@@ -1307,13 +1309,13 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
           // get linked concept (see if forward or reverse association)
           CodeSystemEntityVersion linkedConcept = null;
           if (ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId2() != null
-              && ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId2().getVersionId().longValue() != codeSystemEntityVersionId)
+                  && ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId2().getVersionId().longValue() != codeSystemEntityVersionId)
           {
             linkedConcept = ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId2();
             linkedConcept.getAssociationTypes().add(ass.getAssociationType());
           }
           else if (ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId1() != null
-              && ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().getVersionId().longValue() != codeSystemEntityVersionId)
+                  && ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().getVersionId().longValue() != codeSystemEntityVersionId)
           {
             linkedConcept = ass.getCodeSystemEntityVersionByCodeSystemEntityVersionId1();
             linkedConcept.getAssociationTypes().add(ass.getAssociationType());
@@ -1423,10 +1425,10 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
   {
     this.updateListener = updateListener;
   }
-  
+
   public void onNewClicked(String listId)
   {
-    if(listId != null && listId.equals("translation"))
+    if (listId != null && listId.equals("translation"))
     {
       translations.addRow();
     }
@@ -1438,7 +1440,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
 
   public void onDeleted(String listId, Object o)
   {
-    if(listId != null && listId.equals("translation"))
+    if (listId != null && listId.equals("translation"))
     {
       translations.removeRow(o);
     }

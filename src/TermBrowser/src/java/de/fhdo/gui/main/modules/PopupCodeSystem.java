@@ -230,6 +230,8 @@ public class PopupCodeSystem extends Window implements AfterCompose, IUpdateData
       {
       }
 
+      codeSystemVersion.setUnderLicence(((Checkbox)getFellow("cbCSVLicenced")).isChecked());
+      
       // check mandatory fields
       //if (codeSystemVersion.getValidityRange() != null && codeSystemVersion.getValidityRange() <= 0)
       //  Messagebox.show(Labels.getLabel("popupCodeSystem.editCodeSystemValidityRangeFailed"), "Warning", Messagebox.OK, Messagebox.EXCLAMATION);

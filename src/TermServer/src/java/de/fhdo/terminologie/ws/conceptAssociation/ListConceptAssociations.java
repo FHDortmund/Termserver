@@ -108,6 +108,7 @@ public class ListConceptAssociations
       {
         CodeSystemEntityVersion csev_parameter = (CodeSystemEntityVersion) parameter.getCodeSystemEntity().getCodeSystemEntityVersions().toArray()[0];
         long cse_versionId = csev_parameter.getVersionId();
+        logger.debug("cse_versionId: " + cse_versionId);
 
         // TODO leftID korrekt implementieren
         // directionBoth implementieren (reverse funktioniert)
@@ -237,16 +238,20 @@ public class ListConceptAssociations
           CodeSystemEntityVersion csev = csc.getCodeSystemEntityVersion();
 
           logger.debug("term found: " + csc.getCode());
-
+          //logger.debug("csev-id: " + csc.getCodeSystemEntityVersionId());
+          //logger.debug("csev-id: " + csc.getCodeSystemEntityVersion().getVersionId());
+          
           if (csev != null)
           {
+            //logger.debug("csev != null");
+            
             csev.setAssociationTypes(null);
             //csev.setCodeSystemEntity(null);
             csev.setConceptValueSetMemberships(null);
             csev.setCodeSystemMetadataValues(null);
             csev.setValueSetMetadataValues(null);
 
-            if (parameter != null && parameter.getReverse())
+            if (parameter != null && parameter.getReverse() != null && parameter.getReverse())
             {
               if (parameter != null && parameter.getLookForward() != null && parameter.getLookForward())
               {
@@ -340,8 +345,10 @@ public class ListConceptAssociations
             csev.getCodeSystemConcepts().add(csc);
 
             // Assoziation lesen und Verbindungen auf null setzen
-            if (parameter.getReverse())
+            if (parameter.getReverse() != null && parameter.getReverse())
             {
+              logger.debug("adding reverse...");
+              
               if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null
                       && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
               {
@@ -370,8 +377,10 @@ public class ListConceptAssociations
                 at.setCodeSystemEntityVersion(null);
                 at.setCodeSystemEntityVersionAssociations(null);
 
+                logger.debug("returnList.add(association) reverse with id: " + association.getId());
                 returnList.add(association);
               }
+              else logger.debug("...nothing to add");
             }
             else
             {
@@ -390,9 +399,14 @@ public class ListConceptAssociations
                 at.setCodeSystemEntityVersion(null);
                 at.setCodeSystemEntityVersionAssociations(null);
 
+                logger.debug("returnList.add(association) with id: " + association.getId());
                 returnList.add(association);
               }
             }
+          }
+          else
+          {
+            logger.debug("csev IS NULL!!");
           }
         }
 
@@ -499,6 +513,7 @@ public class ListConceptAssociations
                 at.setCodeSystemEntityVersion(null);
                 at.setCodeSystemEntityVersionAssociations(null);
 
+                logger.debug("returnList.add(association) direction both with id: " + association.getId());
                 returnList.add(association);
               }
             }

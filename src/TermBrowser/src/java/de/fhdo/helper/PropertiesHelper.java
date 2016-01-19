@@ -162,7 +162,7 @@ public class PropertiesHelper
       guiEditConceptsShowDelete = getBooleanValue(config.getProperty("gui.edit.concepts.showDelete", "true"));
       guiEditConceptsShowDetails = getBooleanValue(config.getProperty("gui.edit.concepts.showDetails", "true"));
 
-      logger.debug("login_classname: " + login_classname);
+      logger.debug("login_classname: " + login_classname); 
       logger.debug("termserverUrl: " + termserverUrl);
       logger.debug("termserverServiceName: " + termserverServiceName);
       logger.debug("collaborationActive: " + collaborationActive);

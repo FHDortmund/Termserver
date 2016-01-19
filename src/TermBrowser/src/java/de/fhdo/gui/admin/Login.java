@@ -90,6 +90,11 @@ public class Login extends Window implements org.zkoss.zk.ui.ext.AfterCompose
         SessionHelper.setValue("session_id", response.getParameterList().get(0));
         
         SessionHelper.setValue("user_name", tbUser.getText());
+        
+        // force reloading cs list for navigation (licences may changed)
+        SessionHelper.setCodesystemList(null);
+        SessionHelper.setDomainValueList(null);
+        SessionHelper.setCodesystemListCount(0);
 
         Clients.showBusy("Login erfolgreich\n\nTermBrowser wird geladen...");
         Executions.sendRedirect("/gui/main/main.zul");

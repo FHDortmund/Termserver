@@ -112,7 +112,7 @@ public class LicencedUser  implements java.io.Serializable {
         this.termUser = termUser;
     }
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="validFrom", nullable=false, length=19)
+    @Column(name="validFrom", length=19)
     public Date getValidFrom() {
         return this.validFrom;
     }
@@ -121,7 +121,7 @@ public class LicencedUser  implements java.io.Serializable {
         this.validFrom = validFrom;
     }
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="validTo", nullable=false, length=19)
+    @Column(name="validTo", length=19)
     public Date getValidTo() {
         return this.validTo;
     }

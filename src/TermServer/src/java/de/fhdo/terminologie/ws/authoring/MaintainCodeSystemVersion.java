@@ -197,10 +197,12 @@ public class MaintainCodeSystemVersion
           // LicenceHolder setzen falls vorhanden
           if (csv_Request.getLicenceHolder() != null)
             csvNew.setLicenceHolder(csv_Request.getLicenceHolder());
+          logger.debug("getLicenceHolder: " + csv_Request.getLicenceHolder());
 
           // UnderLicence setzen falls vorhanden
           if (csv_Request.getUnderLicence() != null)
             csvNew.setUnderLicence(csv_Request.getUnderLicence());
+          logger.debug("getUnderLicence: " + csv_Request.getUnderLicence());
 
           csvNew.setLastChangeDate(new java.util.Date());
           
@@ -266,7 +268,9 @@ public class MaintainCodeSystemVersion
           logger.debug("save csv_new");
 
           // In DB speichern damit csvNew eine ID bekommt falls es eine neue Version ist, ansonsten wird das Objekt aktualisiert
-          hb_session.save(csvNew);
+          //hb_session.save(csvNew);
+          hb_session.saveOrUpdate(csvNew);
+          
 
           if (parameter.getVersioning().getCreateNewVersion())
           {

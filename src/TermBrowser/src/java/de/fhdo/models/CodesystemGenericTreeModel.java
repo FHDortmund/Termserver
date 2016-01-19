@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.fhdo.models;
 
 import de.fhdo.helper.SessionHelper;
@@ -24,6 +23,8 @@ import de.fhdo.models.comparators.ComparatorCodesystems;
 import de.fhdo.models.comparators.ComparatorDomainValues;
 import de.fhdo.terminologie.ws.search.ListCodeSystemsInTaxonomyRequestType;
 import de.fhdo.terminologie.ws.search.ListCodeSystemsInTaxonomyResponse;
+import de.fhdo.terminologie.ws.search.ListCodeSystemsRequestType;
+import de.fhdo.terminologie.ws.search.ListCodeSystemsResponse;
 import de.fhdo.terminologie.ws.search.Status;
 import de.fhdo.tree.GenericTree;
 import de.fhdo.tree.GenericTreeCellType;
@@ -44,9 +45,13 @@ import types.termserver.fhdo.de.DomainValue;
 /**
  *
  * @author Robert Mützner <robert.muetzner@fh-dortmund.de>
+ *
+ * 2016-01-12 Robert Mützner changed to get licences for user (use session
+ * instead of cache)
  */
 public class CodesystemGenericTreeModel
 {
+
   private static CodesystemGenericTreeModel instance = null;
 
   public static CodesystemGenericTreeModel getInstance()
@@ -58,27 +63,33 @@ public class CodesystemGenericTreeModel
   }
 
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
-  private boolean loaded = false;
-  private List<DomainValue> listDV = new LinkedList();
-  private List<CodeSystem> listCS = new LinkedList();
+  //private boolean loaded = false;
+  //private List<DomainValue> listDV = new LinkedList();
+  private List<CodeSystem> publicCodeSystemList = null;
   private String errorMessage;
-  private int count = 0;
+  //private int count = 0;
   //private ArrayList<CodeSystemVersion> csvList = new ArrayList<CodeSystemVersion>();
 
   public CodesystemGenericTreeModel()
   {
     errorMessage = "";
   }
-  
+
   public void reloadData()
   {
-    loaded = false;
+    SessionHelper.setCodesystemList(null);
+    SessionHelper.setDomainValueList(null);
+    
+    publicCodeSystemList = null;
+    //loaded = false;
     initData();
   }
-  
+
   private void initData()
   {
-    if (loaded)
+    List<CodeSystem> listCS = SessionHelper.getCodesystemList();
+    //if (loaded)
+    if (listCS != null)  // data already loaded
       return;
 
     logger.debug("--- CodesystemGenericTreeModel, initData ---");
@@ -96,22 +107,24 @@ public class CodesystemGenericTreeModel
       {
         parameter.setLoginToken(SessionHelper.getSessionId());
       }
-      
+
       ListCodeSystemsInTaxonomyResponse.Return response = WebServiceHelper.listCodeSystemsInTaxonomy(parameter);
-      
+
       logger.debug("Response: " + response.getReturnInfos().getMessage());
 
       if (response.getReturnInfos().getStatus() == Status.OK)
       {
-        listDV = response.getDomainValue();
-        loaded = true;
-        //count = response.getReturnInfos().getCount();
+        SessionHelper.setDomainValueList(response.getDomainValue());
+        //listDV = response.getDomainValue();
+        //loaded = true;
       }
       else
       {
         // show error message
         errorMessage = response.getReturnInfos().getMessage();
       }
+      
+      initPublicCodesystemList();
     }
     catch (Exception e)
     {
@@ -119,10 +132,29 @@ public class CodesystemGenericTreeModel
       LoggingOutput.outputException(e, this);
       //treeModel = new TreeModel(new TreeNode(null, new LinkedList()));
     }
+    
+    
   }
   
+  private void initPublicCodesystemList()
+  {
+    if(publicCodeSystemList == null)
+    {
+      ListCodeSystemsRequestType parameter = new ListCodeSystemsRequestType();
+      // don't use login!
+
+      ListCodeSystemsResponse.Return response = WebServiceHelper.listCodeSystems(parameter);
+      logger.debug("Response public: " + response.getReturnInfos().getMessage());
+
+      if (response.getReturnInfos().getStatus() == Status.OK)
+      {
+        publicCodeSystemList = response.getCodeSystem();
+      }
+    }
+  }
+
   /**
-   * 
+   *
    * @param tree
    * @param treeActions
    * @return count entries
@@ -130,16 +162,14 @@ public class CodesystemGenericTreeModel
   public int initGenericTree(GenericTree tree, IGenericTreeActions treeActions)
   {
     initData();
-    
+
     List<GenericTreeHeaderType> header = new LinkedList<GenericTreeHeaderType>();
     header.add(new GenericTreeHeaderType("Name", 0, "", true, "String", false, true, false));
-    
+
     // Daten erzeugen und der Liste hinzufügen
     //List<GenericTreeRowType> dataList = new LinkedList<GenericTreeRowType>();
-    count = 0;
-    listCS = new LinkedList<CodeSystem>();
     List<GenericTreeRowType> dataList = createModel();
-    
+
     // Liste initialisieren
     //tree.setMultiple(true);
     tree.setTreeActions(treeActions);
@@ -149,16 +179,18 @@ public class CodesystemGenericTreeModel
     tree.setButton_delete(false);
     tree.setListHeader(header);
     tree.setDataList(dataList);
-    
-    return count;
-//    if(dataList != null)
-//      return dataList.size();
-//    else return 0;
+
+    return SessionHelper.getCodesystemListCount();
+    //return count;
   }
-  
+
   private List<GenericTreeRowType> createModel()
   {
     logger.debug("createModel()");
+
+    SessionHelper.setCodesystemListCount(0);
+    //Integer count = 0;
+    List<CodeSystem> listCS = new LinkedList<CodeSystem>();
 
     try
     {
@@ -167,6 +199,8 @@ public class CodesystemGenericTreeModel
 
       //provideOrderChoosen by AdminSettings
       Map<Integer, DomainValue> mapDomVal = new HashMap<Integer, DomainValue>();
+
+      List<DomainValue> listDV = SessionHelper.getDomainValueList();
 
       // Domain Values mit untergeordneten DV,CS und CSVs
       for (DomainValue dv : listDV)
@@ -183,8 +217,15 @@ public class CodesystemGenericTreeModel
 
       for (int i = 1; i < mapDomVal.size() + 1; i++)
       {
-        list.add(createTreeNode(mapDomVal.get(i)));
+        list.add(createTreeNode(mapDomVal.get(i), listCS));
       }
+
+      // save values in session
+      // different licences for each user
+      SessionHelper.setCodesystemList(listCS);
+      //SessionHelper.setCodesystemListCount(count);
+
+      logger.debug("Model created, count cs: " + SessionHelper.getCodesystemListCount());
 
       return list;
       //TreeNode tn_root = new TreeNode(null, list);
@@ -197,33 +238,35 @@ public class CodesystemGenericTreeModel
     return new LinkedList<GenericTreeRowType>();
   }
 
-  public GenericTreeRowType createTreeNode(Object obj)
+  public GenericTreeRowType createTreeNode(Object obj, List<CodeSystem> listCS)
   {
     GenericTreeRowType row = new GenericTreeRowType(null);
- 
+
     GenericTreeCellType[] cells = new GenericTreeCellType[1];
-    
+
     if (obj instanceof CodeSystem)
     {
       CodeSystem cs = (CodeSystem) obj;
-      
+
       Label label = new Label(cs.getName());
       label.setTooltiptext(cs.getDescription());
-      
+
       Treecell tc = new Treecell();
       tc.appendChild(label);
-      
+
       cells[0] = new GenericTreeCellType(tc, false, "");
       row.setData(cs);
-      
-      count++;
+
+      SessionHelper.setCodesystemListCount(SessionHelper.getCodesystemListCount() + 1);
       listCS.add(cs);
-      
+
+      logger.debug("CS added to list with id: " + cs.getId() + ", name: " + cs.getName());
+
       Object o = SessionHelper.getValue("loadCS");
-      if(o != null)
+      if (o != null)
       {
         long cs_id = Long.parseLong(o.toString());
-        if(cs_id == cs.getId())
+        if (cs_id == cs.getId())
         {
           logger.debug("load CS with id " + cs_id);
           SessionHelper.setValue("selectedCS", cs);
@@ -232,26 +275,25 @@ public class CodesystemGenericTreeModel
       }
 
       /*// Kinder (CodeSystemVersions) suchen und dem CodeSystem hinzufügen            
-      for (CodeSystemVersion csv : cs.getCodeSystemVersions())
-      {
-        csv.setCodeSystem(cs);
+       for (CodeSystemVersion csv : cs.getCodeSystemVersions())
+       {
+       csv.setCodeSystem(cs);
         
-        row.getChildRows().add(createTreeNode(csv));
-      }*/
-      
+       row.getChildRows().add(createTreeNode(csv));
+       }*/
     }
     else if (obj instanceof CodeSystemVersion)
     {
       CodeSystemVersion csv = (CodeSystemVersion) obj;
-      
+
       cells[0] = new GenericTreeCellType(csv.getName(), false, "");
       row.setData(csv);
-      
+
     }
     else if (obj instanceof DomainValue)
     {
       DomainValue dv = (DomainValue) obj;
-      
+
       cells[0] = new GenericTreeCellType(dv.getDomainDisplay(), false, "", "font-weight:bold; color:green;");
       row.setData(dv);
 
@@ -260,7 +302,7 @@ public class CodesystemGenericTreeModel
       Collections.sort(subDomains, new ComparatorDomainValues(true));
       for (DomainValue dv2 : subDomains)
       {
-        row.getChildRows().add(createTreeNode(dv2));
+        row.getChildRows().add(createTreeNode(dv2, listCS));
       }
 
       // Gibts CSs im DV? Wenn ja, einfügen
@@ -268,17 +310,17 @@ public class CodesystemGenericTreeModel
       Collections.sort(subCSList, new ComparatorCodesystems(true));
       for (CodeSystem cs : subCSList)
       {
-        row.getChildRows().add(createTreeNode(cs));
+        row.getChildRows().add(createTreeNode(cs, listCS));
       }
     }
     else
       return null;    // Kein DV oder CS
 
     row.setCells(cells);
- 
+
     return row;
   }
-  
+
   public CodeSystem findCodeSystem(String Name, String OID, long CodesystemVersionId)
   {
     logger.debug("findCodeSystem()");
@@ -286,29 +328,38 @@ public class CodesystemGenericTreeModel
     logger.debug("OID: " + OID);
     logger.debug("CodesystemVersionId: " + CodesystemVersionId);
     List<CodeSystem> list = getListCS();
-    
-    for(CodeSystem cs : list)
+
+    if(list == null)
     {
-      for(CodeSystemVersion csv : cs.getCodeSystemVersions())
+      // session might not work
+      
+    }
+    
+    if (list != null)
+    {
+      for (CodeSystem cs : list)
       {
-        if((OID != null && OID.length() > 0 && OID.equalsIgnoreCase(csv.getOid())) ||
-           (CodesystemVersionId > 0 && csv.getVersionId() == CodesystemVersionId))
+        for (CodeSystemVersion csv : cs.getCodeSystemVersions())
+        {
+          if ((OID != null && OID.length() > 0 && OID.equalsIgnoreCase(csv.getOid()))
+                  || (CodesystemVersionId > 0 && csv.getVersionId() == CodesystemVersionId))
+          {
+            logger.debug("Found CS with id: " + cs.getId());
+            logger.debug("Found CSV with versionId: " + csv.getVersionId());
+            csv.setCodeSystem(cs);
+            SessionHelper.setValue("selectedCSV", csv);
+            return cs;
+          }
+        }
+
+        if (Name != null && Name.length() > 0 && Name.equalsIgnoreCase(cs.getName()))
         {
           logger.debug("Found CS with id: " + cs.getId());
-          logger.debug("Found CSV with versionId: " + csv.getVersionId());
-          csv.setCodeSystem(cs);
-          SessionHelper.setValue("selectedCSV", csv);
           return cs;
         }
       }
-      
-      if(Name != null && Name.length() > 0 && Name.equalsIgnoreCase(cs.getName()))
-      {
-        logger.debug("Found CS with id: " + cs.getId());
-        return cs;
-      }
     }
-    
+
     return null;
   }
 
@@ -325,7 +376,8 @@ public class CodesystemGenericTreeModel
    */
   public List<DomainValue> getListDV()
   {
-    return listDV;
+    return SessionHelper.getDomainValueList();
+    //return listDV;
   }
 
   /**
@@ -334,8 +386,12 @@ public class CodesystemGenericTreeModel
   public List<CodeSystem> getListCS()
   {
     initData();
-    return listCS;
+    
+    List<CodeSystem> list = SessionHelper.getCodesystemList();
+    if(list == null)
+      return publicCodeSystemList;
+    return list;
+    //return listCS;
   }
-  
-  
+
 }

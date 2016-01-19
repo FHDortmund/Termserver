@@ -207,9 +207,9 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     logger.debug("paramLoadOid: " + paramLoadOid);
 
     if (paramLoadId > 0
-        || (paramLoadType != null && paramLoadType != LOADTYPE.NONE)
-        || (paramLoadName != null && paramLoadName.length() > 0)
-        || (paramLoadOid != null && paramLoadOid.length() > 0))
+            || (paramLoadType != null && paramLoadType != LOADTYPE.NONE)
+            || (paramLoadName != null && paramLoadName.length() > 0)
+            || (paramLoadOid != null && paramLoadOid.length() > 0))
     {
       externMode = true;
     }
@@ -344,21 +344,21 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     logger.debug("setActiveTab(), mode: " + mode.name());
 
     Tabbox tabboxFilter = (Tabbox) getFellow("tabboxFilter");
-    
+
     getFellow("tabCS").setVisible(PropertiesHelper.getInstance().isGuiShowCodesystems());
     getFellow("tabVS").setVisible(PropertiesHelper.getInstance().isGuiShowValuesets());
 
     if (mode == MODE.CODESYSTEMS)
     {
       //tabboxFilter.setSelectedIndex(0);
-      tabboxFilter.setSelectedTab((Tab)getFellow("tabCS"));
+      tabboxFilter.setSelectedTab((Tab) getFellow("tabCS"));
     }
     else if (mode == MODE.VALUESETS)
     {
       //tabboxFilter.setSelectedIndex(1);
-      tabboxFilter.setSelectedTab((Tab)getFellow("tabVS"));
+      tabboxFilter.setSelectedTab((Tab) getFellow("tabVS"));
     }
-    
+
     // load tab content
     onFilterTabChanged();
   }
@@ -466,7 +466,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     });
 
     if (CodesystemGenericTreeModel.getInstance().getErrorMessage() != null
-        && CodesystemGenericTreeModel.getInstance().getErrorMessage().length() > 0)
+            && CodesystemGenericTreeModel.getInstance().getErrorMessage().length() > 0)
     {
       // show error message
       ComponentHelper.setVisible("incTreeCS", false, this);
@@ -910,22 +910,27 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     // update data from modal detail dialogs
     if (o != null && o instanceof CodeSystem)
     {
-      CodeSystem cs = (CodeSystem) o;
-      GenericTreeRowType row = CodesystemGenericTreeModel.getInstance().createTreeNode(cs);
+      //CodeSystem cs = (CodeSystem) o;
 
-      if (edited)
-      {
-        genericTreeCS.updateEntry(row);
-        CodesystemGenericTreeModel.getInstance().reloadData();
-      }
-      else
-      {
-        // reload tree
-        genericTreeCS = null;
-        CodesystemGenericTreeModel.getInstance().reloadData();
+      /*if (edited)
+       {
+       GenericTreeRowType row = CodesystemGenericTreeModel.getInstance().createTreeNode(cs);
+       genericTreeCS.updateEntry(row);
+       CodesystemGenericTreeModel.getInstance().reloadData();
+       }
+       else
+       {
+       // reload tree
+       genericTreeCS = null;
+       CodesystemGenericTreeModel.getInstance().reloadData();
 
-        createTabContent_CS();
-      }
+       createTabContent_CS();
+       }*/
+      // reload tree
+      genericTreeCS = null;
+      CodesystemGenericTreeModel.getInstance().reloadData();
+
+      createTabContent_CS();
     }
     else if (o != null && o instanceof ValueSet)
     {
