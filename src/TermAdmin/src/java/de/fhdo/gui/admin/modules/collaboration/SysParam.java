@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Include;
@@ -80,12 +81,12 @@ public class SysParam extends Window implements AfterCompose, IGenericListAction
 
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Name", 230, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Gültigkeitsbereich", 130, "", true, filter, true, true, false, false));
-    header.add(new GenericListHeaderType("Modify-Level", 130, "", true, filter, true, true, false, false));
-    header.add(new GenericListHeaderType("Datentyp", 80, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Wert", 700, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Beschreibung", 400, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("name"), 230, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("validityRange"), 130, "", true, filter, true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("modifyLevel"), 130, "", true, filter, true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("datatype"), 80, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("value"), 700, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("description"), 400, "", true, "String", true, true, false, false));
     
     
     // Daten laden

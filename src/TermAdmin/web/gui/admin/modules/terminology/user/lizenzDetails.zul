@@ -3,7 +3,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul">
   <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winLizenzDetails"?>
 
-    <window id="winLizenzDetails" title="Lizenz-Details" width="600px"  height="500px" border="normal"
+    <window id="winLizenzDetails" title="${labels.license} - ${labels.details}" width="600px"  height="500px" border="normal"
      use="de.fhdo.gui.admin.modules.terminology.user.LizenzDetails" closable="true">
     <borderlayout>
       <center border="0">
@@ -14,7 +14,7 @@
           </columns>
           <rows>
             <row>
-              <label value="Codesystem-Version:"/>
+              <label value="${labels.codesystemVersion}:"/>
               <bandbox id="bbStandard" mold="rounded" autodrop="true" width="99%" 
                        onOpen="winLizenzDetails.initCSVList()"
                        sclass="mandantory">
@@ -25,7 +25,7 @@
             </row>
 
             <row>
-              <label value="Gültig von:"/>
+              <label value="${labels.validFrom}:"/>
               <hbox>
                 <checkbox label="" id="cbValidFrom" checked="@{winLizenzDetails.showValidFrom}">
                   <attribute name="onClick"><![CDATA[validfromRow.setVisible(self.isChecked());]]>
@@ -39,7 +39,7 @@
             </row>
             
             <row>
-              <label value="Gültig bis:"/>
+              <label value="${labels.validTo}:"/>
               <!--<datebox value="@{winLizenzDetails.licencedUser.validTo}"/>-->
               <hbox>
                 <checkbox label="" id="cbValidTo" checked="@{winLizenzDetails.showValidTo}">
@@ -54,11 +54,10 @@
             </row>
 
             <row>
-              <label value="Lizenztyp:"/>
+              <label value="${labels.licenseType}:"/>
               <hbox>
                 <div style="margin-top:3px;">
-                  <checkbox label="" id="cbLicenceType" checked="@{winLizenzDetails.showLicenceType}"
-                            >
+                  <checkbox label="" id="cbLicenceType" checked="@{winLizenzDetails.showLicenceType}" >
                     <attribute name="onClick"><![CDATA[licenceTypeRow.setVisible(self.isChecked());]]>
                     </attribute>
                   </checkbox>
@@ -71,33 +70,20 @@
                               style="margin-top:3px;">
                     </combobox>
 
-                    <button label="Liste bearbeiten..." onClick="winLizenzDetails.editLicenceTypes()" autodisable="self"/>
+                    <button label="${labels.editList}..." onClick="winLizenzDetails.editLicenceTypes()" autodisable="self"/>
                   </hbox>
                 </div>
 
               </hbox>
             </row>
 
-            
-            <!--<row>
-              <label value="Sortierung:"/>
-              <combobox model="@{winLizenzDetails.sortTypeList}"
-               selectedItem="@{winLizenzDetails.selectedSortType}" value="@{winLizenzDetails.selectedSortType.domainDisplay}"
-
-               width="98%">
-                <comboitem self="@{each=itemType2}" label="@{itemType2.domainDisplay}" value="@{itemType2.domainCode}" />
-              </combobox>
-            </row>-->
-            
-
-
           </rows>
         </grid>
       </center>
       <south height="30px" border="0" collapsible="true">
         <div align="right" style="margin-right:8px;">
-          <button label="OK" onClick="winLizenzDetails.onOkClicked()" autodisable="self" />
-          <button label="Abbrechen" onClick="winLizenzDetails.onCancelClicked()" autodisable="self" />
+          <button label="${labels.ok}" onClick="winLizenzDetails.onOkClicked()" autodisable="self" />
+          <button label="${labels.cancel}" onClick="winLizenzDetails.onCancelClicked()" autodisable="self" />
         </div>
       </south>
     </borderlayout>

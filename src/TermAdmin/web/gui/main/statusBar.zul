@@ -6,12 +6,14 @@
   <window id="win" use="de.fhdo.gui.main.StatusBar">
     <toolbar id="tb" height="20px" align="start" width="100%">
       <toolbarbutton id="tb_user" image="/rsc/img/symbols/user_16x16.png" label="-" onClick='win.onUserClicked()'
-      tooltiptext="Bearbeiten Sie Ihr TermServer Profil"/>
-      <toolbarbutton id="tb_loginInfo" image="/rsc/img/symbols/info16_16.png" label="-" tooltiptext="Info über den Login-Status"/>
-      <toolbarbutton id="tb_logout" image="/rsc/img/symbols/unlock_16x16.png" label="Abmelden" onClick='win.onLogoutClicked()'
-      tooltiptext="Meldet den aktuellen Benutzer vom System ab" visible="true"/>
-      <toolbarbutton id="tb_termbrowser" image="/rsc/img/symbols/find_16x16.png" label="Terminologie-Browser" onClick='win.onCallBrowserClicked()'
-      tooltiptext="Wechselt zum Terminologie-Browser" visible="false"/>
+                     tooltiptext="${labels.editUserData}"/>
+      <toolbarbutton id="tb_loginInfo" image="/rsc/img/symbols/info16_16.png" label="-"
+                     tooltiptext="${labels.loginStatusInfo}"/>
+      <toolbarbutton id="tb_logout" image="/rsc/img/symbols/unlock_16x16.png" label="${labels.logout}" onClick='win.onLogoutClicked()'
+                     tooltiptext="${labels.logoutHint}" visible="true"/>
+      <toolbarbutton id="tb_termbrowser" image="/rsc/img/symbols/find_16x16.png" 
+                     label="${labels.terminologyBrowser}" onClick='win.onCallBrowserClicked()'
+                     tooltiptext="${labels.terminologyBrowserHint}" visible="false"/>
     </toolbar>
   </window>
 </zk>

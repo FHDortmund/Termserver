@@ -6,7 +6,7 @@
     <borderlayout>
       <north border="0">
         <groupbox closable="false" width="50%">
-          <caption label="Export" />
+          <caption label="${labels.export}" />
      
           <grid>
             <columns>
@@ -15,7 +15,7 @@
             </columns>
             <rows>
               <row>	
-                <label value="Beschreibung: "/>
+                <label value="${labels.description}: "/>
                 <textbox id="tbDateiname" width="97%"/>
               </row>
             </rows>
@@ -23,7 +23,7 @@
       
           <separator/>
           <div align="center">
-            <button label="DB-Dump erstellen" onClick="winDB.createDump()" 
+            <button label="${labels.createDbDump}" onClick="winDB.createDump()" 
               image="/rsc/img/symbols/export_32x32.png"/>
           </div>
      

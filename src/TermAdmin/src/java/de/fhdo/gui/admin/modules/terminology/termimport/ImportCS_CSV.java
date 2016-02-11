@@ -19,6 +19,10 @@ package de.fhdo.gui.admin.modules.terminology.termimport;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.list.GenericList;
+import de.fhdo.list.GenericListCellType;
+import de.fhdo.list.GenericListHeaderType;
+import de.fhdo.list.GenericListRowType;
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.db.hibernate.CodeSystem;
 import de.fhdo.terminologie.db.hibernate.ValueSet;
 import de.fhdo.terminologie.ws.administration.ImportCodeSystemCancelRequestType;
@@ -28,8 +32,16 @@ import de.fhdo.terminologie.ws.administration.ImportCodeSystemResponse;
 import de.fhdo.terminologie.ws.administration.ImportCodeSystemStatusRequestType;
 import de.fhdo.terminologie.ws.administration.ImportCodeSystemStatusResponse;
 import de.fhdo.terminologie.ws.administration.ImportType;
+import ehd._001.KeytabsTyp;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.ws.Response;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
@@ -64,71 +76,47 @@ public class ImportCS_CSV implements IImport, javax.xml.ws.AsyncHandler<ImportCo
   
   public void preview(GenericList genericList, byte[] bytes)
   {
-    
-    
-  }
-
-  /**
-   * 
-   * @param bytes
-   * @param progress
-   * @param labelInfo
-   * @param codeSystem
-   * @param valueSet
-   * @return true, wenn asynchroner Aufruf
-   */
-  /*public boolean startImport(byte[] bytes, Progressmeter progress, Label labelInfo, CodeSystem codeSystem, ValueSet valueSet)
-  {
-    logger.debug("ImportCS_CSV - startImport()");
-    
-    
-    progress.setVisible(true);
-
-    // Login
-    ImportCodeSystemRequestType request = new ImportCodeSystemRequestType();
-    request.setLoginToken(SessionHelper.getSessionId());
-
-    // Codesystem
-    request.setCodeSystem(new types.termserver.fhdo.de.CodeSystem());
-    request.getCodeSystem().setId(codeSystem.getId());
-
-    types.termserver.fhdo.de.CodeSystemVersion csv = new CodeSystemVersion();
-    
-    if(codeSystem.getCodeSystemVersions() != null && codeSystem.getCodeSystemVersions().size() > 0)
+    try
     {
-      csv.setVersionId(((de.fhdo.terminologie.db.hibernate.CodeSystemVersion)codeSystem.getCodeSystemVersions().toArray()[0]).getVersionId());
-      csv.setName(((de.fhdo.terminologie.db.hibernate.CodeSystemVersion)codeSystem.getCodeSystemVersions().toArray()[0]).getName());
-    }
-    
-    request.getCodeSystem().getCodeSystemVersions().add(csv);
+      /*
+      List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
+      header.add(new GenericListHeaderType("Name", 180, "", false, "String", true, true, false, false));
+      header.add(new GenericListHeaderType("Wert", 0, "", false, "boolean", true, true, false, false));
 
-    // CSV-Datei
-    request.setImportInfos(new ImportType());
-    request.getImportInfos().setFormatId(formatId); // CSV_ID
-    request.getImportInfos().setFilecontent(bytes);
-    
-    ImportCodeSystemResponse.Return response = WebServiceHelper.importCodeSystem(request);
-
-    String msg = response.getReturnInfos().getMessage();
-    logger.debug("Return: " + msg);
-
-    //CodeSystemVersion
-    if (response.getReturnInfos().getStatus().equals(Status.OK))
-    {
-
+      List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
       
+      dataList.add(createRow("Codesystem name:",selectedCodeSystem.getName()));
+      dataList.add(createRow("Version name:",csv.getName()));
+      dataList.add(createRow("OID:",csv.getOid()));
+      
+      genericList.setButton_new(false);
+      genericList.setListHeader(header);
+      genericList.setDataList(dataList);
+
+      genericList.getParent().setVisible(true);*/
+
     }
+    catch (Exception ex)
+    {
+      LoggingOutput.outputException(ex, this);
 
-    labelInfo.setValue(msg);
-    progress.setVisible(false);
+    }
     
-    return false;
   }
-
-  public void cancelImport()
-  {
-  }*/
   
+//  private GenericListRowType createRow(String key, String value)
+//  {
+//    GenericListRowType row = new GenericListRowType();
+//
+//    GenericListCellType[] cells = new GenericListCellType[2];
+//    cells[0] = new GenericListCellType(key, false, "");
+//    cells[1] = new GenericListCellType(value, false, "");
+//
+//    row.setCells(cells);
+//
+//    return row;
+//  }
+
   public boolean startImport(byte[] bytes, final Progressmeter progress, Label labelInfo, CodeSystem codeSystem, ValueSet valueSet)
   {
     logger.debug("ImportCS_CSV - startImport()");

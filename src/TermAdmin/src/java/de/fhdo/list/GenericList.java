@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -364,7 +365,7 @@ public class GenericList extends Window implements IDoubleClick, IUpdateData
 
         if (o != null)
         {
-          if (Messagebox.show("Möchten Sie den ausgewählten Eintrag wirklich löschen?", "Löschen", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION) == Messagebox.YES)
+          if (Messagebox.show(Labels.getLabel("deleteEntryQuestion"), Labels.getLabel("delete"), Messagebox.YES | Messagebox.NO, Messagebox.QUESTION) == Messagebox.YES)
           {
             // Liste dynamisch erneuern
             listModel.remove(o);

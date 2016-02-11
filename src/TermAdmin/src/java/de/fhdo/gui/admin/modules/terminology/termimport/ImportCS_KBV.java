@@ -39,6 +39,7 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.Progressmeter;
 import org.zkoss.zul.Textbox;
@@ -112,8 +113,8 @@ public class ImportCS_KBV implements IImport
        ((Label) getFellow("labelVersion")).setValue(keytab.getSV());
        ((Label) getFellow("labelOID")).setValue(keytab.getS());*/
       List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-      header.add(new GenericListHeaderType("Name", 180, "", false, "String", true, true, false, false));
-      header.add(new GenericListHeaderType("Wert", 0, "", false, "boolean", true, true, false, false));
+      header.add(new GenericListHeaderType(Labels.getLabel("name"), 180, "", false, "String", true, true, false, false));
+      header.add(new GenericListHeaderType(Labels.getLabel("value"), 0, "", false, "boolean", true, true, false, false));
 
       List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
       

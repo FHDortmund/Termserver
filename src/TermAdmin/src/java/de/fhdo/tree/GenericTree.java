@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.DropEvent;
 import org.zkoss.zk.ui.event.Event;
@@ -517,7 +518,7 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
 
         if (o != null)
         {
-          if (Messagebox.show("Möchten Sie den ausgewählten Eintrag wirklich löschen?", "Löschen", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION) == Messagebox.YES)
+          if (Messagebox.show(Labels.getLabel("deleteEntryQuestion"), Labels.getLabel("delete"), Messagebox.YES | Messagebox.NO, Messagebox.QUESTION) == Messagebox.YES)
           {
             // Baum dynamisch erneuern
             if (treeActions.onTreeDeleted(listId, ((GenericTreeRowType) o).getData()))
@@ -733,12 +734,12 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
   {
     if (component instanceof Treeitem)
     {
-      logger.debug("Component ist Treeitem, jetzt aufklappen");
+//      logger.debug("Component ist Treeitem, jetzt aufklappen");
       Treeitem treeitem = (Treeitem) component;
       treeitem.setOpen(aufklappen);
     }
-    else
-      logger.debug("Component ist kein Treeitem, sondern: " + component.getClass().getCanonicalName());
+    //else
+//      logger.debug("Component ist kein Treeitem, sondern: " + component.getClass().getCanonicalName());
 
     Collection<?> com = component.getChildren();
     if (com != null)

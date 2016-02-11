@@ -1179,6 +1179,8 @@ public class ConceptsTree implements IUpdateModal
               && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
           {
             // new sub concept
+            logger.debug("new sub concept");
+            
             Treeitem treeItem = treeConcepts.getSelectedItem();
             if (treeItem != null)
             {

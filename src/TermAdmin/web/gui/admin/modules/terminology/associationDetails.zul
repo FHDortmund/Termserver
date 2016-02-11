@@ -3,7 +3,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul">
   <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winAssDetails"?>
 
-  <window id="winAssDetails" title="Assoziation-Details" width="800px"  height="250px" border="normal"
+  <window id="winAssDetails" title="${labels.association}-${labels.details}" width="800px"  height="250px" border="normal"
           use="de.fhdo.gui.admin.modules.terminology.AssociationDetails" closable="true"
           sizable="true" onOK="winAssDetails.onOkClicked()">
     <borderlayout>
@@ -15,11 +15,11 @@
           </columns>
           <rows>
             <row>
-              <label value="Name vorwärts:"/>
+              <label value="${labels.nameForward}:"/>
               <textbox hflex="true" value="@{winAssDetails.associationType.forwardName}" sclass="mandatory"/>
             </row>
             <row>
-              <label value="Name rückwärts:"/>
+              <label value="${labels.nameReverse}:"/>
               <textbox hflex="true" value="@{winAssDetails.associationType.reverseName}" sclass="mandatory"/>
             </row>
             
@@ -34,8 +34,8 @@
       </center>
       <south height="30px" border="0" collapsible="true">
         <div align="right">
-          <button label="OK" onClick="winAssDetails.onOkClicked()" autodisable="self" />
-          <button label="Abbrechen" onClick="winAssDetails.onCancelClicked()" autodisable="self" />
+          <button  label="${labels.ok}" onClick="winAssDetails.onOkClicked()" autodisable="self" />
+          <button label="${labels.cancel}" onClick="winAssDetails.onCancelClicked()" autodisable="self" />
         </div>
       </south>
     </borderlayout>

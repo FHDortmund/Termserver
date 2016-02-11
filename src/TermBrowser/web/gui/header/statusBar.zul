@@ -31,6 +31,10 @@
           <toolbarbutton id="tb_termadmin" image="/rsc/img/symbols/settings_16x16.png" label="Verwaltungsbereich" onClick='win.onCallAdminClicked()'
                          tooltiptext="Wechselt zum Verwaltungsbereich"/>
           
+<!--          <separator orient="vertical"/> 
+          <toolbarbutton id="tb_language" image="/rsc/img/symbols/settings_16x16.png" label="Verwaltungsbereich" onClick='win.onCallAdminClicked()'
+                         tooltiptext="Wechselt zum Verwaltungsbereich"/>-->
+          
       
           <!--<toolbarbutton  label="|"/>-->
         </toolbar>

@@ -27,6 +27,7 @@ import de.fhdo.helper.SessionHelper;
 import de.fhdo.interfaces.IUpdate;
 import java.util.List;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.KeyEvent;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Messagebox;
@@ -92,7 +93,7 @@ public class PasswordDetails extends Window implements org.zkoss.zk.ui.ext.After
 
       if(tb1.getValue().equals(tb2.getValue()) == false)
       {
-        Messagebox.show("Das eingegebene Passwort stimmt nicht überein!", "Fehler", Messagebox.OK, Messagebox.ERROR);
+        Messagebox.show(Labels.getLabel("passwordMatchFailure"), Labels.getLabel("error"), Messagebox.OK, Messagebox.ERROR);
         return;
       }
 
@@ -132,7 +133,7 @@ public class PasswordDetails extends Window implements org.zkoss.zk.ui.ext.After
       }
       else
       {
-        Messagebox.show("Das alte Passwort ist nicht korrekt!", "Fehler", Messagebox.OK, Messagebox.ERROR);
+        Messagebox.show(Labels.getLabel("passwordNotCorrect"), Labels.getLabel("error"), Messagebox.OK, Messagebox.ERROR);
         hb_session.close();
         return;
       }
@@ -141,7 +142,7 @@ public class PasswordDetails extends Window implements org.zkoss.zk.ui.ext.After
       hb_session.getTransaction().commit();
       hb_session.close();
 
-      Messagebox.show("Passwort erfolgreich geändert.", "Passwort ändern", Messagebox.OK, Messagebox.INFORMATION);
+      Messagebox.show(Labels.getLabel("passwordChanged"), Labels.getLabel("changePassword"), Messagebox.OK, Messagebox.INFORMATION);
 
       tb1.setValue("");
       tb2.setValue("");

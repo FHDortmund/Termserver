@@ -36,6 +36,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -212,9 +213,9 @@ public class Datenbank extends Window implements AfterCompose
     logger.debug("initList()");
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Name", 400, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Datum", 120, "", true, "Date", true, true, false, false));
-    header.add(new GenericListHeaderType("Größe", 80, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("name"), 400, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("date"), 120, "", true, "Date", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("size"), 80, "", true, "String", true, true, false, false));
 
 
     List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();

@@ -52,8 +52,8 @@
             tooltiptext="Zurück zum Terminologie-Browser" 
             image="/rsc/img/symbols/back_32x32.png" orient="vertical"
             onClick="win.onBackToTermBrowser()" />-->
-            <toolbarbutton label="Abmelden" 
-                           tooltiptext="Vom Verwaltungsbereich abmelden" 
+            <toolbarbutton label="${labels.logout}" 
+                           tooltiptext="${labels.logoutHint}" 
                            image="/rsc/img/symbols/unlock_32x32.png" orient="vertical"
                            onClick="win.onLogoutClicked()"/>
           </toolbar>
@@ -65,8 +65,8 @@
           <toolbar height="64px">
             <toolbarbutton tooltiptext="Fachhochschule Dortmund"                        image="/rsc/img/fh_logo_klein.png"    onClick="win.onLogoFHClicked()" />            
             <toolbarbutton tooltiptext="eBPG-Projekt"                                   image="/rsc/img/logo_ebpg_40.png"     onClick="win.onLogoEBPGClicked()" />                                    
-            <toolbarbutton tooltiptext="Europäische Union"                              image="/rsc/img/logo_EU.png"          onClick="win.onLogoEUClicked()" />             
-            <toolbarbutton tooltiptext="Nordreihn-Westfalen"                            image="/rsc/img/logo_NRW.png"         onClick="win.onLogoNRWClicked()" />             
+            <toolbarbutton tooltiptext="${labels.europeanUnion}"                              image="/rsc/img/logo_EU.png"          onClick="win.onLogoEUClicked()" />             
+            <toolbarbutton tooltiptext="${labels.nrw}" image="/rsc/img/logo_NRW.png"         onClick="win.onLogoNRWClicked()" />             
             <toolbarbutton tooltiptext="Bundesministerium für Gesundheit Deutschland"   image="/rsc/img/logo_BMG.png"         onClick="win.onLogoBMGClicked()" />                         
             <toolbarbutton tooltiptext="Bundesministerium für Gesundheit Österreich"    image="/rsc/img/bmg_logo.png"         onClick="win.onLogoBMGATClicked()" />
             <toolbarbutton tooltiptext="Fachhochschule Technikum Wien"                  image="/rsc/img/fhtw_logo.png"        onClick="win.onLogoFHTWClicked()" />

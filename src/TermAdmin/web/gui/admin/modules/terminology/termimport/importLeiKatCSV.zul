@@ -87,7 +87,7 @@
         <groupbox  width="98%" closable="false" >
           <caption>3. Import</caption>
           <button id="buttonImport" label="Import starten" onClick="winImportCSV.startImport()" disabled="true"/><label value="-" id="labelImportStatus"/>
-          <button id="buttonCancel" label="Abbrechen" onClick="winImportCSV.cancelImport()" visible="false"/>
+          <button id="buttonCancel"  label="${labels.cancel}" onClick="winImportCSV.cancelImport()" visible="false"/>
           <button id="buttonSort" label="Sort" onClick="winImportCSV.sort()" visible="false"/>
           <textbox id="tbSortListId" readonly="false" visible= "false" width="150px"/>
           <separator />

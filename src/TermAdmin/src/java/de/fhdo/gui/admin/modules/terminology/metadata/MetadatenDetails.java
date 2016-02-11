@@ -35,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Messagebox;
@@ -170,7 +171,7 @@ public class MetadatenDetails extends Window implements AfterCompose
       {
         if (metadataParameter.getParamName() == null || metadataParameter.getParamName().equals(""))
         {
-          Messagebox.show("Es muss ein Wert angegeben werden!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+          Messagebox.show(Labels.getLabel("valueMustExist"), Labels.getLabel("warning"), Messagebox.OK, Messagebox.EXCLAMATION);
           return;
         }
 
@@ -199,7 +200,7 @@ public class MetadatenDetails extends Window implements AfterCompose
             List list = q.list();
             if (list != null && list.size() > 0)
             {
-              Messagebox.show("Dieser Parameter ist für das ausgewählte Code System bereits vorhanden!", "Achtung", Messagebox.OK, Messagebox.EXCLAMATION);
+              Messagebox.show(Labels.getLabel("parameterExistsForCodesystem"), Labels.getLabel("warning"), Messagebox.OK, Messagebox.EXCLAMATION);
               return;
             }
           }

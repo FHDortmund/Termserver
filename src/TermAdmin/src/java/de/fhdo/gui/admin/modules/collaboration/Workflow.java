@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -68,12 +69,12 @@ public class Workflow extends Window implements AfterCompose, IGenericListAction
   {
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Start", 40, "", true, "bool", true, true, false, true));
-    header.add(new GenericListHeaderType("Ende", 40, "", true, "bool", true, true, false, true));
-    header.add(new GenericListHeaderType("Status 'Von'", 170, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Status 'Zu'", 170, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Aktion", 150, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Rollen", 240, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("start"), 40, "", true, "bool", true, true, false, true));
+    header.add(new GenericListHeaderType(Labels.getLabel("ed"), 40, "", true, "bool", true, true, false, true));
+    header.add(new GenericListHeaderType(Labels.getLabel("stateFrom"), 170, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("stateTo"), 170, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("action"), 150, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("roles"), 240, "", true, "String", true, true, false, false));
 
     // Daten laden
     Session hb_session = HibernateUtil.getSessionFactory().openSession();

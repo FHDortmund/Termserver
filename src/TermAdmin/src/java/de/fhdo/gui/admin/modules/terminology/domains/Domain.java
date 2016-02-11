@@ -36,6 +36,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Div;
@@ -82,7 +83,7 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
   {
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Domäne", 0, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("domain"), 0, "", true, "String", true, true, false, false));
 
     // Daten laden
     Session hb_session = HibernateUtil.getSessionFactory().openSession();
@@ -442,13 +443,13 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
 
         hb_session.getTransaction().commit();
 
-        Messagebox.show("Domain wurde erfolgreich gelöscht.", "Domain löschen", Messagebox.OK, Messagebox.INFORMATION);
+        Messagebox.show(Labels.getLabel("domainDeleteSuccess"), Labels.getLabel("deleteDomain"), Messagebox.OK, Messagebox.INFORMATION);
       }
       catch (Exception e)
       {
         hb_session.getTransaction().rollback();
 
-        Messagebox.show("Fehler beim Löschen der Domain: " + e.getLocalizedMessage(), "Domain löschen", Messagebox.OK, Messagebox.EXCLAMATION);
+        Messagebox.show(Labels.getLabel("domainDeleteFailure") + ": " + e.getLocalizedMessage(), Labels.getLabel("deleteDomain"), Messagebox.OK, Messagebox.EXCLAMATION);
         initList();
       }finally{
       
@@ -488,7 +489,7 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
       {
         hb_session.getTransaction().rollback();
 
-        Messagebox.show("Fehler beim Löschen einer Domain-Value: " + e.getLocalizedMessage(), "Domain löschen", Messagebox.OK, Messagebox.EXCLAMATION);
+        Messagebox.show(Labels.getLabel("domainValueDeleteFailure") + ": " + e.getLocalizedMessage(), Labels.getLabel("deleteDomain"), Messagebox.OK, Messagebox.EXCLAMATION);
         showDomainValueList();
       }finally{
           hb_session.close();
@@ -688,7 +689,7 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
     {
       hb_session.getTransaction().rollback();
 
-      Messagebox.show("Fehler beim Löschen einer Domain-Value: " + e.getLocalizedMessage(), "Domain löschen", Messagebox.OK, Messagebox.EXCLAMATION);
+      Messagebox.show(Labels.getLabel("domainValueDeleteFailure") + ": " + e.getLocalizedMessage(), Labels.getLabel("deleteDomain"), Messagebox.OK, Messagebox.EXCLAMATION);
       showDomainValueList();
     }finally{
         hb_session.close();

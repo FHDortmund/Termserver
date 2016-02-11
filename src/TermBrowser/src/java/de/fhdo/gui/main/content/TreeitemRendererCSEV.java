@@ -70,7 +70,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     this.updateDropListener = updateDropListener;
 
     logger.debug("updateDropListener: " + updateDropListener);
-    
+
     sendBack = conceptsTree.getConceptsWindow().isSendBack();
     logger.debug("sendBack: " + sendBack);
 
@@ -109,28 +109,34 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       {
         for (CodeSystemEntityVersionAssociation cseva : csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1())
         {
-          if (hasCrossMapping == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.CROSS_MAPPING.getCode())
-            hasCrossMapping = true;
-          else if (hasLink == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.LINK.getCode())
-            hasLink = true;
-          else if (hasOntology == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.ONTOLOGY.getCode())
-            hasOntology = true;
-          else if (hasHierachical == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.TAXONOMY.getCode())
-            hasHierachical = true;
+          if (cseva.getAssociationKind() != null)
+          {
+            if (hasCrossMapping == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.CROSS_MAPPING.getCode())
+              hasCrossMapping = true;
+            else if (hasLink == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.LINK.getCode())
+              hasLink = true;
+            else if (hasOntology == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.ONTOLOGY.getCode())
+              hasOntology = true;
+            else if (hasHierachical == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.TAXONOMY.getCode())
+              hasHierachical = true;
+          }
         }
       }
       if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2() != null)
       {
         for (CodeSystemEntityVersionAssociation cseva : csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2())
         {
-          if (hasCrossMapping == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.CROSS_MAPPING.getCode())
-            hasCrossMapping = true;
-          else if (hasLink == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.LINK.getCode())
-            hasLink = true;
-          else if (hasOntology == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.ONTOLOGY.getCode())
-            hasOntology = true;
-          else if (hasHierachical == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.TAXONOMY.getCode())
-            hasHierachical = true;
+          if (cseva.getAssociationKind() != null)
+          {
+            if (hasCrossMapping == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.CROSS_MAPPING.getCode())
+              hasCrossMapping = true;
+            else if (hasLink == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.LINK.getCode())
+              hasLink = true;
+            else if (hasOntology == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.ONTOLOGY.getCode())
+              hasOntology = true;
+            else if (hasHierachical == false && cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.TAXONOMY.getCode())
+              hasHierachical = true;
+          }
         }
       }
 
@@ -144,7 +150,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       Treecell cell = null;
 
       if (searchResults && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null
-          && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
+              && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
       {
         // search result
         CodeSystemEntityVersion csevTemp = csev;
@@ -163,7 +169,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
           if (csevTemp.getCodeSystemConcepts() != null && csevTemp.getCodeSystemConcepts().size() > 0)
           {
             s = s + "<div style=\"padding-left:" + indent + "px; margin:0;\">" + csevTemp.getCodeSystemConcepts().get(0).getTerm()
-                + " (" + csevTemp.getCodeSystemConcepts().get(0).getCode() + ")</div>";
+                    + " (" + csevTemp.getCodeSystemConcepts().get(0).getCode() + ")</div>";
           }
           //s += csevTemp.getCodeSystemConcepts().get(0).getTerm();
 
@@ -324,7 +330,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
   {
     fillDetailsCell(listcell, treecell, csev, csc, false);
   }
-  
+
   public static void fillDetailsCell(Listcell listcell, Treecell treecell, CodeSystemEntityVersion csev, CodeSystemConcept csc, boolean hasAssociation)
   {
     //Listcell cell = new Listcell("");
@@ -407,29 +413,30 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
   {
     String s_img = "";
     String tooltip = "";
-    
-    if(cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.CROSS_MAPPING.getCode())
+
+    if (cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.CROSS_MAPPING.getCode())
     {
       s_img = Definitions.ASSOCIATION_KIND.CROSS_MAPPING.getImg();
       tooltip = Labels.getLabel("associationEditor.crossmapping");
     }
-    else if(cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.LINK.getCode())
+    else if (cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.LINK.getCode())
     {
       s_img = Definitions.ASSOCIATION_KIND.LINK.getImg();
       tooltip = Labels.getLabel("associationEditor.link");
     }
-    else if(cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.ONTOLOGY.getCode())
+    else if (cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.ONTOLOGY.getCode())
     {
       s_img = Definitions.ASSOCIATION_KIND.ONTOLOGY.getImg();
       tooltip = Labels.getLabel("popupConcept.ontology");
     }
-    else if(cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.TAXONOMY.getCode())
+    else if (cseva.getAssociationKind() == Definitions.ASSOCIATION_KIND.TAXONOMY.getCode())
     {
       s_img = Definitions.ASSOCIATION_KIND.TAXONOMY.getImg();
       tooltip = Labels.getLabel("common.taxonomy");
     }
-    else return; // unknown format
-    
+    else
+      return; // unknown format
+
     Image img = new Image(s_img);
     img.setTooltiptext(tooltip);
     if (listcell != null)
@@ -499,8 +506,6 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       return;
 
     logger.debug("createContextMenu()");
-    
-    
 
     contextMenu = new Menupopup();
     contextMenu.setParent(conceptsTree.getConceptsWindow());
@@ -512,11 +517,10 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
     // TODO Menuitem miStatus = new Menuitem(Labels.getLabel("treeitemRendererCSEV.editStatus"));
     Menuitem miNewSubConcept = new Menuitem(Labels.getLabel("treeitemRendererCSEV.newSubConcept"));
     Menuitem miNewRootConcept = new Menuitem(Labels.getLabel("treeitemRendererCSEV.newRootConcept"));
-     // TODO Menuitem miDeepLink = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miCreateDeepLink"));
+    // TODO Menuitem miDeepLink = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miCreateDeepLink"));
     //Menuitem miRemoveVS = null;// = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miRemoveFromVS"));
-    
+
     Menuitem miAssumeConcept = new Menuitem(Labels.getLabel("labels.common.assumeConcept"));
-    
 
     // set icons
     miDetails.setImage("/rsc/img/design/details_16x16.png");
@@ -626,8 +630,8 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
         new Menuseparator().setParent(contextMenu);
         miNewRootConcept.setParent(contextMenu);
         miNewSubConcept.setParent(contextMenu);
-        
-        if(sendBack)
+
+        if (sendBack)
         {
           miAssumeConcept.setParent(contextMenu);
         }

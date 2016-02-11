@@ -14,7 +14,7 @@ Die Initialisierung der Liste geschieht über GenericList.java
     <borderlayout>
       <center border="none">
         <listbox id="listbox"
-                 emptyMessage="Keine Einträge mit aktuellen Filtern"
+                 emptyMessage="${labels.noEntries}"
                  onSelect="winGenericList.onListSelected(event)"
                  height="100%"
                  vflex="true" 
@@ -23,7 +23,7 @@ Die Initialisierung der Liste geschieht über GenericList.java
           <listhead sizable="true" id="listHeader">
             <listheader label="" width="18px" align="right">
             </listheader>
-            <listheader label="Projekt" sort="auto(name)">
+            <listheader label="-" sort="auto(name)">
             </listheader>
             <listheader label="#" width="40px" align="right">
             </listheader>
@@ -35,15 +35,15 @@ Die Initialisierung der Liste geschieht über GenericList.java
       <south size="33px" border="none" id="south">
         <div style="padding-top:5px; padding-left: 0px;">
           <div align="left" style="float:left; margin-top:-2px;" id="divEditButtons">
-            <button id="buttonNew" label="Neu..." onClick="winGenericList.onNew()" image="/rsc/img/genericlist/add.png"
-                    autodisable="self" tooltiptext="Fügt einen neuen Eintrag der Liste hinzu..."
+            <button id="buttonNew" label="${labels.newText}..." onClick="winGenericList.onNew()" image="/rsc/img/genericlist/add.png"
+                    autodisable="self" tooltiptext="${labels.newHint}"
                     disabled="@{winContent.standardNewDecline}" visible="false"/>
-            <button id="buttonEdit" label="Bearbeiten..." onClick="winGenericList.onEdit()"
+            <button id="buttonEdit" label="${labels.edit}..." onClick="winGenericList.onEdit()"
                     image="/rsc/img/genericlist/pencil.png"
-                    autodisable="self" tooltiptext="Bearbeitet den markierten Eintrag"
+                    autodisable="self" tooltiptext="${labels.editHint}"
                     disabled="true" visible="false"/>
-            <button id="buttonDelete" label="Löschen" onClick="winGenericList.onDelete()"
-                    image="/rsc/img/genericlist/delete.png" tooltiptext="Löscht den markierten Eintrag"
+            <button id="buttonDelete" label="${labels.delete}" onClick="winGenericList.onDelete()"
+                    image="/rsc/img/genericlist/delete.png" tooltiptext="${labels.deleteHint}"
                     disabled="true" visible="false"/>
             
             

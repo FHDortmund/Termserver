@@ -55,7 +55,7 @@
         <groupbox  width="98%" closable="false" >
           <caption>4. Import</caption>
           <button id="buttonImport" label="Import starten" onClick="winImportLOINC.startImport()" disabled="true"/>
-          <button id="buttonCancel" label="Abbrechen" onClick="winImportLOINC.cancelImport()" visible="false"/>
+          <button id="buttonCancel"  label="${labels.cancel}" onClick="winImportLOINC.cancelImport()" visible="false"/>
           <separator />
           <progressmeter id="progress" value="0" visible="false"/>
           <separator />

@@ -24,6 +24,7 @@ import de.fhdo.interfaces.IUpdateModal;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Messagebox;
@@ -134,12 +135,12 @@ public class DomainValueDetails extends Window implements AfterCompose
     {
       if(domainValue.getDomainCode() == null || domainValue.getDomainCode().length() == 0)
       {
-        Messagebox.show("Geben Sie bitte einen Code an.");
+        Messagebox.show(Labels.getLabel("domainValueMandatory1"));
         return;
       }
       if(domainValue.getDomainDisplay() == null || domainValue.getDomainDisplay().length() == 0)
       {
-        Messagebox.show("Geben Sie bitte einen Anzeige-Text an.");
+        Messagebox.show(Labels.getLabel("domainValueMandatory2"));
         return;
       }
       

@@ -40,6 +40,7 @@ import java.util.List;
 import javax.xml.ws.soap.MTOMFeature;
 import org.hibernate.Session;
 import org.zkoss.util.media.Media;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.ext.AfterCompose;
@@ -159,7 +160,7 @@ public class ImportLOINC_old extends Window implements AfterCompose, IGenericLis
       // Header
       List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
       header.add(new GenericListHeaderType("ID", 60, "", true, "String", true, true, false, false));
-      header.add(new GenericListHeaderType("Name", 0, "", true, "String", true, true, false, false));
+      header.add(new GenericListHeaderType(Labels.getLabel("name"), 0, "", true, "String", true, true, false, false));
 
       // Daten laden
       Session hb_session = HibernateUtil.getSessionFactory().openSession();

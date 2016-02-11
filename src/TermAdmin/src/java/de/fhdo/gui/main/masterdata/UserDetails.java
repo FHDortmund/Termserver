@@ -22,6 +22,7 @@ import de.fhdo.interfaces.IUpdate;
 import de.fhdo.interfaces.IUpdateModal;
 import java.util.Map;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Messagebox;
@@ -71,7 +72,7 @@ public class UserDetails extends Window implements AfterCompose, IUpdate
 
     if (user == null)
     {
-      Messagebox.show("Benutzer nicht vorhanden!", "Achtung", Messagebox.OK, Messagebox.INFORMATION);
+      Messagebox.show(Labels.getLabel("userNotExists"), Labels.getLabel("warning"), Messagebox.OK, Messagebox.INFORMATION);
       this.setVisible(false);
       this.detach();
     }

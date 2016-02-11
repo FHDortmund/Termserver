@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Include;
@@ -80,7 +81,7 @@ public class Codesysteme extends Window implements AfterCompose, IGenericListAct
   {
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Name", 0, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("name"), 0, "", true, "String", true, true, false, false));
 
     // Daten laden
     Session hb_session = HibernateUtil.getSessionFactory().openSession();

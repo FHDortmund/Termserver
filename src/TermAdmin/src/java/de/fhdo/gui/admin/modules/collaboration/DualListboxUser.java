@@ -18,6 +18,7 @@ package de.fhdo.gui.admin.modules.collaboration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.zkoss.util.resource.Labels;
  
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
@@ -63,7 +64,7 @@ public class DualListboxUser extends Div implements IdSpace {
         if(lbUserChoosen.getItemCount() != 1){
             Events.postEvent(new DualListboxUser.ChooseEvent(this, chooseOne()));
         }else{
-            Messagebox.show("Es darf nur ein Eintrag ausgewählt werden!", "Information", Messagebox.OK, Messagebox.EXCLAMATION);
+            Messagebox.show(Labels.getLabel("onlySingleSelection"), Labels.getLabel("info"), Messagebox.OK, Messagebox.EXCLAMATION);
         }
     }
  

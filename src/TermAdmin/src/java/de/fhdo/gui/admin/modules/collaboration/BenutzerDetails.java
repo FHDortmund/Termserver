@@ -40,6 +40,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Checkbox;
@@ -169,7 +170,7 @@ public class BenutzerDetails extends Window implements AfterCompose, IUpdateData
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
     header.add(new GenericListHeaderType(" ", 40, "", false, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Rolle", 0, "", false, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("role"), 0, "", false, "String", true, true, false, false));
 
     List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
 
@@ -246,7 +247,7 @@ public class BenutzerDetails extends Window implements AfterCompose, IUpdateData
         || user.getEmail() == null || user.getEmail().length() == 0 || user.getEmail().contains("@") == false
         || user.getOrganisation().getOrganisation() == null || user.getOrganisation().getOrganisation().equals(""))
     {
-      Messagebox.show("Sie müssen einen Benutzernamen, eine gültige Email-Adresse, Benutzerrolle und Organisation angeben.");
+      Messagebox.show(Labels.getLabel("userMandatoryMsg"));
       return;
     }
 
@@ -271,7 +272,7 @@ public class BenutzerDetails extends Window implements AfterCompose, IUpdateData
       }
       else
       {
-        Messagebox.show("Fehler beim Anlegen eines Benutzers: " + mailResponse);
+        Messagebox.show(Labels.getLabel("userCreateFailure") + ": " + mailResponse);
         return;
       }
     }
@@ -301,7 +302,7 @@ public class BenutzerDetails extends Window implements AfterCompose, IUpdateData
         // prüfen, ob Benutzer bereits existiert
         if (userExists(user.getUsername(), hb_session))
         {
-          Messagebox.show("Benutzer existiert bereits. Bitte wählen Sie einen anderen Benutzernamen.");
+          Messagebox.show(Labels.getLabel("userAlreadyExistsMsg"));
           return;
         }
 
@@ -320,7 +321,7 @@ public class BenutzerDetails extends Window implements AfterCompose, IUpdateData
         hb_session.save(user.getOrganisation());
 
         tx.commit();
-        Messagebox.show("Benutzer wurde erfolgreich angelegt und Aktivierungs-Email verschickt.");
+        Messagebox.show(Labels.getLabel("userCreateSuccess"));
         //logger.debug("Speicher Rollen...");
         // Benachrichtigung senden
 //        mailResponse = Mail.sendMailCollaborationNewUser(user.getUsername(), neuesPW,

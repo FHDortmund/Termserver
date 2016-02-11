@@ -11,6 +11,7 @@ import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.TermUser;
 import java.util.List;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.KeyEvent;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Button;
@@ -100,19 +101,19 @@ public class ResendPasswordDialog extends Window implements AfterCompose
 
       if (erfolg)
       {
-        Messagebox.show("Neues Passwort erfolgreich verschickt",
-                "Neues Passwort", Messagebox.OK, Messagebox.INFORMATION);
+        Messagebox.show(Labels.getLabel("newPasswortSendSuccessfully"),
+                Labels.getLabel("newPassword"), Messagebox.OK, Messagebox.INFORMATION);
       }
       else
       {
-        Messagebox.show("Fehler beim Verschicken des neuen Passworts. Bitte wenden Sie sich an den Administrator.",
-                "Neues Passwort", Messagebox.OK, Messagebox.EXCLAMATION);
+        Messagebox.show(Labels.getLabel("newPasswordSendFailure"),
+                Labels.getLabel("newPassword"), Messagebox.OK, Messagebox.EXCLAMATION);
       }
     }
     else
     {
-      Messagebox.show("Die E-Mail Adresse stimmt nicht mit der im Profil angegebenen überein. Das Passwort kann nicht verschickt werden.",
-                  "Neues Passwort", Messagebox.OK, Messagebox.EXCLAMATION);
+      Messagebox.show(Labels.getLabel("noValidMail"),
+                  Labels.getLabel("newPassword"), Messagebox.OK, Messagebox.EXCLAMATION);
     }
 
     this.setVisible(false);

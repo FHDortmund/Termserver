@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?page title="Verwaltungsbereich" contentType="text/html;charset=UTF-8"?>
+<?page title="${labels.administration_area}" contentType="text/html;charset=UTF-8"?>
 <?link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"?>
 <?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
 
@@ -28,7 +28,7 @@
           <separator />
           <div>
             <!--<image src="/rsc/img/logo.png" width="32px" height="32px" style="margin-top:0px;" />-->
-            <label id="labelVersion" value="Verwaltungsbereich" style="font-size:32px;font-weight:bold;vertical-align:top;margin-left:8px;" />
+            <label id="labelVersion" value="${labels.administration_area}" style="font-size:32px;font-weight:bold;vertical-align:top;margin-left:8px;" />
           </div>
           <separator />
           <separator />
@@ -45,10 +45,9 @@
         <div align="center" height="400px">
               <separator />
 
-              <panel title="Anmeldung Verwaltungsbereich" framable="true" width="410px" 
+              <panel title="${labels.login} - ${labels.administration_area}" framable="true" width="410px" 
                      border="normal" >
                 <panelchildren>
-
                   <grid width="400px">
                     <columns>
                       <column width="110px" />
@@ -60,20 +59,20 @@
                           <image src="/rsc/img/symbols/info32_32.png" width="32" height="32"/>
                         </div>
                         <div align="left">
-                          <label value="Ihr Benutzer wurde erfolgreich aktiviert." />
+                          <label value="${labels.loginSuccessful}" />
                         </div>
                       </row>
 
                       <row>
                         <div align="right">
-                          <label value="Benutzer:" />
+                          <label value="${labels.user}:" />
                         </div>
                         <textbox id="tfUser" value="@{winLogin.username}" width="97%"
                                  onChanging="warningRow.visible=false;"/>
                       </row>
                       <row>
                         <div align="right">
-                          <label value="Passwort:"  />
+                          <label value="${labels.password}:"  />
                         </div>
                         <textbox width="97%" type="password" id="tfPassword" value=""
                                  onChange="warningRow.visible=false;"/>
@@ -84,7 +83,7 @@
                           <image src="/rsc/img/symbols/warning_32x32.png" width="32" height="32"/>
                         </div>
                         <div align="left">
-                          <label value="Benutzername unbekannt, Passwort falsch oder der Benutzer ist noch nicht aktiviert." />
+                          <label value="${labels.loginFailure}" />
                           <separator/>
                           <button id="pwVergessenButton" label="neues Passwort zuschicken" onClick="winLogin.sendPassword()" 
                                   autodisable="self"/>
@@ -94,7 +93,7 @@
                       <row>
                         <label id="temp" visible="true" value="" style="color:#DF0101;"/>
                         <div align="center">
-                          <button id="loginButton" label="Login" 
+                          <button id="loginButton" label="${labels.login}" 
                                   onClick="winLogin.login()" autodisable="self"
                                   image="/rsc/img/symbols/unlock_32x32.png"/>
                         </div>
@@ -102,7 +101,10 @@
 
                     </rows>
                   </grid>
-
+                  <div style="margin:8px;" align="left">
+                    <button label="English" onClick='winLogin.setLanguage("en")' image="/rsc/img/countries/16/United States of America.png"/>
+                    <button label="Deutsch" onClick='winLogin.setLanguage("de")' image="/rsc/img/countries/16/Germany.png"/>
+                  </div>
                 </panelchildren>
               </panel>
               <separator />
@@ -128,7 +130,7 @@
         <borderlayout>
           <west  border="none" >
             <hbox style="margin-top:25px;margin-left:5px">
-              <label value="Umgesetzt von: " style="color:#808080;font-size:12px"/>
+              <label value="${labels.implementationBy}: " style="color:#808080;font-size:12px"/>
               <image src="/rsc/img/fhdo_logo.png" height="40px" width="110px"/>
               <image src="/rsc/img/fhtw_logo.png" height="50px" width="144px"/>
             </hbox>
@@ -137,7 +139,7 @@
           </center>
           <east border="none">
             <hbox style="margin-top:25px;">
-              <label value="Gefördert durch: " style="color:#808080;font-size:12px"/>
+              <label value="${labels.foundedBy}: " style="color:#808080;font-size:12px"/>
               <image src="/rsc/img/eu.jpg" height="40px" width="179px"/>
               <image src="/rsc/img/nrw.png" height="40px" width="144px"/>
               <image src="/rsc/img/bmg_logo.png" height="40px" width="144px"/>

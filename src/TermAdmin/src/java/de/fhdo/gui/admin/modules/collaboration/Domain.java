@@ -36,6 +36,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Include;
@@ -81,7 +82,7 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
   {
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Domäne", 0, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("domain"), 0, "", true, "String", true, true, false, false));
 
     // Daten laden
     Session hb_session = HibernateUtil.getSessionFactory().openSession();
@@ -125,12 +126,8 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
     genericList.setListHeader(header);
     genericList.setDataList(dataList);
 
-
-
     //genericList.setDataList(null);
     //genericList.set
-
-
   }
 
   private GenericListRowType createRowFromDomainValue(de.fhdo.collaboration.db.classes.DomainValue domainValue)
@@ -262,7 +259,7 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
       {
         de.fhdo.collaboration.db.classes.DomainValue domainValue = dvList.get(i);
 
-        if (domainValue.getDomainValuesForDomainValueIdParent()== null
+        if (domainValue.getDomainValuesForDomainValueIdParent() == null
                 || domainValue.getDomainValuesForDomainValueIdChild().size() == 0)
         {
           // Nur root-Elemente auf oberster Ebene
@@ -273,8 +270,6 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
         }
         //else
         //  logger.debug("kein Child DV: " + domainValue.getDomainCode() + ", " + domainValue.getDomainValuesForDomainValueId1().size());
-
-
 
       }
 
@@ -303,7 +298,6 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
     genericTree.setListHeader(header);
     genericTree.setDataList(dataList);
 
-
   }
 
   public void afterCompose()
@@ -327,26 +321,26 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
         win.doModal();
       }
       /*else
-      {
-        //logger.debug("initDomainValueList: " + DomainID);
-        Object o = SessionHelper.getValue("termadmin_domainId");
-        if (o != null)
-        {
-          logger.debug("domainValueDetails mit id: " + o.toString());
-          Map map = new HashMap();
-          map.put("domain_id", o);
+       {
+       //logger.debug("initDomainValueList: " + DomainID);
+       Object o = SessionHelper.getValue("termadmin_domainId");
+       if (o != null)
+       {
+       logger.debug("domainValueDetails mit id: " + o.toString());
+       Map map = new HashMap();
+       map.put("domain_id", o);
 
-          Window win = (Window) Executions.createComponents(
-                  "/gui/admin/modules/domainValueDetails.zul", null, map);
+       Window win = (Window) Executions.createComponents(
+       "/gui/admin/modules/domainValueDetails.zul", null, map);
 
-          ((DomainValueDetails) win).setUpdateListInterface(this);
-          win.doModal();
-        }
-        else
-        {
-          logger.warn("termadmin_domainId ist null");
-        }
-      }*/
+       ((DomainValueDetails) win).setUpdateListInterface(this);
+       win.doModal();
+       }
+       else
+       {
+       logger.warn("termadmin_domainId ist null");
+       }
+       }*/
     }
     catch (Exception ex)
     {
@@ -368,7 +362,6 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
       {
         Map map = new HashMap();
         map.put("domain_id", domain.getId());
-
 
         Window win = (Window) Executions.createComponents(
                 "/gui/admin/modules/collaboration/domainDetails.zul", null, map);
@@ -393,8 +386,6 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
         //map.put("domainValue_id", domainValue.getDomainValueId());
         map.put("domain_value", domainValue);
         map.put("domain_id", domainValue.getDomain().getId());
-
-
 
         Window win = (Window) Executions.createComponents(
                 "/gui/admin/modules/collaboration/domainValueDetails.zul", null, map);
@@ -439,16 +430,18 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
 
         hb_session.getTransaction().commit();
 
-        Messagebox.show("Domain wurde erfolgreich gelöscht.", "Domain löschen", Messagebox.OK, Messagebox.INFORMATION);
+        Messagebox.show(Labels.getLabel("domainDeleteSuccess"), Labels.getLabel("deleteDomain"), Messagebox.OK, Messagebox.INFORMATION);
       }
       catch (Exception e)
       {
         hb_session.getTransaction().rollback();
 
-        Messagebox.show("Fehler beim Löschen der Domain: " + e.getLocalizedMessage(), "Domain löschen", Messagebox.OK, Messagebox.EXCLAMATION);
+        Messagebox.show(Labels.getLabel("domainDeleteFailure") + ": " + e.getLocalizedMessage(), Labels.getLabel("deleteDomain"), Messagebox.OK, Messagebox.EXCLAMATION);
         initList();
-      }finally{
-          hb_session.close();
+      }
+      finally
+      {
+        hb_session.close();
       }
     }
     else if (data != null && data instanceof de.fhdo.collaboration.db.classes.DomainValue)
@@ -470,10 +463,7 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
          de.fhdo.db.hibernate.DomainValue dv = itSession.next();
          hb_session.delete(dv);
          }*/
-
         // Erst alle darunterliegenden löschen, dann Beziehungen löschen (?)
-
-
         hb_session.delete(domain_db);
 
         hb_session.getTransaction().commit();
@@ -482,11 +472,13 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
       }
       catch (Exception e)
       {
-       hb_session.getTransaction().rollback();
+        hb_session.getTransaction().rollback();
 
-        Messagebox.show("Fehler beim Löschen einer Domain-Value: " + e.getLocalizedMessage(), "Domain löschen", Messagebox.OK, Messagebox.EXCLAMATION);
+        Messagebox.show(Labels.getLabel("domainValueDeleteFailure") + ": " + e.getLocalizedMessage(), Labels.getLabel("deleteDomain"), Messagebox.OK, Messagebox.EXCLAMATION);
         showDomainValueList();
-      }finally{
+      }
+      finally
+      {
         hb_session.close();
       }
     }
@@ -530,7 +522,7 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
       }
       else
       {
-        genericTree.addEntry(row, dv.getDomainValuesForDomainValueIdParent()== null && dv.getDomainValuesForDomainValueIdParent().size() == 0);
+        genericTree.addEntry(row, dv.getDomainValuesForDomainValueIdParent() == null && dv.getDomainValuesForDomainValueIdParent().size() == 0);
       }
 
     }
@@ -560,10 +552,8 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
 
     //Div div = (Div)getFellow("noDataDiv");
     //Include inc = (Include) getFellow("incListValues");
-
     //div.setVisible(domainId == 0);
     //inc.setVisible(domainId != 0);
-
     //initDomainValueList(domainId);
     initDomainValueTree(domainId);
   }
@@ -638,7 +628,7 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
   private void deleteDomainChilds(de.fhdo.collaboration.db.classes.DomainValue domainValue, Session hb_session)
   {
     logger.debug("deleteDomainChilds()");
-    if (domainValue.getDomainValuesForDomainValueIdChild()!= null)
+    if (domainValue.getDomainValuesForDomainValueIdChild() != null)
     {
       logger.debug("deleteDomainChilds(), Anzahl: " + domainValue.getDomainValuesForDomainValueIdChild().size());
 
@@ -683,10 +673,12 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
     {
       hb_session.getTransaction().rollback();
 
-      Messagebox.show("Fehler beim Löschen einer Domain-Value: " + e.getLocalizedMessage(), "Domain löschen", Messagebox.OK, Messagebox.EXCLAMATION);
+      Messagebox.show(Labels.getLabel("") + ": " + e.getLocalizedMessage(), Labels.getLabel("deleteDomain"), Messagebox.OK, Messagebox.EXCLAMATION);
       showDomainValueList();
-    }finally{
-        hb_session.close();
+    }
+    finally
+    {
+      hb_session.close();
     }
     return true;
   }

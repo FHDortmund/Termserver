@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Include;
@@ -84,8 +85,8 @@ public class Lizenzen extends Window implements AfterCompose, IGenericListAction
   {
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Benutzername", 120, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Name", 0, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("username"), 120, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("name"), 0, "", true, "String", true, true, false, false));
 
     // Daten laden
     Session hb_session = HibernateUtil.getSessionFactory().openSession();
@@ -217,13 +218,13 @@ public class Lizenzen extends Window implements AfterCompose, IGenericListAction
         
         hb_session.getTransaction().commit();
 
-        Messagebox.show("Benutzer-Lizenz wurde erfolgreich gelöscht.", "Lizenz löschen", Messagebox.OK, Messagebox.INFORMATION);
+        Messagebox.show(Labels.getLabel("userLicenseDeleteSuccess"), Labels.getLabel("delete"), Messagebox.OK, Messagebox.INFORMATION);
       }
       catch (Exception e)
       {
         hb_session.getTransaction().rollback();
 
-        Messagebox.show("Fehler beim Löschen einer Lizenz: " + e.getLocalizedMessage(), "Lizenz löschen", Messagebox.OK, Messagebox.EXCLAMATION);
+        Messagebox.show(Labels.getLabel("userLicenseDeleteFailure") + ": " + e.getLocalizedMessage(), Labels.getLabel("delete"), Messagebox.OK, Messagebox.EXCLAMATION);
         initList();
       }
       finally
@@ -278,11 +279,11 @@ public class Lizenzen extends Window implements AfterCompose, IGenericListAction
 
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Codesystem", 220, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Codesystem-Version", 220, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Von", 80, "", true, "Date", true, true, false, false));
-    header.add(new GenericListHeaderType("Bis", 80, "", true, "Date", true, true, false, false));
-    header.add(new GenericListHeaderType("Lizenztyp", 160, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("codesystem"), 220, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("codesystemVersion"), 220, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("from"), 80, "", true, "Date", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("to"), 80, "", true, "Date", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("licenseType"), 160, "", true, "String", true, true, false, false));
 
     // Daten laden
     Session hb_session = HibernateUtil.getSessionFactory().openSession();

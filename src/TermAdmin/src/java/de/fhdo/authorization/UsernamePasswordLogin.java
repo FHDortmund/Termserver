@@ -17,12 +17,12 @@
 package de.fhdo.authorization;
 
 import de.fhdo.helper.CookieHelper;
+import de.fhdo.helper.LocalizationHelper;
 import de.fhdo.helper.MD5;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.interfaces.IUpdate;
 import de.fhdo.logging.LoggingOutput;
-import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.ws.authorization.LoginResponse;
 import de.fhdo.terminologie.ws.authorization.Status;
 import java.util.HashMap;
@@ -30,13 +30,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.KeyEvent;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Label;
-import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Row;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
@@ -181,7 +180,7 @@ public class UsernamePasswordLogin extends Window implements org.zkoss.zk.ui.ext
       Textbox tbPass = (Textbox) getFellow("tfPassword");
 
       if (logger.isDebugEnabled())
-        logger.debug("Login wird durchgefuehrt...");
+        logger.debug("perform login...");
 
       // Webservice-Aufruf
       // Generische Parameterliste füllen (hier nur SessionID)
@@ -191,7 +190,7 @@ public class UsernamePasswordLogin extends Window implements org.zkoss.zk.ui.ext
       parameterList.add("true"); // Require admin
 
       LoginResponse.Return response = WebServiceHelper.login(parameterList);
-      logger.debug("Antwort: " + response.getReturnInfos().getMessage());
+      logger.debug("response: " + response.getReturnInfos().getMessage());
 
       if (response.getReturnInfos().getStatus() == Status.OK
               && response.getParameterList() != null && response.getParameterList().size() > 0)
@@ -200,17 +199,16 @@ public class UsernamePasswordLogin extends Window implements org.zkoss.zk.ui.ext
         CookieHelper.removeCookie("show_captcha");
         CookieHelper.setCookie("username", tbUser.getText());
 
-        logger.debug("Login erfolgreich, Session-ID: " + response.getParameterList().get(0));
+        logger.debug("Login successfull, Session-ID: " + response.getParameterList().get(0));
         SessionHelper.setValue("session_id", response.getParameterList().get(0));
         SessionHelper.setValue("user_id", Long.parseLong(response.getParameterList().get(1)));
         SessionHelper.setValue("user_name", tbUser.getText());
         SessionHelper.setValue("is_admin", true);
 
-        logger.debug("Login successfull");
         logger.debug("session_id: " + response.getParameterList().get(0));
         logger.debug("user_id: " + Long.parseLong(response.getParameterList().get(1)));
 
-        Clients.showBusy("Login erfolgreich\n\nTermAdmin wird geladen...");  // TODO übersetzen
+        Clients.showBusy(Labels.getLabel("loginSuccessfullLoading"));  // TODO übersetzen
         Executions.sendRedirect("/gui/admin/admin.zul");
       }
       else
@@ -243,26 +241,9 @@ public class UsernamePasswordLogin extends Window implements org.zkoss.zk.ui.ext
    */
   public void sendPassword() throws InterruptedException
   {
-    /*if (Messagebox.show("Möchten Sie ein neues, zufällig generiertes Passwort an Ihre Email-Adresse geschickt bekommen?",
-     "Neues Passwort", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION) == Messagebox.YES)
-     {
-
-     boolean erfolg = Authorization.resendPassword(username);
-
-     if (erfolg)
-     {
-     Messagebox.show("Neues Passwort erfolgreich verschickt",
-     "Neues Passwort", Messagebox.OK, Messagebox.INFORMATION);
-     }
-     else
-     {
-     Messagebox.show("Fehler beim Verschicken des neuen Passworts. Bitte wenden Sie sich an den Administrator.",
-     "Neues Passwort", Messagebox.OK, Messagebox.EXCLAMATION);
-     }
-     }*/
     try
     {
-      logger.debug("erstelle Fenster...");
+      logger.debug("create window...");
 
       Map map = new HashMap();
       map.put("username", username);
@@ -271,7 +252,7 @@ public class UsernamePasswordLogin extends Window implements org.zkoss.zk.ui.ext
               "/gui/authorization/resendPasswordDialog.zul", null, map);
 
       //((ResendPasswordDialog) win).setUpdateListInterface(this);
-      logger.debug("öffne Fenster...");
+      logger.debug("open window...");
       win.doModal();
     }
     catch (Exception ex)
@@ -310,5 +291,10 @@ public class UsernamePasswordLogin extends Window implements org.zkoss.zk.ui.ext
   public void update(Object o)
   {
     login();
+  }
+  
+  public void setLanguage(String langCd)
+  {
+    LocalizationHelper.switchLocalization(langCd);
   }
 }

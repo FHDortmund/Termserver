@@ -83,8 +83,8 @@
       </center>
       <south height="30px" border="0" collapsible="true">
         <div align="right">
-          <button label="OK" onClick="winDomainDetails.onOkClicked()" autodisable="self" />
-          <button label="Abbrechen" onClick="winDomainDetails.onCancelClicked()" autodisable="self" />
+          <button label="${labels.ok}" onClick="winDomainDetails.onOkClicked()" autodisable="self" />
+          <button  label="${labels.cancel}" onClick="winDomainDetails.onCancelClicked()" autodisable="self" />
         </div>
       </south>
     </borderlayout>

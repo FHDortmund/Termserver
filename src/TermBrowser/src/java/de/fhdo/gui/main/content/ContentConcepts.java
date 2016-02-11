@@ -885,7 +885,8 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     ComponentHelper.setVisible("buttonDeleteVersion", allowEditing, this);
 
     // hide buttons, when in SELECT-Mode
-    ComponentHelper.setVisible("buttonExport", externMode == false, this);
+    //ComponentHelper.setVisible("buttonExport", externMode == false, this);
+    ComponentHelper.setVisible("buttonExport", allowEditing && externMode == false, this);
 
     // Collaboration
     boolean collabLoggedIn = SessionHelper.isCollaborationLoggedIn();

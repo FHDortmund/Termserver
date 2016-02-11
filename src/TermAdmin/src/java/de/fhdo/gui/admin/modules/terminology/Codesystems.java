@@ -16,6 +16,7 @@
  */
 package de.fhdo.gui.admin.modules.terminology;
 
+import de.fhdo.gui.templates.NameInputbox;
 import de.fhdo.helper.HQLParameterHelper;
 import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.logging.LoggingOutput;
@@ -28,13 +29,16 @@ import de.fhdo.tree.GenericTree;
 import de.fhdo.tree.GenericTreeCellType;
 import de.fhdo.tree.GenericTreeHeaderType;
 import de.fhdo.tree.GenericTreeRowType;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -81,14 +85,13 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal
 
     try
     {
-      java.util.List<DomainValue> list = null;
 
       // Hibernate-Block, Session öffnen
       org.hibernate.Session hb_session = HibernateUtil.getSessionFactory().openSession();
 
       try // 2. try-catch-Block zum Abfangen von Hibernate-Fehlern
       {
-        String hql = "select distinct cs from CodeSystem cs left join fetch cs.codeSystemVersions csv order by csv.name,cs.name";
+        String hql = "select distinct cs from CodeSystem cs left join fetch cs.codeSystemVersions csv order by cs.name,csv.name";
 
         List<CodeSystem> csList = hb_session.createQuery(hql).list();
 
@@ -121,6 +124,16 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal
         genericTree.setListHeader(header);
         genericTree.setDataList(dataList);
 
+        Button buttonNew = new Button("Neues Codesystem (ohne Version)...");
+        buttonNew.setAttribute("disabled", false);
+        buttonNew.addEventListener(Events.ON_CLICK, new EventListener<Event>()
+        {
+          public void onEvent(Event t) throws Exception
+          {
+            newCodeSystem();
+          }
+        });
+
         Button button = new Button("Status ändern...");
         button.addEventListener(Events.ON_CLICK, new EventListener<Event>()
         {
@@ -131,6 +144,7 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal
         });
 
         genericTree.removeCustomButtons();
+        genericTree.addCustomButton(buttonNew);
         genericTree.addCustomButton(button);
       }
       catch (Exception e)
@@ -190,6 +204,28 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal
     return row;
   }
 
+  public void newCodeSystem()
+  {
+    try
+    {
+      Map map = new HashMap();
+      //map.put("csv", selectedCSV);
+
+      Window win = (Window) Executions.createComponents(
+              "/gui/templates/nameInputbox.zul", null, map);
+
+      ((NameInputbox) win).setiUpdateListener(this);
+
+      win.doModal();
+
+    }
+    catch (Exception ex)
+    {
+      logger.debug("Fehler beim Öffnen der SysParamDetails: " + ex.getLocalizedMessage());
+      ex.printStackTrace();
+    }
+  }
+
   public void changeStatus()
   {
     CodeSystemVersion selectedCSV = null;
@@ -204,7 +240,7 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal
 
     if (selectedCSV == null)
     {
-      Messagebox.show("Sie müssen eine Codesystem-Version auswählen, um den Status zu ändern.");
+      Messagebox.show(Labels.getLabel("selectCodesystemMsg"));
     }
     else
     {
@@ -233,6 +269,9 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal
 
   public void update(Object o, boolean edited)
   {
+    if(o == null)
+      return;
+    
     // update status in db
     if (o instanceof CodeSystemVersion)
     {
@@ -264,6 +303,41 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal
         hb_session.close();
       }
 
+    }
+
+    if (o instanceof String)
+    {
+      String newCodesystemStr = (String) o;
+
+      if (newCodesystemStr.length() > 0)
+      {
+        // create new code system without a version
+        Session hb_session = HibernateUtil.getSessionFactory().openSession();
+
+        try
+        {
+          hb_session.getTransaction().begin();
+          
+          CodeSystem newCS = new CodeSystem();
+          newCS.setName(newCodesystemStr);
+          newCS.setInsertTimestamp(new Date());
+          
+          hb_session.save(newCS);
+
+          hb_session.getTransaction().commit();
+        }
+        catch (Exception ex)
+        {
+          LoggingOutput.outputException(ex, this);
+        }
+        finally
+        {
+          hb_session.close();
+        }
+
+        // refresh tree view
+        initTree();
+      }
     }
   }
 

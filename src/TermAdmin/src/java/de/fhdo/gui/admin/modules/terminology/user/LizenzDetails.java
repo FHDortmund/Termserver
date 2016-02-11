@@ -36,6 +36,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Bandbox;
@@ -219,8 +220,8 @@ public class LizenzDetails extends Window implements AfterCompose, IGenericListA
 
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Codesystem", 0, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Versions-Name", 200, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("codesystem"), 0, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("versionName"), 200, "", true, "String", true, true, false, false));
 
     // Daten laden
     Session hb_session = HibernateUtil.getSessionFactory().openSession();
@@ -287,7 +288,7 @@ public class LizenzDetails extends Window implements AfterCompose, IGenericListA
                 || licencedUser.getCodeSystemVersion().getVersionId() == null
                 || licencedUser.getCodeSystemVersion().getVersionId().longValue() == 0)
         {
-          Messagebox.show("Bitte wählen Sie ein Codesystem aus.");
+          Messagebox.show(Labels.getLabel("selectCodesystemMsg2"));
           return;
         }
       }
@@ -391,7 +392,7 @@ public class LizenzDetails extends Window implements AfterCompose, IGenericListA
     }
     catch (Exception ex)
     {
-      Messagebox.show("Bitte wählen Sie zuerst ein Codesystem aus.");
+      Messagebox.show(Labels.getLabel("selectCodesystemMsg2"));
       
       //logger.debug("Fehler beim Öffnen der LizenzDetails: " + ex.getLocalizedMessage());
       ex.printStackTrace();

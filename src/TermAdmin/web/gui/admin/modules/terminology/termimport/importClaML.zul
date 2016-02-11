@@ -43,7 +43,7 @@
         <groupbox  width="98%" closable="false" >
           <caption>3. Import</caption>
           <button id="buttonImport" label="Import starten" onClick="winImportClaML.startImport()" disabled="true"/>
-          <button id="buttonCancel" label="Abbrechen" onClick="winImportClaML.cancelImport()" visible="false"/>
+          <button id="buttonCancel"  label="${labels.cancel}" onClick="winImportClaML.cancelImport()" visible="false"/>
           <separator />
           <progressmeter id="progress" value="0" visible="false"/>
           <separator />

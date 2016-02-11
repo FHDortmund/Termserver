@@ -7,37 +7,37 @@
       <center flex="true" border="none" >
         <div >
           <groupbox width="98%" closable="false">
-            <caption>1. Dateiauswahl</caption>
+            <caption label="1. ${labels.fileSelection}" />
             <hbox>
               <textbox id="textboxDateiname" readonly="true" width="500px"/>
-              <button label="SVS-Datei wählen..." 
-                upload="true,maxsize=50240"
-                onUpload="winImportVSSVS.onDateinameSelect(event)" />
+              <button label="${labels.selectFile}..." 
+                      upload="true,maxsize=50240"
+                      onUpload="winImportVSSVS.onDateinameSelect(event)" />
             </hbox>
           </groupbox>
           <separator />
           <groupbox  width="98%" closable="false" >
-            <caption>2. Value Set-Auswahl</caption>
-            <label value="Wählen Sie ein Value Set aus, in welches Sie die Datei importieren möchten (dabei wird eine neue Version angelegt). Alternativ kann ein neues Value Set angelegt werden, wenn Sie die Textbox dafür ausfüllen:"/>
+            <caption label="2. ${labels.valueset} - ${labels.selection}" />
+            <label value="${labels.selectValuesetHint}:"/>
             <separator />
             <separator />
-            <label value="BITTE BEACHTEN SIE: Vergewissern Sie sich, dass dementsprechend alle Quell-Codelisten im System vorhanden sind und mit einer entsprechenden OID versehen sind!" />
+            <label value="${labels.selectValuesetHint2}" />
             <separator />
-            <checkbox id="cbNewVal" label="Neues ValueSet" onCheck="winImportVSSVS.newValChecked()" />
+            <checkbox id="cbNewVal" label="${labels.newValueset}" onCheck="winImportVSSVS.newValChecked()" />
             <separator />
-            <label value="Neuer Value Set-Name: "/> 
+            <label value="${labels.name}: "/> 
             <textbox id="tbVokabularVersion" onChange="winImportVSSVS.showStatus()" width="300px" disabled="true" />
             <separator />
             <include id="incList" src="/gui/templates/GenericList.zul"
-                   height="250px" width="99%"/>
+                     height="250px" width="99%"/>
             <separator />
-            <checkbox id="cbOrder" label="Konzept Reihenfolge fixieren"/>
+            <checkbox id="cbOrder" label="${labels.orderValueset}"/>
           </groupbox>
           <separator />
           <groupbox  width="98%" closable="false" >
-            <caption>3. Import</caption>
-            <button id="buttonImport" label="Import starten" onClick="winImportVSSVS.startImport()" disabled="true"/>
-            <button id="buttonCancel" label="Abbrechen" onClick="winImportVSSVS.cancelImport()" visible="false"/>
+            <caption label="3. ${labels.importText}"/>
+            <button id="buttonImport" label="${labels.startImport}" onClick="winImportVSSVS.startImport()" disabled="true"/>
+            <button id="buttonCancel"  label="${labels.cancel}" onClick="winImportVSSVS.cancelImport()" visible="false"/>
             <separator />
             <progressmeter id="progress" value="0" visible="false"/>
             <separator />

@@ -39,6 +39,7 @@ import java.util.Timer;
 import javax.xml.ws.Response;
 import org.hibernate.Session;
 import org.zkoss.util.media.Media;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.UploadEvent;
@@ -164,7 +165,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
         }
         else
         {
-          Messagebox.show("Nicht unterstützter Dateityp gefunden, Content Type: " + media.getContentType());
+          Messagebox.show(Labels.getLabel("foundNotSupportedDatatype") + ": " + media.getContentType());
         }
 
         logger.debug("ct: " + media.getContentType());
@@ -185,7 +186,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
     }
     catch (Exception ex)
     {
-      Messagebox.show("Fehler beim Laden eines Dokuments: " + ex.getMessage());
+      Messagebox.show(Labels.getLabel("docLoadFailure") + ": " + ex.getMessage());
       //logger.error("Fehler beim Laden eines Dokuments: " + ex.getMessage());
 
       LoggingOutput.outputException(ex, this);
@@ -216,7 +217,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
   {
     logger.debug("preview()");
 
-    // Interface bauen
+    // create interface
     importClass = null;
 
     int kind = ((Radiogroup) getFellow("rgKind")).getSelectedIndex();
@@ -316,7 +317,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
       List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
       header.add(new GenericListHeaderType("ID", 60, "", true, "String", true, true, false, false));
       //header.add(new GenericListHeaderType("V-ID", 60, "", true, "String", true, true, false, false));
-      header.add(new GenericListHeaderType("Name", 0, "", true, "String", true, true, false, false));
+      header.add(new GenericListHeaderType(Labels.getLabel("name"), 0, "", true, "String", true, true, false, false));
       //header.add(new GenericListHeaderType("Version", 0, "", true, "String", true, true, false, false));
 
       // Daten laden
@@ -379,7 +380,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
       List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
       header.add(new GenericListHeaderType("ID", 60, "", true, "String", true, true, false, false));
       //header.add(new GenericListHeaderType("V-ID", 60, "", true, "String", true, true, false, false));
-      header.add(new GenericListHeaderType("Name", 0, "", true, "String", true, true, false, false));
+      header.add(new GenericListHeaderType(Labels.getLabel("name"), 0, "", true, "String", true, true, false, false));
       //header.add(new GenericListHeaderType("Version", 0, "", true, "String", true, true, false, false));
 
       // Daten laden
@@ -477,13 +478,13 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
     String s = "";
     if (bytes == null)
     {
-      s += "Bitte wählen Sie eine Datei aus. ";
+      s += Labels.getLabel("selectFileMsg");
     }
 
     if (importClass == null)
     {
       logger.debug("ImportClass ist null");
-      s += "Bitte wählen Sie die Import-Art sowie ein Format aus. ";
+      s += Labels.getLabel("selectImportType");
       getFellow("westCS").setVisible(false);
     }
     else
@@ -492,7 +493,8 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
 
       if (importClass.supportsFormat(format) == false)
       {
-        s += "Das Format '" + format + "' wird für die Import-Art nicht unterstützt. ";
+        s += Labels.getLabel("formatNotSupported") + ": " + format;
+        //s += "Das Format '" + format + "' wird für die Import-Art nicht unterstützt. ";
       }
 
       mustSpecifyCodesystem = importClass.mustSpecifyCodesystem();
@@ -503,7 +505,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
     {
       if (selectedCS == null && selectedVS == null)
       {
-        s += "Bitte wählen Sie ein Codesystem oder Valueset aus. ";
+        s += Labels.getLabel("selectCodesystemOrValuesetMsg");
       }
     }
     else
@@ -516,7 +518,8 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
       String versionName = ((Textbox) getFellow("tbVersion")).getText();
       if (versionName == null || versionName.length() == 0)
       {
-        s += "Bitte geben Sie einen Versions-Namen ein. ";
+        s += Labels.getLabel("fillVersionNameMsg");
+        
       }
       else
       {
@@ -577,7 +580,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
     }
     else
     {
-      Messagebox.show("Bitte füllen Sie alle Felder aus.");
+      Messagebox.show(Labels.getLabel("fillAllFields"));
     }
   }
 

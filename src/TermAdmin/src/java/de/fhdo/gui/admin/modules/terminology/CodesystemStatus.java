@@ -21,6 +21,7 @@ import de.fhdo.helper.DomainHelper;
 import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.terminologie.db.Definitions;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Messagebox;
@@ -68,7 +69,7 @@ public class CodesystemStatus extends Window implements AfterCompose
     }
     catch (Exception e)
     {
-      Messagebox.show("Fehler beim Ändern des Status: " + e.getLocalizedMessage());
+      Messagebox.show(Labels.getLabel("changeStatusFailure") + ": " + e.getLocalizedMessage());
     }
   }
 

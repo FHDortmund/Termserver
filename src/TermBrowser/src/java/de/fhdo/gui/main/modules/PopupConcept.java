@@ -962,7 +962,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
         // sub-ebene
         // Assoziation erstellen; geht erst nachdem die neue CSE(V) erstell wurde und eine Id bekommen hat
         logger.debug("to id: " + csevAssociatedVersionId);
-
+        
         CreateConceptAssociationResponse.Return responseAssociation
                 = createAssociation(csevAssociatedVersionId, csev.getVersionId(),
                         Definitions.ASSOCIATION_KIND.TAXONOMY.getCode(),
@@ -971,13 +971,18 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
         try
         {
           if (responseAssociation != null && responseAssociation.getReturnInfos().getStatus() != de.fhdo.terminologie.ws.conceptassociation.Status.OK)
+          {
             Messagebox.show(Labels.getLabel("common.error") + "\n" + Labels.getLabel("popupConcept.associationNotCreated") + "\n\n" + responseAssociation.getReturnInfos().getMessage());
+          }
           else
           {
             if (responseAssociation.getReturnInfos().getOverallErrorCategory() == de.fhdo.terminologie.ws.conceptassociation.OverallErrorCategory.INFO)
             {
               CodeSystemEntityVersionAssociation cseva = new CodeSystemEntityVersionAssociation();
               cseva.setLeftId(csevAssociatedVersionId);
+              cseva.setAssociationKind(Definitions.ASSOCIATION_KIND.TAXONOMY.getCode());
+              cseva.setAssociationType(new AssociationType());
+              cseva.getAssociationType().setCodeSystemEntityVersionId(PropertiesHelper.getInstance().getAssociationTaxonomyDefaultVersionId());
               csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().add(cseva);
               //tnSelected.getChildren().add(newTreeNode);
             }

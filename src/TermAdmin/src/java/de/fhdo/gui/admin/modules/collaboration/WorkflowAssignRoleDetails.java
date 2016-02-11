@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Include;
@@ -106,9 +107,9 @@ public class WorkflowAssignRoleDetails extends Window implements AfterCompose, I
 
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Zugewiesen", 90, "", true, "Boolean", true, true, true, true));
-    header.add(new GenericListHeaderType("Name", 0, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Administrator", 80, "", true, "bool", true, true, false, true));
+    header.add(new GenericListHeaderType(Labels.getLabel("assigned"), 90, "", true, "Boolean", true, true, true, true));
+    header.add(new GenericListHeaderType(Labels.getLabel("name"), 0, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("administrator"), 80, "", true, "bool", true, true, false, true));
 
     // Daten laden
     Session hb_session = HibernateUtil.getSessionFactory().openSession();

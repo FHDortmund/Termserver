@@ -1,4 +1,4 @@
-<?page title="Terminologieserver - Verwaltungsbereich" contentType="text/html;charset=UTF-8"?>
+<?page title="${labels.termserver} - ${labels.administration_area}" contentType="text/html;charset=UTF-8"?>
 <?link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"?>
 <zk>
   <borderlayout>
@@ -10,24 +10,24 @@
         
         <tabbox id="tabboxMode" width="100%" height="100%" onSelect="win.onTabSelect(event)">
           <tabs>
-            <tab id="tabTerminology" label="Terminologie" height="32px"/>
-            <tab id="tabCollaboration" label="Kollaboration" height="32px"/>
+            <tab id="tabTerminology" label="${labels.terminology}" height="32px"/>
+            <tab id="tabCollaboration" label="${labels.collaboration}" height="32px"/>
           </tabs>
           <tabpanels>
             <tabpanel>
               <tabbox id="tabboxNavigation" width="100%" height="100%"  orient="vertical"
                       onSelect="win.onNavigationSelect(event)">
                 <tabs id="tabbox_tabs" width="160px">
-                  <tab label="Benutzer" id="tabBenutzer"/>
-                  <tab label="Terminologien" id="tabCS"/>
-                  <tab label="Terminologie-Import" id="tabImport"/>
-                  <tab label="Domänen" id="tabDomains"/>
-                  <tab label="Metadaten" id="tabMetadata"/>
-                  <tab label="System-Parameter" id="tabSysParam"/>
-                  <tab label="Reporting" id="tabReporting"/>
+                  <tab label="${labels.user}" id="tabBenutzer"/>
+                  <tab label="${labels.terminologies}" id="tabCS"/>
+                  <tab label="${labels.terminologyImport}" id="tabImport"/>
+                  <tab label="${labels.domains}" id="tabDomains"/>
+                  <tab label="${labels.metadata}" id="tabMetadata"/>
+                  <tab label="${labels.systemParameter}" id="tabSysParam"/>
+                  <tab label="${labels.reporting}" id="tabReporting"/>
                   
-                  <tab label="Taxonomie-Einordnung" id="tabTaxonomie"/>
-                  <tab label="Assoziationen" id="tabAssociations"/>
+                  <tab label="${labels.taxonomyClassify}" id="tabTaxonomie"/>
+                  <tab label="${labels.associations}" id="tabAssociations"/>
                   <!--<tab label="Datenbank" id="tabDatenbank"/>-->
                 </tabs>
                 <tabpanels id="tabbox_tabpanels">
@@ -71,10 +71,10 @@
               <tabbox id="tabboxNavigationCollab" width="100%" height="100%"  orient="vertical"
                       onSelect="win.onNavigationSelect(event)"  >
                 <tabs width="160px">
-                  <tab label="Workflow" id="tabKollabWorkflow" disabled="false"/>
-                  <tab label="Benutzer" id="tabKollabBenutzer" disabled="false"/>
-                  <tab label="Domänen" id="tabKollabDomains" disabled="false"/>
-                  <tab label="System-Parameter" id="tabKollabSysParam" disabled="false"/>
+                  <tab label="${labels.workflow}" id="tabKollabWorkflow" disabled="false"/>
+                  <tab label="${labels.user}" id="tabKollabBenutzer" disabled="false"/>
+                  <tab label="${labels.domains}" id="tabKollabDomains" disabled="false"/>
+                  <tab label="${labels.systemParameter}" id="tabKollabSysParam" disabled="false"/>
                   
                 </tabs>
                 <tabpanels>

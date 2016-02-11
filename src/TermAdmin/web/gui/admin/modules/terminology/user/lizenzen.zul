@@ -4,10 +4,10 @@
           use="de.fhdo.gui.admin.modules.terminology.user.Lizenzen">
 
     <borderlayout>
-      <west border="0" width="300px" title="Benutzer-Auswahl">
+      <west border="0" width="300px" title="${labels.userSelection}">
         <include id="incList" src="/gui/templates/GenericList.zul"/>
       </west>
-      <center border="0" title="Codesystem-Lizenzen">
+      <center border="0" title="${labels.codesystem} - ${labels.licenses}">
         <include id="incListLizenzen" src="/gui/templates/GenericList.zul"/>
       </center>
       

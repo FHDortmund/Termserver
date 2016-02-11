@@ -3,7 +3,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul">
   <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winUserDetails"?>
 
-  <window id="winUserDetails" title="Benutzer-Daten" width="600px"  height="175px" border="normal"
+  <window id="winUserDetails" title="${labels.userdata}" width="600px"  height="175px" border="normal"
           use="de.fhdo.gui.main.masterdata.UserDetails" closable="true"
           sizable="true">
     <borderlayout>
@@ -15,30 +15,19 @@
           </columns>
           <rows>
             <row>
-              <label value="Benutzername:"/>
+              <label value="${labels.username}:"/>
               <textbox width="97%" value="@{winUserDetails.user.name}" id="tb_Benutzername"
                        readonly="true" sclass="mandatory"/>
             </row>
             <row>
-              <label value="Email:"/>
+              <label value="${labels.mail}:"/>
               <textbox width="97%" value="@{winUserDetails.user.email}" id="tb_Email"
                        readonly="false" sclass="mandatory"/>
             </row>
-            
-            <!--<row>
-              <label value="Administrator:"/>
-              <checkbox disabled="false"
-                   checked="@{winUserDetails.user.isAdmin}"/>
-            </row>-->
-
-            <!--<row>
-              <label value="Name:"/>
-              <textbox width="97%" value="@{winUserDetails.user.userName}"/>
-            </row>-->
-            
+    
             <row id="row_Passwort">
-              <label value="Passwort:"/>
-              <button id="buttonPW" label="Passwort ändern" onClick="winUserDetails.changePassword()"/>
+              <label value="${labels.password}:"/>
+              <button id="buttonPW" label="${labels.changePassword}" onClick="winUserDetails.changePassword()"/>
             </row>
 
           </rows>
@@ -46,8 +35,8 @@
       </center>
       <south height="30px" border="0" collapsible="true">
         <div align="right">
-          <button label="OK" onClick="winUserDetails.onOkClicked()" autodisable="self" />
-          <button label="Abbrechen" onClick="winUserDetails.onCancelClicked()" autodisable="self" />
+          <button label="${labels.ok}" onClick="winUserDetails.onOkClicked()" autodisable="self" />
+          <button label="${labels.cancel}" onClick="winUserDetails.onCancelClicked()" autodisable="self" />
         </div>
       </south>
     </borderlayout>

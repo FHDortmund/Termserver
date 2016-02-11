@@ -18,10 +18,10 @@ Die Initialisierung des Baumes geschieht über GenericTree.java
             <div id="divExpandCollapse">
               <toolbarbutton id="tbb_Expand"
                              image="/rsc/img/generictree/expand_16x16.png"
-                             onClick="winGenericTree.expandTree()" tooltiptext="Klappt alle Einträge auf"/>
+                             onClick="winGenericTree.expandTree()" tooltiptext="${labels.expandAll}"/>
               <toolbarbutton id="tbb_Collapse"
                              image="/rsc/img/generictree/collapse_16x16.png" 
-                             onClick="winGenericTree.collapseTree()" tooltiptext="Klappt alle Einträge zusammen" />
+                             onClick="winGenericTree.collapseTree()" tooltiptext="${labels.collapseAll}" />
             </div>
             
             
@@ -76,15 +76,15 @@ Die Initialisierung des Baumes geschieht über GenericTree.java
       <south size="33px" border="none" id="south">
         <div style="padding-top:5px; padding-left: 0px;">
           <div align="left" style="float:left;" id="divEditButtons">
-            <button id="buttonNew" label="Neu..." onClick="winGenericTree.onNew()" image="/rsc/img/generictree/add.png"
-                    autodisable="self" tooltiptext="Fügt einen neuen Eintrag der Liste hinzu..."
+            <button id="buttonNew" label="${labels.newText}..." onClick="winGenericTree.onNew()" image="/rsc/img/generictree/add.png"
+                    autodisable="self" tooltiptext="${labels.newHint}"
                     disabled="@{winContent.standardNewDecline}" visible="false"/>
-            <button id="buttonEdit" label="Bearbeiten..." onClick="winGenericTree.onEdit()"
+            <button id="buttonEdit" label="${labels.edit}..." onClick="winGenericTree.onEdit()"
                     image="/rsc/img/generictree/pencil.png"
-                    autodisable="self" tooltiptext="Bearbeitet den markierten Eintrag"
+                    autodisable="self" tooltiptext="${labels.editHint}"
                     disabled="true" visible="false"/>
-            <button id="buttonDelete" label="Löschen" onClick="winGenericTree.onDelete()"
-                    image="/rsc/img/generictree/delete.png" tooltiptext="Löscht den markierten Eintrag"
+            <button id="buttonDelete" label="${labels.delete}" onClick="winGenericTree.onDelete()"
+                    image="/rsc/img/generictree/delete.png" tooltiptext="${labels.deleteHint}"
                     disabled="true" visible="false"/>
           </div>
           
@@ -108,25 +108,11 @@ Die Initialisierung des Baumes geschieht über GenericTree.java
       </south>
     </borderlayout>
     <menupopup id="treePopupItem">
-      <menuitem label="Neuer Untereintrag..." image="/rsc/img/design/add_16x16.png" onClick="winGenericTree.onNewSubentry()"/>
+      <menuitem label="${labels.newSubEntry}..." image="/rsc/img/design/add_16x16.png" onClick="winGenericTree.onNewSubentry()"/>
       <menuseparator/>
-      <menuitem label="Eintrag bearbeiten..." image="/rsc/img/list/pencil.png" onClick="winGenericTree.onEdit()"/>
-      <menuitem label="Eintrag löschen" image="/rsc/img/list/delete.png" onClick="winGenericTree.onDelete()"/>
+      <menuitem label="${labels.editEntry}..." image="/rsc/img/list/pencil.png" onClick="winGenericTree.onEdit()"/>
+      <menuitem label="${labels.deleteEntry}" image="/rsc/img/list/delete.png" onClick="winGenericTree.onDelete()"/>
     </menupopup>
-    
-    <!--<menupopup id="treePopupItem">
-      <menuitem label="Neuer Eintrag..." image="/rsc/img/design/add_16x16.png" onClick="winContent.navigationFrame.onNew()"/>
-      <menuseparator/>
-      <menuitem label="Eintrag bearbeiten..." image="/rsc/img/list/pencil.png" onClick="winContent.navigationFrame.onEdit()"/>
-      <menuitem label="Eintrag löschen" image="/rsc/img/list/delete.png" onClick="winContent.navigationFrame.onDelete()"/>
-    </menupopup>-->
-    
-    <!--<menupopup id="listPopup">
-      <menuitem label="Neuer Eintrag..." image="/rsc/img/design/add_16x16.png" onClick="winContent.navigationFrame.onNew()"/>
-      <menuseparator/>
-      <menuitem label="Eintrag bearbeiten..." image="/rsc/img/list/pencil.png" onClick="winContent.navigationFrame.onEdit()"/>
-      <menuitem label="Eintrag löschen" image="/rsc/img/list/delete.png" onClick="winContent.navigationFrame.onDelete()"/>
-    </menupopup>-->
     
   </window>
 </zk>

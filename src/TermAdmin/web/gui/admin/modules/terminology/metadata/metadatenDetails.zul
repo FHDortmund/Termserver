@@ -3,7 +3,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul">
   <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winMdDetails"?>
   
-  <window id="winMdDetails" title="Weitere Attribute-Details" width="600px"  height="400px" border="normal"
+  <window id="winMdDetails" title="${labels.otherAttributeDetails}" width="600px"  height="400px" border="normal"
      use="de.fhdo.gui.admin.modules.terminology.metadata.MetadatenDetails" closable="true"
      onOK="winMdDetails.onOkClicked()">
     <borderlayout>
@@ -15,38 +15,38 @@
           </columns>
           <rows>
             <row>
-              <label value="Parameter-Name:"/>
+              <label value="${labels.parameterName}:"/>
               <textbox id="domain_code" hflex="true"
                        value="@{winMdDetails.metadataParameter.paramName}" sclass="mandatory"/>
             </row>
             
             <row>
-              <label value="Name lang:"/>
+              <label value="${labels.nameLong}:"/>
               <textbox hflex="true" value="@{winMdDetails.metadataParameter.paramNameDisplay}"/>
             </row>
             
             <row>
-              <label value="Beschreibung:"/>
+              <label value="${labels.description}:"/>
               <textbox hflex="true" value="@{winMdDetails.metadataParameter.description}" rows="5"/>
             </row>
             
             <row>
-              <label value="Parameter-Typ:"/>
+              <label value="${labels.parameterType}:"/>
               <combobox id="cbParamType" readonly="true" hflex="true"/>
             </row>
             
             <row>
-              <label value="Datentyp:"/>
+              <label value="${labels.datatype}:"/>
               <combobox id="cbDatatype" readonly="true" hflex="true"/>
             </row>
             
             <row>
-              <label value="Max. Länge:"/>
+              <label value="${labels.maxLength}:"/>
               <intbox width="200px" value="@{winMdDetails.metadataParameter.maxLength}"/>
             </row>
             
             <row>
-              <label value="Sprache:"/>
+              <label value="${labels.language}:"/>
               <hbox>
                 <combobox id="cbLanguage" readonly="true"/>
                 <image src="/rsc/img/flaggen/de.png" onClick='winMdDetails.setLanguage("de")'/>
@@ -59,8 +59,8 @@
       </center>
       <south height="30px" border="0" collapsible="true">
         <div align="right" style="margin-right:8px;">
-          <button label="OK" onClick="winMdDetails.onOkClicked()" autodisable="self" />
-          <button label="Abbrechen" onClick="winMdDetails.onCancelClicked()" autodisable="self" />
+          <button label="${labels.ok}" onClick="winMdDetails.onOkClicked()" autodisable="self" />
+          <button label="${labels.cancel}" onClick="winMdDetails.onCancelClicked()" autodisable="self" />
         </div>
       </south>
     </borderlayout>

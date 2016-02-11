@@ -7,14 +7,14 @@
     <!--<include id="incList" src="/gui/templates/GenericList.zul"/>-->
     <tabbox height="100%" width="100%" id="tabboxNavigation" onSelect="winImport.onNavigationSelect(event)">
       <tabs>
-        <tab visible="true" label="Alle" id="tabAll"/>
+        <tab visible="true" label="${labels.all}" id="tabAll"/>
         <!--<tab visible="true" label="Code System (ClaML)" id="tabCLAML"/>-->
         <!--<tab visible="true" label="Code System (csv)" id="tabCS_CSV"/>-->
         <!--<tab visible="true" label="Value Set (csv)" id="tabVS_CSV"/>-->
-        <tab visible="true" label="Codelisten (ELGA_SVS)" id="tabCS_SVS"/>
-        <tab visible="true" label="Value Set (ELGA_SVS)" id="tabVS_SVS"/>
+        <tab visible="true" label="${labels.codelistsELGA}" id="tabCS_SVS"/>
+        <tab visible="true" label="${labels.valuesetsELGA}" id="tabVS_SVS"/>
         <!--<tab visible="true" label="LOINC (csv)" id="tabLOINC"/>-->
-        <tab visible="false" label="Leistungskatalog und KAL BMG AT (csv)" id="tabLEIKAT"/>
+        <tab visible="false" label="${labels.KAL_ELGA}" id="tabLEIKAT"/>
         <tab visible="false" label="ICD-10 BMG AT (csv)" id="tabICDBMG"/>
         <!--<tab visible="false" label="KBV Schlüsseltabellen" id="tabKBV"/>-->
       </tabs>

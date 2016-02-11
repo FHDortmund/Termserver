@@ -22,6 +22,7 @@ import java.util.HashMap;
 import org.zkoss.zk.ui.event.EventListener;
 import java.util.List;
 import java.util.Map;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Sessions;
@@ -199,7 +200,7 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose
             }
             catch (Exception e)
             {
-              Messagebox.show("Keine Auswahl");
+              Messagebox.show(Labels.getLabel("noSelection"));
               fehler = true;
             }
           }

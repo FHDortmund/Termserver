@@ -3,7 +3,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul">
   <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winLizenzTypen"?>
 
-    <window id="winLizenzTypen" title="Lizenz-Details" width="600px"  height="500px" border="normal"
+    <window id="winLizenzTypen" title="${labels.licenseTypes}" width="600px"  height="500px" border="normal"
             use="de.fhdo.gui.admin.modules.terminology.user.LizenzTypen" closable="true"
             onClose="winLizenzTypen.onOkClicked()">
     <borderlayout>

@@ -53,6 +53,14 @@
         </menupopup>
       </menu>
       
+      <menu label="${labels.common.language}">
+        <menupopup>
+          <menuitem label="English" onClick='win.setLanguage("en")' image="/rsc/img/countries/16/United States of America.png" ></menuitem>
+          <menuitem label="Deutsch" onClick='win.setLanguage("de")' image="/rsc/img/countries/16/Germany.png"></menuitem>
+        </menupopup>
+      </menu>
+      
+      
       <menu label="${labels.common.help}">
         <menupopup>
           <!--<menuitem label="${labels.menu.enquiry}" onClick="win.callEnquiry()"></menuitem>

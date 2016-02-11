@@ -18,11 +18,13 @@ package de.fhdo.gui.header;
 
 import de.fhdo.authorization.Authorization;
 import de.fhdo.collaboration.helper.LoginHelper;
+import de.fhdo.helper.LocalizationHelper;
 import de.fhdo.helper.PropertiesHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.helper.ViewHelper;
 import de.fhdo.logging.LoggingOutput;
 import java.util.HashMap;
+import java.util.Locale;
 import org.zkoss.zk.ui.event.EventListener;
 import java.util.Map;
 import org.zkoss.util.resource.Labels;
@@ -55,6 +57,8 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
     {
       logger.debug("[Menu.java] Konstruktor");
     }
+    
+    LocalizationHelper.initLocalization();
 
     //isCollaboration = SessionHelper.isCollaborationActive();
     
@@ -527,6 +531,15 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
   {
 
     return !isCollaboration;
+  }
+  
+  public void setLanguage(String langCd)
+  {
+    /*if(langCd.equalsIgnoreCase("de"))
+      LocalizationHelper.switchLocalization(Locale.GERMAN);
+    else
+      LocalizationHelper.switchLocalization(Locale.ENGLISH);*/
+    LocalizationHelper.switchLocalization(langCd);
   }
 
 }

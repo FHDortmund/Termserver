@@ -3,7 +3,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul">
   <!--<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winCSStatus"?>-->
 
-  <window id="winCSStatus" title="Codesystem-Version - Status" width="500px"  height="250px" border="normal"
+  <window id="winCSStatus" title="${labels.codesystemVersion} - ${labels.status}" width="500px"  height="250px" border="normal"
           use="de.fhdo.gui.admin.modules.terminology.CodesystemStatus" closable="true"
           sizable="true">
     <borderlayout>
@@ -15,7 +15,7 @@
           </columns>
           <rows>
             <row>
-              <label value="Status:"/>
+              <label value="${labels.status}:"/>
               <combobox id="cbStatus" readonly="true"/>
             </row>
               
@@ -32,8 +32,8 @@
       </center>
       <south height="30px" border="0" collapsible="true">
         <div align="right">
-          <button label="OK" onClick="winCSStatus.onOkClicked()" autodisable="self" />
-          <button label="Abbrechen" onClick="winCSStatus.onCancelClicked()" autodisable="self" />
+          <button  label="${labels.ok}" onClick="winCSStatus.onOkClicked()" autodisable="self" />
+          <button label="${labels.cancel}" onClick="winCSStatus.onCancelClicked()" autodisable="self" />
         </div>
       </south>
     </borderlayout>

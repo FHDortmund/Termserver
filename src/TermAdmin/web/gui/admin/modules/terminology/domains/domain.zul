@@ -8,20 +8,7 @@
         <include id="incList" src="/gui/templates/GenericList.zul"/>
       </west>
       <center border="0" title="Werte">
-        <!--<include id="incListValues" src="/gui/templates/GenericList.zul"/>-->
         <include id="incTree" src="/gui/templates/GenericTree.zul"/>
-        <!--<div>
-          <div id="noDataDiv" visible="true" style="margin-left:12px;margin-top:12px;">
-            
-            <hlayout style="text-align: center;">
-              <hbox align="center">
-                <image src="/rsc/img/symbols/info32_32.png" />
-                <label value="Keine Daten. Bitte wählen Sie links eine Domäne aus."/>
-              </hbox>
-            </hlayout>
-          </div>
-          
-        </div>-->
       </center>
       
     </borderlayout>

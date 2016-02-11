@@ -359,8 +359,17 @@ public class ImportClaml
             //if(event.isCharacters()){
             clamlBindingXSD.Label l = new clamlBindingXSD.Label();
             //l.getContent().add(event.asCharacters().getData());
-            l.setvalue(event.asCharacters().getData());
-            rubi.getLabel().add(l);
+            if(event.isCharacters())
+            {
+              l.setvalue(event.asCharacters().getData());
+              rubi.getLabel().add(l);
+            }
+            else
+            {
+              logger.warn("ClaML Element Label contains no characters, event-type: " + event.getEventType() + ", str: " + event.toString());
+              //l.setvalue(event.toString());
+            }
+            
             continue;
             //}
           }

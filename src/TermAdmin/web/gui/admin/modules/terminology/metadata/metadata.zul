@@ -2,11 +2,11 @@
 
 <zk xmlns="http://www.zkoss.org/2005/zul">
   <window border="none" width="100%" height="100%" >
-  <!--<include id="incList" src="/gui/templates/GenericList.zul"/>-->
+  
   <tabbox height="100%" width="100%">
     <tabs>
-      <tab visible="true" label="Code Systeme" id="tabMetaVok"/>
-      <tab visible="true" label="Value Sets" id="tabMetaVal"/>
+      <tab visible="true" label="${labels.codesystems}" id="tabMetaVok"/>
+      <tab visible="true" label="${labels.valuesets}" id="tabMetaVal"/>
     </tabs>
     <tabpanels>
       <tabpanel> <!-- CS -->

@@ -32,6 +32,7 @@ import de.fhdo.logging.LoggingOutput;
 import java.util.LinkedList;
 import java.util.List;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Include;
 import org.zkoss.zul.Messagebox;
@@ -65,7 +66,7 @@ public class LizenzTypen extends Window implements AfterCompose, IGenericListAct
 
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Lizenztyp", 0, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("licenseType"), 0, "", true, "String", true, true, false, false));
 
     // Daten laden
     Session hb_session = HibernateUtil.getSessionFactory().openSession();
@@ -134,7 +135,7 @@ public class LizenzTypen extends Window implements AfterCompose, IGenericListAct
   {
     try
     {
-      String ltTxt = (String) InputMessageBox.showInput("Lizenztyp:", "Neuer Lizenztyp");
+      String ltTxt = (String) InputMessageBox.showInput(Labels.getLabel("licenseType") + ":", Labels.getLabel("newLicenseType"));
       logger.debug("Neuer Lizenztyp: " + ltTxt);
 
       if (ltTxt != null && ltTxt.length() > 0)
@@ -180,7 +181,7 @@ public class LizenzTypen extends Window implements AfterCompose, IGenericListAct
     {
       LicenceType lt = (LicenceType) data;
 
-      String ltTxt = (String) InputMessageBox.showInput("Lizenztyp:", "Lizenztyp ändern", lt.getTypeTxt());
+      String ltTxt = (String) InputMessageBox.showInput(Labels.getLabel("licenseType") + ":", Labels.getLabel("changeLicenseType"), lt.getTypeTxt());
       logger.debug("Lizenztyp: " + ltTxt);
 
       if (ltTxt != null && ltTxt.length() > 0)
@@ -245,13 +246,13 @@ public class LizenzTypen extends Window implements AfterCompose, IGenericListAct
 
         hb_session.getTransaction().commit();
 
-        Messagebox.show("Lizenz-Typ wurde erfolgreich gelöscht. Alle Lizenzen mit diesem Typen wurden zu 'generelle Lizenz' geändert.", "Lizenztyp löschen", Messagebox.OK, Messagebox.INFORMATION);
+        Messagebox.show(Labels.getLabel("licenseTypeDeletedSuccess"), Labels.getLabel("delete"), Messagebox.OK, Messagebox.INFORMATION);
       }
       catch (Exception e)
       {
         hb_session.getTransaction().rollback();
 
-        Messagebox.show("Fehler beim Löschen eines Lizenz-Typs: " + e.getLocalizedMessage(), "Lizenztyp löschen", Messagebox.OK, Messagebox.EXCLAMATION);
+        Messagebox.show(Labels.getLabel("licenseTypeDeleteFailure") + ": " + e.getLocalizedMessage(), Labels.getLabel("delete"), Messagebox.OK, Messagebox.EXCLAMATION);
         initList();
       }
       finally

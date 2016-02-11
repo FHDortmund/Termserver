@@ -44,6 +44,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.persister.collection.AbstractCollectionPersister;
 import org.hibernate.persister.entity.EntityPersister;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Include;
@@ -130,9 +131,9 @@ public class Associations extends Window implements AfterCompose, IGenericListAc
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
     header.add(new GenericListHeaderType("ID", 90, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Name vorwärts", 250, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Name rückwärts", 250, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Codesystem", 350, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("nameForward"), 250, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("nameReverse"), 250, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("codesystem"), 350, "", true, "String", true, true, false, false));
 
     //CacheManager.getInstance().clearAll();
     //clearHibernateCache();
@@ -293,7 +294,7 @@ public class Associations extends Window implements AfterCompose, IGenericListAc
       catch (Exception e)
       {
         LoggingOutput.outputException(e, this);
-        Messagebox.show("Fehler beim Löschen: " + e.getLocalizedMessage());
+        Messagebox.show(Labels.getLabel("deleteFailure") + ": " + e.getLocalizedMessage());
         hb_session.getTransaction().rollback();
       }
       finally

@@ -79,7 +79,7 @@ public class UsernamePasswordMethod implements IAuthorization
     {
       try
       {
-        Messagebox.show(Labels.getLabel("loginHelper.loggingOffError") + ": " + response.getReturnInfos().getMessage());
+        Messagebox.show(Labels.getLabel("loggingOffError") + ": " + response.getReturnInfos().getMessage());
       }
       catch (Exception ex)
       {

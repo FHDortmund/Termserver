@@ -3,7 +3,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul">
   <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winDomainDetails"?>
 
-  <window id="winDomainDetails" title="Domänen-Details" width="500px"  height="450px" border="normal"
+  <window id="winDomainDetails" title="${labels.domainDetails}" width="500px"  height="450px" border="normal"
      use="de.fhdo.gui.admin.modules.terminology.domains.DomainDetails" closable="true"
      onOK="winDomainDetails.onOkClicked()">
     <borderlayout>
@@ -15,14 +15,14 @@
           </columns>
           <rows>
             <row>
-              <label value="Domänen-Name:"/>
+              <label value="${labels.domainName}:"/>
               <textbox id="domain_name" width="97%"
-               constraint="no empty : Tragen Sie bitte einen Domänennamen ein"
+               constraint="no empty : ${labels.pleaseInsertDomainName}"
                value="@{winDomainDetails.domain.domainName}" sclass="mandatory"/>
             </row>
 
             <row>
-              <label value="Anzeigetext:"/>
+              <label value="${labels.displayText}:"/>
               <textbox width="97%" value="@{winDomainDetails.domain.displayText}"/>
             </row>
 
@@ -32,7 +32,7 @@
             </row>
 
             <row>
-              <label value="Beschreibung:"/>
+              <label value="${labels.description}:"/>
               <textbox width="97%" rows="4" value="@{winDomainDetails.domain.description}"/>
             </row>
             
@@ -41,28 +41,27 @@
               <textbox width="97%" value="@{winDomainDetails.domain.domainCodesys}"/>
             </row>-->
             <row>
-              <label value="Typ:"/>
+              <label value="${labels.type}:"/>
               <textbox width="97%" value="@{winDomainDetails.domain.domainType}"/>
             </row>
             <row>
-              <label value="Optional:"/>
+              <label value="${labels.optional}:"/>
               <checkbox label="" checked="@{winDomainDetails.domain.isOptional}" />
             </row>
             <row>
-              <label value="CDA Domäne:"/>
+              <label value="${labels.cdaDomain}:"/>
               <checkbox label="" checked="@{winDomainDetails.domain.cdaDomainFlag}" />
             </row>
             <row>
-              <label value="Sortierung:"/>
+              <label value="${labels.sortDirection}:"/>
               <combobox model="@{winDomainDetails.sortTypeList}"
                selectedItem="@{winDomainDetails.selectedSortType}" value="@{winDomainDetails.selectedSortType.domainDisplay}"
-
                width="98%">
                 <comboitem self="@{each=itemType2}" label="@{itemType2.domainDisplay}" value="@{itemType2.domainCode}" />
               </combobox>
             </row>
             <row id="defaultRow">
-              <label value="Standard-Wert:"/>
+              <label value="${labels.defaultValue}:"/>
               <hbox width="100%">
                 <bandbox id="bbStandard" mold="rounded" autodrop="true" width="305px"
                onOpen="winDomainDetails.showStandardList()">
@@ -82,7 +81,7 @@
                   </bandpopup>
                 </bandbox>
                 <button image="/rsc/img/symbols/delete_12x12.png" height="24px" 
-                onClick="winDomainDetails.filterRemove()" tooltiptext="Entfernt den Standard-Wert" />
+                        onClick="winDomainDetails.filterRemove()" tooltiptext="${labels.removesDefaultValue}" />
               </hbox>
             </row>
 
@@ -92,8 +91,8 @@
       </center>
       <south height="30px" border="0" collapsible="true">
         <div align="right">
-          <button label="OK" onClick="winDomainDetails.onOkClicked()" autodisable="self" />
-          <button label="Abbrechen" onClick="winDomainDetails.onCancelClicked()" autodisable="self" />
+          <button label="${labels.ok}" onClick="winDomainDetails.onOkClicked()" autodisable="self" />
+          <button label="${labels.cancel}" onClick="winDomainDetails.onCancelClicked()" autodisable="self" />
         </div>
       </south>
     </borderlayout>

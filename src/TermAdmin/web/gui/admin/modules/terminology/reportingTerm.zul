@@ -7,9 +7,9 @@
       <center flex="true" border="none" >
         <div >
     <groupbox width="98%" closable="false">
-      <caption>Übersicht über die Terminologien</caption>
+      <caption label="${labels.termOverview}" />
       <separator />
-      <label value="Statistik - Terminologien:"/>
+      <label value="${labels.statistic}Statistik - ${labels.terminologies}:"/>
       <separator />
       <include id="incTermList" src="/gui/templates/GenericList.zul" height="400px" width="99%"/>
       <separator />

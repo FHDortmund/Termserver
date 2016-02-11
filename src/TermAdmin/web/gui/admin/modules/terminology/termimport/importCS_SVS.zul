@@ -7,45 +7,31 @@
       <center flex="true" border="none" >
         <div >
     <groupbox width="98%" closable="false">
-      <caption>1. Dateiauswahl</caption>
+      <caption label="1. ${labels.fileSelection}" />
       <hbox>
         <textbox id="textboxDateiname" readonly="true" width="500px"/>
-        <button label="SVS-Datei wählen..."
+        <button label="${labels.selectFile}..."
                 upload="true,maxsize=50240"
                 onUpload="winImportCSSVS.onDateinameSelect(event)" />
-        <!--<button label="CSV-Datei wählen..." 
-                upload="true,maxsize=50240"
-                onUpload="winImportCSV.onDateinameSelect(event)" />-->
       </hbox>
-      <!--<vbox>
-        <hbox><label value="CSV-Version: "/><label id="labelClamlVersion"/></hbox>
-        <hbox><label value="Titel: "/><label id="labelClamlTitel"/></hbox>
-        <hbox><label value="Author: "/><label id="labelClamlAutor"/></hbox>
-      </vbox>-->
       
     </groupbox>
     <separator />
-    <!--<groupbox  width="98%" closable="false" >
-      <caption>2. Steuerparameter</caption>
-      
-      
-        </groupbox>
-        <separator />-->
         <groupbox  width="98%" closable="false" >
-          <caption>2. Code System Auswahl</caption>
-          <label value="Wählen Sie ein Code System aus, in welches Sie die Datei importieren möchten. Es wird automatisch eine neue Version mit folgendem Namen angelegt:"/>
+          <caption label="2. ${labels.codesystem} - ${labels.selection}" />
+          <label value="${labels.codesystemImportHint}:"/>
           <separator />
-          <label value="Code System Version: "/> <textbox id="tbVokabularVersion" width="300px" />
+          <label value="${labels.codesystemVersion}: "/> <textbox id="tbVokabularVersion" width="300px" />
           <separator />
-          <label value="ODER"/>
+          <label value="${labels.OR}"/>
           <separator />
-          <label value="Markieren Sie die Checkbox um ein neues Code System mit Erst-Version anzulegen:" />
+          <label value="${labels.newCodesystemHint}:" />
           <separator />
-          <checkbox id="cbNewVoc" label="Neues Code System" onCheck="winImportCSSVS.newVocChecked()" disabled="true" />
+          <checkbox id="cbNewVoc" label="${labels.newCodesystem}" onCheck="winImportCSSVS.newVocChecked()" disabled="true" />
           <separator />
-          <label value="Code System Name: "/><textbox id="tbNewVoc" disabled="true" width="300px"/>
+          <label value="${labels.codesystem} - ${labels.name}: "/><textbox id="tbNewVoc" disabled="true" width="300px"/>
           <separator />
-          <label value="Code System Versions Name: "/><textbox id="tbNewVocVersion" disabled="true" width="300px"/>
+          <label value="${labels.codesystem} - ${labels.versionName}: "/><textbox id="tbNewVocVersion" disabled="true" width="300px"/>
           <separator />
           <include id="incList" src="/gui/templates/GenericList.zul"
                    height="250px" width="99%"/>
@@ -53,9 +39,9 @@
         </groupbox>
         <separator />
         <groupbox  width="98%" closable="false" >
-          <caption>3. Import</caption>
-          <button id="buttonImport" label="Import starten" onClick="winImportCSSVS.startImport()" disabled="true"/>
-          <button id="buttonCancel" label="Abbrechen" onClick="winImportCSSVS.cancelImport()" visible="false"/>
+          <caption label="3. ${labels.importText}"/>
+          <button id="buttonImport" label="${labels.startImport}" onClick="winImportCSSVS.startImport()" disabled="true"/>
+          <button id="buttonCancel"  label="${labels.cancel}" onClick="winImportCSSVS.cancelImport()" visible="false"/>
           <separator />
           <progressmeter id="progress" value="0" visible="false"/>
           <separator />

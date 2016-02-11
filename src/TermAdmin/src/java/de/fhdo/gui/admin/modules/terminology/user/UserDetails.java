@@ -25,6 +25,7 @@ import de.fhdo.terminologie.db.HibernateUtil;
 import java.util.HashMap;
 import java.util.Map;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Checkbox;
@@ -130,7 +131,7 @@ public class UserDetails extends Window implements AfterCompose
       if (user.getName().length() == 0
               || user.getEmail().length() == 0)
       {
-        Messagebox.show("Bitte beachten Sie die Pflichtfelder!");
+        Messagebox.show(Labels.getLabel("mandatoryFields"));
       }
 
       // Parameter füllen
@@ -155,7 +156,7 @@ public class UserDetails extends Window implements AfterCompose
       if (auth.createOrEditUser(param, newEntry, password))
       {
         if(newEntry)
-          Messagebox.show("Benutzer erfolgreich erstellt und benachrichtigt.");
+          Messagebox.show(Labels.getLabel("userCreatedSuccess"));
 
         this.setVisible(false);
         this.detach();
@@ -165,7 +166,7 @@ public class UserDetails extends Window implements AfterCompose
       }
       else
       {
-        Messagebox.show("Fehler beim Erstellen eines Benutzers. Bitte vergewissern Sie sich, dass Sie alle Pflichfelder ausgefüllt haben. Wenden Sie sich bei Problemen an den Administrator.");
+        Messagebox.show(Labels.getLabel("userCreateFailure2"));
       }
     }
     catch (Exception e)

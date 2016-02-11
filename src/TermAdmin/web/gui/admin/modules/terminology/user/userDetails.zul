@@ -3,7 +3,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul">
   <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winUserDetails"?>
 
-  <window id="winUserDetails" title="Benutzerdaten" width="600px"  height="290px" border="normal"
+  <window id="winUserDetails" title="${labels.userdata}" width="600px"  height="290px" border="normal"
           use="de.fhdo.gui.admin.modules.terminology.user.UserDetails" closable="true"
           sizable="true">
     <borderlayout>
@@ -15,7 +15,7 @@
           </columns>
           <rows>
             <row visible="false" id="rowUserId">
-              <label value="User-ID:"/>
+              <label value="ID:"/>
               <textbox  id="tb_userID"
                           hflex="true" value="@{winUserDetails.user.id}"
                           readonly="true" />
@@ -27,9 +27,9 @@
             </row>-->
             
             <row>
-              <label value="Benutzername:"/>
+              <label value="${labels.username}:"/>
               <textbox hflex="true" value="@{winUserDetails.user.name}" id="tb_Benutzername"
-                         constraint="no empty : Tragen Sie bitte einen Benutzernamen ein" readonly="true" sclass="mandatory"/>
+                         constraint="no empty : ${labels.usernameHint}" readonly="true" sclass="mandatory"/>
             </row>
             <!--<row id="rComboUsername" visible= "true">
               <label value="Mögliche Benutzer:"/>
@@ -37,19 +37,19 @@
                           constraint="no empty : Wählen sie eine Benutzer aus." readonly="true" sclass="mandatory"/>
             </row>-->
             <row>
-              <label value="Email:"/>
+              <label value="${labels.mail}:"/>
               <textbox hflex="true" value="@{winUserDetails.user.email}" id="tb_Email"
                        sclass="mandatory"/>
             </row>
             <row id="rowPassword">
-              <label value="Passwort:"/>
+              <label value="${labels.password}:"/>
               <vbox>
-                <checkbox id="cbPasswordMail" label="Automatisch per Email verschicken" checked="true" onCheck="winUserDetails.showPasswordBox()"/>
+                <checkbox id="cbPasswordMail" label="${labels.sendAutomatically}" checked="true" onCheck="winUserDetails.showPasswordBox()"/>
                 <textbox hflex="true" id="tb_Password"/>
               </vbox>
             </row>
             <row id="row_Aktiv">
-              <label value="Aktiv:"/>
+              <label value="${labels.active}:"/>
               <checkbox id="cb_aktiv" checked="@{winUserDetails.user.enabled}"/>
             </row>
             <!--<row id="row_MailAktiv">
@@ -58,26 +58,17 @@
                           checked="@{winUserDetails.user.activated}"/>
             </row>-->
             <row>
-              <label value="Admin Rechte:"/>
+              <label value="${labels.adminRights}:"/>
               <checkbox id="cb_isAdmin" checked="@{winUserDetails.user.isAdmin}"/>
             </row>
-
-            <!--<row id="row_Email">
-              <label value="Email (Registrierung):"/>
-              <textbox hflex="true" value="@{winUserDetails.email}" id="tb_Email" 
-              constraint="/.+@.+\.[a-z]+/: Tragen Sie bitte eine Registrierungs-Emailadresse ein"
-              readonly="false" sclass="mandatory"/>
-            </row>-->
-
-            
 
           </rows>
         </grid>
       </center>
       <south height="30px" border="0" collapsible="true">
         <div align="right">
-          <button id="b_Ok" label="OK" onClick="winUserDetails.onOkClicked()" autodisable="self" />
-          <button label="Abbrechen" onClick="winUserDetails.onCancelClicked()" autodisable="self" />
+          <button id="b_Ok" label="${labels.ok}" onClick="winUserDetails.onOkClicked()" autodisable="self" />
+          <button label="${labels.cancel}" onClick="winUserDetails.onCancelClicked()" autodisable="self" />
         </div>
       </south>
     </borderlayout>

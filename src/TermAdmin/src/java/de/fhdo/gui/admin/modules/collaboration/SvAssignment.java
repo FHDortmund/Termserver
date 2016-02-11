@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Include;
@@ -78,12 +79,12 @@ public class SvAssignment extends Window implements AfterCompose, IGenericListAc
   {
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Terminologiename", 350, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Typ", 150, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Benutzername", 150, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Vorname", 150, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Nachname", 150, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Organisation", 200, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("terminologyName"), 350, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("type"), 150, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("username"), 150, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("firstname"), 150, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("name"), 150, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("organization"), 200, "", true, "String", true, true, false, false));
 
     // Daten laden
     Session hb_session_kollab = HibernateUtil.getSessionFactory().openSession();

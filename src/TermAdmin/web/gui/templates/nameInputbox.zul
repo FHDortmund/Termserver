@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <!--<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winTextInput"?>-->
+
+  <window id="winTextInput" title="${labels.input}" width="500px"  height="170px" border="normal"
+          use="de.fhdo.gui.templates.NameInputbox" closable="true"
+          sizable="true">
+    <borderlayout>
+      <center border="0">
+        <grid>
+          <columns>
+            <column hflex="min" />
+            <column label=""/>
+          </columns>
+          <rows>
+            <row>
+              <label value="${labels.text}:"/>
+              <textbox id="textbox" hflex="true"/>
+            </row>
+              
+          </rows>
+        </grid>
+      </center>
+      <south height="30px" border="0" collapsible="true">
+        <div align="right" style="margin-right:8px;">
+          <button label="${labels.ok}" onClick="winTextInput.onOkClicked()" autodisable="self" />
+          <button label="${labels.cancel}" onClick="winTextInput.onCancelClicked()" autodisable="self" />
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>

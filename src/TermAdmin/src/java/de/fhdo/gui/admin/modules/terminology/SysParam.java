@@ -18,7 +18,6 @@ package de.fhdo.gui.admin.modules.terminology;
 
 import de.fhdo.terminologie.db.Definitions;
 import de.fhdo.terminologie.db.HibernateUtil;
-import de.fhdo.helper.DeleteTermHelper;
 import de.fhdo.helper.DomainHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.interfaces.IUpdateModal;
@@ -32,13 +31,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
-import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Include;
-import org.zkoss.zul.Messagebox;
-import org.zkoss.zul.South;
-import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 /**
@@ -85,12 +81,12 @@ public class SysParam extends Window implements AfterCompose, IGenericListAction
 
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Name", 230, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Gültigkeitsbereich", 130, "", true, filter, true, true, false, false));
-    header.add(new GenericListHeaderType("Modify-Level", 130, "", true, filter, true, true, false, false));
-    header.add(new GenericListHeaderType("Datentyp", 80, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Wert", 700, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Beschreibung", 400, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("name"), 230, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("validityRange"), 130, "", true, filter, true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("modifyLevel"), 130, "", true, filter, true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("datatype"), 80, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("value"), 700, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("description"), 400, "", true, "String", true, true, false, false));
 
     // Daten laden
     Session hb_session = HibernateUtil.getSessionFactory().openSession();
@@ -135,11 +131,6 @@ public class SysParam extends Window implements AfterCompose, IGenericListAction
   public void afterCompose()
   {
     initList();
-    
-    South s = (South)getFellow("id_south");
-    if(SessionHelper.getUserName().equals("urbauer_tadm")){
-        s.setVisible(true);
-    }
   }
 
   public void onNewClicked(String id)
@@ -252,145 +243,5 @@ public class SysParam extends Window implements AfterCompose, IGenericListAction
     }
   }
   
-  public void deleteTerm(){
   
-    Checkbox cb_isCodeSystem = (Checkbox) getFellow("cbIsCodeSystem");
-    Checkbox cb_isOnlyVersion = (Checkbox) getFellow("cbIsOnlyVersion");  
-    Textbox tb_csvsId = (Textbox) getFellow("tb_CSVSId");
-    Textbox tb_csvsVersionId = (Textbox) getFellow("tb_CSVSVersionId");
-    String result="";
-    if(cb_isCodeSystem.isChecked()){//CS
-        result = DeleteTermHelper.deleteCS_CSV(cb_isOnlyVersion.isChecked(), Long.valueOf(tb_csvsId.getText()), Long.valueOf(tb_csvsVersionId.getText()));
-    }else{//VS
-        result = DeleteTermHelper.deleteVS_VSV(cb_isOnlyVersion.isChecked(), Long.valueOf(tb_csvsId.getText()), Long.valueOf(tb_csvsVersionId.getText()));
-    }
-    
-    Messagebox.show("Übersicht:\n\n" + result, "Terminologie löschen", Messagebox.OK, Messagebox.INFORMATION);
-  }
-  
-  //This method is for fixing Purposes ONLY for Tech-Admins!!
-  public void fixIt(){
-      /*
-        Session hb_session = HibernateUtil.getSessionFactory().openSession();
-        int i = 0;
-        try
-        {
-            hb_session.getTransaction().begin();
-
-            //Create metadata_parameter STATUS
-            MetadataParameter mp = new MetadataParameter();
-            mp.setParamName("STATUS");
-            mp.setCodeSystem(new CodeSystem());
-            mp.getCodeSystem().setId(169l);
-            mp.setValueSet(null);
-            hb_session.save(mp);
-            
-            String hqlCsev = "select distinct csev from CodeSystemEntityVersion csev join csev.codeSystemConcepts csc join csev.codeSystemEntity cse join cse.codeSystemVersionEntityMemberships csvem join csvem.codeSystemVersion csv WHERE csv.versionId=:versionId";
-            Query q_Csev = hb_session.createQuery(hqlCsev);
-            q_Csev.setParameter("versionId", 178l);
-            List<CodeSystemEntityVersion> csevList = q_Csev.list();
-           
-            for(CodeSystemEntityVersion csev:csevList){
-                i++;
-                CodeSystemMetadataValue csmv = new CodeSystemMetadataValue();
-                csmv.setMetadataParameter(mp);
-                csmv.setCodeSystemEntityVersion(csev);
-                
-                if(csev.getStatus() == 1){
-                    csmv.setParameterValue("ACTIVE");
-                }
-                
-                if(csev.getStatus() == 2){
-                    csmv.setParameterValue("DEPRECATED");
-                }
-                
-                if(csev.getStatus() == 3){
-                    csmv.setParameterValue("DISCOURAGED");
-                }
-                
-                if(csev.getStatus() == 4){
-                    csmv.setParameterValue("TRIAL");
-                }
-                
-                hb_session.save(csmv);
-                csev.setStatus(1);
-                hb_session.update(csev);
-                System.out.println("--- Success_Done Nr: " + i);
-            }
-            hb_session.getTransaction().commit();
-            Textbox tb_csvsId = (Textbox) getFellow("tb_CSVSId");
-            tb_csvsId.setText("Success!: " + i);
-        }
-        catch (Exception e)
-        {
-            System.out.println("--- EXCEPTION_Done Nr: " + i);
-            hb_session.getTransaction().rollback();
-        }finally{
-            hb_session.close();
-        }
-        */
-  }
-  
-  public void fixItA(){
-  
-      /*  
-      Session hb_session = HibernateUtil.getSessionFactory().openSession();
-        int i = 0;
-        try
-        {
-            
-            
-            String hqlCsev = "select distinct csev.versionId from CodeSystemEntityVersion csev join csev.codeSystemConcepts csc join csev.codeSystemEntity cse join cse.codeSystemVersionEntityMemberships csvem join csvem.codeSystemVersion csv WHERE csv.versionId=:versionId AND csc.description IS NULL";
-            Query q_Csev = hb_session.createQuery(hqlCsev);
-            q_Csev.setParameter("versionId", 178l);
-            List csevList = q_Csev.list();
-            
-            System.out.println("---Number of remaining Concepts: " + csevList.size());
-            
-            hb_session.getTransaction().begin();
-            Iterator iter = csevList.iterator();
-            while(iter.hasNext()){
-                hb_session.getTransaction().begin();
-                i++;
-                Long id = (Long)iter.next();
-                CodeSystemConcept csc_db = (CodeSystemConcept)hb_session.load(CodeSystemConcept.class,id);
-                String text = "";           
-                List l = null;
-                l = hb_session.createSQLQuery("SELECT csmv.parameterValue FROM code_system_metadata_value csmv JOIN metadata_parameter mp ON mp.id = csmv.metadataParameterId WHERE csmv.codeSystemEntityVersionId=" + id + " AND mp.paramName='COMPONENT'").addScalar("csmv.parameterValue",Hibernate.TEXT).list();
-                if(l.size() > 0)
-                    text += (String)l.get(0) + " | ";
-                l = hb_session.createSQLQuery("SELECT csmv.parameterValue FROM code_system_metadata_value csmv JOIN metadata_parameter mp ON mp.id = csmv.metadataParameterId WHERE csmv.codeSystemEntityVersionId=" + id + " AND mp.paramName='PROPERTY'").addScalar("csmv.parameterValue",Hibernate.TEXT).list();
-                if(l.size() > 0)
-                    text += (String)l.get(0) + " | ";
-                l = hb_session.createSQLQuery("SELECT csmv.parameterValue FROM code_system_metadata_value csmv JOIN metadata_parameter mp ON mp.id = csmv.metadataParameterId WHERE csmv.codeSystemEntityVersionId=" + id + " AND mp.paramName='TIME_ASPCT'").addScalar("csmv.parameterValue",Hibernate.TEXT).list();
-                if(l.size() > 0)
-                    text += (String)l.get(0) + " | ";
-                l = hb_session.createSQLQuery("SELECT csmv.parameterValue FROM code_system_metadata_value csmv JOIN metadata_parameter mp ON mp.id = csmv.metadataParameterId WHERE csmv.codeSystemEntityVersionId=" + id + " AND mp.paramName='SYSTEM'").addScalar("csmv.parameterValue",Hibernate.TEXT).list();
-                if(l.size() > 0)
-                    text += (String)l.get(0) + " | ";
-                l = hb_session.createSQLQuery("SELECT csmv.parameterValue FROM code_system_metadata_value csmv JOIN metadata_parameter mp ON mp.id = csmv.metadataParameterId WHERE csmv.codeSystemEntityVersionId=" + id + " AND mp.paramName='SCALE_TYP'").addScalar("csmv.parameterValue",Hibernate.TEXT).list();
-                if(l.size() > 0)
-                    text += (String)l.get(0) + " | ";
-                l = hb_session.createSQLQuery("SELECT csmv.parameterValue FROM code_system_metadata_value csmv JOIN metadata_parameter mp ON mp.id = csmv.metadataParameterId WHERE csmv.codeSystemEntityVersionId=" + id + " AND mp.paramName='METHOD_TYP'").addScalar("csmv.parameterValue",Hibernate.TEXT).list();
-                if(l.size() > 0)
-                    text += (String)l.get(0) + " | ";
-                
-                text = text.substring(0, text.length()-2);
-                csc_db.setDescription(text);
-                hb_session.update(csc_db);
-                System.out.println("--- Success_Done Nr: " + i);
-                hb_session.getTransaction().commit();
-            }
-            Textbox tb_csvsId = (Textbox) getFellow("tb_CSVSId");
-            tb_csvsId.setText("Success!: " + i);
-        }
-        catch (Exception e)
-        {
-            hb_session.getTransaction().rollback();
-            System.out.println("--- EXCEPTION_Done Nr: " + i);
-        }finally{
-            hb_session.close();
-        }
-        */
-  }
 }

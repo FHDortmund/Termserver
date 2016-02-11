@@ -62,12 +62,21 @@ public class ImportClaML implements IImport, javax.xml.ws.AsyncHandler<ImportCod
 
   public void preview(GenericList genericList, byte[] bytes)
   {
+    //boolean success = startImport(bytes, null, null, null, null, true);
+    // no preview possible, because import logic is in webservice
   }
 
+  
+//  public boolean startImport(byte[] bytes, final Progressmeter progress, Label labelInfo, CodeSystem codeSystem, ValueSet valueSet)
+//  {
+//    return startImport(bytes, progress, labelInfo, codeSystem, valueSet, false);
+//  }
+  
   public boolean startImport(byte[] bytes, final Progressmeter progress, Label labelInfo, CodeSystem codeSystem, ValueSet valueSet)
   {
     lastValue = -1;
-    progress.setVisible(true);
+    if(progress != null)
+      progress.setVisible(true);
 
     // Login
     ImportCodeSystemRequestType request = new ImportCodeSystemRequestType();
@@ -75,7 +84,8 @@ public class ImportClaML implements IImport, javax.xml.ws.AsyncHandler<ImportCod
 
     // Codesystem
     request.setCodeSystem(new types.termserver.fhdo.de.CodeSystem());
-    request.getCodeSystem().setId(codeSystem.getId());
+    if(codeSystem != null)
+      request.getCodeSystem().setId(codeSystem.getId());
 
     // Claml-Datei
     request.setImportInfos(new ImportType());
@@ -130,13 +140,15 @@ public class ImportClaML implements IImport, javax.xml.ws.AsyncHandler<ImportCod
               if (total > 0)
               {
                 int prozent = (index * 100) / total;
-                progress.setValue(prozent);
+                if(progress != null)
+                  progress.setValue(prozent);
                 msg = index + "/" + total;
 
               }
               else
               {
-                progress.setValue(0);
+                if(progress != null)
+                  progress.setValue(0);
                 msg = index + "/unbekannt";
               }
               

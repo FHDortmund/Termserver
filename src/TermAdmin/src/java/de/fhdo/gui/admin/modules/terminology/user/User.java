@@ -31,6 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Include;
@@ -82,12 +83,12 @@ public class User extends Window implements AfterCompose, IGenericListActions, I
   {
     // Header
     List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-    header.add(new GenericListHeaderType("Benutzername", 200, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Aktiv", 60, "", true, "boolean", true, true, false, true));
-    header.add(new GenericListHeaderType("Administrator", 60, "", true, "boolean", true, true, false, true));
-    header.add(new GenericListHeaderType("Name", 250, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Email", 300, "", true, "String", true, true, false, false));
-    header.add(new GenericListHeaderType("Mail-Aktiviert", 100, "", true, "boolean", true, true, false, true));
+    header.add(new GenericListHeaderType(Labels.getLabel("username"), 200, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("active"), 60, "", true, "boolean", true, true, false, true));
+    header.add(new GenericListHeaderType(Labels.getLabel("administrator"), 60, "", true, "boolean", true, true, false, true));
+    header.add(new GenericListHeaderType(Labels.getLabel("name"), 250, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("mail"), 300, "", true, "String", true, true, false, false));
+    header.add(new GenericListHeaderType(Labels.getLabel("mailActivated"), 100, "", true, "boolean", true, true, false, true));
     
 
     // Daten laden
@@ -220,13 +221,13 @@ public class User extends Window implements AfterCompose, IGenericListActions, I
 
         hb_session.getTransaction().commit();
 
-        Messagebox.show("Benutzer wurde erfolgreich gelöscht.", "Benutzer löschen", Messagebox.OK, Messagebox.INFORMATION);
+        Messagebox.show(Labels.getLabel("userDeletedMsg"), Labels.getLabel("delete"), Messagebox.OK, Messagebox.INFORMATION);
       }
       catch (Exception e)
       {
         hb_session.getTransaction().rollback();
         
-        Messagebox.show("Fehler beim Löschen des Benutzers: " + e.getLocalizedMessage(), "Benutzer löschen", Messagebox.OK, Messagebox.EXCLAMATION);
+        Messagebox.show(Labels.getLabel("deleteUserFailure") + ": " + e.getLocalizedMessage(), Labels.getLabel("delete"), Messagebox.OK, Messagebox.EXCLAMATION);
         initList();
       }
       hb_session.close();

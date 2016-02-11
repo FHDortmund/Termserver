@@ -5,8 +5,8 @@
     <!--<include id="incList" src="/gui/templates/GenericList.zul"/>-->
     <tabbox height="100%" width="100%">
       <tabs>
-        <tab label="Benutzerliste" id="tabBenutzer"/>
-        <tab label="Lizenzen" id="tabLizenzen"/>
+        <tab label="${labels.userlist}" id="tabBenutzer"/>
+        <tab label="${labels.licenses}" id="tabLizenzen"/>
       </tabs>
       <tabpanels>
         <tabpanel>

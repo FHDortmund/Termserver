@@ -56,6 +56,7 @@ import java.util.Set;
 import javax.xml.ws.soap.MTOMFeature;
 import org.hibernate.Session;
 import org.zkoss.util.media.Media;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.ext.AfterCompose;
@@ -177,7 +178,7 @@ public class ImportCS_SVS extends Window implements AfterCompose, IGenericListAc
       // Header
       List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
       header.add(new GenericListHeaderType("ID", 60, "", true, "String", true, true, false, false));
-      header.add(new GenericListHeaderType("Name", 0, "", true, "String", true, true, false, false));
+      header.add(new GenericListHeaderType(Labels.getLabel("name"), 0, "", true, "String", true, true, false, false));
 
       // Daten laden
       Session hb_session = HibernateUtil.getSessionFactory().openSession();
@@ -314,8 +315,7 @@ public class ImportCS_SVS extends Window implements AfterCompose, IGenericListAc
 
   public void onNewClicked(String id)
   {
-    ((Label) getFellow("labelImportStatus")).setValue("Bitte legen sie ein neues CodeSystem über den Terminologie-Browser an!");
-
+    ((Label) getFellow("labelImportStatus")).setValue(Labels.getLabel("createNewCodesystem"));
   }
 
   public void onEditClicked(String id, Object data)
@@ -332,12 +332,12 @@ public class ImportCS_SVS extends Window implements AfterCompose, IGenericListAc
 
     if (bytes == null)
     {
-      s += "Bitte wählen Sie eine Datei aus.";
+      s += Labels.getLabel("selectFileMsg");
     }
 
     if (selectedCodeSystem == null)
     {
-      s += "\nBitte wählen Sie ein Codesystem aus.";
+      s += "\n" + Labels.getLabel("selectCodesystemMsg2");
     }
 
     ((Label) getFellow("labelImportStatus")).setValue(s);
@@ -350,7 +350,7 @@ public class ImportCS_SVS extends Window implements AfterCompose, IGenericListAc
     boolean csvOnly = false;
     if (cbNewVoc.isChecked() && (tbNewVoc.getText().equals("") || tbNewVocVersion.getText().equals("")))
     {
-      Messagebox.show("Bitte geben Sie Code System Bezeichnung und Code System Versionsbezeichnung ein!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+      Messagebox.show(Labels.getLabel("importCS_SCS_mandatory1"), Labels.getLabel("warning"), Messagebox.OK, Messagebox.EXCLAMATION);
     }
     else
     {
@@ -358,7 +358,7 @@ public class ImportCS_SVS extends Window implements AfterCompose, IGenericListAc
       String vokVersion = ((Textbox) getFellow("tbVokabularVersion")).getText();
       if (!cbNewVoc.isChecked() && vokVersion.equals(""))
       {
-        Messagebox.show("Bitte geben Sie eine Versionsbezeichnung ein!", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+        Messagebox.show(Labels.getLabel("importCS_SCS_mandatory2"), Labels.getLabel("warning"), Messagebox.OK, Messagebox.EXCLAMATION);
       }
       else
       {
