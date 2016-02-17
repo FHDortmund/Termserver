@@ -304,6 +304,16 @@ public class SessionHelper
     else
       return null;
   }
+  
+  public static void removeValue(String Name)
+  {
+    org.zkoss.zk.ui.Session session = Sessions.getCurrent();
+    if (session != null)
+    {
+      if(session.hasAttribute(Name))
+        session.removeAttribute(Name);
+    }
+  }
 
   public static boolean getBoolValue(String Name, boolean Default)
   {

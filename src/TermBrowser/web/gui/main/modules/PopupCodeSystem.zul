@@ -15,6 +15,18 @@
           </tabs>
           <tabpanels>
             <tabpanel id="tabpanelDetails">
+              <div id="divId" align="right" style="float:right; margin-top:-24px;">
+                <hbox>
+                  <label style="color:grey;" value="ID: "></label>
+                  <label id="labelId" style="color:grey;" value="@{winCSDetails.codeSystem.id}"></label>
+                
+                  <div visible="@{winCSDetails.showVersion}">
+                    <label style="color:grey;" value=" | Version-ID: "></label>
+                    <label id="labelVersionId" style="color:grey;" value="@{winCSDetails.codeSystemVersion.versionId}"></label>
+                  </div>
+                </hbox>
+              </div>
+            
               <groupbox id="gbCS" mold="3d" width="100%" title="${labels.common.codeSystem}"
                         closable="false" vflex="min">
                 <caption>
@@ -112,7 +124,7 @@
                         <datebox id="dateBoxSD" format="medium+medium" width="150px" disabled="true"/>
                       </hbox>
                     </row>
-<!--                    <row id="rowCSVStatusLastEdited" >
+                    <!--                    <row id="rowCSVStatusLastEdited" >
                       <label value="${labels.common.statusLastEdited}"/>     
                       <datebox id="dateBoxSD" format="medium+medium" width="150px" disabled="true"/>
                     </row>-->
@@ -127,7 +139,7 @@
                         <textbox id="tbCSVLicenceHolder" value="@{winCSDetails.codeSystemVersion.licenceHolder}"  hflex="true"/>
                       </hbox>
                     </row>
-<!--                    <row id="rowCSVLicenceHolder">
+                    <!--                    <row id="rowCSVLicenceHolder">
                       <label value="${labels.common.licenceHolder}"/>        
                       <textbox  id="tbCSVLicenceHolder" value="@{winCSDetails.codeSystemVersion.licenceHolder}"  hflex="true"/>
                     </row>               -->
@@ -137,7 +149,7 @@
             </tabpanel>
             <tabpanel id="tabpanelMetaparameter" >
               <include id="incList" src="~./zul/pages/GenericList.zul"/>
-<!--              <listbox id="listMetadataParameter" vflex="true" height="99%" hflex="true" >
+              <!--              <listbox id="listMetadataParameter" vflex="true" height="99%" hflex="true" >
                 <listhead></listhead>
               </listbox>-->
             </tabpanel>

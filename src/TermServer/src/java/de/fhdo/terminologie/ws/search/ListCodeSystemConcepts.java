@@ -295,7 +295,7 @@ public class ListCodeSystemConcepts
          LEFT JOIN code_system_concept_translation csct ON csct.codeSystemEntityVersionId=csc2.codeSystemEntityVersionId*/
         //
         //String sql = "SELECT * FROM (SELECT csc.*, csev.*, csvem.isAxis, csvem.isMainClass, cse.* FROM code_system_concept csc"
-        String sql = "SELECT * FROM (SELECT csc.*, csev.*, csvem.isAxis, csvem.isMainClass, cse.*, csct.term translation_term, csct.termAbbrevation translation_termAbbrevation, csct.description translation_description, csct.languageCd translation_languageCd, csct.id translation_id "
+        String sql = "SELECT * FROM (SELECT csc.*, csev.*, csvem.isAxis, csvem.isMainClass, cse.*, csct.term translation_term, csct.termAbbrevation translation_termAbbrevation, csct.description translation_description, csct.languageCd translation_languageCd, csct.id translation_id, csct.meaning translation_meaning, csct.hints translation_hints "
                 + " FROM code_system_concept csc"
                 + " JOIN code_system_entity_version csev ON csc.codeSystemEntityVersionId=csev.versionId"
                 + " JOIN code_system_entity cse ON csev.codeSystemEntityId=cse.id"
@@ -544,18 +544,22 @@ public class ListCodeSystemConcepts
           q.addScalar("translation_languageCd", StandardBasicTypes.TEXT);
           q.addScalar("translation_description", StandardBasicTypes.TEXT);
           q.addScalar("translation_id", StandardBasicTypes.LONG);
+          
+          q.addScalar("translation_meaning", StandardBasicTypes.TEXT); // new
+          q.addScalar("translation_hints", StandardBasicTypes.TEXT); // new
+          
 
-          q.addScalar("csc2.meaning", StandardBasicTypes.TEXT); //Index: 24
+          q.addScalar("csc2.meaning", StandardBasicTypes.TEXT); //Index: 24, changed to 26
           q.addScalar("csc2.hints", StandardBasicTypes.TEXT);
 
-          q.addScalar("csc2.statusDeactivated", StandardBasicTypes.INTEGER); // Index: 26
+          q.addScalar("csc2.statusDeactivated", StandardBasicTypes.INTEGER); // Index: 28
           q.addScalar("csc2.statusDeactivatedDate", StandardBasicTypes.TIMESTAMP);
           q.addScalar("csc2.statusWorkflow", StandardBasicTypes.INTEGER);
           q.addScalar("csc2.statusWorkflowDate", StandardBasicTypes.TIMESTAMP);
 
           if (isLookForward)
           {
-            q.addScalar("cseva1.codeSystemEntityVersionId1", StandardBasicTypes.LONG); // Index: 30
+            q.addScalar("cseva1.codeSystemEntityVersionId1", StandardBasicTypes.LONG); // Index: 32
             q.addScalar("cseva1.codeSystemEntityVersionId2", StandardBasicTypes.LONG);
             q.addScalar("cseva1.leftId", StandardBasicTypes.LONG);
             q.addScalar("cseva1.associationTypeId", StandardBasicTypes.LONG);
@@ -563,11 +567,8 @@ public class ListCodeSystemConcepts
             q.addScalar("cseva1.status", StandardBasicTypes.INTEGER);
             q.addScalar("cseva1.statusDate", StandardBasicTypes.TIMESTAMP);
             q.addScalar("cseva1.insertTimestamp", StandardBasicTypes.TIMESTAMP);
-          }
-
-          if (isLookForward)
-          {
-            q.addScalar("cseva2.codeSystemEntityVersionId1", StandardBasicTypes.LONG); // Index: 38
+          
+            q.addScalar("cseva2.codeSystemEntityVersionId1", StandardBasicTypes.LONG); // Index: 40
             q.addScalar("cseva2.codeSystemEntityVersionId2", StandardBasicTypes.LONG);
             q.addScalar("cseva2.leftId", StandardBasicTypes.LONG);
             q.addScalar("cseva2.associationTypeId", StandardBasicTypes.LONG);
@@ -645,10 +646,10 @@ public class ListCodeSystemConcepts
             if (item[5] != null)
               csc.setCodeSystemEntityVersionId((Long) item[5]);
 
-            if (item[24] != null)
-              csc.setMeaning(item[24].toString());
-            if (item[25] != null)
-              csc.setHints(item[25].toString());
+            if (item[26] != null)
+              csc.setMeaning(item[26].toString());
+            if (item[27] != null)
+              csc.setHints(item[27].toString());
 
             // Entity Version
             if (item[6] != null)
@@ -668,14 +669,14 @@ public class ListCodeSystemConcepts
             if (item[13] != null)
               csev.setVersionId((Long) item[13]);
 
-            if (item[26] != null)
-              csev.setStatusDeactivated((Integer) item[26]);
-            if (item[27] != null)
-              csev.setStatusDeactivatedDate(DateHelper.getDateFromObject(item[27]));
             if (item[28] != null)
-              csev.setStatusWorkflow((Integer) item[28]);
+              csev.setStatusDeactivated((Integer) item[28]);
             if (item[29] != null)
-              csev.setStatusWorkflowDate(DateHelper.getDateFromObject(item[29]));
+              csev.setStatusDeactivatedDate(DateHelper.getDateFromObject(item[29]));
+            if (item[30] != null)
+              csev.setStatusWorkflow((Integer) item[30]);
+            if (item[31] != null)
+              csev.setStatusWorkflowDate(DateHelper.getDateFromObject(item[31]));
 
             // Code System Entity
             if (item[15] != null)
@@ -690,7 +691,7 @@ public class ListCodeSystemConcepts
               csvem.setIsMainClass((Boolean) item[18]);
 
             // Translation
-            addTranslationToConcept(csc, item);
+            addTranslationToConcept(csc, item, languageCd);
 
             // Assoziation
             if (parameter.isLookForward())
@@ -1039,7 +1040,7 @@ public class ListCodeSystemConcepts
     
   }
 
-  private void addTranslationToConcept(CodeSystemConcept csc, Object[] item)
+  private void addTranslationToConcept(CodeSystemConcept csc, Object[] item, String languageCd)
   {
     //logger.debug("addTranslationToConcept...");
     if (item[19] == null)  // Term muss angegeben sein
@@ -1062,48 +1063,62 @@ public class ListCodeSystemConcepts
       csct.setDescription(item[22].toString());
     if (item[23] != null)
       csct.setId((Long) item[23]);
-
-    /*q.addScalar("csct.term", Hibernate.TEXT);  // Index: 19
-     q.addScalar("csct.termAbbrevation", Hibernate.TEXT);
-     q.addScalar("csct.languageId", Hibernate.LONG);
-     q.addScalar("csct.description", Hibernate.TEXT);*/
-    csc.getCodeSystemConceptTranslations().add(csct);
+    if (item[24] != null)
+      csct.setMeaning(item[24].toString());
+    if (item[25] != null)
+      csct.setHints(item[25].toString());
+    
+    if(languageCd != null && languageCd.length() > 0)
+    {
+      // replace concept with translation
+      csc.setTerm(csct.getTerm());
+      csc.setTermAbbrevation(csct.getTermAbbrevation());
+      csc.setDescription(csct.getDescription());
+      csc.setMeaning(csct.getMeaning());
+      csc.setHints(csct.getHints());
+    }
+    else
+    {
+      // add translation to list
+      csc.getCodeSystemConceptTranslations().add(csct);
+    }
+    
   }
 
   private void addAssociationToEntityVersion(CodeSystemEntityVersion csev, Object[] item)
   {
     try
     {
-      if (item[30] != null)  // Pflichtfeld
+      if (item[32] != null)  // Pflichtfeld
       {
 
-        logger.debug("addAssociationToEntityVersion, csev-id: " + csev.getVersionId() + ", item[30]: " + item[30]);
+        logger.debug("addAssociationToEntityVersion, csev-id: " + csev.getVersionId() + ", item[30]: " + item[32]);
 
         CodeSystemEntityVersionAssociation cseva = new CodeSystemEntityVersionAssociation();
         cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(new CodeSystemEntityVersion());
-        cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setVersionId((Long) item[30]);
+        cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setVersionId((Long) item[32]);
         cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId2(new CodeSystemEntityVersion());
-        cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId2().setVersionId((Long) item[31]);
+        cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId2().setVersionId((Long) item[33]);
 
-        if (item[32] != null)
-          cseva.setLeftId((Long) item[32]);
+        if (item[34] != null)
+          cseva.setLeftId((Long) item[34]);
         else
           logger.warn("LeftId ist null: " + csev.getVersionId());
 
-        if (item[33] != null)
+        if (item[35] != null)
         {
           cseva.setAssociationType(new AssociationType());
-          cseva.getAssociationType().setCodeSystemEntityVersionId((Long) item[33]);
+          cseva.getAssociationType().setCodeSystemEntityVersionId((Long) item[35]);
         }
 
-        if (item[34] != null)
-          cseva.setAssociationKind((Integer) item[34]);
-        if (item[35] != null)
-          cseva.setStatus((Integer) item[35]);
         if (item[36] != null)
-          cseva.setStatusDate(DateHelper.getDateFromObject(item[36]));
+          cseva.setAssociationKind((Integer) item[36]);
         if (item[37] != null)
-          cseva.setInsertTimestamp(DateHelper.getDateFromObject(item[37]));
+          cseva.setStatus((Integer) item[37]);
+        if (item[38] != null)
+          cseva.setStatusDate(DateHelper.getDateFromObject(item[38]));
+        if (item[39] != null)
+          cseva.setInsertTimestamp(DateHelper.getDateFromObject(item[39]));
 
         if (cseva.getLeftId() == null || cseva.getLeftId().longValue() == csev.getVersionId().longValue())
         {
@@ -1120,35 +1135,35 @@ public class ListCodeSystemConcepts
           csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2().add(cseva);
         }
       }
-      else if (item[38] != null)  // Pflichtfeld
+      else if (item[40] != null)  // Pflichtfeld
       {
-        logger.debug("addAssociationToEntityVersion, csev-id: " + csev.getVersionId() + ", item[38]: " + item[38]);
+        logger.debug("addAssociationToEntityVersion, csev-id: " + csev.getVersionId() + ", item[40]: " + item[40]);
 
         CodeSystemEntityVersionAssociation cseva = new CodeSystemEntityVersionAssociation();
         cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId1(new CodeSystemEntityVersion());
-        cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setVersionId((Long) item[38]);
+        cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setVersionId((Long) item[40]);
         cseva.setCodeSystemEntityVersionByCodeSystemEntityVersionId2(new CodeSystemEntityVersion());
-        cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId2().setVersionId((Long) item[39]);
+        cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId2().setVersionId((Long) item[41]);
 
-        if (item[40] != null)
-          cseva.setLeftId((Long) item[40]);
+        if (item[42] != null)
+          cseva.setLeftId((Long) item[42]);
         else
           logger.warn("LeftId ist null: " + csev.getVersionId());
 
-        if (item[41] != null)
+        if (item[43] != null)
         {
           cseva.setAssociationType(new AssociationType());
-          cseva.getAssociationType().setCodeSystemEntityVersionId((Long) item[41]);
+          cseva.getAssociationType().setCodeSystemEntityVersionId((Long) item[43]);
         }
 
-        if (item[42] != null)
-          cseva.setAssociationKind((Integer) item[42]);
-        if (item[43] != null)
-          cseva.setStatus((Integer) item[43]);
         if (item[44] != null)
-          cseva.setStatusDate(DateHelper.getDateFromObject(item[44]));
+          cseva.setAssociationKind((Integer) item[44]);
         if (item[45] != null)
-          cseva.setInsertTimestamp(DateHelper.getDateFromObject(item[45]));
+          cseva.setStatus((Integer) item[45]);
+        if (item[46] != null)
+          cseva.setStatusDate(DateHelper.getDateFromObject(item[46]));
+        if (item[47] != null)
+          cseva.setInsertTimestamp(DateHelper.getDateFromObject(item[47]));
 
         if (cseva.getLeftId() == null || cseva.getLeftId().longValue() == csev.getVersionId().longValue())
         {

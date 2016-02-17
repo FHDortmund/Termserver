@@ -27,6 +27,8 @@ import de.fhdo.gui.main.modules.PopupValueSet;
 import de.fhdo.gui.main.modules.ValuesetEditor;
 import de.fhdo.helper.ArgumentHelper;
 import de.fhdo.helper.ComponentHelper;
+import de.fhdo.helper.LanguageHelper;
+import de.fhdo.helper.LocalizationHelper;
 import de.fhdo.helper.ParameterHelper;
 import de.fhdo.helper.PropertiesHelper;
 import de.fhdo.helper.SendBackHelper;
@@ -56,6 +58,8 @@ import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.MouseEvent;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zk.ui.util.Clients;
@@ -64,6 +68,8 @@ import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.ComboitemRenderer;
+import org.zkoss.zul.Div;
+import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Radiogroup;
@@ -291,6 +297,9 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     logger.debug("ContentConcepts - afterCompose()");
 
     fillVersionList();
+    
+    showLanguageButtons();
+    
     loadConcepts();
 
     showButtons();
@@ -342,9 +351,9 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     logger.debug("dragAndDropTree: " + dragAndDropTree);
 
     if (paramLoadId > 0
-        || (paramLoadType != null && paramLoadType != TreeAndContent.LOADTYPE.NONE)
-        || (paramLoadName != null && paramLoadName.length() > 0)
-        || (paramLoadOid != null && paramLoadOid.length() > 0))
+            || (paramLoadType != null && paramLoadType != TreeAndContent.LOADTYPE.NONE)
+            || (paramLoadName != null && paramLoadName.length() > 0)
+            || (paramLoadOid != null && paramLoadOid.length() > 0))
     {
       externMode = true;
     }
@@ -464,8 +473,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   public void reload()
   {
     logger.debug("reload()");
-    //loadConcepts();
-    concepts.initData();
+    initConceptData();
   }
 
   private void loadConcepts()
@@ -496,8 +504,35 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     else if (getValueSetVersion() != null)
       concepts.setValueSetVersionId(getValueSetVersion().getVersionId());
 
-    concepts.initData();
+    initConceptData();
+  }
 
+  private void initConceptData()
+  {
+    String languageCd = SessionHelper.getStringValue("selectedLanguageCd", "");
+
+    String langStr = "";
+    if (languageCd != null && languageCd.length() > 0)
+    {
+      concepts.initData(languageCd);
+      langStr = LanguageHelper.getLanguageNameFromCode(languageCd);
+    }
+    else
+    {
+      concepts.initData();
+    }
+    
+    // Show selected language in header
+    logger.debug("languageStr: " + langStr);
+    
+    boolean visible = (langStr != null && langStr.length() > 0);
+    if(visible)
+    {
+      ((Label)getFellow("labelSelectedLanguage")).setValue(langStr);
+    }
+    
+    ComponentHelper.setVisible("labelSelectedLanguage", visible, this);
+    ComponentHelper.setVisible("valueSelectedLanguage", visible, this);
   }
 
   public void onConceptSelect(Event event)
@@ -570,7 +605,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       try
       {
         if (Messagebox.show(Labels.getLabel("common.deactivateCSVersion"), Labels.getLabel("common.deleteSystem"), Messagebox.YES | Messagebox.NO, Messagebox.QUESTION)
-            == Messagebox.YES)
+                == Messagebox.YES)
         {
           if (codeSystem != null)
           {
@@ -899,8 +934,79 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       ComponentHelper.setVisibleAndDisabled("buttonCollabDelete", collabLoggedIn && isCodesystem, csev == null, this);
     }
 
+    
+
     //ComponentHelper.setVisible("buttonDeleteVersion", loggedIn, this);
     //ComponentHelper.setVisibleAndDisabled("buttonDeleteVersion", loggedIn, csev == null, this);
+  }
+  
+  private void showLanguageButtons()
+  {
+    String selectedLanguageCd = SessionHelper.getStringValue("selectedLanguageCd");
+    boolean foundSelectedLanguageCd = false;
+    
+    // Languages
+    boolean languageChoiceVisible = false;
+    if (codeSystemVersion != null && codeSystemVersion.getAvailableLanguages() != null
+            && codeSystemVersion.getAvailableLanguages().length() > 0)
+    {
+      languageChoiceVisible = true;
+
+      Div div = (Div) getFellow("languageSelection");
+      div.getChildren().clear();
+
+      logger.debug("Language-map size: " + LanguageHelper.getLanguageCodes().size());
+
+      // create buttons
+      List<String> languageList = LanguageHelper.getLanguagesFromString(codeSystemVersion.getAvailableLanguages());
+      for (final String languageCd : languageList)
+      {
+        if(languageCd.equalsIgnoreCase(selectedLanguageCd))
+          foundSelectedLanguageCd = true;
+        
+        String displayName = languageCd;
+        if (LanguageHelper.getLanguageCodes().containsKey(languageCd))
+          displayName = LanguageHelper.getLanguageCodes().get(languageCd);
+        else
+          logger.debug("language with code '" + languageCd + "' does not exist in map");
+
+        Button button = new Button(displayName);
+        button.setStyle("margin-left: 6px;");
+        button.setAttribute("languageCd", languageCd);
+        div.getChildren().add(button);
+
+        button.addEventListener(Events.ON_CLICK, new EventListener<Event>()
+        {
+          public void onEvent(Event t) throws Exception
+          {
+            // reload code system with selected language
+            SessionHelper.setValue("selectedLanguageCd", languageCd);
+            initConceptData();
+          }
+        });
+      }
+
+      // Default language
+      Button button = new Button(Labels.getLabel("common.default"));
+      button.setStyle("margin-left: 12px;");
+      button.setAttribute("languageCd", "");
+      div.getChildren().add(button);
+
+      button.addEventListener(Events.ON_CLICK, new EventListener<Event>()
+      {
+        public void onEvent(Event t) throws Exception
+        {
+          // reload code system with selected language
+          SessionHelper.removeValue("selectedLanguageCd");
+          initConceptData();
+        }
+      });
+    }
+    
+    if(foundSelectedLanguageCd == false)
+      SessionHelper.removeValue("selectedLanguageCd");
+    
+    ComponentHelper.setVisible("languageSelection", languageChoiceVisible, this);
   }
 
   public void onCollabNewClicked()

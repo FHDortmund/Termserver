@@ -462,7 +462,7 @@ public class UsernamePasswordMethod implements IAuthorization
     // check parameters
     if (loginToken == null || loginToken.length() == 0)
     {
-      logger.warn("Parameterlist is not correct for 'Authenticate', must be 1 entry containing the session id");
+      //logger.warn("Parameterlist is not correct for 'Authenticate', must be 1 entry containing the session id");
       response.setMessage("Parameterlist is not correct for 'Authenticate', must be 1 entry containing the session id");
       return response;
     }

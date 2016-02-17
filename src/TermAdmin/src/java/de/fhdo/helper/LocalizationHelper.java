@@ -16,6 +16,8 @@
  */
 package de.fhdo.helper;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Session;
@@ -61,5 +63,21 @@ public class LocalizationHelper
         session.setAttribute(org.zkoss.web.Attributes.PREFERRED_LOCALE, preferredLocale);
       }
     }
+  }
+  
+  public static List<String> getLanguagesFromString(String str)
+  {
+    List<String> list = new LinkedList<String>();
+    
+    if(str != null && str.length() > 0)
+    {
+      String []s = str.split(";");
+      for(String _s : s)
+      {
+        list.add(_s.trim());
+      }
+    }
+    
+    return list;
   }
 }

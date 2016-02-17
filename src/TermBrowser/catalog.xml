@@ -14,9 +14,6 @@
     <system systemId="http://localhost:8080/TermServer/ConceptAssociations?wsdl" uri="src/conf/xml-resources/web-service-references/ConceptAssociations/wsdl/localhost_8080/TermServer/ConceptAssociations.wsdl"/>
     <system systemId="http://localhost:8080/TermServer/ConceptAssociations?xsd=1" uri="src/conf/xml-resources/web-service-references/ConceptAssociations/wsdl/localhost_8080/TermServer/ConceptAssociations.xsd_1.xsd"/>
     <system systemId="http://localhost:8080/TermServer/ConceptAssociations?xsd=2" uri="src/conf/xml-resources/web-service-references/ConceptAssociations/wsdl/localhost_8080/TermServer/ConceptAssociations.xsd_2.xsd"/>
-    <system systemId="http://localhost:8080/TermServer/Search?wsdl" uri="src/conf/xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.wsdl"/>
-    <system systemId="http://localhost:8080/TermServer/Search?xsd=1" uri="src/conf/xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.xsd_1.xsd"/>
-    <system systemId="http://localhost:8080/TermServer/Search?xsd=2" uri="src/conf/xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.xsd_2.xsd"/>
     <system systemId="http://localhost:8080/TermServer/Administration?wsdl" uri="src/conf/xml-resources/web-service-references/Administration/wsdl/localhost_8080/TermServer/Administration.wsdl"/>
     <system systemId="http://localhost:8080/TermServer/Administration?xsd=1" uri="src/conf/xml-resources/web-service-references/Administration/wsdl/localhost_8080/TermServer/Administration.xsd_1.xsd"/>
     <system systemId="http://localhost:8080/TermServer/Administration?xsd=2" uri="src/conf/xml-resources/web-service-references/Administration/wsdl/localhost_8080/TermServer/Administration.xsd_2.xsd"/>
@@ -25,6 +22,9 @@
     <system systemId="http://localhost:8080/TermServer/Authoring?xsd=2" uri="src/conf/xml-resources/web-service-references/Authoring/wsdl/localhost_8080/TermServer/Authoring.xsd_2.xsd"/>
     <system systemId="http://localhost:8080/TermServer/Authorization?wsdl" uri="src/conf/xml-resources/web-service-references/Authorization_1/wsdl/localhost_8080/TermServer/Authorization.wsdl"/>
     <system systemId="http://localhost:8080/TermServer/Authorization?xsd=1" uri="src/conf/xml-resources/web-service-references/Authorization_1/wsdl/localhost_8080/TermServer/Authorization.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/TermServer/Search?wsdl" uri="src/conf/xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.wsdl"/>
+    <system systemId="http://localhost:8080/TermServer/Search?xsd=1" uri="src/conf/xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/TermServer/Search?xsd=2" uri="src/conf/xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.xsd_2.xsd"/>
 </catalog>
 
 

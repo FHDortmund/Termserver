@@ -17,6 +17,7 @@
 package de.fhdo.terminologie.ws.administration;
 
 import de.fhdo.logging.LoggingOutput;
+import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.ws.administration._import.ImportCSSVS;
 import de.fhdo.terminologie.ws.administration._import.ImportCS_CSV;
 import de.fhdo.terminologie.ws.administration._import.ImportClaml;
@@ -31,6 +32,8 @@ import de.fhdo.terminologie.ws.administration.types.ImportCodeSystemResponseType
 import de.fhdo.terminologie.ws.authorization.Authorization;
 import de.fhdo.terminologie.ws.authorization.types.AuthenticateInfos;
 import de.fhdo.terminologie.ws.types.ReturnType;
+import java.util.List;
+import org.hibernate.Query;
 
 /**
  * 28.03.2012, Mützner: Hinzufügen vom LOINC-Import 27.02.2013, Mützner: KBV
@@ -395,12 +398,12 @@ public class ImportCodeSystem
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         String msg = e.getLocalizedMessage();
-        if(msg == null || msg.length() == 0)
+        if (msg == null || msg.length() == 0)
         {
-          if(e.getCause() != null)
+          if (e.getCause() != null)
             msg = e.getCause().getLocalizedMessage();
         }
-          
+
         response.getReturnInfos().setMessage("Error at import: " + msg);
 
         LoggingOutput.outputException(e, this);
@@ -426,7 +429,7 @@ public class ImportCodeSystem
    * @return false, wenn fehlerhafte Parameter enthalten sind
    */
   private boolean validateParameter(ImportCodeSystemRequestType Request,
-          ImportCodeSystemResponseType Response)
+                                    ImportCodeSystemResponseType Response)
   {
     boolean erfolg = true;
 
@@ -437,16 +440,39 @@ public class ImportCodeSystem
     }
     else
     {
-      /*if (Request.getImportInfos().getFilecontent() == null)
-       {
-       Response.getReturnInfos().setMessage("Sie müssen eine Datei anhängen (filecontent)!");
-       erfolg = false;
-       }
-       else*/ if (Request.getImportInfos().getFormatId() == null || Request.getImportInfos().getFormatId() == 0)
+      if (Request.getImportInfos().getFormatId() == null || Request.getImportInfos().getFormatId() == 0)
       {
         // TODO auf gültiges Format prüfen
         Response.getReturnInfos().setMessage("You have to give an import format:\n" + ImportCodeSystemRequestType.getPossibleFormats());
         erfolg = false;
+      }
+    }
+
+    // check version name
+    if (Request != null && Request.getCodeSystem() != null && Request.getCodeSystem().getCodeSystemVersions() != null
+            && Request.getCodeSystem().getCodeSystemVersions().size() > 0 && Request.getCodeSystem().getId() > 0)
+    {
+      logger.debug("Check, if version for given code system with id " + Request.getCodeSystem().getId() + " already exists");
+      
+      org.hibernate.Session hb_session = HibernateUtil.getSessionFactory().openSession();
+      try // try-catch-Block zum Abfangen von Hibernate-Fehlern
+      {
+        String csv_name = Request.getCodeSystem().getCodeSystemVersions().iterator().next().getName();
+        Query q = hb_session.createQuery("from CodeSystemVersion csv join csv.codeSystem cs where csv.name=:csv_name and cs.id=:cs_id");
+        q.setParameter("csv_name", csv_name);
+        q.setParameter("cs_id", Request.getCodeSystem().getId());
+        
+        List list = q.list();
+        if(list != null && list.size() > 0)
+        {
+          // name already exists
+          erfolg = false;
+          Response.getReturnInfos().setMessage("Codesystem-Version name already exists: " + csv_name + ". Please select a version name that does not exist.");
+        }
+      }
+      catch (Exception ex)
+      {
+        LoggingOutput.outputException(ex, this);
       }
     }
 

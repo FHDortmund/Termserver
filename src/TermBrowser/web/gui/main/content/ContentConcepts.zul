@@ -33,6 +33,9 @@
                       autodisable="self"
                       visible="false" 
                       disabled="false"/>
+              
+              <label id="valueSelectedLanguage" value="${labels.common.selectedLanguage}: "/>
+              <label id="labelSelectedLanguage" value="-"/>
             </div>
           
             <div align="right">
@@ -192,25 +195,25 @@
               <!--<separator orient="vertical" bar="true"/>-->
               
               <button id="buttonCollabNew" 
-                    label="${labels.collab.proposeNewConcept}"
-                    onClick="winConcepts.onCollabNewClicked()" 
-                    image="/rsc/img/design/add_16x16.png"    
-                    />
+                      label="${labels.collab.proposeNewConcept}"
+                      onClick="winConcepts.onCollabNewClicked()" 
+                      image="/rsc/img/design/add_16x16.png"    
+              />
               <button id="buttonCollabNewSub" 
-                    label="${labels.collab.proposeNewSubConcept}"
-                    onClick="winConcepts.onCollabNewSubClicked()" 
-                    image="/rsc/img/design/add_16x16.png"    
-                    />
+                      label="${labels.collab.proposeNewSubConcept}"
+                      onClick="winConcepts.onCollabNewSubClicked()" 
+                      image="/rsc/img/design/add_16x16.png"    
+              />
               <button id="buttonCollabEdit" 
-                    label="${labels.collab.proposeToExistingEntry}"
-                    onClick="winConcepts.onCollabEditClicked()" 
-                    image="/rsc/img/list/pencil.png"
-                    />
+                      label="${labels.collab.proposeToExistingEntry}"
+                      onClick="winConcepts.onCollabEditClicked()" 
+                      image="/rsc/img/list/pencil.png"
+              />
               <button id="buttonCollabDelete" 
-                    label="${labels.collab.deleteConcept}"
-                    onClick="winConcepts.onCollabDeletedClicked()" 
-                    image="/rsc/img/list/delete.png"
-                    />
+                      label="${labels.collab.deleteConcept}"
+                      onClick="winConcepts.onCollabDeletedClicked()" 
+                      image="/rsc/img/list/delete.png"
+              />
               
             </div>
           </div>
@@ -220,6 +223,12 @@
             onClick="winConcepts.onDeleteClicked()" 
             image="/rsc/img/symbols/delete_12x12.png"
             disabled="false"/>-->
+            <div id="languageSelection" visible="false">
+              <button id="buttonEng"
+                      label="English" 
+                      image="/rsc/img/list/magnifier.png"
+              />
+            </div>
             
             <!--            <label value="${labels.contentConcepts.moreFunctions}" style="color:gray"/>
             <button id="bNew" label="${labels.contentConcepts.newConcept}" onClick="windowConcepts.onClickedNewRootConcept()" image="/rsc/img/design/add_16x16.png"    visible="false" />

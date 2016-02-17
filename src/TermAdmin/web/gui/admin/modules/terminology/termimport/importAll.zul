@@ -22,23 +22,13 @@
           
           <label value="${labels.format}: "/>
           <combobox id="cbFormat" width="300px" readonly="true" onChange="winImportAll.preview()"/>
-          <!--<radiogroup Id="rgFormatCodesystem" visible="false" onCheck="winImportAll.preview()">
-            <radio label="ClaML"/>
-            <radio label="CSV"/>
-            <radio label="ELGA SVS"/>
-            <radio label="LOINC"/>
-          </radiogroup>
-          <radiogroup Id="rgFormatValueset" visible="false" onCheck="winImportAll.preview()">
-            <radio label="CSV"/>
-            <radio label="ELGA SVS"/>
-          </radiogroup>-->
           
           <separator />
           <separator />
           
-          <label value="${labels.preview}: "/>
+          <!--<label value="${labels.preview}: "/>-->
           <include id="incListPreview" src="/gui/templates/GenericList.zul"
-                   height="160px" width="99%" visible="true"/>
+                   height="160px" width="99%" visible="false"/>
         </div>
       </north>
       <west title="${labels.codesystem} - ${labels.selection}" size="500px" visible="false" id="westCS">

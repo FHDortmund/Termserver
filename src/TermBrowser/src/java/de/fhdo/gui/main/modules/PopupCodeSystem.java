@@ -148,8 +148,8 @@ public class PopupCodeSystem extends Window implements AfterCompose, IUpdateData
     showDetailsVisibilty();
 
     // fill domain values with selected codes
-    logger.debug("showVersion: " + showVersion);
-    if (showVersion)
+    logger.debug("showVersion: " + isShowVersion());
+    if (isShowVersion())
     {
       DomainHelper.getInstance().fillCombobox((Combobox) getFellow("cboxCSVValidityRange"), de.fhdo.Definitions.DOMAINID_CODESYSTEMVERSION_VALIDITYRANGE,
               codeSystemVersion == null ? "" : "" + codeSystemVersion.getValidityRange());
@@ -202,7 +202,7 @@ public class PopupCodeSystem extends Window implements AfterCompose, IUpdateData
   {
     logger.debug("onOkClicked() - save data...");
 
-    if (showVersion)
+    if (isShowVersion())
     {
       // save data without bindings (dates, ...)
       Date date = ((Datebox) getFellow("dateBoxED")).getValue();
@@ -280,7 +280,7 @@ public class PopupCodeSystem extends Window implements AfterCompose, IUpdateData
     {
       if (updateListener != null)
       {
-        if(showVersion)
+        if(isShowVersion())
         {
           codeSystem.getCodeSystemVersions().clear();
           codeSystem.getCodeSystemVersions().add(codeSystemVersion);
@@ -358,7 +358,7 @@ public class PopupCodeSystem extends Window implements AfterCompose, IUpdateData
     if (codeSystemVersion == null)
       logger.debug("codeSystemVersion ist null");
 
-    if (showVersion)
+    if (isShowVersion())
     {
       // Liste leeren, da hier so viele CSVs drin stehen wie es Versionen gibt. Als Parameter darf aber nur genau EINE CSV drin stehen.
       codeSystem.getCodeSystemVersions().clear();
@@ -882,5 +882,13 @@ public class PopupCodeSystem extends Window implements AfterCompose, IUpdateData
   public void setUpdateListener(IUpdateModal updateListener)
   {
     this.updateListener = updateListener;
+  }
+
+  /**
+   * @return the showVersion
+   */
+  public boolean isShowVersion()
+  {
+    return showVersion;
   }
 }

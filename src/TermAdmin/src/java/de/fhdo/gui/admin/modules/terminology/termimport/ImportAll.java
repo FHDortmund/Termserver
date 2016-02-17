@@ -16,7 +16,9 @@
  */
 package de.fhdo.gui.admin.modules.terminology.termimport;
 
+import de.fhdo.gui.templates.NameInputbox;
 import de.fhdo.helper.DomainHelper;
+import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.list.GenericList;
 import de.fhdo.list.GenericListCellType;
 import de.fhdo.list.GenericListHeaderType;
@@ -32,14 +34,18 @@ import de.fhdo.terminologie.db.hibernate.ValueSetVersion;
 import de.fhdo.terminologie.ws.administration.ImportCodeSystemResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import javax.xml.ws.Response;
 import org.hibernate.Session;
 import org.zkoss.util.media.Media;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.UploadEvent;
@@ -59,7 +65,7 @@ import org.zkoss.zul.Window;
  *
  * @author Robert Mützner <robert.muetzner@fh-dortmund.de>
  */
-public class ImportAll extends Window implements AfterCompose, IGenericListActions, javax.xml.ws.AsyncHandler<ImportCodeSystemResponse>, EventListener
+public class ImportAll extends Window implements AfterCompose, IGenericListActions, javax.xml.ws.AsyncHandler<ImportCodeSystemResponse>, EventListener, IUpdateModal
 {
 
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
@@ -357,7 +363,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
       genericList = (GenericList) winGenericList;
 
       genericList.setListActions(this);
-      genericList.setButton_new(false);
+      genericList.setButton_new(true);
       genericList.setButton_edit(false);
       genericList.setButton_delete(false);
       genericList.setListHeader(header);
@@ -374,6 +380,11 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
 
   private void fillVocabularyList()
   {
+    fillVocabularyList(null);
+  }
+
+  private void fillVocabularyList(CodeSystem selectedCS)
+  {
     try
     {
       // Header
@@ -383,9 +394,10 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
       header.add(new GenericListHeaderType(Labels.getLabel("name"), 0, "", true, "String", true, true, false, false));
       //header.add(new GenericListHeaderType("Version", 0, "", true, "String", true, true, false, false));
 
+      int selIndex = -1;
+      
       // Daten laden
       Session hb_session = HibernateUtil.getSessionFactory().openSession();
-      //hb_session.getTransaction().begin();
 
       List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
       try
@@ -401,6 +413,11 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
           GenericListRowType row = createRowFromCodesystem(csList.get(i));
 
           dataList.add(row);
+
+          if(selectedCS != null && csList.get(i).getId().longValue() == selectedCS.getId())
+          {
+            selIndex = i;
+          }
         }
       }
       catch (Exception e)
@@ -418,12 +435,25 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
       genericList = (GenericList) winGenericList;
 
       genericList.setListActions(this);
-      genericList.setButton_new(false);
+      genericList.setButton_new(true);
       genericList.setButton_edit(false);
       genericList.setButton_delete(false);
       genericList.setListHeader(header);
       genericList.setDataList(dataList);
       genericList.setListId("0");
+
+      if(selIndex >= 0)
+        genericList.setSelectedIndex(selIndex);
+      /*for (int i = 0; i < genericList.getListbox().getItemCount(); ++i)
+      {
+        if (genericList.set.get(i).getId().longValue() == licencedUser.getLicenceType().getId().longValue())
+        {
+          cb.setSelectedIndex(i);
+          break;
+        }
+      }*/
+      // selectedCS
+      //genericList.setSelectedIndex(MODAL);
 
       //getFellow("westCS").setVisible(true);
       ((West) getFellow("westCS")).setTitle("Codesystem Auswahl");
@@ -519,7 +549,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
       if (versionName == null || versionName.length() == 0)
       {
         s += Labels.getLabel("fillVersionNameMsg");
-        
+
       }
       else
       {
@@ -568,7 +598,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
       final Label label = (Label) getFellow("labelStatus");
       label.setValue("...");
       progress.setVisible(true);
-      
+
       ((Label) getFellow("labelStatus")).setValue("...");
 
       if (importClass.startImport(bytes, progress, label, selectedCS, selectedVS) == false)
@@ -602,6 +632,21 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
    }*/
   public void onNewClicked(String id)
   {
+    // create new code system
+    try
+    {
+      Map map = new HashMap();
+      Window win = (Window) Executions.createComponents(
+              "/gui/templates/nameInputbox.zul", null, map);
+
+      ((NameInputbox) win).setiUpdateListener(this);
+
+      win.doModal();
+    }
+    catch (Exception ex)
+    {
+      LoggingOutput.outputException(ex, this);
+    }
   }
 
   public void onEditClicked(String id, Object data)
@@ -643,6 +688,48 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
 
   public void onEvent(Event t) throws Exception
   {
+  }
+
+  public void update(Object o, boolean edited)
+  {
+    // new code system added
+    // refresh list view
+
+    if (o instanceof String)
+    {
+      String newCodesystemStr = (String) o;
+
+      if (newCodesystemStr.length() > 0)
+      {
+        CodeSystem newCS = null;
+        // create new code system without a version
+        Session hb_session = HibernateUtil.getSessionFactory().openSession();
+
+        try
+        {
+          hb_session.getTransaction().begin();
+
+          newCS = new CodeSystem();
+          newCS.setName(newCodesystemStr);
+          newCS.setInsertTimestamp(new Date());
+
+          hb_session.save(newCS);
+
+          hb_session.getTransaction().commit();
+        }
+        catch (Exception ex)
+        {
+          LoggingOutput.outputException(ex, this);
+        }
+        finally
+        {
+          hb_session.close();
+        }
+
+        // refresh tree view
+        fillVocabularyList(newCS);
+      }
+    }
   }
 
 }

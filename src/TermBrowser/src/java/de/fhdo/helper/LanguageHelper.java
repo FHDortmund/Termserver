@@ -28,7 +28,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.zkoss.util.resource.Labels;
@@ -46,6 +48,7 @@ public class LanguageHelper
 
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
   private static HashMap<String, String> languages;
+  private static HashMap<String, String> languageCodes;
 
   public static HashMap<String, String> getLanguageTable()
   {
@@ -53,6 +56,14 @@ public class LanguageHelper
       createLanguageTable();
 
     return languages;
+  }
+  
+  public static HashMap<String, String> getLanguageCodes()
+  {
+    if (languageCodes == null)
+      createLanguageTable();
+
+    return languageCodes;
   }
 
   public static Long getLanguageIdByName(String language)
@@ -83,7 +94,10 @@ public class LanguageHelper
 
   private static void createLanguageTable()
   {
+    logger.debug("createLanguageTable()");
+    
     languages = new HashMap<String, String>();
+    languageCodes = new HashMap<String, String>();
 
     ListDomainValuesRequestType parameter = new ListDomainValuesRequestType();
 
@@ -91,6 +105,7 @@ public class LanguageHelper
     parameter.getDomain().setDomainId((long) 1); // 1 = Sprachen
 
     ListDomainValuesResponse.Return response = WebServiceHelper.listDomainValues(parameter);
+    logger.debug("WS-response: " + response.getReturnInfos().getMessage());
 
     if (response != null && response.getReturnInfos().getStatus() == Status.OK)
     {
@@ -112,8 +127,37 @@ public class LanguageHelper
         {
           DomainValue dv = it.next();
           languages.put(String.valueOf(dv.getDomainValueId()), dv.getDomainDisplay());
+          languageCodes.put(dv.getDomainCode(), dv.getDomainDisplay());
+          
+          //logger.debug("adding language to map with code: " + dv.getDomainCode());
         }
       }
     }
+  }
+  
+  public static List<String> getLanguagesFromString(String str)
+  {
+    List<String> list = new LinkedList<String>();
+    
+    if(str != null && str.length() > 0)
+    {
+      String []s = str.split(";");
+      for(String _s : s)
+      {
+        list.add(_s.trim());
+      }
+    }
+    
+    return list;
+  }
+  
+  public static String getLanguageNameFromCode(String code)
+  {
+    Map<String, String> map = getLanguageCodes();
+    
+    if(map.containsKey(code))
+      return map.get(code);
+    
+    return "";
   }
 }

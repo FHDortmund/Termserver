@@ -62,6 +62,7 @@ public class CodeSystemVersion implements java.io.Serializable
   private String preferredLanguageCd;
   private String oid;
   private String licenceHolder;
+  private String availableLanguages;
   private Boolean underLicence;
   private Date insertTimestamp;
   private Long validityRange;
@@ -332,5 +333,21 @@ public class CodeSystemVersion implements java.io.Serializable
   public void setValidityRange(Long validityRange)
   {
     this.validityRange = validityRange;
+  }
+
+  /**
+   * @return the availableLanguages
+   */
+  public String getAvailableLanguages()
+  {
+    return availableLanguages;
+  }
+
+  /**
+   * @param availableLanguages the availableLanguages to set
+   */
+  public void setAvailableLanguages(String availableLanguages)
+  {
+    this.availableLanguages = availableLanguages;
   }
 }

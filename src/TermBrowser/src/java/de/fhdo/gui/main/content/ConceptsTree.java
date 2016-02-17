@@ -71,6 +71,7 @@ import org.zkoss.zul.Window;
 import org.zkoss.zul.event.PagingEvent;
 import types.termserver.fhdo.de.CodeSystem;
 import types.termserver.fhdo.de.CodeSystemConcept;
+import types.termserver.fhdo.de.CodeSystemConceptTranslation;
 import types.termserver.fhdo.de.CodeSystemEntity;
 import types.termserver.fhdo.de.CodeSystemEntityVersion;
 import types.termserver.fhdo.de.CodeSystemEntityVersionAssociation;
@@ -97,6 +98,7 @@ public class ConceptsTree implements IUpdateModal
   private boolean dragAndDrop = false, dragAndDropTree = false;
   private IUpdate updateDropListener = null;
   private boolean onDropListenerAdded = false;
+  private String selectedLanguageCd = "";
 
   private enum DISPLAY_MODE
   {
@@ -134,6 +136,14 @@ public class ConceptsTree implements IUpdateModal
   {
     this.treeConcepts = treeConcepts;
     this.conceptsWindow = concepsWindow;
+  }
+
+  public void initData(String languageCd)
+  {
+    logger.debug("reload code system with language code: " + languageCd);
+    selectedLanguageCd = languageCd;
+
+    initData();
   }
 
   public void initData()
@@ -257,10 +267,10 @@ public class ConceptsTree implements IUpdateModal
 
         // add drop possibility
         //if (treeConcepts.getEventListeners(Events.ON_DROP) == null)
-        if(onDropListenerAdded == false)
+        if (onDropListenerAdded == false)
         {
           logger.debug("add ONDROP listener");
-          
+
           treeConcepts.addEventListener(Events.ON_DROP, new EventListener<DropEvent>()
           {
             public void onEvent(DropEvent event) throws Exception
@@ -278,7 +288,7 @@ public class ConceptsTree implements IUpdateModal
                   {
                     CodeSystemEntityVersion csev = ((Treeitem) row.getParent()).getValue();
 
-                  //Object target = event.getTarget();
+                    //Object target = event.getTarget();
                     //if (target instanceof Tree)
                     {
                       // add mapping
@@ -296,10 +306,11 @@ public class ConceptsTree implements IUpdateModal
 
             }
           });
-          
+
           onDropListenerAdded = true;
         }
-        else logger.debug("ONDROP listener already added");
+        else
+          logger.debug("ONDROP listener already added");
       }
     }
 
@@ -431,7 +442,7 @@ public class ConceptsTree implements IUpdateModal
       csev.setCodeSystemEntity(cse);
 
       if ((csev.isIsLeaf() != null && csev.isIsLeaf().booleanValue())
-          || contentType == CONTENT_TYPE.VALUESET)
+              || contentType == CONTENT_TYPE.VALUESET)
       {
         // end element (leaf)
         list.add(new DefaultTreeNode(csev));
@@ -565,7 +576,7 @@ public class ConceptsTree implements IUpdateModal
     CodeSystemEntityVersion csev = getSelection();
     if (csev != null)
     {
-      if(contentType == CONTENT_TYPE.VALUESET)
+      if (contentType == CONTENT_TYPE.VALUESET)
       {
         // remove from value set
         removeConceptFromValueset(csev.getVersionId());
@@ -582,7 +593,7 @@ public class ConceptsTree implements IUpdateModal
     logger.debug("deleteConcept, csev-id: " + csev_id);
 
     if (Messagebox.show(Labels.getLabel("common.deleteConcept"), Labels.getLabel("common.delete"), Messagebox.YES | Messagebox.NO, Messagebox.QUESTION)
-        == Messagebox.YES)
+            == Messagebox.YES)
     {
       UpdateConceptStatusRequestType request = new UpdateConceptStatusRequestType();
       request.setLoginToken(SessionHelper.getSessionId());
@@ -630,30 +641,30 @@ public class ConceptsTree implements IUpdateModal
     }
 
   }
-  
+
   public void removeConceptFromValueset(long csev_id)
   {
     logger.debug("removeConceptFromValueset, csev-id: " + csev_id + ", vsv-id: " + valueSetVersionId);
 
     if (Messagebox.show(Labels.getLabel("common.removeConcept"), Labels.getLabel("treeitemRendererCSEV.miRemoveFromVS"), Messagebox.YES | Messagebox.NO, Messagebox.QUESTION)
-        == Messagebox.YES)
+            == Messagebox.YES)
     {
       RemoveValueSetContentRequestType request = new RemoveValueSetContentRequestType();
       request.setLoginToken(SessionHelper.getSessionId());
-      
+
       // add valueset to request
       request.setValueSet(new ValueSet());
       ValueSetVersion vsv = new ValueSetVersion();
       vsv.setVersionId(valueSetVersionId);
       request.getValueSet().getValueSetVersions().add(vsv);
-      
+
       // add csev-id to request
       CodeSystemEntityVersion csev = new CodeSystemEntityVersion();
       csev.setVersionId(csev_id);
       CodeSystemEntity cse = new CodeSystemEntity();
       cse.getCodeSystemEntityVersions().add(csev);
       request.getCodeSystemEntity().add(cse);
-      
+
       RemoveValueSetContentResponseType response = WebServiceHelper.removeValueSetContent(request);
 
       if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.authoring.Status.OK)
@@ -696,7 +707,7 @@ public class ConceptsTree implements IUpdateModal
     if (csev != null)
     {
       if (csev.getStatusVisibility() == Definitions.STATUS_VISIBILITY_VISIBLE
-          && csev.getStatusDeactivated() <= Definitions.STATUS_DEACTIVATED_ACTIVE)
+              && csev.getStatusDeactivated() <= Definitions.STATUS_DEACTIVATED_ACTIVE)
       {
         maintainConcept(csev.getVersionId());
       }
@@ -1069,6 +1080,44 @@ public class ConceptsTree implements IUpdateModal
     // sort parameter
     parameter.setSortingParameter(createSortingParameter());
 
+    // language
+    if (selectedLanguageCd != null && selectedLanguageCd.length() > 0)
+    {
+      // build request to load specific language
+      if (parameter.getCodeSystemEntity() == null)
+        parameter.setCodeSystemEntity(new CodeSystemEntity());
+
+      CodeSystemConcept csc = new CodeSystemConcept();
+      CodeSystemConceptTranslation csct = new CodeSystemConceptTranslation();
+      csct.setLanguageCd(selectedLanguageCd);
+      csc.getCodeSystemConceptTranslations().add(csct);
+
+      CodeSystemEntityVersion csev = null;
+
+      if (parameter.getCodeSystemEntity().getCodeSystemEntityVersions() == null || parameter.getCodeSystemEntity().getCodeSystemEntityVersions().size() == 0)
+      {
+        csev = new CodeSystemEntityVersion();
+        csev.getCodeSystemConcepts().add(csc);
+        parameter.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev);
+      }
+      else if (parameter.getCodeSystemEntity().getCodeSystemEntityVersions() != null || parameter.getCodeSystemEntity().getCodeSystemEntityVersions().size() == 1)
+      {
+        csev = parameter.getCodeSystemEntity().getCodeSystemEntityVersions().get(0);
+      }
+
+      if (csev != null)
+      {
+        if (csev.getCodeSystemConcepts() == null || csev.getCodeSystemConcepts().size() == 0)
+        {
+          csev.getCodeSystemConcepts().add(csc);
+        }
+        else if (csev.getCodeSystemConcepts() != null || csev.getCodeSystemConcepts().size() == 1)
+        {
+          csev.getCodeSystemConcepts().get(0).getCodeSystemConceptTranslations().add(csct);
+        }
+      }
+    }
+
     return parameter;
   }
 
@@ -1176,11 +1225,11 @@ public class ConceptsTree implements IUpdateModal
         else
         {
           if (csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null
-              && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
+                  && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
           {
             // new sub concept
             logger.debug("new sub concept");
-            
+
             Treeitem treeItem = treeConcepts.getSelectedItem();
             if (treeItem != null)
             {
