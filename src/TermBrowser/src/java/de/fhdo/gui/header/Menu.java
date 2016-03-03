@@ -60,9 +60,11 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
     
     LocalizationHelper.initLocalization();
 
-    //isCollaboration = SessionHelper.isCollaborationActive();
+    isCollaboration = PropertiesHelper.getInstance().isCollaborationActive() &&
+            SessionHelper.getCollaborationUserID() > 0;
+    logger.debug("isCollaboration: " + isCollaboration);
     
-    isCollaboration = PropertiesHelper.getInstance().isCollaborationActive();
+    
 
     if (isCollaboration)
     {
@@ -73,16 +75,24 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
       headerStr = Labels.getLabel("common.terminologyBrowser");
     }
     
-    // TODO check, if editor (valueset, association) is opened
+    // check, if editor (valueset, association) is opened
     String url = Executions.getCurrent().getDesktop().getRequestPath();
     logger.debug("context: " + url);
-    if(url.contains("ValuesetEditor.zul"))
+    if(url.contains("AssociationEditor.zul"))
     {
-      headerStr = Labels.getLabel("common.valuesetEditor");
+      headerStr += " - " + Labels.getLabel("common.associationEditor");
+    }
+    else if(url.contains("TranslationEditor.zul"))
+    {
+      headerStr += " - " + Labels.getLabel("common.translationEditor");
+    }
+    else if(url.contains("ValuesetEditor.zul"))
+    {
+      headerStr += " - " + Labels.getLabel("common.valuesetEditor");
     }
     
     
-    logger.debug("isCollaboration: " + isCollaboration);
+    
   }
 
   public void afterCompose()
@@ -269,6 +279,16 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose //p
     {
       Messagebox.show(Labels.getLabel("menu.loginRequiredForAssociationEditor"));
     }
+  }
+  
+  public void viewTranslationEditor()
+  {
+    //if (SessionHelper.isUserLoggedIn())
+      redirect("/gui/main/modules/TranslationEditor.zul", Labels.getLabel("menu.pleaseWait"), null);
+//    else
+//    {
+//      Messagebox.show(Labels.getLabel("menu.loginRequiredForAssociationEditor"));
+//    }
   }
   
   public void viewValuesetEditor()

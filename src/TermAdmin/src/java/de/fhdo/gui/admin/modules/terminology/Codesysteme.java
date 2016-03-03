@@ -185,9 +185,9 @@ public class Codesysteme extends Window implements AfterCompose, IGenericListAct
 
     // Header
     List<GenericTreeHeaderType> header = new LinkedList<GenericTreeHeaderType>();
-    header.add(new GenericTreeHeaderType("Zugeordnet", 100, "", true, "Bool", true, false, true));
-    header.add(new GenericTreeHeaderType("Code", 140, "", true, "String", false, false, false));
-    header.add(new GenericTreeHeaderType("Anzeige-Text", 400, "", true, "String", false, false, false));
+    header.add(new GenericTreeHeaderType(Labels.getLabel("assigned"), 100, "", true, "Bool", true, false, true));
+    header.add(new GenericTreeHeaderType(Labels.getLabel("code"), 140, "", true, "String", false, false, false));
+    header.add(new GenericTreeHeaderType(Labels.getLabel("displayText"), 400, "", true, "String", false, false, false));
 
     // Daten laden
     Session hb_session = HibernateUtil.getSessionFactory().openSession();

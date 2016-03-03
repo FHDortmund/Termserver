@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">       
+  <window use="de.fhdo.gui.main.modules.TranslationEditor"  border="none" height="100%" width="100%" 
+          id="winTranslationEditor">
+   
+    <borderlayout>  
+      <north id="blMainNorth">
+        <include src="/gui/header/menu.zul" />                               
+      </north>
+            
+      <south id="blMainSouth" height="26px">
+        <include src="/gui/header/statusBar.zul" />
+      </south> 
+                        
+      <!--muss ganz zum schluss stehe, da sonst auf north, south,etc, nicht zugegriffen werden kann-->
+      <center id="blMainCenter" border="0">
+        <borderlayout>
+          <north title="${labels.common.codeSystem} - ${labels.common.selection}">
+            <div style="margin-top:8px; ">
+              <div style="float:left; margin-left:8px; margin-bottom:8px;">
+                <label value="${labels.common.codeSystem}: "/>
+                <button label="" onClick="winTranslationEditor.chooseCodesystem()" image="/rsc/img/design/open_16x16.png"/>
+                <label id="labelSelectedCodesystem" value=""/>
+                
+                <separator orient="vertical" width="40px" /> 
+                
+                <label value="${labels.common.language}: "/>
+                <!--<combobox id="comboTranslationLanguage" readonly="true" onSelect="winTranslationEditor.languageChanged(event)"/>-->
+                <combobox id="comboTranslationLanguage" readonly="true"/>
+                
+                <separator orient="vertical" width="16px" />
+                
+                <button label="${labels.common.load}" onClick="winTranslationEditor.loadData()" />
+              </div>
+              <div align="center">
+                
+              </div>
+            </div>
+          </north>
+          <center>
+            <include id="incContent" />
+          </center>
+          <!--          
+          <east width="40%" flex="true" collapsible="true" splittable="true">
+            <include id="incContentRight" />
+          </east>-->
+          
+          
+        </borderlayout>
+      </center>    
+    </borderlayout>
+  </window>
+</zk>

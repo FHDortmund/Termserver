@@ -39,7 +39,6 @@ import org.hibernate.Session;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
-import org.zkoss.zul.Div;
 import org.zkoss.zul.Include;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
@@ -246,10 +245,10 @@ public class Domain extends Window implements AfterCompose, IGenericListActions,
     // Header
     List<GenericTreeHeaderType> header = new LinkedList<GenericTreeHeaderType>();
     header.add(new GenericTreeHeaderType("ID", 80, "", true, "long", false, false, false));
-    header.add(new GenericTreeHeaderType("Code", 140, "", true, "String", false, false, false));
-    header.add(new GenericTreeHeaderType("Anzeige-Text", 250, "", true, "String", false, false, false));
-    header.add(new GenericTreeHeaderType("Order-Nr", 70, "", false, "int", false, false, false));
-    header.add(new GenericTreeHeaderType("Bild", 250, "", true, "String", false, false, false));
+    header.add(new GenericTreeHeaderType(Labels.getLabel("code"), 140, "", true, "String", false, false, false));
+    header.add(new GenericTreeHeaderType(Labels.getLabel("displayText"), 250, "", true, "String", false, false, false));
+    header.add(new GenericTreeHeaderType(Labels.getLabel("direction"), 70, "", false, "int", false, false, false));
+    header.add(new GenericTreeHeaderType(Labels.getLabel("image"), 250, "", true, "String", false, false, false));
 
     // Daten laden
     Session hb_session = HibernateUtil.getSessionFactory().openSession();

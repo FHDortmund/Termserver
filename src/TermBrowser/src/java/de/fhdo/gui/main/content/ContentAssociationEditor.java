@@ -144,7 +144,7 @@ public class ContentAssociationEditor extends Window implements AfterCompose, IU
 
   public void update(Object o)
   {
-    // TODO load codesystem or valueset
+    // load codesystem or valueset
     if(o != null)
     {
       logger.debug("update with object: " + o.getClass().getCanonicalName());

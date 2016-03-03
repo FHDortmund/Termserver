@@ -95,6 +95,8 @@ public class ListDomainValues
         
          //hql += " dmv.domainValuesForDomainValueId1 is null";
          hql += " dmv.domainValuesForDomainValueId1 is null";*/
+        
+        hql += " order by dmv.domainDisplay ";
 
         if (logger.isDebugEnabled())
           logger.debug("HQL: " + hql);

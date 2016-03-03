@@ -114,6 +114,9 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   private boolean dragAndDropTree = false;
 
   private boolean collaborationActive = false;
+  
+  private boolean showTranslation = false;
+  private boolean editTranslation = false;
 
   private IUpdate updateListener = null;
   private AssociationEditor associationEditor;
@@ -307,6 +310,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     if (paramSearch)
       onSwitchSearch();
 
+    logger.debug("ContentConcepts - clearBusy");
     Clients.clearBusy();
   }
 
@@ -339,6 +343,9 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
     dragAndDrop = ParameterHelper.getBoolean("dragAndDrop", false);
     dragAndDropTree = ParameterHelper.getBoolean("dragAndDropTree", false);
+    
+    showTranslation = ParameterHelper.getBoolean("translation", false);
+    editTranslation = ParameterHelper.getBoolean("editTranslation", false);
 
     logger.debug("sendBack: " + isSendBack());
     logger.debug("paramSearch: " + paramSearch);
@@ -349,6 +356,9 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
     logger.debug("dragAndDrop: " + dragAndDrop);
     logger.debug("dragAndDropTree: " + dragAndDropTree);
+    
+    logger.debug("showTranslation: " + isShowTranslation());
+    logger.debug("editTranslation: " + isEditTranslation());
 
     if (paramLoadId > 0
             || (paramLoadType != null && paramLoadType != TreeAndContent.LOADTYPE.NONE)
@@ -510,11 +520,12 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   private void initConceptData()
   {
     String languageCd = SessionHelper.getStringValue("selectedLanguageCd", "");
+    String translationLanguageCd = SessionHelper.getStringValue("selectedTranslationLanguageCd", null);
 
     String langStr = "";
-    if (languageCd != null && languageCd.length() > 0)
+    if ((languageCd != null && languageCd.length() > 0) || (translationLanguageCd != null && translationLanguageCd.length() > 0))
     {
-      concepts.initData(languageCd);
+      concepts.initData(languageCd, translationLanguageCd);
       langStr = LanguageHelper.getLanguageNameFromCode(languageCd);
     }
     else
@@ -1137,6 +1148,22 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   public ValueSetVersion getValueSetVersion()
   {
     return valueSetVersion;
+  }
+
+  /**
+   * @return the showTranslation
+   */
+  public boolean isShowTranslation()
+  {
+    return showTranslation;
+  }
+
+  /**
+   * @return the editTranslation
+   */
+  public boolean isEditTranslation()
+  {
+    return editTranslation;
   }
 
 }

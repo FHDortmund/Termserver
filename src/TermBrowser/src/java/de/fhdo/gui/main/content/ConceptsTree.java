@@ -99,6 +99,7 @@ public class ConceptsTree implements IUpdateModal
   private IUpdate updateDropListener = null;
   private boolean onDropListenerAdded = false;
   private String selectedLanguageCd = "";
+  private String selectedTranslationLanguageCd = "";
 
   private enum DISPLAY_MODE
   {
@@ -138,10 +139,13 @@ public class ConceptsTree implements IUpdateModal
     this.conceptsWindow = concepsWindow;
   }
 
-  public void initData(String languageCd)
+  public void initData(String languageCd, String translationLanguageCd)
   {
     logger.debug("reload code system with language code: " + languageCd);
+    logger.debug("... and translation language code: " + translationLanguageCd);
+    
     selectedLanguageCd = languageCd;
+    selectedTranslationLanguageCd = translationLanguageCd;
 
     initData();
   }
@@ -205,6 +209,7 @@ public class ConceptsTree implements IUpdateModal
   private void fillTree()
   {
     ComponentHelper.setVisible("treecolSource", valueSetVersionId > 0, conceptsWindow);
+    ComponentHelper.setVisible("treecolTranslation", conceptsWindow.isShowTranslation(), conceptsWindow);
 
     msg = "";
     boolean search = false;
@@ -1117,6 +1122,12 @@ public class ConceptsTree implements IUpdateModal
         }
       }
     }
+    
+    // translations
+    if(selectedTranslationLanguageCd != null && selectedTranslationLanguageCd.length() > 0)
+    {
+      parameter.setLoadTranslation(true);
+    }
 
     return parameter;
   }
@@ -1419,5 +1430,21 @@ public class ConceptsTree implements IUpdateModal
   public void setDragAndDropTree(boolean dragAndDropTree)
   {
     this.dragAndDropTree = dragAndDropTree;
+  }
+
+  /**
+   * @return the selectedTranslationLanguageCd
+   */
+  public String getSelectedTranslationLanguageCd()
+  {
+    return selectedTranslationLanguageCd;
+  }
+
+  /**
+   * @param selectedTranslationLanguageCd the selectedTranslationLanguageCd to set
+   */
+  public void setSelectedTranslationLanguageCd(String selectedTranslationLanguageCd)
+  {
+    this.selectedTranslationLanguageCd = selectedTranslationLanguageCd;
   }
 }

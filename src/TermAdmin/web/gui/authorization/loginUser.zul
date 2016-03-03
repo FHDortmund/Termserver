@@ -85,7 +85,7 @@
                         <div align="left">
                           <label value="${labels.loginFailure}" />
                           <separator/>
-                          <button id="pwVergessenButton" label="neues Passwort zuschicken" onClick="winLogin.sendPassword()" 
+                          <button id="pwVergessenButton" label="${labels.sendNewPassword}" onClick="winLogin.sendPassword()" 
                                   autodisable="self"/>
                         </div>
                       </row>

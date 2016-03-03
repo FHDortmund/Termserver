@@ -126,10 +126,10 @@
                 onPaging="winConcepts.onPaging(event)">
             <treecols sizable="true">
               <treecol label="${labels.common.designation}" id="tcTerm" hflex="min" />
+              <treecol label="${labels.common.translation}" id="treecolTranslation" hflex="min" visible="false" />
               <treecol label="${labels.common.code}" id="tcCode" width="180px" sortDirection="ascending" />
               <treecol label="${labels.common.details}" id="tcDetails" width="80px" />
-              <treecol label="${labels.common.source}" id="treecolSource" hflex="min" visible="false" 
-              />
+              <treecol label="${labels.common.source}" id="treecolSource" hflex="min" visible="false" />
             </treecols>
           </tree>
           

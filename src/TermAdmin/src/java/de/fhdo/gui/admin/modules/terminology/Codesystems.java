@@ -17,22 +17,18 @@
 package de.fhdo.gui.admin.modules.terminology;
 
 import de.fhdo.gui.templates.NameInputbox;
-import de.fhdo.helper.HQLParameterHelper;
 import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.db.Definitions;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.CodeSystem;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
-import de.fhdo.terminologie.db.hibernate.DomainValue;
 import de.fhdo.tree.GenericTree;
 import de.fhdo.tree.GenericTreeCellType;
 import de.fhdo.tree.GenericTreeHeaderType;
 import de.fhdo.tree.GenericTreeRowType;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -75,11 +71,11 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal
     // Header
     List<GenericTreeHeaderType> header = new LinkedList<GenericTreeHeaderType>();
     header.add(new GenericTreeHeaderType("ID", 100, "", true, "String", false, false, false));
-    header.add(new GenericTreeHeaderType("Name Codesystem/Version", 300, "", true, "String", false, false, false));
+    header.add(new GenericTreeHeaderType(Labels.getLabel("codesystem") + " - " + Labels.getLabel("name"), 300, "", true, "String", false, false, false));
     header.add(new GenericTreeHeaderType("OID", 170, "", true, "String", false, false, false));
-    header.add(new GenericTreeHeaderType("Eingefügt", 100, "", true, "DateTime", false, false, false));
-    header.add(new GenericTreeHeaderType("Status", 100, "", true, "String", false, false, false));
-    header.add(new GenericTreeHeaderType("Status seit", 100, "", true, "DateTime", false, false, false));
+    header.add(new GenericTreeHeaderType(Labels.getLabel("inserted"), 100, "", true, "DateTime", false, false, false));
+    header.add(new GenericTreeHeaderType(Labels.getLabel("status"), 100, "", true, "String", false, false, false));
+    header.add(new GenericTreeHeaderType(Labels.getLabel("since"), 100, "", true, "DateTime", false, false, false));
 
     List<GenericTreeRowType> dataList = new LinkedList<GenericTreeRowType>();
 
@@ -124,7 +120,7 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal
         genericTree.setListHeader(header);
         genericTree.setDataList(dataList);
 
-        Button buttonNew = new Button("Neues Codesystem (ohne Version)...");
+        Button buttonNew = new Button(Labels.getLabel("newCodesystem") + "(" + Labels.getLabel("withoutVersion") + "...");
         buttonNew.setAttribute("disabled", false);
         buttonNew.addEventListener(Events.ON_CLICK, new EventListener<Event>()
         {
@@ -134,7 +130,7 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal
           }
         });
 
-        Button button = new Button("Status ändern...");
+        Button button = new Button(Labels.getLabel("changeStatus") + "...");
         button.addEventListener(Events.ON_CLICK, new EventListener<Event>()
         {
           public void onEvent(Event t) throws Exception

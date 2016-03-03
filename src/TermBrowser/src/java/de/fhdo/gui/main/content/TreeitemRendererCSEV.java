@@ -35,12 +35,14 @@ import org.zkoss.zul.Menuitem;
 import org.zkoss.zul.Menupopup;
 import org.zkoss.zul.Menuseparator;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Textbox;
 import org.zkoss.zul.TreeNode;
 import org.zkoss.zul.Treecell;
 import org.zkoss.zul.Treeitem;
 import org.zkoss.zul.TreeitemRenderer;
 import org.zkoss.zul.Treerow;
 import types.termserver.fhdo.de.CodeSystemConcept;
+import types.termserver.fhdo.de.CodeSystemConceptTranslation;
 import types.termserver.fhdo.de.CodeSystemEntity;
 import types.termserver.fhdo.de.CodeSystemEntityVersion;
 import types.termserver.fhdo.de.CodeSystemEntityVersionAssociation;
@@ -190,6 +192,43 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       cell.setStyle(style);
       treeRow.appendChild(cell);
 
+      // translation
+      if (conceptsTree.getConceptsWindow().isShowTranslation())
+      {
+        logger.debug("TreeitemRendererCSEV - show translation");
+        // shows a translation column
+        cell = new Treecell();
+
+        String langCd = conceptsTree.getSelectedTranslationLanguageCd();
+        
+        logger.debug("getSelectedTranslationLanguageCd: " + langCd);
+        logger.debug("translation-size: " + csc.getCodeSystemConceptTranslations().size());
+        
+        String designation = "";
+        for (CodeSystemConceptTranslation csct : csc.getCodeSystemConceptTranslations())
+        {
+          if(csct.getLanguageCd().equalsIgnoreCase(langCd))
+          {
+            // use selected language
+            designation = csct.getTerm();
+            break;
+          }
+        }
+
+        if (conceptsTree.getConceptsWindow().isEditTranslation())
+        {
+          Textbox tb = new Textbox(designation);
+          tb.setInplace(true);
+          cell.getChildren().add(tb);
+        }
+        else
+        {
+          cell.setLabel(designation);
+        }
+
+        treeRow.appendChild(cell);
+      }
+
       // code
       cell = new Treecell(getString(csc.getCode()));
       cell.setStyle(style);
@@ -200,6 +239,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       fillDetailsCell(null, cell, csev, csc, hasAssociation);
       cell.setStyle(style);
       treeRow.appendChild(cell);
+      
       /*cell = new Treecell();
 
        if (csc.isIsPreferred() != null && csc.isIsPreferred().booleanValue() == false)

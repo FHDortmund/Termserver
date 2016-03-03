@@ -40,10 +40,6 @@
 
 <xs:element name="ListValueSetContents" type="tns:ListValueSetContents" />
 
-<xs:element name="ListValueSetContentsByTermOrCode" type="tns:ListValueSetContentsByTermOrCode" />
-
-<xs:element name="ListValueSetContentsByTermOrCodeResponse" type="tns:ListValueSetContentsByTermOrCodeResponse" />
-
 <xs:element name="ListValueSetContentsResponse" type="tns:ListValueSetContentsResponse" />
 
 <xs:element name="ListValueSets" type="tns:ListValueSets" />
@@ -193,15 +189,6 @@
 </xs:complexType>
 </xs:element>
 
-<xs:element name="listValueSetContentsByTermOrCodeResponseType">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-</xs:sequence>
-</xs:complexType>
-</xs:element>
-
 <xs:element name="listValueSetContentsResponseType">
 <xs:complexType>
 <xs:sequence>
@@ -288,128 +275,6 @@
 
 <xs:element name="valueSetVersion" type="ns1:valueSetVersion" />
 
-<xs:complexType name="ReturnConceptValueSetMembership">
-<xs:sequence>
-<xs:element name="parameter" type="tns:returnConceptValueSetMembershipRequestType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="returnConceptValueSetMembershipRequestType">
-<xs:sequence>
-<xs:element name="codeSystemEntityVersion" type="ns1:codeSystemEntityVersion" minOccurs="0" />
-<xs:element name="loginToken" type="xs:string" minOccurs="0" />
-<xs:element name="valueSetVersion" type="ns1:valueSetVersion" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<xs:complexType name="ReturnConceptValueSetMembershipResponse">
-<xs:sequence>
-<xs:element name="return" minOccurs="0">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="conceptValueSetMembership" type="ns1:conceptValueSetMembership" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="returnType">
-<xs:sequence>
-<xs:element name="count" type="xs:int" />
-<xs:element name="message" type="xs:string" minOccurs="0" />
-<xs:element name="overallErrorCategory" type="tns:overallErrorCategory" minOccurs="0" />
-<xs:element name="status" type="tns:status" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ListCodeSystemsInTaxonomy">
-<xs:sequence>
-<xs:element name="parameter" type="tns:listCodeSystemsInTaxonomyRequestType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="listCodeSystemsInTaxonomyRequestType">
-<xs:sequence>
-<xs:element name="loginToken" type="xs:string" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ListCodeSystemsInTaxonomyResponse">
-<xs:sequence>
-<xs:element name="return" minOccurs="0">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="domainValue" type="ns1:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-</xs:sequence>
-</xs:complexType>
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ListValueSetContents">
-<xs:sequence>
-<xs:element name="parameter" type="tns:listValueSetContentsRequestType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="listValueSetContentsRequestType">
-<xs:sequence>
-<xs:element name="loginToken" type="xs:string" minOccurs="0" />
-<xs:element name="valueSet" type="ns1:valueSet" />
-<xs:element name="sortingParameter" type="tns:sortingType" minOccurs="0" />
-<xs:element name="readMetadataLevel" type="xs:boolean" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="sortingType">
-<xs:sequence>
-<xs:element name="sortBy" type="tns:sortByField" minOccurs="0" />
-<xs:element name="sortDirection" type="tns:sortDirection" minOccurs="0" />
-<xs:element name="sortType" type="tns:sortType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ListValueSetContentsResponse">
-<xs:sequence>
-<xs:element name="return" minOccurs="0">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-</xs:sequence>
-</xs:complexType>
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-
 <xs:complexType name="ReturnValueSetConceptMetadata">
 <xs:sequence>
 <xs:element name="parameter" type="tns:returnValueSetConceptMetadataRequestType" minOccurs="0" />
@@ -437,122 +302,54 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="ListDomains">
+<xs:complexType name="returnType">
 <xs:sequence>
-<xs:element name="parameter" type="tns:listDomainsRequestType" minOccurs="0" />
+<xs:element name="count" type="xs:int" />
+<xs:element name="message" type="xs:string" minOccurs="0" />
+<xs:element name="overallErrorCategory" type="tns:overallErrorCategory" minOccurs="0" />
+<xs:element name="status" type="tns:status" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="listDomainsRequestType">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<xs:complexType name="ListGloballySearchedConcepts">
 <xs:sequence>
-<xs:element name="domain" type="ns1:domain" minOccurs="0" />
+<xs:element name="parameter" type="tns:listGloballySearchedConceptsRequestType" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="ListDomainsResponse">
-<xs:sequence>
-<xs:element name="return" minOccurs="0">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="domain" type="ns1:domain" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-</xs:sequence>
-</xs:complexType>
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ReturnValueSetDetails">
-<xs:sequence>
-<xs:element name="parameter" type="tns:returnValueSetDetailsRequestType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="returnValueSetDetailsRequestType">
+<xs:complexType name="listGloballySearchedConceptsRequestType">
 <xs:sequence>
 <xs:element name="loginToken" type="xs:string" minOccurs="0" />
-<xs:element name="valueSet" type="ns1:valueSet" minOccurs="0" />
+<xs:element name="codeSystemConcept" type="ns1:codeSystemConcept" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="ReturnValueSetDetailsResponse">
-<xs:sequence>
-<xs:element name="return" minOccurs="0">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="valueSet" type="ns1:valueSet" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ReturnConceptDetails">
-<xs:sequence>
-<xs:element name="parameter" type="tns:returnConceptDetailsRequestType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="returnConceptDetailsRequestType">
-<xs:sequence>
-<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" minOccurs="0" />
-<xs:element name="loginToken" type="xs:string" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ReturnConceptDetailsResponse">
-<xs:sequence>
-<xs:element name="return" minOccurs="0">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ListCodeSystemConcepts">
-<xs:sequence>
-<xs:element name="parameter" type="tns:listCodeSystemConceptsRequestType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="listCodeSystemConceptsRequestType">
-<xs:sequence>
-<xs:element name="loginToken" type="xs:string" minOccurs="0" />
-<xs:element name="codeSystem" type="ns1:codeSystem" />
-<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" minOccurs="0" />
-<xs:element name="searchParameter" type="tns:searchType" minOccurs="0" />
-<xs:element name="pagingParameter" type="tns:pagingType" minOccurs="0" />
-<xs:element name="lookForward" type="xs:boolean" />
-<xs:element name="sortingParameter" type="tns:sortingType" minOccurs="0" />
-<xs:element name="loadMetadata" type="xs:boolean" minOccurs="0" />
-<xs:element name="loadTranslation" type="xs:boolean" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="searchType">
-<xs:sequence>
-<xs:element name="caseSensitive" type="xs:boolean" minOccurs="0" />
-<xs:element name="startsWith" type="xs:boolean" minOccurs="0" />
-<xs:element name="traverseConceptsToRoot" type="xs:boolean" minOccurs="0" />
-<xs:element name="wholeWords" type="xs:boolean" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="pagingType">
-<xs:sequence>
-<xs:element name="allEntries" type="xs:boolean" minOccurs="0" />
-<xs:element name="pageIndex" type="xs:int" minOccurs="0" />
-<xs:element name="pageSize" type="xs:string" minOccurs="0" />
-<xs:element name="userPaging" type="xs:boolean" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ListCodeSystemConceptsResponse">
+<xs:complexType name="ListGloballySearchedConceptsResponse">
 <xs:sequence>
 <xs:element name="return" minOccurs="0">
 <xs:complexType>
@@ -576,20 +373,73 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="ListConceptAssociationTypes">
+<xs:complexType name="GetTermserverVersion">
+<xs:sequence />
+</xs:complexType>
+
+<xs:complexType name="GetTermserverVersionResponse">
 <xs:sequence>
-<xs:element name="parameter" type="tns:listConceptAssociationTypesRequestType" minOccurs="0" />
+<xs:element name="return" minOccurs="0">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="version" type="xs:string" minOccurs="0" />
+<xs:element name="date" type="xs:dateTime" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+</xs:element>
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="listConceptAssociationTypesRequestType">
+<xs:complexType name="ListDomainValues">
 <xs:sequence>
-<xs:element name="codeSystem" type="ns1:codeSystem" minOccurs="0" />
+<xs:element name="parameter" type="tns:listDomainValuesRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="listDomainValuesRequestType">
+<xs:sequence>
+<xs:element name="domain" type="ns1:domain" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ListDomainValuesResponse">
+<xs:sequence>
+<xs:element name="return" minOccurs="0">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
+<xs:element name="domainValues" type="ns1:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ListValueSetContents">
+<xs:sequence>
+<xs:element name="parameter" type="tns:listValueSetContentsRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="listValueSetContentsRequestType">
+<xs:sequence>
 <xs:element name="loginToken" type="xs:string" minOccurs="0" />
+<xs:element name="valueSet" type="ns1:valueSet" />
+<xs:element name="sortingParameter" type="tns:sortingType" minOccurs="0" />
+<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" minOccurs="0" />
+<xs:element name="readMetadataLevel" type="xs:boolean" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="ListConceptAssociationTypesResponse">
+<xs:complexType name="sortingType">
+<xs:sequence>
+<xs:element name="sortBy" type="tns:sortByField" minOccurs="0" />
+<xs:element name="sortDirection" type="tns:sortDirection" minOccurs="0" />
+<xs:element name="sortType" type="tns:sortType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ListValueSetContentsResponse">
 <xs:sequence>
 <xs:element name="return" minOccurs="0">
 <xs:complexType>
@@ -628,27 +478,78 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="ListMetadataParameter">
+<xs:complexType name="ListConceptAssociationTypes">
 <xs:sequence>
-<xs:element name="parameter" type="tns:listMetadataParameterRequestType" minOccurs="0" />
+<xs:element name="parameter" type="tns:listConceptAssociationTypesRequestType" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="listMetadataParameterRequestType">
+<xs:complexType name="listConceptAssociationTypesRequestType">
 <xs:sequence>
 <xs:element name="codeSystem" type="ns1:codeSystem" minOccurs="0" />
 <xs:element name="loginToken" type="xs:string" minOccurs="0" />
-<xs:element name="valueSet" type="ns1:valueSet" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="ListMetadataParameterResponse">
+<xs:complexType name="ListConceptAssociationTypesResponse">
 <xs:sequence>
 <xs:element name="return" minOccurs="0">
 <xs:complexType>
 <xs:sequence>
 <xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="metadataParameter" type="ns1:metadataParameter" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ReturnConceptDetails">
+<xs:sequence>
+<xs:element name="parameter" type="tns:returnConceptDetailsRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="returnConceptDetailsRequestType">
+<xs:sequence>
+<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" minOccurs="0" />
+<xs:element name="loginToken" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ReturnConceptDetailsResponse">
+<xs:sequence>
+<xs:element name="return" minOccurs="0">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
+<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ReturnValueSetDetails">
+<xs:sequence>
+<xs:element name="parameter" type="tns:returnValueSetDetailsRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="returnValueSetDetailsRequestType">
+<xs:sequence>
+<xs:element name="loginToken" type="xs:string" minOccurs="0" />
+<xs:element name="valueSet" type="ns1:valueSet" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ReturnValueSetDetailsResponse">
+<xs:sequence>
+<xs:element name="return" minOccurs="0">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
+<xs:element name="valueSet" type="ns1:valueSet" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 </xs:element>
@@ -681,53 +582,25 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="ListValueSetContentsByTermOrCode">
+<xs:complexType name="ListDomains">
 <xs:sequence>
-<xs:element name="parameter" type="tns:listValueSetContentsByTermOrCodeRequestType" minOccurs="0" />
+<xs:element name="parameter" type="tns:listDomainsRequestType" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="listValueSetContentsByTermOrCodeRequestType">
-<xs:sequence>
-<xs:element name="loginToken" type="xs:string" minOccurs="0" />
-<xs:element name="searchCode" type="xs:string" minOccurs="0" />
-<xs:element name="searchTerm" type="xs:string" minOccurs="0" />
-<xs:element name="valueSet" type="ns1:valueSet" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ListValueSetContentsByTermOrCodeResponse">
-<xs:sequence>
-<xs:element name="return" minOccurs="0">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-</xs:sequence>
-</xs:complexType>
-</xs:element>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="ListDomainValues">
-<xs:sequence>
-<xs:element name="parameter" type="tns:listDomainValuesRequestType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="listDomainValuesRequestType">
+<xs:complexType name="listDomainsRequestType">
 <xs:sequence>
 <xs:element name="domain" type="ns1:domain" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="ListDomainValuesResponse">
+<xs:complexType name="ListDomainsResponse">
 <xs:sequence>
 <xs:element name="return" minOccurs="0">
 <xs:complexType>
 <xs:sequence>
 <xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
-<xs:element name="domainValues" type="ns1:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="domain" type="ns1:domain" nillable="true" minOccurs="0" maxOccurs="unbounded" />
 </xs:sequence>
 </xs:complexType>
 </xs:element>
@@ -760,6 +633,58 @@
 </xs:sequence>
 </xs:complexType>
 
+<xs:complexType name="ReturnConceptValueSetMembership">
+<xs:sequence>
+<xs:element name="parameter" type="tns:returnConceptValueSetMembershipRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="returnConceptValueSetMembershipRequestType">
+<xs:sequence>
+<xs:element name="codeSystemEntityVersion" type="ns1:codeSystemEntityVersion" minOccurs="0" />
+<xs:element name="loginToken" type="xs:string" minOccurs="0" />
+<xs:element name="valueSetVersion" type="ns1:valueSetVersion" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ReturnConceptValueSetMembershipResponse">
+<xs:sequence>
+<xs:element name="return" minOccurs="0">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
+<xs:element name="conceptValueSetMembership" type="ns1:conceptValueSetMembership" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ListCodeSystemsInTaxonomy">
+<xs:sequence>
+<xs:element name="parameter" type="tns:listCodeSystemsInTaxonomyRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="listCodeSystemsInTaxonomyRequestType">
+<xs:sequence>
+<xs:element name="loginToken" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ListCodeSystemsInTaxonomyResponse">
+<xs:sequence>
+<xs:element name="return" minOccurs="0">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
+<xs:element name="domainValue" type="ns1:domainValue" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+
 <xs:complexType name="ListValueSets">
 <xs:sequence>
 <xs:element name="parameter" type="tns:listValueSetsRequestType" minOccurs="0" />
@@ -786,37 +711,47 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="GetTermserverVersion">
-<xs:sequence />
-</xs:complexType>
-
-<xs:complexType name="GetTermserverVersionResponse">
+<xs:complexType name="ListCodeSystemConcepts">
 <xs:sequence>
-<xs:element name="return" minOccurs="0">
-<xs:complexType>
-<xs:sequence>
-<xs:element name="version" type="xs:string" minOccurs="0" />
-<xs:element name="date" type="xs:dateTime" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-</xs:element>
+<xs:element name="parameter" type="tns:listCodeSystemConceptsRequestType" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="ListGloballySearchedConcepts">
-<xs:sequence>
-<xs:element name="parameter" type="tns:listGloballySearchedConceptsRequestType" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="listGloballySearchedConceptsRequestType">
+<xs:complexType name="listCodeSystemConceptsRequestType">
 <xs:sequence>
 <xs:element name="loginToken" type="xs:string" minOccurs="0" />
-<xs:element name="codeSystemConcept" type="ns1:codeSystemConcept" minOccurs="0" />
+<xs:element name="codeSystem" type="ns1:codeSystem" />
+<xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" minOccurs="0" />
+<xs:element name="searchParameter" type="tns:searchType" minOccurs="0" />
+<xs:element name="pagingParameter" type="tns:pagingType" minOccurs="0" />
+<xs:element name="lookForward" type="xs:boolean" />
+<xs:element name="sortingParameter" type="tns:sortingType" minOccurs="0" />
+<xs:element name="loadMetadata" type="xs:boolean" minOccurs="0" />
+<xs:element name="loadTranslation" type="xs:boolean" minOccurs="0" />
+<xs:element name="hierarchicalOutput" type="xs:boolean" minOccurs="0" />
+<xs:element name="upperLevels" type="xs:int" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="ListGloballySearchedConceptsResponse">
+<xs:complexType name="searchType">
+<xs:sequence>
+<xs:element name="caseSensitive" type="xs:boolean" minOccurs="0" />
+<xs:element name="startsWith" type="xs:boolean" minOccurs="0" />
+<xs:element name="traverseConceptsToRoot" type="xs:boolean" minOccurs="0" />
+<xs:element name="wholeWords" type="xs:boolean" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="pagingType">
+<xs:sequence>
+<xs:element name="allEntries" type="xs:boolean" minOccurs="0" />
+<xs:element name="pageIndex" type="xs:int" minOccurs="0" />
+<xs:element name="pageSize" type="xs:string" minOccurs="0" />
+<xs:element name="userPaging" type="xs:boolean" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ListCodeSystemConceptsResponse">
 <xs:sequence>
 <xs:element name="return" minOccurs="0">
 <xs:complexType>
@@ -824,6 +759,33 @@
 <xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
 <xs:element name="pagingInfos" type="tns:pagingResultType" minOccurs="0" />
 <xs:element name="codeSystemEntity" type="ns1:codeSystemEntity" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ListMetadataParameter">
+<xs:sequence>
+<xs:element name="parameter" type="tns:listMetadataParameterRequestType" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="listMetadataParameterRequestType">
+<xs:sequence>
+<xs:element name="codeSystem" type="ns1:codeSystem" minOccurs="0" />
+<xs:element name="loginToken" type="xs:string" minOccurs="0" />
+<xs:element name="valueSet" type="ns1:valueSet" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ListMetadataParameterResponse">
+<xs:sequence>
+<xs:element name="return" minOccurs="0">
+<xs:complexType>
+<xs:sequence>
+<xs:element name="returnInfos" type="tns:returnType" minOccurs="0" />
+<xs:element name="metadataParameter" type="ns1:metadataParameter" nillable="true" minOccurs="0" maxOccurs="unbounded" />
 </xs:sequence>
 </xs:complexType>
 </xs:element>

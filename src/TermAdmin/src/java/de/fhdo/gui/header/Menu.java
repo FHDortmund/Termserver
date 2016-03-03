@@ -49,7 +49,7 @@ public class Menu extends Window implements org.zkoss.zk.ui.ext.AfterCompose
     if (logger.isDebugEnabled())
       logger.debug("[Menu.java] Konstruktor");
     /*Productive_AT_PU**********************************************************************/
-    headerStr = "Verwaltungsbereich";  // TODO übersetzen
+    headerStr = Labels.getLabel("administration_area");  // TODO übersetzen
     /***************************************************************************************/
     
     
