@@ -2,9 +2,9 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
     <system systemId="http://localhost:8080/TermServer/SSo?wsdl" uri="wsdl/localhost_8080/TermServer/SSo.wsdl"/>
     <system systemId="http://localhost:8080/TermServer/SSo?xsd=1" uri="wsdl/localhost_8080/TermServer/SSo.xsd_1.xsd"/>
-    <system systemId="http://localhost:8080/TermServer/Search?wsdl" uri="wsdl/localhost_8080/TermServer/Search.wsdl"/>
-    <system systemId="http://localhost:8080/TermServer/Search?xsd=1" uri="wsdl/localhost_8080/TermServer/Search.xsd_1.xsd"/>
-    <system systemId="http://localhost:8080/TermServer/Search?xsd=2" uri="wsdl/localhost_8080/TermServer/Search.xsd_2.xsd"/>
+    <!--<system systemId="http://localhost:8080/TermServer/Search?wsdl" uri="wsdl/localhost_8080/TermServer/Search.wsdl"/>-->
+    <!--<system systemId="http://localhost:8080/TermServer/Search?xsd=1" uri="wsdl/localhost_8080/TermServer/Search.xsd_1.xsd"/>-->
+    <!--<system systemId="http://localhost:8080/TermServer/Search?xsd=2" uri="wsdl/localhost_8080/TermServer/Search.xsd_2.xsd"/>-->
     <system systemId="http://localhost:8080/TermServer/ConceptAssociations?wsdl" uri="wsdl/localhost_8080/TermServer/ConceptAssociations.wsdl"/>
     <system systemId="http://localhost:8080/TermServer/ConceptAssociations?xsd=1" uri="wsdl/localhost_8080/TermServer/ConceptAssociations.xsd_1.xsd"/>
     <system systemId="http://localhost:8080/TermServer/ConceptAssociations?xsd=2" uri="wsdl/localhost_8080/TermServer/ConceptAssociations.xsd_2.xsd"/>
@@ -17,11 +17,14 @@
     <system systemId="http://localhost:8080/TermServer/Authorization?wsdl" uri="wsdl/localhost_8080/TermServer/Authorization.wsdl"/>
     <system systemId="http://localhost:8080/TermServer/Authorization?xsd=1" uri="wsdl/localhost_8080/TermServer/Authorization.xsd_1.xsd"/>
     <system systemId="http://localhost:8080/TermServer/Authorization?xsd=2" uri="wsdl/localhost_8080/TermServer/Authorization.xsd_2.xsd"/>
-    <system systemId="http://127.0.0.1:8080/TermServer/Search?wsdl" uri="wsdl/127.0.0.1_8080/TermServer/Search.wsdl"/>
+<!--    <system systemId="http://127.0.0.1:8080/TermServer/Search?wsdl" uri="wsdl/127.0.0.1_8080/TermServer/Search.wsdl"/>
     <system systemId="http://127.0.0.1:8080/TermServer/Search?xsd=1" uri="wsdl/127.0.0.1_8080/TermServer/Search.xsd_1.xsd"/>
-    <system systemId="http://127.0.0.1:8080/TermServer/Search?xsd=2" uri="wsdl/127.0.0.1_8080/TermServer/Search.xsd_2.xsd"/>
+    <system systemId="http://127.0.0.1:8080/TermServer/Search?xsd=2" uri="wsdl/127.0.0.1_8080/TermServer/Search.xsd_2.xsd"/>-->
     <system systemId="http://127.0.0.1:8080/TermServer/Administration?wsdl" uri="wsdl/127.0.0.1_8080/TermServer/Administration.wsdl"/>
     <system systemId="http://127.0.0.1:8080/TermServer/Administration?xsd=1" uri="wsdl/127.0.0.1_8080/TermServer/Administration.xsd_1.xsd"/>
     <system systemId="http://127.0.0.1:8080/TermServer/Administration?xsd=2" uri="wsdl/127.0.0.1_8080/TermServer/Administration.xsd_2.xsd"/>
+    <system systemId="https://www.it4health.eu:8083/TermServer/Search?wsdl" uri="wsdl/www.it4health.eu_8083/TermServer/Search.wsdl"/>
+    <system systemId="https://www.it4health.eu:443/TermServer/Search?xsd=1" uri="wsdl/www.it4health.eu_443/TermServer/Search.xsd_1.xsd"/>
+    <system systemId="https://www.it4health.eu:443/TermServer/Search?xsd=2" uri="wsdl/www.it4health.eu_443/TermServer/Search.xsd_2.xsd"/>
 </catalog>
 

@@ -16,11 +16,7 @@
  */
 package de.fhdo.gui.admin.modules.terminology.metadata;
 
-import de.fhdo.collaboration.db.classes.AssignedTerm;
 import de.fhdo.helper.ArgumentHelper;
-import de.fhdo.helper.AssignTermHelper;
-import de.fhdo.helper.CODES;
-import de.fhdo.helper.ComparatorRowTypeName;
 import de.fhdo.helper.DomainHelper;
 import de.fhdo.helper.HQLParameterHelper;
 import de.fhdo.helper.SessionHelper;
@@ -36,8 +32,6 @@ import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.CodeSystem;
 import de.fhdo.terminologie.db.hibernate.MetadataParameter;
 import de.fhdo.terminologie.db.hibernate.ValueSet;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,124 +53,35 @@ public class MetadatenCS extends Window implements AfterCompose, IGenericListAct
   
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
   byte[] bytes;
-  GenericList genericListVocs;
   GenericList genericListMetadata;
   CodeSystem selectedCodeSystem;
   ValueSet selectedValueSet;
   MetadataParameter selectedMetadataParameter;
   
+  private Object selectedItem;
+  
   private Mode mode;
 
   public MetadatenCS()
   {
-    String modeStr = "";
-    Object o = ArgumentHelper.getWindowParameter("mode");
-    if(o != null)
-      modeStr = o.toString();
+    selectedItem = SessionHelper.getValue("CS_SelectedItem");
     
-    logger.debug("Mode: " + modeStr);
-    
-    if(modeStr.equals("vs"))
+    if(selectedItem instanceof CodeSystem)
+    {
+      selectedCodeSystem = (CodeSystem)selectedItem;
+      mode = Mode.CODESYSTEM;
+    }
+    else if(selectedItem instanceof ValueSet)
+    {
+      selectedValueSet = (ValueSet)selectedItem;
       mode = Mode.VALUESET;
-    else mode = Mode.CODESYSTEM;
+    }
+    
   }
   
   public void afterCompose()
   {
-    fillVocabularyList();
-    showStatus();
-  }
-
-  private void fillVocabularyList()
-  {
-    try
-    {
-      // Header
-      List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
-      header.add(new GenericListHeaderType("ID", 60, "", true, "String", true, true, false, false));
-      header.add(new GenericListHeaderType(Labels.getLabel("name"), 0, "", true, "String", true, true, false, false));
-
-      // Daten laden
-      Session hb_session = HibernateUtil.getSessionFactory().openSession();
-      //hb_session.getTransaction().begin();
-
-      List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
-      try
-      {
-
-        /*if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_INHALTSVERWALTER))
-        {
-
-          ArrayList<AssignedTerm> myTerms = AssignTermHelper.getUsersAssignedTerms();
-
-          for (AssignedTerm at : myTerms)
-          {
-
-            if (at.getClassname().equals("CodeSystem"))
-            {
-
-              CodeSystem cs = (CodeSystem) hb_session.get(CodeSystem.class, at.getClassId());
-              GenericListRowType row = createRowFromCodesystem(cs);
-              dataList.add(row);
-            }
-          }
-          Collections.sort(dataList, new ComparatorRowTypeName(true));
-        }
-        else*/
-        
-        if(mode == Mode.VALUESET)
-        {
-          String hql = "from ValueSet order by name";
-          List<ValueSet> vsList = hb_session.createQuery(hql).list();
-
-          for (int i = 0; i < vsList.size(); ++i)
-          {
-            ValueSet vs = vsList.get(i);
-            GenericListRowType row = createRowFromValueSet(vs);
-
-            dataList.add(row);
-          }
-        }
-        else
-        {
-          String hql = "from CodeSystem order by name";
-          List<CodeSystem> csList = hb_session.createQuery(hql).list();
-
-          for (int i = 0; i < csList.size(); ++i)
-          {
-            CodeSystem cs = csList.get(i);
-            GenericListRowType row = createRowFromCodesystem(cs);
-
-            dataList.add(row);
-          }
-        }
-      }
-      catch (Exception e)
-      {
-        logger.error("[" + this.getClass().getCanonicalName() + "] Fehler bei initList(): " + e.getMessage());
-      }
-      finally
-      {
-        hb_session.close();
-      }
-
-      //Vokabular Liste
-      Include inc = (Include) getFellow("incVocList");
-      Window winGenericList = (Window) inc.getFellow("winGenericList");
-      genericListVocs = (GenericList) winGenericList;
-      //genericListVocs.setId("0");
-
-      genericListVocs.setListActions(this);
-      genericListVocs.setButton_new(false);
-      genericListVocs.setButton_edit(false);
-      genericListVocs.setButton_delete(false);
-      genericListVocs.setListHeader(header);
-      genericListVocs.setDataList(dataList);
-    }
-    catch (Exception ex)
-    {
-      logger.error("Fehler in MetadatenCS.java: " + ex.getMessage());
-    }
+    fillMetadataList();
   }
 
   private void fillMetadataList()
@@ -186,7 +91,6 @@ public class MetadatenCS extends Window implements AfterCompose, IGenericListAct
       // Header
       List<GenericListHeaderType> header = new LinkedList<GenericListHeaderType>();
       header.add(new GenericListHeaderType("ID", 60, "", true, "String", true, true, false, false));
-      //header.add(new GenericListHeaderType("Name", 0, "", true, "String", true, true, false, false));
       header.add(new GenericListHeaderType(Labels.getLabel("type"), 100, "", true, "String", true, true, false, false));
       header.add(new GenericListHeaderType(Labels.getLabel("name"), 0, "", true, "String", true, true, false, false));
       header.add(new GenericListHeaderType(Labels.getLabel("language"), 100, "", true, "String", true, true, false, false));
@@ -194,7 +98,6 @@ public class MetadatenCS extends Window implements AfterCompose, IGenericListAct
 
       // Daten laden
       Session hb_session = HibernateUtil.getSessionFactory().openSession();
-      //hb_session.getTransaction().begin();
 
       List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
       try
@@ -202,7 +105,6 @@ public class MetadatenCS extends Window implements AfterCompose, IGenericListAct
         HQLParameterHelper parameterHelper = new HQLParameterHelper();
         
         String hql = "from MetadataParameter mp";
-        
         
         if(mode == Mode.VALUESET)
         {
@@ -265,36 +167,8 @@ public class MetadatenCS extends Window implements AfterCompose, IGenericListAct
     }
     catch (Exception ex)
     {
-      ex.printStackTrace();
+      LoggingOutput.outputException(ex, this);
     }
-  }
-
-  private GenericListRowType createRowFromCodesystem(CodeSystem cs)
-  {
-    GenericListRowType row = new GenericListRowType();
-
-    GenericListCellType[] cells = new GenericListCellType[2];
-    cells[0] = new GenericListCellType(cs.getId(), false, "");
-    cells[1] = new GenericListCellType(cs.getName(), false, "");
-
-    row.setData(cs);
-    row.setCells(cells);
-
-    return row;
-  }
-  
-  private GenericListRowType createRowFromValueSet(ValueSet vs)
-  {
-    GenericListRowType row = new GenericListRowType();
-
-    GenericListCellType[] cells = new GenericListCellType[2];
-    cells[0] = new GenericListCellType(vs.getId(), false, "");
-    cells[1] = new GenericListCellType(vs.getName(), false, "");
-
-    row.setData(vs);
-    row.setCells(cells);
-
-    return row;
   }
 
   private GenericListRowType createRowFromMetadataParameter(MetadataParameter mp)
@@ -318,31 +192,10 @@ public class MetadatenCS extends Window implements AfterCompose, IGenericListAct
   {
     if (data != null)
     {
-
-      if (data instanceof CodeSystem)
-      {
-        selectedValueSet = null;
-        selectedCodeSystem = (CodeSystem) data;
-        logger.debug("Selected Codesystem: " + selectedCodeSystem.getName());
-        fillMetadataList();
-
-        showStatus();
-      }
-      else if (data instanceof ValueSet)
-      {
-        selectedCodeSystem = null;
-        selectedValueSet = (ValueSet) data;
-        logger.debug("Selected Valueset: " + selectedValueSet.getName());
-        fillMetadataList();
-
-        showStatus();
-      }
-      else if (data instanceof MetadataParameter)
+      if (data instanceof MetadataParameter)
       {
         selectedMetadataParameter = (MetadataParameter) data;
         logger.debug("Selected Metadata Parameter: " + selectedMetadataParameter.getParamName());
-
-        showStatus();
       }
       else
       {
@@ -429,28 +282,6 @@ public class MetadatenCS extends Window implements AfterCompose, IGenericListAct
     }
   }
 
-  private void showStatus()
-  {
-    /*String s = "";
-
-     if (selectedCodeSystem == null)
-     {
-     s = "\nBitte wählen Sie ein Codesystem aus.";
-     }
-
-     if (selectedCodeSystem != null)
-     {
-     s = "\nJetzt können Sie einen Metadaten Parameter auswählen.";
-     }
-     if (selectedMetadataParameter != null)
-     {
-     s = "\nMetadaten Parameter ausgewählt.";
-     }*/
-
-    //((Label) getFellow("labelStatus")).setValue(s);
-  }
-
-  
 
   public void update(Object o, boolean edited)
   {

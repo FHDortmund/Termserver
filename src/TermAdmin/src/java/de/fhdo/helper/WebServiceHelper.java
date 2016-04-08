@@ -16,12 +16,10 @@
  */
 package de.fhdo.helper;
 
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.ws.administration.Administration;
 import de.fhdo.terminologie.ws.administration.Administration_Service;
-import de.fhdo.terminologie.ws.administration.ExportValueSetContentRequestType;
-import de.fhdo.terminologie.ws.administration.ExportValueSetContentResponse;
 import de.fhdo.terminologie.ws.administration.ImportCodeSystemCancelRequestType;
-import de.fhdo.terminologie.ws.administration.ImportCodeSystemCancelResponse;
 import de.fhdo.terminologie.ws.administration.ImportCodeSystemCancelResponseType;
 import de.fhdo.terminologie.ws.administration.ImportCodeSystemRequestType;
 import de.fhdo.terminologie.ws.administration.ImportCodeSystemResponse;
@@ -29,12 +27,10 @@ import de.fhdo.terminologie.ws.administration.ImportCodeSystemStatusRequestType;
 import de.fhdo.terminologie.ws.administration.ImportCodeSystemStatusResponse;
 import de.fhdo.terminologie.ws.administration.ImportValueSetRequestType;
 import de.fhdo.terminologie.ws.administration.ImportValueSetResponse;
-import de.fhdo.terminologie.ws.administration.ImportValueSetResponseType;
 import de.fhdo.terminologie.ws.authoring.Authoring;
 import de.fhdo.terminologie.ws.authoring.Authoring_Service;
 import de.fhdo.terminologie.ws.authoring.CreateConceptAssociationTypeRequestType;
 import de.fhdo.terminologie.ws.authoring.CreateConceptAssociationTypeResponse;
-import de.fhdo.terminologie.ws.authoring.CreateConceptAssociationTypeResponseType;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptAssociationTypeRequestType;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptAssociationTypeResponse;
 import de.fhdo.terminologie.ws.authorization.Authorization;
@@ -64,7 +60,7 @@ public class WebServiceHelper
 
   private static String optimizeUrl(String url)
   {
-    if (url.startsWith("http://") == false)
+    if (url.startsWith("http://") == false && url.startsWith("https://") == false)
       return "http://" + url;
     if (url.endsWith("/") == false)
       return url + "/";
@@ -74,17 +70,17 @@ public class WebServiceHelper
     return url;
   }
 
-  public static LoginResponse.Return login(List<String> parameter)
+  public static LoginResponse.Return login(List<String> parameter) throws Exception
   {
     return login(parameter, PropertiesHelper.getInstance().getTermserverUrl());
   }
 
-  public static LoginResponse.Return login(List<String> parameter, String urlHost)
+  public static LoginResponse.Return login(List<String> parameter, String urlHost) throws Exception
   {
     return login(parameter, urlHost, PropertiesHelper.getInstance().getTermserverServiceName());
   }
 
-  public static LoginResponse.Return login(List<String> parameter, String urlHost, String urlService)
+  public static LoginResponse.Return login(List<String> parameter, String urlHost, String urlService) throws Exception
   {
     Authorization_Service service;
     Authorization port;
@@ -96,10 +92,9 @@ public class WebServiceHelper
     }
     catch (Exception ex)
     {
-      Logger.getLogger(WebServiceHelper.class.getName()).log(Level.SEVERE, null, ex);
+      LoggingOutput.outputException(ex, WebServiceHelper.class);
 
-      // Standard Service ?ffnen
-      service = new Authorization_Service();
+      throw ex;
     }
     port = service.getAuthorizationPort();
     return port.login(parameter);

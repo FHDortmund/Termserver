@@ -3,9 +3,9 @@
     <system systemId="http://127.0.0.1:8080/TermServer/Administration?wsdl" uri="src/conf/xml-resources/web-service-references/Administration/wsdl/127.0.0.1_8080/TermServer/Administration.wsdl"/>
     <system systemId="http://127.0.0.1:8080/TermServer/Administration?xsd=1" uri="src/conf/xml-resources/web-service-references/Administration/wsdl/127.0.0.1_8080/TermServer/Administration.xsd_1.xsd"/>
     <system systemId="http://127.0.0.1:8080/TermServer/Administration?xsd=2" uri="src/conf/xml-resources/web-service-references/Administration/wsdl/127.0.0.1_8080/TermServer/Administration.xsd_2.xsd"/>
-    <system systemId="http://127.0.0.1:8080/TermServer/Search?wsdl" uri="src/conf/xml-resources/web-service-references/Search/wsdl/127.0.0.1_8080/TermServer/Search.wsdl"/>
-    <system systemId="http://127.0.0.1:8080/TermServer/Search?xsd=1" uri="src/conf/xml-resources/web-service-references/Search/wsdl/127.0.0.1_8080/TermServer/Search.xsd_1.xsd"/>
-    <system systemId="http://127.0.0.1:8080/TermServer/Search?xsd=2" uri="src/conf/xml-resources/web-service-references/Search/wsdl/127.0.0.1_8080/TermServer/Search.xsd_2.xsd"/>
+    <!--<system systemId="http://127.0.0.1:8080/TermServer/Search?wsdl" uri="src/conf/xml-resources/web-service-references/Search/wsdl/127.0.0.1_8080/TermServer/Search.wsdl"/>-->
+    <!--<system systemId="http://127.0.0.1:8080/TermServer/Search?xsd=1" uri="src/conf/xml-resources/web-service-references/Search/wsdl/127.0.0.1_8080/TermServer/Search.xsd_1.xsd"/>-->
+    <!--<system systemId="http://127.0.0.1:8080/TermServer/Search?xsd=2" uri="src/conf/xml-resources/web-service-references/Search/wsdl/127.0.0.1_8080/TermServer/Search.xsd_2.xsd"/>-->
     <system systemId="http://localhost:8080/TermServer/SSo?wsdl" uri="src/conf/xml-resources/web-service-references/SSo/wsdl/localhost_8080/TermServer/SSo.wsdl"/>
     <system systemId="http://localhost:8080/TermServer/SSo?xsd=1" uri="src/conf/xml-resources/web-service-references/SSo/wsdl/localhost_8080/TermServer/SSo.xsd_1.xsd"/>
     <system systemId="http://localhost:8080/TermServer/Authorization?xsd=2" uri="src/conf/xml-resources/web-service-references/Authorization/wsdl/localhost_8080/TermServer/Authorization.xsd_2.xsd"/>
@@ -22,9 +22,12 @@
     <system systemId="http://localhost:8080/TermServer/Authoring?xsd=2" uri="src/conf/xml-resources/web-service-references/Authoring/wsdl/localhost_8080/TermServer/Authoring.xsd_2.xsd"/>
     <system systemId="http://localhost:8080/TermServer/Authorization?wsdl" uri="src/conf/xml-resources/web-service-references/Authorization_1/wsdl/localhost_8080/TermServer/Authorization.wsdl"/>
     <system systemId="http://localhost:8080/TermServer/Authorization?xsd=1" uri="src/conf/xml-resources/web-service-references/Authorization_1/wsdl/localhost_8080/TermServer/Authorization.xsd_1.xsd"/>
-    <system systemId="http://localhost:8080/TermServer/Search?wsdl" uri="src/conf/xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.wsdl"/>
+<!--    <system systemId="http://localhost:8080/TermServer/Search?wsdl" uri="src/conf/xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.wsdl"/>
     <system systemId="http://localhost:8080/TermServer/Search?xsd=1" uri="src/conf/xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.xsd_1.xsd"/>
-    <system systemId="http://localhost:8080/TermServer/Search?xsd=2" uri="src/conf/xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.xsd_2.xsd"/>
+    <system systemId="http://localhost:8080/TermServer/Search?xsd=2" uri="src/conf/xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.xsd_2.xsd"/>-->
+    <system systemId="https://www.it4health.eu:8083/TermServer/Search?wsdl" uri="src/conf/xml-resources/web-service-references/Search/wsdl/www.it4health.eu_8083/TermServer/Search.wsdl"/>
+    <system systemId="https://www.it4health.eu:443/TermServer/Search?xsd=1" uri="src/conf/xml-resources/web-service-references/Search/wsdl/www.it4health.eu_443/TermServer/Search.xsd_1.xsd"/>
+    <system systemId="https://www.it4health.eu:443/TermServer/Search?xsd=2" uri="src/conf/xml-resources/web-service-references/Search/wsdl/www.it4health.eu_443/TermServer/Search.xsd_2.xsd"/>
 </catalog>
 
 

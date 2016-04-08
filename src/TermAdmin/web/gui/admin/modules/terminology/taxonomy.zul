@@ -1,0 +1,8 @@
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <style src="/rsc/style/admin.css"/>
+  <window id="winCodesysteme" border="none" width="100%" height="100%"
+          use="de.fhdo.gui.admin.modules.terminology.Taxonomy">
+
+    <include id="incTree" src="/gui/templates/GenericTree.zul"/>
+  </window>
+</zk>

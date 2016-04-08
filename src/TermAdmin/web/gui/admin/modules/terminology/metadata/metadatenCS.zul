@@ -3,15 +3,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul">
   <window id="winMetadatenCS" border="none" width="100%" height="100%"
           use="de.fhdo.gui.admin.modules.terminology.metadata.MetadatenCS" >
-    <borderlayout>
-      <west border="normal" title="${labels.codesystem}-${labels.selection}" width="350px">
-        <include id="incVocList" src="/gui/templates/GenericList.zul"
-                         height="100%" width="98%"/>
-      </west>
-      <center flex="true" border="normal" title="${labels.metadata}">
-        <include id="incMetadataList" src="/gui/templates/GenericList.zul"
-                       height="100%" width="99%"/>
-      </center>
-    </borderlayout>
+    <include id="incMetadataList" src="/gui/templates/GenericList.zul"
+                 height="100%" width="99%"/>
   </window>
 </zk>

@@ -228,6 +228,12 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
 
         treeRow.appendChild(cell);
       }
+      else
+      {
+        cell = new Treecell();
+        treeRow.appendChild(cell);
+      }
+             
 
       // code
       cell = new Treecell(getString(csc.getCode()));

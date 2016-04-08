@@ -127,4 +127,20 @@ public class ArgumentHelper
     return "";
   }
   
+  public static Long getWindowParameterLong(String argName)
+  {
+    try
+    {
+      Object o = Executions.getCurrent().getParameter(argName);
+      if(o != null)
+        return Long.parseLong(o.toString());
+    }
+    catch (Exception e)
+    {
+      LoggingOutput.outputException(e, ArgumentHelper.class);
+    }
+
+    return 0l;
+  }
+  
 }

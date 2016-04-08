@@ -83,7 +83,7 @@
                           <image src="/rsc/img/symbols/warning_32x32.png" width="32" height="32"/>
                         </div>
                         <div align="left">
-                          <label value="${labels.loginFailure}" />
+                          <label value="${labels.loginFailure}" id="labelFailure"/>
                           <separator/>
                           <button id="pwVergessenButton" label="${labels.sendNewPassword}" onClick="winLogin.sendPassword()" 
                                   autodisable="self"/>

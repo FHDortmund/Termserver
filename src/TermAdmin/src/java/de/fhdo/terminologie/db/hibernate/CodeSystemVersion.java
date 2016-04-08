@@ -69,6 +69,8 @@ public class CodeSystemVersion implements java.io.Serializable
   private Set<CodeSystemVersionEntityMembership> codeSystemVersionEntityMemberships = new HashSet<CodeSystemVersionEntityMembership>(0);
   private Set<LicencedUser> licencedUsers = new HashSet<LicencedUser>(0);
   private Set<LicenceType> licenceTypes = new HashSet<LicenceType>(0);
+  private String availableLanguages;
+
 
   public CodeSystemVersion()
   {
@@ -332,5 +334,22 @@ public class CodeSystemVersion implements java.io.Serializable
   public void setValidityRange(Long validityRange)
   {
     this.validityRange = validityRange;
+  }
+  
+  /**
+   * @return the availableLanguages
+   */
+  @Column(name = "availableLanguages")
+  public String getAvailableLanguages()
+  {
+    return availableLanguages;
+  }
+
+  /**
+   * @param availableLanguages the availableLanguages to set
+   */
+  public void setAvailableLanguages(String availableLanguages)
+  {
+    this.availableLanguages = availableLanguages;
   }
 }

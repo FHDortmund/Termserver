@@ -220,7 +220,9 @@ public class UsernamePasswordLogin extends Window implements org.zkoss.zk.ui.ext
          {
          CookieHelper.setCookie("show_captcha", "1");
          showCaptcha();
-         }*/
+        }*/
+        
+        ((Label)getFellow("labelFailure")).setValue(Labels.getLabel("loginFailure"));
         showRow("warningRow", true);
 
         //Label label = (Label) getFellow("temp");
@@ -232,6 +234,9 @@ public class UsernamePasswordLogin extends Window implements org.zkoss.zk.ui.ext
     {
       logger.error(e.getLocalizedMessage());
       LoggingOutput.outputException(e, this);
+      
+      ((Label)getFellow("labelFailure")).setValue(e.getLocalizedMessage());
+      showRow("warningRow", true);
     }
 
   }

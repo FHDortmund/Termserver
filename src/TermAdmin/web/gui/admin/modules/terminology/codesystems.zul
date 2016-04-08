@@ -5,15 +5,22 @@
   <window id="winCodesysteme" border="none" width="100%" height="100%"
           use="de.fhdo.gui.admin.modules.terminology.Codesystems">
 
-    <include id="incTree" src="/gui/templates/GenericTree.zul"/>
-<!--    <borderlayout>
-      <west border="0" width="300px" title="Codesysteme-Auswahl">
+    <borderlayout style="background:#FFF;">
+      <west id="titleItem" border="normal" width="300px" title="${labels.codesystem}">
         <include id="incList" src="/gui/templates/GenericList.zul"/>
       </west>
-      <center border="0" title="Codesystem-Details">
-        <include id="incTree" src="/gui/templates/GenericTree.zul"/>
+      <center margins="0,8,0,0" border="none">
+        <borderlayout style="background:#FFF;" >
+          <west id="titleVersion" border="normal" width="300px" title="${labels.codesystemVersion}">
+            <include id="incListVersions"/>
+          </west>
+          <center id="titleContent" border="normal" title="${labels.details}" margins="0,8,0,0" >
+            <include id="incContent" />
+            
+            
+          </center>
+        </borderlayout>
       </center>
-      
-    </borderlayout>-->
+    </borderlayout>
   </window>
 </zk>

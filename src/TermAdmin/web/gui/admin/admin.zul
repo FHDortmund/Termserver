@@ -22,11 +22,10 @@
                   <tab label="${labels.terminologies}" id="tabCS"/>
                   <tab label="${labels.terminologyImport}" id="tabImport"/>
                   <tab label="${labels.domains}" id="tabDomains"/>
-                  <tab label="${labels.metadata}" id="tabMetadata"/>
                   <tab label="${labels.systemParameter}" id="tabSysParam"/>
                   <tab label="${labels.reporting}" id="tabReporting"/>
                   
-                  <tab label="${labels.taxonomyClassify}" id="tabTaxonomie"/>
+                  <!--<tab label="${labels.taxonomyClassify}" id="tabTaxonomie"/>-->
                   <tab label="${labels.associations}" id="tabAssociations"/>
                   <!--<tab label="Datenbank" id="tabDatenbank"/>-->
                 </tabs>
@@ -44,18 +43,15 @@
                     <include id="incDomains"/>
                   </tabpanel>
                   <tabpanel>
-                    <include id="incMetadata"/>
-                  </tabpanel>
-                  <tabpanel>
                     <include id="incSysParam"/>
                   </tabpanel>
                   <tabpanel>
                     <include id="incReporting"/>
                   </tabpanel>
 
-                  <tabpanel>
-                    <include id="incTaxonomie"/><!--<include src="/gui/admin/modules/codesysteme.zul"/>-->
-                  </tabpanel>
+<!--                  <tabpanel>
+                    <include id="incTaxonomie"/><include src="/gui/admin/modules/codesysteme.zul"/>
+                  </tabpanel>-->
                   <tabpanel>
                     <include id="incAssociations"/>
                   </tabpanel>

@@ -16,6 +16,8 @@
  */
 package de.fhdo.terminologie.db;
 
+import org.zkoss.util.resource.Labels;
+
 /**
  *
  * @author Robert Mützner
@@ -69,13 +71,13 @@ public class Definitions
     public static String readLabel(int status)
     {
       if(status == STATUS_CODES.ACTIVE.code)
-        return "aktiv";
+        return Labels.getLabel("active");//"aktiv";
       else if(status == STATUS_CODES.INACTIVE.code)
-        return "inaktiv";
+        return Labels.getLabel("inactive");
       else if(status == STATUS_CODES.DELETED.code)
-        return "gelöscht";
+        return Labels.getLabel("deleted");
       
-      return "unbekannt";
+      return Labels.getLabel("unknown");
     }
 
     public static boolean isStatusCodeValid(Integer StatusCode)

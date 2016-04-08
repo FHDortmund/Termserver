@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="winCodesysteme" border="none" width="100%" height="100%"
+          use="de.fhdo.gui.admin.modules.terminology.CodesystemsContent">
+    <tabbox id="tabboxMode" width="100%" height="100%" onSelect="win.onTabSelect(event)">
+      <tabs>
+        <tab id="tabTerminology" label="${labels.details}" height="32px"/>
+        <tab id="tabCollaboration" label="${labels.metadata}" height="32px"/>
+        <tab id="tabTaxonomy" label="${labels.taxonomyClassify}" height="32px"/>
+      </tabs>
+      <tabpanels>
+        <tabpanel>
+          <div>
+            <include id="incDetails" src="/gui/templates/MessageInclude.zul"/>
+            <grid id="gridDetails" visible="false">
+              <columns>
+                <column hflex="min" align="right" label=""/>
+                <column label=""/>
+              </columns>
+              <rows>
+                <row>
+                  <label value="Version ID:"/>
+                  <label id="labelVersionId" value=""/>
+                </row>
+                <row>
+                  <label value="${labels.status}:"/>
+                  <label id="labelStatus" value=""/>
+                </row>
+                <row>
+                  <label value="OID:"/>
+                  <label id="labelOID" value=""/>
+                </row>
+                <row>
+                  <label value="${labels.language}:"/>
+                  <label id="labelLanguage" value=""/>
+                </row>
+                <row id="rowLanguages">
+                  <label value="${labels.languages}:"/>
+                  <label id="labelLanguages" value=""/>
+                </row>
+                <row id="rowLicense">
+                  <label value="${labels.license}:"/>
+                  <checkbox id="checkboxLicense" disabled="true"/>
+                </row>
+              </rows>
+            </grid>
+          </div>
+        </tabpanel>
+        
+        <!-- METADATA -->
+        <tabpanel> 
+          <include id="incMetadata" height="100%" width="100%"/>
+        </tabpanel>
+        
+        <!-- TAXONOMY -->
+        <tabpanel> 
+          <include id="incTaxonomy" height="100%" width="100%"/>
+        </tabpanel>
+      </tabpanels>
+    </tabbox>
+  </window>
+</zk>

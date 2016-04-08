@@ -338,6 +338,7 @@ public class CodeSystemVersion implements java.io.Serializable
   /**
    * @return the availableLanguages
    */
+  @Column(name = "availableLanguages")
   public String getAvailableLanguages()
   {
     return availableLanguages;
