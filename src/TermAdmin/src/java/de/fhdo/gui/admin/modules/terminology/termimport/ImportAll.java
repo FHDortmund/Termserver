@@ -244,6 +244,8 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
         final String TYPE_ICD_AUSTRIA = "6";
         final String TYPE_LEITLINIEN_AUSTRIA = "7";
         final String TYPE_MESH = "10";
+        final String TYPE_LOINC_254 = "11";
+        final String TYPE_LOINC_RELATIONS_254 = "12";
 
         if (cd.equals(TYPE_CSV))
         {
@@ -269,6 +271,10 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
         else if (cd.equals(TYPE_MESH))
         {
           importClass = new ImportMeSH(formatId, this);
+        }
+        else if (cd.equals(TYPE_LOINC_254) || cd.equals(TYPE_LOINC_RELATIONS_254))
+        {
+          importClass = new ImportCS_LOINC(formatId, this);
         }
       }
       else if (kind == KIND_VALUESET)

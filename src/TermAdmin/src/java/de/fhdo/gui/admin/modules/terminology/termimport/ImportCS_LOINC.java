@@ -201,6 +201,10 @@ public class ImportCS_LOINC implements IImport, javax.xml.ws.AsyncHandler<Import
     {
       if (format.equalsIgnoreCase("txt"))
         return true;
+      else if (format.equalsIgnoreCase("xls"))
+        return true;
+      else if (format.equalsIgnoreCase("csv"))
+        return true;
     }
     return false;
   }

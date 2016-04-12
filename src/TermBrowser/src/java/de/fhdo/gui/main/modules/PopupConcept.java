@@ -551,6 +551,9 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
 
     List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
 
+    // show metadata that belong to a code system or value set
+    List<Long> shownMetadataIds = new LinkedList<Long>();
+
     for (MetadataParameter mp : listMetadata)
     {
       String value = "";
@@ -568,6 +571,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
             gefunden = true;
             logger.debug("VS Metadata found: " + meta.getMetadataParameter().getParamName() + ", value: " + value);
             dataList.add(createRowFromMetadataParameter(value, mp));
+            shownMetadataIds.add(meta.getId());
             //break;
           }
         }
@@ -583,6 +587,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
             gefunden = true;
             logger.debug("CS Metadata found: " + meta.getMetadataParameter().getParamName() + ", value: " + value);
             dataList.add(createRowFromMetadataParameter(value, mp));
+            shownMetadataIds.add(meta.getId());
             //break;
           }
         }
@@ -606,6 +611,36 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
         }
 
         dataList.add(createRowFromMetadataParameter(value, mp));
+      }
+    }
+
+    // show metadata that not belong to a code system or value set
+    if (contentMode == CONTENTMODE.VALUESET)
+    {
+      for (ValueSetMetadataValue meta : csev.getValueSetMetadataValues())
+      {
+        if (shownMetadataIds.contains(meta.getId()) == false)
+        {
+          String value = meta.getParameterValue();
+          listMetadataValuesVS.add(meta);
+          logger.debug("VS Metadata found: " + meta.getMetadataParameter().getParamName() + ", value: " + value);
+          dataList.add(createRowFromMetadataParameter(value, meta.getMetadataParameter()));
+          shownMetadataIds.add(meta.getId());
+        }
+      }
+    }
+    else
+    {
+      for (CodeSystemMetadataValue meta : csev.getCodeSystemMetadataValues())
+      {
+        if (shownMetadataIds.contains(meta.getId()) == false)
+        {
+          String value = meta.getParameterValue();
+          listMetadataValuesCS.add(meta);
+          logger.debug("CS Metadata found: " + meta.getMetadataParameter().getParamName() + ", value: " + value);
+          dataList.add(createRowFromMetadataParameter(value, meta.getMetadataParameter()));
+          shownMetadataIds.add(meta.getId());
+        }
       }
     }
 
@@ -716,7 +751,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
       {
         translations.completeList();
 
-        if(csc.getCodeSystemConceptTranslations() != null)
+        if (csc.getCodeSystemConceptTranslations() != null)
           logger.debug("size t: " + csc.getCodeSystemConceptTranslations().size());
       }
 
@@ -962,7 +997,7 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
         // sub-ebene
         // Assoziation erstellen; geht erst nachdem die neue CSE(V) erstell wurde und eine Id bekommen hat
         logger.debug("to id: " + csevAssociatedVersionId);
-        
+
         CreateConceptAssociationResponse.Return responseAssociation
                 = createAssociation(csevAssociatedVersionId, csev.getVersionId(),
                         Definitions.ASSOCIATION_KIND.TAXONOMY.getCode(),

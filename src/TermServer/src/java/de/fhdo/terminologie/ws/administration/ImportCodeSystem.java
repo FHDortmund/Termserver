@@ -25,6 +25,7 @@ import de.fhdo.terminologie.ws.administration._import.ImportICDBMGAT;
 import de.fhdo.terminologie.ws.administration._import.ImportKAL;
 import de.fhdo.terminologie.ws.administration._import.ImportKBV;
 import de.fhdo.terminologie.ws.administration._import.ImportLOINC;
+import de.fhdo.terminologie.ws.administration._import.ImportLOINC_V254;
 import de.fhdo.terminologie.ws.administration._import.ImportLeiKatAt;
 import de.fhdo.terminologie.ws.administration._import.ImportMeSH;
 import de.fhdo.terminologie.ws.administration.types.ImportCodeSystemRequestType;
@@ -85,7 +86,7 @@ public class ImportCodeSystem
     {
       response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
       response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-      response.getReturnInfos().setMessage("Für diesen Dienst müssen Sie am Terminologieserver angemeldet sein!");
+      response.getReturnInfos().setMessage("For using this service you have to be logged in to the Terminology Server.");
       return response;
     }
 
@@ -187,6 +188,70 @@ public class ImportCodeSystem
       {
         StaticStatus.importRunning = true;
         ImportLOINC importLOINC = new ImportLOINC(parameter, loginInfoType);
+
+        String s = importLOINC.importLOINC_Associations(response);
+
+        if (s.length() == 0)
+        {
+          response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
+          response.getReturnInfos().setStatus(ReturnType.Status.OK);
+          response.getReturnInfos().setCount(importLOINC.getCountImported());
+        }
+        else
+        {
+          response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
+          response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+          response.getReturnInfos().setMessage("Error at LOINC relationship import: " + s);
+        }
+        logger.warn("LOINC-Associations Import-Ende");
+      }
+      catch (Exception e)
+      {
+        response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
+        response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+        response.getReturnInfos().setMessage("Error at LOINC relationship import: " + e.getLocalizedMessage());
+
+        LoggingOutput.outputException(e, this);
+      }
+    }
+    else if (formatId == ImportCodeSystemRequestType.IMPORT_LOINC_254_ID)
+    {
+      try
+      {
+        StaticStatus.importRunning = true;
+        ImportLOINC_V254 importLOINC = new ImportLOINC_V254(parameter, loginInfoType);
+
+        String s = importLOINC.importLOINC(response);
+
+        if (s.length() == 0)
+        {
+          response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
+          response.getReturnInfos().setStatus(ReturnType.Status.OK);
+          response.getReturnInfos().setCount(importLOINC.getCountImported());
+        }
+        else
+        {
+          response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
+          response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+          response.getReturnInfos().setMessage("Error at LOINC import: " + s);
+        }
+        logger.warn("LOINC import finished");
+      }
+      catch (Exception e)
+      {
+        response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
+        response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+        response.getReturnInfos().setMessage("Error at LOINC import: " + e.getLocalizedMessage());
+
+        LoggingOutput.outputException(e, this);
+      }
+    }
+    else if (formatId == ImportCodeSystemRequestType.IMPORT_LOINC_254_RELATIONS_ID)
+    {
+      try
+      {
+        StaticStatus.importRunning = true;
+        ImportLOINC_V254 importLOINC = new ImportLOINC_V254(parameter, loginInfoType);
 
         String s = importLOINC.importLOINC_Associations(response);
 
@@ -449,30 +514,34 @@ public class ImportCodeSystem
     }
 
     // check version name
-    if (Request != null && Request.getCodeSystem() != null && Request.getCodeSystem().getCodeSystemVersions() != null
-            && Request.getCodeSystem().getCodeSystemVersions().size() > 0 && Request.getCodeSystem().getId() > 0)
+    if (!(Request.getImportInfos().getFormatId() == ImportCodeSystemRequestType.IMPORT_LOINC_254_RELATIONS_ID
+            || Request.getImportInfos().getFormatId() == ImportCodeSystemRequestType.IMPORT_LOINC_RELATIONS_ID))
     {
-      logger.debug("Check, if version for given code system with id " + Request.getCodeSystem().getId() + " already exists");
-      
-      org.hibernate.Session hb_session = HibernateUtil.getSessionFactory().openSession();
-      try // try-catch-Block zum Abfangen von Hibernate-Fehlern
+      if (Request != null && Request.getCodeSystem() != null && Request.getCodeSystem().getCodeSystemVersions() != null
+              && Request.getCodeSystem().getCodeSystemVersions().size() > 0 && Request.getCodeSystem().getId() > 0)
       {
-        String csv_name = Request.getCodeSystem().getCodeSystemVersions().iterator().next().getName();
-        Query q = hb_session.createQuery("from CodeSystemVersion csv join csv.codeSystem cs where csv.name=:csv_name and cs.id=:cs_id");
-        q.setParameter("csv_name", csv_name);
-        q.setParameter("cs_id", Request.getCodeSystem().getId());
-        
-        List list = q.list();
-        if(list != null && list.size() > 0)
+        logger.debug("Check, if version for given code system with id " + Request.getCodeSystem().getId() + " already exists");
+
+        org.hibernate.Session hb_session = HibernateUtil.getSessionFactory().openSession();
+        try // try-catch-Block zum Abfangen von Hibernate-Fehlern
         {
-          // name already exists
-          erfolg = false;
-          Response.getReturnInfos().setMessage("Codesystem-Version name already exists: " + csv_name + ". Please select a version name that does not exist.");
+          String csv_name = Request.getCodeSystem().getCodeSystemVersions().iterator().next().getName();
+          Query q = hb_session.createQuery("from CodeSystemVersion csv join csv.codeSystem cs where csv.name=:csv_name and cs.id=:cs_id");
+          q.setParameter("csv_name", csv_name);
+          q.setParameter("cs_id", Request.getCodeSystem().getId());
+
+          List list = q.list();
+          if (list != null && list.size() > 0)
+          {
+            // name already exists
+            erfolg = false;
+            Response.getReturnInfos().setMessage("Codesystem-Version name already exists: " + csv_name + ". Please select a version name that does not exist.");
+          }
         }
-      }
-      catch (Exception ex)
-      {
-        LoggingOutput.outputException(ex, this);
+        catch (Exception ex)
+        {
+          LoggingOutput.outputException(ex, this);
+        }
       }
     }
 

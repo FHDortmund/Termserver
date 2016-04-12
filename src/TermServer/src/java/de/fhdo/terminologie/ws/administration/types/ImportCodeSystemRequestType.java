@@ -45,10 +45,12 @@ public class ImportCodeSystemRequestType
   public static final long IMPORT_KAL_ID = 9;
   public static final long IMPORT_ICD_BMG_ID = 6;
   public static final long IMPORT_MESH_XML_ID = 10;
+  public static final long IMPORT_LOINC_254_ID = 11;
+  public static final long IMPORT_LOINC_254_RELATIONS_ID = 12;
+  
 
   public static String getPossibleFormats()
   {
-    //String s = "Mögliche Import-Formate sind:\n193: ClaML\n194: CSV\n200: LOINC\n201: LOINC relations\n234: KBV Keytabs\n500: Leistungskatalog BMG AT\n501: KAL BMG AT\n502: ICD-10 BMG AT";
     String s = "Mögliche Import-Formate sind:";
 
     ListDomainValuesRequestType request = new ListDomainValuesRequestType();

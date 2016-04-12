@@ -38,7 +38,7 @@ public class DB
   // =================================================================
   // Die DB-Versionsnummer muss bei jeder Änderung hochgesetzt werden!
   // =================================================================
-  private static final int CURRENT_DB_VERSION = 4;
+  private static final int CURRENT_DB_VERSION = 5;
   // =================================================================
 
   /**
@@ -64,8 +64,8 @@ public class DB
       // check version
       int currentVersion = readCurrentDBVersion();
 
-      logger.debug("Datenbank DB-Version: " + currentVersion);
-      logger.debug("Anwendungs DB-Version: " + CURRENT_DB_VERSION);
+      logger.debug("Database DB-Version: " + currentVersion);
+      logger.debug("Application DB-Version: " + CURRENT_DB_VERSION);
 
       org.hibernate.Session hb_session = HibernateUtil.getSessionFactory().openSession();
       org.hibernate.Transaction tx = hb_session.beginTransaction();
@@ -104,6 +104,17 @@ public class DB
           updated = true;
         }
         
+        if(currentVersion < 5)
+        {
+          // allow all characters for metadata value
+          hb_session.createSQLQuery("ALTER TABLE code_system_metadata_value MODIFY COLUMN parameterValue TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;").executeUpdate();
+          hb_session.createSQLQuery("ALTER TABLE value_set_metadata_value MODIFY COLUMN parameterValue TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;").executeUpdate();
+          hb_session.createSQLQuery("ALTER TABLE code_system_concept MODIFY COLUMN term TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;").executeUpdate();
+          hb_session.createSQLQuery("ALTER TABLE code_system_concept_translation MODIFY COLUMN term TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;").executeUpdate();
+          
+          updated = true;
+        }
+        
         // Änderungen speichern
         tx.commit();
       }
@@ -120,11 +131,11 @@ public class DB
       if (updated)
       {
         // Neue Version in SysParam setzen
-        logger.debug("Speicher neue DB-Version in SysParam: " + CURRENT_DB_VERSION);
+        logger.debug("save new db version in SysParam: " + CURRENT_DB_VERSION);
         //SystemSettings.getInstance().setDbVersion(CURRENT_DB_VERSION);
         saveCurrentDBVersion(CURRENT_DB_VERSION);
 
-        logger.info("Die Datenbank wurde erfolgreich auf die Version " + CURRENT_DB_VERSION + " aktualisiert!");
+        logger.info("Database was successfully updated to version: " + CURRENT_DB_VERSION);
 
         //Clients.showNotification("Die Datenbank wurde erfolgreich auf die Version " + CURRENT_DB_VERSION + " aktualisiert!", Clients.NOTIFICATION_TYPE_INFO, null,
         //        "middle_center", 0, true);
