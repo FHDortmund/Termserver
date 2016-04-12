@@ -33,6 +33,9 @@ import de.fhdo.terminologie.ws.authoring.CreateConceptAssociationTypeRequestType
 import de.fhdo.terminologie.ws.authoring.CreateConceptAssociationTypeResponse;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptAssociationTypeRequestType;
 import de.fhdo.terminologie.ws.authoring.MaintainConceptAssociationTypeResponse;
+import de.fhdo.terminologie.ws.authoring.RemoveTerminologyOrConceptRequestType;
+import de.fhdo.terminologie.ws.authoring.RemoveTerminologyOrConceptResponse;
+import de.fhdo.terminologie.ws.authoring.RemoveTerminologyOrConceptResponseType;
 import de.fhdo.terminologie.ws.authorization.Authorization;
 import de.fhdo.terminologie.ws.authorization.Authorization_Service;
 import de.fhdo.terminologie.ws.authorization.LoginResponse;
@@ -381,5 +384,37 @@ public class WebServiceHelper
     }
     port = service.getSearchPort();
     return port.returnConceptAssociationTypeDetails(parameter);
+  }
+  
+  
+  
+  public static RemoveTerminologyOrConceptResponseType removeTerminologyOrConcept(RemoveTerminologyOrConceptRequestType parameter)
+  {
+    return removeTerminologyOrConcept(parameter, PropertiesHelper.getInstance().getTermserverUrl());
+  }
+
+  public static RemoveTerminologyOrConceptResponseType removeTerminologyOrConcept(RemoveTerminologyOrConceptRequestType parameter, String urlHost)
+  {
+    return removeTerminologyOrConcept(parameter, urlHost, PropertiesHelper.getInstance().getTermserverServiceName());
+  }
+
+  public static RemoveTerminologyOrConceptResponseType removeTerminologyOrConcept(RemoveTerminologyOrConceptRequestType parameter, String urlHost, String urlService)
+  {
+    Authoring_Service service;
+    Authoring port;
+    try
+    {
+      // Service mit bestimmter URL ?ffnen
+      service = new Authoring_Service(new URL(optimizeUrl(urlHost) + urlService + "Authoring?wsdl"),
+              new QName("http://authoring.ws.terminologie.fhdo.de/", "Authoring"));
+    }
+    catch (Exception ex)
+    {
+      Logger.getLogger(WebServiceHelper.class.getName()).log(Level.SEVERE, null, ex);
+
+      service = new Authoring_Service();
+    }
+    port = service.getAuthoringPort();
+    return port.removeTerminologyOrConcept(parameter);
   }
 }

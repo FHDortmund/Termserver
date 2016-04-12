@@ -196,6 +196,10 @@ public class Admin extends Window implements AfterCompose
     {
       includePage("incCS", "/gui/admin/modules/terminology/codesystems.zul");
     }
+    else if (ID.equals("tabVS"))
+    {
+      includePage("incVS", "/gui/admin/modules/terminology/codesystems.zul?mode=vs");
+    }
     // KOLLABORATION
     else if (ID.equals("tabKollabBenutzer"))
     {

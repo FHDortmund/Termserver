@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.Timer;
 import javax.xml.ws.Response;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.zkoss.util.media.Media;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
@@ -109,6 +110,16 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
 
     showStatus();
     //setStatus("Bitte wählen Sie eine Datei aus.", false);
+  }
+
+  public void helpCS()
+  {
+    Executions.getCurrent().sendRedirect("http://www.wiki.mi.fh-dortmund.de/cts2/index.php?title=Import_Codesystem_-_CSV", "_blank");
+  }
+
+  public void helpVS()
+  {
+    Executions.getCurrent().sendRedirect("http://www.wiki.mi.fh-dortmund.de/cts2/index.php?title=Import_Valueset_-_CSV", "_blank");
   }
 
   public void onDateinameSelect(Event event)
@@ -323,6 +334,10 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
 
   private void fillValuesetList()
   {
+    fillValuesetList(null);
+  }
+  private void fillValuesetList(ValueSet selectedVS)
+  {
     try
     {
       // Header
@@ -332,8 +347,11 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
       header.add(new GenericListHeaderType(Labels.getLabel("name"), 0, "", true, "String", true, true, false, false));
       //header.add(new GenericListHeaderType("Version", 0, "", true, "String", true, true, false, false));
 
+      int selIndex = -1;
+      
       // Daten laden
-      Session hb_session = HibernateUtil.getSessionFactory().openSession();
+      SessionFactory sf = HibernateUtil.getNewSessionFactory();
+      Session hb_session = sf.openSession();
       //hb_session.getTransaction().begin();
 
       List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
@@ -344,13 +362,18 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
 //                + " order by vs.name,vsv.name";
         String hql = "from ValueSet order by name";
 
-        List<ValueSet> csList = hb_session.createQuery(hql).list();
+        List<ValueSet> vsList = hb_session.createQuery(hql).list();
 
-        for (int i = 0; i < csList.size(); ++i)
+        for (int i = 0; i < vsList.size(); ++i)
         {
-          GenericListRowType row = createRowFromValueset(csList.get(i));
+          GenericListRowType row = createRowFromValueset(vsList.get(i));
 
           dataList.add(row);
+          
+          if (selectedVS != null && vsList.get(i).getId().longValue() == selectedVS.getId())
+          {
+            selIndex = i;
+          }
         }
 
       }
@@ -375,6 +398,9 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
       genericList.setListHeader(header);
       genericList.setDataList(dataList);
       genericList.setListId("1");
+      
+      if (selIndex >= 0)
+        genericList.setSelectedIndex(selIndex);
 
       ((West) getFellow("westCS")).setTitle("Valueset Auswahl");
     }
@@ -401,9 +427,10 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
       //header.add(new GenericListHeaderType("Version", 0, "", true, "String", true, true, false, false));
 
       int selIndex = -1;
-      
+
       // Daten laden
-      Session hb_session = HibernateUtil.getSessionFactory().openSession();
+      SessionFactory sf = HibernateUtil.getNewSessionFactory();
+      Session hb_session = sf.openSession();
 
       List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
       try
@@ -420,7 +447,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
 
           dataList.add(row);
 
-          if(selectedCS != null && csList.get(i).getId().longValue() == selectedCS.getId())
+          if (selectedCS != null && csList.get(i).getId().longValue() == selectedCS.getId())
           {
             selIndex = i;
           }
@@ -448,16 +475,16 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
       genericList.setDataList(dataList);
       genericList.setListId("0");
 
-      if(selIndex >= 0)
+      if (selIndex >= 0)
         genericList.setSelectedIndex(selIndex);
       /*for (int i = 0; i < genericList.getListbox().getItemCount(); ++i)
-      {
-        if (genericList.set.get(i).getId().longValue() == licencedUser.getLicenceType().getId().longValue())
-        {
-          cb.setSelectedIndex(i);
-          break;
-        }
-      }*/
+       {
+       if (genericList.set.get(i).getId().longValue() == licencedUser.getLicenceType().getId().longValue())
+       {
+       cb.setSelectedIndex(i);
+       break;
+       }
+       }*/
       // selectedCS
       //genericList.setSelectedIndex(MODAL);
 
@@ -698,42 +725,78 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
 
   public void update(Object o, boolean edited)
   {
-    // new code system added
+    // new code system or value set added
     // refresh list view
 
     if (o instanceof String)
     {
-      String newCodesystemStr = (String) o;
+      String nameStr = (String) o;
 
-      if (newCodesystemStr.length() > 0)
+      if (nameStr.length() > 0)
       {
-        CodeSystem newCS = null;
-        // create new code system without a version
-        Session hb_session = HibernateUtil.getSessionFactory().openSession();
-
-        try
+        int kind = ((Radiogroup) getFellow("rgKind")).getSelectedIndex();
+        if (kind == KIND_CODESYSTEM)
         {
-          hb_session.getTransaction().begin();
+          CodeSystem newCS = null;
+          // create new code system without a version
+          Session hb_session = HibernateUtil.getSessionFactory().openSession();
 
-          newCS = new CodeSystem();
-          newCS.setName(newCodesystemStr);
-          newCS.setInsertTimestamp(new Date());
+          try
+          {
+            hb_session.getTransaction().begin();
 
-          hb_session.save(newCS);
+            newCS = new CodeSystem();
+            newCS.setName(nameStr);
+            newCS.setInsertTimestamp(new Date());
 
-          hb_session.getTransaction().commit();
+            hb_session.save(newCS);
+
+            hb_session.getTransaction().commit();
+          }
+          catch (Exception ex)
+          {
+            LoggingOutput.outputException(ex, this);
+          }
+          finally
+          {
+            hb_session.close();
+          }
+
+          // refresh tree view
+          fillVocabularyList(newCS);
         }
-        catch (Exception ex)
+        else if (kind == KIND_VALUESET)
         {
-          LoggingOutput.outputException(ex, this);
-        }
-        finally
-        {
-          hb_session.close();
+          ValueSet newVS = null;
+          // create new code system without a version
+          Session hb_session = HibernateUtil.getSessionFactory().openSession();
+
+          try
+          {
+            hb_session.getTransaction().begin();
+
+            newVS = new ValueSet();
+            newVS.setName(nameStr);
+            newVS.setStatusDate(new Date());
+            newVS.setStatus(Definitions.STATUS_CODES.ACTIVE.getCode());
+
+            hb_session.save(newVS);
+
+            hb_session.getTransaction().commit();
+          }
+          catch (Exception ex)
+          {
+            LoggingOutput.outputException(ex, this);
+          }
+          finally
+          {
+            hb_session.close();
+          }
+
+          // refresh tree view
+          fillValuesetList(newVS);
         }
 
-        // refresh tree view
-        fillVocabularyList(newCS);
       }
     }
   }

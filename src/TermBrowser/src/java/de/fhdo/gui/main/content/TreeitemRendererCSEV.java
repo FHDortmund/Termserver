@@ -21,6 +21,7 @@ import de.fhdo.gui.main.modules.PopupConcept;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.interfaces.IUpdate;
 import java.text.SimpleDateFormat;
+import org.hibernate.annotations.common.util.StringHelper;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.DropEvent;
@@ -150,6 +151,18 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
 
       // designation
       Treecell cell = null;
+      
+      // get displayed term designation
+      String term = getString(csc.getTerm()), tooltip = "";
+      
+      if(csev.getConceptValueSetMemberships() != null && csev.getConceptValueSetMemberships().size() > 0 &&
+         StringHelper.isNotEmpty(csev.getConceptValueSetMemberships().get(0).getValueOverride()))
+      {
+        // use overridden value for value set
+        tooltip = "*" + Labels.getLabel("originalValue") + ": " + term;
+        term = csev.getConceptValueSetMemberships().get(0).getValueOverride() + "*";
+      }
+      
 
       if (searchResults && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null
               && csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
@@ -158,7 +171,7 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
         CodeSystemEntityVersion csevTemp = csev;
         int indent = 20;
         String s = "";
-        s = "<div style=\"padding-left:" + indent + "px; margin:0;\">" + "<b><font color=\"#000000\">" + getString(csc.getTerm()) + "</font></b>" + "</div>";
+        s = "<div style=\"padding-left:" + indent + "px; margin:0;\">" + "<b><font color=\"#000000\">" + getString(term) + "</font></b>" + "</div>";
 
         while (csevTemp.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1() != null && csevTemp.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1().size() > 0)
         {
@@ -187,7 +200,8 @@ public class TreeitemRendererCSEV implements TreeitemRenderer
       }
       else
       {
-        cell = new Treecell(getString(csc.getTerm()));
+        cell = new Treecell(term);
+        cell.setTooltiptext(tooltip);
       }
       cell.setStyle(style);
       treeRow.appendChild(cell);

@@ -20,6 +20,7 @@
                 <tabs id="tabbox_tabs" width="160px">
                   <tab label="${labels.user}" id="tabBenutzer"/>
                   <tab label="${labels.terminologies}" id="tabCS"/>
+                  <tab label="${labels.valuesets}" id="tabVS"/>
                   <tab label="${labels.terminologyImport}" id="tabImport"/>
                   <tab label="${labels.domains}" id="tabDomains"/>
                   <tab label="${labels.systemParameter}" id="tabSysParam"/>
@@ -35,6 +36,9 @@
                   </tabpanel>
                   <tabpanel>
                     <include id="incCS"/>
+                  </tabpanel>
+                  <tabpanel>
+                    <include id="incVS"/>
                   </tabpanel>
                   <tabpanel>
                     <include id="incImport"/>

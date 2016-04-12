@@ -28,6 +28,7 @@ import de.fhdo.terminologie.db.hibernate.ValueSet;
 import de.fhdo.terminologie.db.hibernate.ValueSetVersion;
 import de.fhdo.terminologie.helper.DateComparator;
 import de.fhdo.terminologie.helper.HQLParameterHelper;
+import de.fhdo.terminologie.helper.SysParameter;
 import de.fhdo.terminologie.ws.administration.types.ImportValueSetRequestType;
 import de.fhdo.terminologie.ws.administration.types.ImportValueSetResponseType;
 import de.fhdo.terminologie.ws.authoring.CreateValueSet;
@@ -91,9 +92,14 @@ public class ImportVS_CSV
       csv.setDelimiter(';');
       csv.setTextQualifier('\"');
       csv.setUseTextQualifier(true);
+      csv.setSkipEmptyRecords(true);
 
       csv.readHeaders();
       logger.debug("Anzahl Header: " + csv.getHeaderCount());
+      for(String h : csv.getHeaders())
+      {
+        logger.debug("Header: " + h);
+      }
 
       // Hibernate-Block, Session öffnen
       org.hibernate.Session hb_session = HibernateUtil.getSessionFactory().openSession();
@@ -206,6 +212,8 @@ public class ImportVS_CSV
             cvsm.setOrderNr(0l);
           }
           
+          logger.debug("Column count: " + csv.getColumnCount());
+          logger.debug(csv.getValues()[0]);
           
 
           // Version-ID muss anhand des Codes bestimmt werden
@@ -215,6 +223,10 @@ public class ImportVS_CSV
           logger.debug("Entity zu Code '" + code + "' wird gesucht...");
           String codesystem_oid = replaceApo(csv.get("codesystem_oid"));
           String codesystem_version_id = replaceApo(csv.get("codesystem_version_id"));
+          
+          logger.debug("csv.get(\"code\"): " + csv.get("code"));
+          logger.debug("codesystem_oid: " + codesystem_oid);
+          logger.debug("codesystem_version_id: " + codesystem_version_id);
 
           String hqlV = "";
           if (codesystem_version_id != null && codesystem_version_id.length() > 0)
@@ -550,9 +562,8 @@ public class ImportVS_CSV
 
     if (str.startsWith("\"") && str.endsWith("\""))
     {
-
-      str = str.replaceFirst("\"", "");
-      str = str.substring(0, str.length() - 1);
+      //str = str.replaceFirst("\"", "");
+      str = str.substring(1, str.length() - 2);
     }
     return str;
   }

@@ -19,6 +19,7 @@ package de.fhdo.gui.admin.modules.terminology;
 import de.fhdo.gui.templates.NameInputbox;
 import de.fhdo.helper.ArgumentHelper;
 import de.fhdo.helper.SessionHelper;
+import de.fhdo.helper.WebServiceHelper;
 import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.list.GenericList;
 import de.fhdo.list.GenericListCellType;
@@ -32,13 +33,19 @@ import de.fhdo.terminologie.db.hibernate.CodeSystem;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
 import de.fhdo.terminologie.db.hibernate.ValueSet;
 import de.fhdo.terminologie.db.hibernate.ValueSetVersion;
+import de.fhdo.terminologie.ws.authoring.DeleteInfo;
+import de.fhdo.terminologie.ws.authoring.RemoveTerminologyOrConceptRequestType;
+import de.fhdo.terminologie.ws.authoring.RemoveTerminologyOrConceptResponseType;
+import de.fhdo.terminologie.ws.authoring.Type;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.hibernate.CacheMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
@@ -111,7 +118,7 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
   {
     if (o == null)
       return;
-    
+
     // update status in db
     if (o instanceof CodeSystemVersion)
     {
@@ -142,7 +149,7 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
       {
         hb_session.close();
       }
-      
+
       initDetails();
 
     }
@@ -177,7 +184,9 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
       header.add(new GenericListHeaderType(Labels.getLabel("name"), 0, "", true, "String", true, true, false, false));
 
       // load data from db
-      Session hb_session = HibernateUtil.getSessionFactory().openSession();
+      SessionFactory sf = HibernateUtil.getNewSessionFactory();
+      Session hb_session = sf.openSession();
+      //Session hb_session = HibernateUtil.getSessionFactory().openSession();
 
       List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
       try
@@ -187,7 +196,16 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
           ValueSet selectedVS = (ValueSet) selectedItem;
 
           String hql = "from ValueSet order by name";
-          List<ValueSet> vsList = hb_session.createQuery(hql).list();
+
+          Query q = hb_session.createQuery(hql);
+          q.setCacheable(false);
+          q.setCacheMode(CacheMode.IGNORE);
+
+          hb_session.setCacheMode(CacheMode.IGNORE);
+          hb_session.clear();
+          hb_session.flush();
+
+          List<ValueSet> vsList = q.list();
 
           for (int i = 0; i < vsList.size(); ++i)
           {
@@ -211,7 +229,15 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
           CodeSystem selectedCS = (CodeSystem) selectedItem;
 
           String hql = "from CodeSystem order by name";
-          List<CodeSystem> csList = hb_session.createQuery(hql).list();
+          Query q = hb_session.createQuery(hql);
+          q.setCacheable(false);
+          q.setCacheMode(CacheMode.IGNORE);
+
+          hb_session.setCacheMode(CacheMode.IGNORE);
+          hb_session.clear();
+          hb_session.flush();
+
+          List<CodeSystem> csList = q.list();
 
           for (int i = 0; i < csList.size(); ++i)
           {
@@ -249,7 +275,7 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
       genericList.setListActions(this);
       genericList.setButton_new(true);
       genericList.setButton_edit(false);
-      genericList.setButton_delete(false);
+      genericList.setButton_delete(true);
       genericList.setListHeader(header);
       genericList.setDataList(dataList);
 
@@ -276,7 +302,9 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
     if (selectedItem == null)
     {
       logger.debug("show empty message");
-      title.setTitle(Labels.getLabel("codesystemVersion"));
+      if(mode == Mode.VALUESET)
+        title.setTitle(Labels.getLabel("valuesetVersion"));
+      else title.setTitle(Labels.getLabel("codesystemVersion"));
 
       incVersions.setSrc(null);
       incVersions.setSrc("/gui/templates/MessageInclude.zul?msg=" + Labels.getLabel("noSelection"));
@@ -300,6 +328,8 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
 
         // load data from db
         Session hb_session = HibernateUtil.getSessionFactory().openSession();
+        hb_session.setCacheMode(org.hibernate.CacheMode.IGNORE);
+        hb_session.clear();
 
         List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
         try
@@ -313,6 +343,14 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
             String hql = "from ValueSetVersion where valueSetId=:vs_id order by name";
             Query q = hb_session.createQuery(hql);
             q.setParameter("vs_id", selectedVS.getId());
+
+            q.setCacheable(false);
+            q.setCacheMode(CacheMode.IGNORE);
+
+            hb_session.setCacheMode(CacheMode.IGNORE);
+            hb_session.clear();
+            hb_session.flush();
+
             List<ValueSetVersion> vsList = q.list();
 
             for (int i = 0; i < vsList.size(); ++i)
@@ -341,6 +379,14 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
             String hql = "from CodeSystemVersion where codeSystemId=:cs_id order by name";
             Query q = hb_session.createQuery(hql);
             q.setParameter("cs_id", selectedCS.getId());
+
+            q.setCacheable(false);
+            q.setCacheMode(CacheMode.IGNORE);
+
+            hb_session.setCacheMode(CacheMode.IGNORE);
+            hb_session.clear();
+            hb_session.flush();
+
             List<CodeSystemVersion> csList = q.list();
 
             for (int i = 0; i < csList.size(); ++i)
@@ -378,7 +424,7 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
         genericListVersion.setListActions(this);
         genericListVersion.setButton_new(true);
         genericListVersion.setButton_edit(false);
-        genericListVersion.setButton_delete(false);
+        genericListVersion.setButton_delete(true);
         genericListVersion.setListHeader(header);
         genericListVersion.setDataList(dataList);
 
@@ -551,6 +597,93 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
 
   public void onDeleted(String id, Object data)
   {
+    if (id == null || id.equals("list"))
+    {
+      logger.debug("Type: " + data.getClass().getCanonicalName());
+
+      RemoveTerminologyOrConceptRequestType request = new RemoveTerminologyOrConceptRequestType();
+      request.setLoginToken(SessionHelper.getSessionId());
+      request.setDeleteInfo(new DeleteInfo());
+
+      if (data instanceof ValueSet)
+      {
+        // deletes a whole value set with all versions
+        ValueSet vs = (ValueSet) data;
+
+        request.getDeleteInfo().setType(Type.VALUE_SET);
+        request.getDeleteInfo().setValueSet(new types.termserver.fhdo.de.ValueSet());
+        request.getDeleteInfo().getValueSet().setId(vs.getId());
+      }
+      else if (data instanceof CodeSystem)
+      {
+        // deletes a whole code system with all versions
+        CodeSystem cs = (CodeSystem) data;
+
+        request.getDeleteInfo().setType(Type.CODE_SYSTEM);
+        request.getDeleteInfo().setCodeSystem(new types.termserver.fhdo.de.CodeSystem());
+        request.getDeleteInfo().getCodeSystem().setId(cs.getId());
+      }
+
+      // do webservice call
+      RemoveTerminologyOrConceptResponseType response = WebServiceHelper.removeTerminologyOrConcept(request);
+      logger.debug("reponse: " + response.getReturnInfos().getMessage());
+
+      Messagebox.show(response.getReturnInfos().getMessage());
+      //initList();
+      
+      SessionHelper.setValue("CS_SelectedItem", null);
+      SessionHelper.getValue("CS_SelectedItemVersion", null);
+      SessionHelper.setValue("VS_SelectedItem", null);
+      SessionHelper.getValue("VS_SelectedItemVersion", null);
+      Executions.sendRedirect(null);
+    }
+    else if (id.equals("listVersion"))
+    {
+      logger.debug("Type: " + data.getClass().getCanonicalName());
+
+      RemoveTerminologyOrConceptRequestType request = new RemoveTerminologyOrConceptRequestType();
+      request.setLoginToken(SessionHelper.getSessionId());
+      request.setDeleteInfo(new DeleteInfo());
+
+      if (data instanceof ValueSetVersion)
+      {
+        // deletes a whole value set with all versions
+        ValueSetVersion vsv = (ValueSetVersion) data;
+
+        request.getDeleteInfo().setType(Type.VALUE_SET_VERSION);
+        request.getDeleteInfo().setValueSet(new types.termserver.fhdo.de.ValueSet());
+        request.getDeleteInfo().getValueSet().setId(vsv.getValueSet().getId());
+
+        types.termserver.fhdo.de.ValueSetVersion vsv_ws = new types.termserver.fhdo.de.ValueSetVersion();
+        vsv_ws.setVersionId(vsv.getVersionId());
+        request.getDeleteInfo().getValueSet().getValueSetVersions().add(vsv_ws);
+      }
+      else if (data instanceof CodeSystemVersion)
+      {
+        // deletes a whole code system with all versions
+        CodeSystemVersion csv = (CodeSystemVersion) data;
+
+        request.getDeleteInfo().setType(Type.CODE_SYSTEM_VERSION);
+        request.getDeleteInfo().setCodeSystem(new types.termserver.fhdo.de.CodeSystem());
+        request.getDeleteInfo().getCodeSystem().setId(csv.getCodeSystem().getId());
+        types.termserver.fhdo.de.CodeSystemVersion csv_ws = new types.termserver.fhdo.de.CodeSystemVersion();
+        csv_ws.setVersionId(csv.getVersionId());
+        request.getDeleteInfo().getCodeSystem().getCodeSystemVersions().add(csv_ws);
+      }
+
+      // do webservice call
+      RemoveTerminologyOrConceptResponseType response = WebServiceHelper.removeTerminologyOrConcept(request);
+      logger.debug("reponse: " + response.getReturnInfos().getMessage());
+
+      Messagebox.show(response.getReturnInfos().getMessage());
+      //initList();
+      //initListVersion();
+      SessionHelper.setValue("CS_SelectedItem", null);
+      SessionHelper.getValue("CS_SelectedItemVersion", null);
+      SessionHelper.setValue("VS_SelectedItem", null);
+      SessionHelper.getValue("VS_SelectedItemVersion", null);
+      Executions.sendRedirect(null);
+    }
   }
 
   public void onSelected(String id, Object data)
@@ -733,11 +866,11 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
     CodeSystemVersion selectedCSV = null;
 
     Object obj = genericListVersion.getSelection();
-    
+
     if (obj != null && obj instanceof de.fhdo.list.GenericListRowType)
     {
       logger.debug("obj: " + obj.getClass().getCanonicalName());
-      selectedCSV = (CodeSystemVersion) ((de.fhdo.list.GenericListRowType)obj).getData();
+      selectedCSV = (CodeSystemVersion) ((de.fhdo.list.GenericListRowType) obj).getData();
     }
 
     if (selectedCSV == null)

@@ -169,8 +169,8 @@ public class DeleteTermHelperWS
     int count = 0;
     //logger.debug("removeConcept with cse-version-id: " + csevId);
 
-    // delete associated concepts first
-    String hql = "select csev.versionId,csev.codeSystemEntity.id from CodeSystemEntityVersion csev "
+    // DON'T delete associated concepts (no need to and maybe cross mapping)
+    /*String hql = "select csev.versionId,csev.codeSystemEntity.id from CodeSystemEntityVersion csev "
                + " join csev.codeSystemEntityVersionAssociationsForCodeSystemEntityVersionId2 cseva where codeSystemEntityVersionId1=:versionId";
     
     Query q_CsevNumber = hb_session.createQuery(hql);
@@ -186,7 +186,7 @@ public class DeleteTermHelperWS
       //logger.debug("Found sub concept with csev-id: " + subCsevId);
       
       count += removeConcept(subCseId, subCsevId, codeSystemVersionId, hb_session);
-    }
+    }*/
     
     // remove content
     String hql_csct = "delete from CodeSystemConceptTranslation where codeSystemConcept.codeSystemEntityVersionId=:csevId";
@@ -322,7 +322,8 @@ public class DeleteTermHelperWS
     {
 
       if (cs.getCodeSystemVersions().size() < 1 && onlyCSV)
-        return "Ein Code System MUSS eine Version haben! \nBitte legen sie eine neue an bevor sie diese löschen. \nSie können alternativ das gesamte Code System löschen.";
+        //return "Ein Code System MUSS eine Version haben! \nBitte legen sie eine neue an bevor sie diese löschen. \nSie können alternativ das gesamte Code System löschen.";
+        return "A code system must have a version.";
 
       String hqlCsevNumber = "select csev.versionId,csev.codeSystemEntity.id from CodeSystemEntityVersion csev join csev.codeSystemEntity cse join cse.codeSystemVersionEntityMemberships csvem";
       hqlCsevNumber += " join csvem.codeSystemVersion csv where csv.versionId=:versionId";
@@ -330,7 +331,6 @@ public class DeleteTermHelperWS
       q_CsevNumber.setParameter("versionId", codeSystemVersionId);
       csevIds = q_CsevNumber.list();
       //Start deleting
-      //hb_session.getTransaction().begin();
       int count = 0;
 
       for (Object o : csevIds)

@@ -13,16 +13,26 @@
                     onUpload="winImportAll.onDateinameSelect(event)" />
           </hbox>
           
-          <label value="${labels.importType}: "/>
-          <radiogroup Id="rgKind" onCheck="winImportAll.kindChanged()">
-            <radio label="${labels.codesystem}"/>
-            <radio label="${labels.valueset}"/>
-          </radiogroup>
-          <separator />
-          
-          <label value="${labels.format}: "/>
-          <combobox id="cbFormat" width="300px" readonly="true" onChange="winImportAll.preview()"/>
-          
+          <hbox width="100%">
+            <div>
+              <label value="${labels.importType}: "/>
+              <radiogroup Id="rgKind" onCheck="winImportAll.kindChanged()">
+                <radio label="${labels.codesystem}"/>
+                <radio label="${labels.valueset}"/>
+              </radiogroup>
+              <separator />
+              <label value="${labels.format}: "/>
+              <combobox id="cbFormat" width="300px" readonly="true" onChange="winImportAll.preview()"/>
+            </div>
+            <div style="margin-left:24px;">
+              <button style="color: #0000ff; text-decoration: underline; cursor: pointer; " 
+                      label="Codesystem format"
+                      onClick="winImportAll.helpCS()"/>
+              <button style="color: #0000ff; text-decoration: underline; cursor: pointer; " 
+                      label="Valueset format"
+                      onClick="winImportAll.helpVS()"/>
+            </div>
+          </hbox>
           <separator />
           <separator />
           
