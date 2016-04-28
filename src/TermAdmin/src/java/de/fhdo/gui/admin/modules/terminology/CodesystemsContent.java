@@ -25,6 +25,7 @@ import de.fhdo.terminologie.db.hibernate.CodeSystem;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
 import de.fhdo.terminologie.db.hibernate.ValueSet;
 import de.fhdo.terminologie.db.hibernate.ValueSetVersion;
+import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Include;
@@ -59,11 +60,15 @@ public class CodesystemsContent extends Window implements AfterCompose
 
   private void loadData()
   {
+    if(selectedItem != null)
+      logger.debug("selectedItem: " + selectedItem.getClass().getCanonicalName());
+      
     if (selectedItem instanceof CodeSystem)
     {
       loadDataCS();
     }
-    else if (selectedItem instanceof CodeSystemVersion)
+    //else if (selectedItem instanceof CodeSystemVersion)
+    else if (selectedItem instanceof ValueSet)
     {
       loadDataVS();
     }
@@ -109,7 +114,7 @@ public class CodesystemsContent extends Window implements AfterCompose
     ((Include) getFellow("incTaxonomy")).setSrc(null);
     ((Include) getFellow("incTaxonomy")).setSrc("/gui/admin/modules/terminology/taxonomy.zul");
     
-
+    getFellow("tabTaxonomy").setVisible(true);
   }
 
   private void loadDataVS()
@@ -123,6 +128,9 @@ public class CodesystemsContent extends Window implements AfterCompose
     }
     else
     {
+      getFellow("incDetails").setVisible(false);
+      getFellow("gridDetails").setVisible(true);
+      
       ValueSetVersion vsv = (ValueSetVersion) selectedItemVersion;
 
       logger.debug("loadDataVS with vsv-id: " + vsv.getVersionId());
@@ -135,6 +143,8 @@ public class CodesystemsContent extends Window implements AfterCompose
       getFellow("rowLicense").setVisible(false);
       getFellow("rowLanguages").setVisible(false);
     }
+    
+    getFellow("tabTaxonomy").setVisible(false);
    
 
   }
@@ -149,6 +159,11 @@ public class CodesystemsContent extends Window implements AfterCompose
       s += LanguageHelper.getLanguageNameFromCode(language);
     }
     return s;
+  }
+  
+  public void onTabSelect(Event event)
+  {
+    
   }
 
 }

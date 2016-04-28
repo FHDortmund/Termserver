@@ -193,7 +193,10 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
       {
         if (mode == Mode.VALUESET)
         {
-          ValueSet selectedVS = (ValueSet) selectedItem;
+          ValueSet selectedVS = null;
+          
+          if(selectedItem instanceof ValueSet)
+            selectedVS = (ValueSet) selectedItem;
 
           String hql = "from ValueSet order by name";
 
@@ -204,6 +207,8 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
           hb_session.setCacheMode(CacheMode.IGNORE);
           hb_session.clear();
           hb_session.flush();
+          
+          logger.debug("hql: " + hql);
 
           List<ValueSet> vsList = q.list();
 
@@ -226,7 +231,10 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
         }
         else
         {
-          CodeSystem selectedCS = (CodeSystem) selectedItem;
+          CodeSystem selectedCS = null;
+          
+          if(selectedItem instanceof CodeSystem)
+            selectedCS = (CodeSystem) selectedItem;
 
           String hql = "from CodeSystem order by name";
           Query q = hb_session.createQuery(hql);
@@ -237,6 +245,7 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
           hb_session.clear();
           hb_session.flush();
 
+          logger.debug("hql: " + hql);
           List<CodeSystem> csList = q.list();
 
           for (int i = 0; i < csList.size(); ++i)
@@ -452,6 +461,8 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
     initDetails();
   }
 
+  
+  
   private void initDetails()
   {
     logger.debug("initDetails()");
@@ -477,14 +488,14 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
       incContent.setSrc(null);
       //incContent.setSrc("/gui/templates/GenericList.zul");
 
-      if (mode == Mode.VALUESET)
+      if (mode == Mode.VALUESET && selectedItem instanceof ValueSet)
       {
         ValueSet selectedVS = (ValueSet) selectedItem;
         ValueSetVersion selectedVSV = (ValueSetVersion) selectedItemVersion;
 
         title.setTitle(Labels.getLabel("details") + " | " + selectedVS.getName() + " - " + (selectedVSV == null ? "" : selectedVSV.getName()));
       }
-      else
+      else if(selectedItem instanceof CodeSystem)
       {
         CodeSystem selectedCS = (CodeSystem) selectedItem;
         CodeSystemVersion selectedCSV = (CodeSystemVersion) selectedItemVersion;
