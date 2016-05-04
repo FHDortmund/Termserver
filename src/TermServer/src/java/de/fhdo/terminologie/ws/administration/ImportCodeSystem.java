@@ -518,7 +518,7 @@ public class ImportCodeSystem
             || Request.getImportInfos().getFormatId() == ImportCodeSystemRequestType.IMPORT_LOINC_RELATIONS_ID))
     {
       if (Request != null && Request.getCodeSystem() != null && Request.getCodeSystem().getCodeSystemVersions() != null
-              && Request.getCodeSystem().getCodeSystemVersions().size() > 0 && Request.getCodeSystem().getId() > 0)
+              && Request.getCodeSystem().getCodeSystemVersions().size() > 0 && Request.getCodeSystem().getId() != null && Request.getCodeSystem().getId() > 0)
       {
         logger.debug("Check, if version for given code system with id " + Request.getCodeSystem().getId() + " already exists");
 
