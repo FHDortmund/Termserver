@@ -16,7 +16,7 @@ Die Initialisierung der Liste geschieht über GenericList.java
         <listbox id="listbox"
                  emptyMessage="${labels.noEntries}"
                  onSelect="winGenericList.onListSelected(event)"
-                 height="100%"
+                 
                  vflex="true" 
                  checkmark="false"
                  multiple="true">

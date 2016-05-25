@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="winCodesystemTranslations" border="none" width="100%" height="100%"
+          use="de.fhdo.gui.admin.modules.terminology.CodesystemTranslations">
+<!--    <spreadsheet id="spreadsheet" width="100%" height="100%" 
+                 showToolbar="true"
+                 showFormulabar="false"
+                 showSheetbar="false"
+                 showContextMenu="false"
+                 showAddRow="true"
+                 preloadColumnSize="50" preloadRowSize="50"
+                 maxVisibleRows="100" maxVisibleColumns="10"
+                 
+                 src="/WEB-INF/blank2.xlsx"
+    
+    />-->
+    <!--<button label="Aus zwischenablage einfügen" onClick="winCodesystemTranslations.paste()" />-->
+    <borderlayout>
+      <north id="northLogs" height="200px" title="${labels.logs}" visible="false" collapsible="true">
+        <textbox id="tbLogs" value="" height="100%" width="100%" multiline="true" />
+      </north>
+      <center border="0">
+        <spreadsheet id="spreadsheet" width="100%" height="100%" 
+                     showToolbar="false"
+                     showFormulabar="false"
+                     showSheetbar="false"
+                     showContextMenu="true"
+                     showAddRow="true"
+                     preloadColumnSize="50" preloadRowSize="50"
+
+                     maxVisibleColumns="3"
+                 
+                 
+                     src="/web/blank.xlsx"/>
+      </center>
+      <south border="0" collapsible="true">
+        <div align="left" style="margin-top:8px;">
+          <hbox>
+            <button id="buttonFile" label="${labels.openFile}" upload="true,maxsize=50240"
+                    onUpload="winCodesystemTranslations.openFile(event)" autodisable="self" />
+            <separator bar="true" orient="vertical" height="24px"/>
+            <button id="buttonImport" label="${labels.startImport}" onClick="winCodesystemTranslations.startImport()" autodisable="self" />
+            <div style="margin-top:4px;">
+              <progressmeter id="progress" value="033" visible="false"  />
+            </div>
+            <button id="buttonCancelImport" label="${labels.cancel}" onClick="winCodesystemTranslations.cancelImport()" autodisable="self" visible="false"/>
+          </hbox>
+        </div>
+      </south>
+    </borderlayout>
+    
+
+  </window>
+</zk>

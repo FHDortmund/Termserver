@@ -97,7 +97,7 @@
         </tabbox>
       </window>
     </center>
-    <south height="26px">
+    <south >
       <include src="../main/statusBar.zul" />
     </south>
   </borderlayout>

@@ -114,7 +114,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   private boolean dragAndDropTree = false;
 
   private boolean collaborationActive = false;
-  
+
   private boolean showTranslation = false;
   private boolean editTranslation = false;
 
@@ -300,9 +300,9 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     logger.debug("ContentConcepts - afterCompose()");
 
     fillVersionList();
-    
+
     showLanguageButtons();
-    
+
     loadConcepts();
 
     showButtons();
@@ -343,7 +343,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
     dragAndDrop = ParameterHelper.getBoolean("dragAndDrop", false);
     dragAndDropTree = ParameterHelper.getBoolean("dragAndDropTree", false);
-    
+
     showTranslation = ParameterHelper.getBoolean("translation", false);
     editTranslation = ParameterHelper.getBoolean("editTranslation", false);
 
@@ -356,7 +356,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
 
     logger.debug("dragAndDrop: " + dragAndDrop);
     logger.debug("dragAndDropTree: " + dragAndDropTree);
-    
+
     logger.debug("showTranslation: " + isShowTranslation());
     logger.debug("editTranslation: " + isEditTranslation());
 
@@ -530,18 +530,18 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     }
     else
     {
-      concepts.initData();
+      concepts.initData("","");
     }
-    
+
     // Show selected language in header
     logger.debug("languageStr: " + langStr);
-    
+
     boolean visible = (langStr != null && langStr.length() > 0);
-    if(visible)
+    if (visible)
     {
-      ((Label)getFellow("labelSelectedLanguage")).setValue(langStr);
+      ((Label) getFellow("labelSelectedLanguage")).setValue(langStr);
     }
-    
+
     ComponentHelper.setVisible("labelSelectedLanguage", visible, this);
     ComponentHelper.setVisible("valueSelectedLanguage", visible, this);
   }
@@ -945,17 +945,15 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       ComponentHelper.setVisibleAndDisabled("buttonCollabDelete", collabLoggedIn && isCodesystem, csev == null, this);
     }
 
-    
-
     //ComponentHelper.setVisible("buttonDeleteVersion", loggedIn, this);
     //ComponentHelper.setVisibleAndDisabled("buttonDeleteVersion", loggedIn, csev == null, this);
   }
-  
+
   private void showLanguageButtons()
   {
     String selectedLanguageCd = SessionHelper.getStringValue("selectedLanguageCd");
     boolean foundSelectedLanguageCd = false;
-    
+
     // Languages
     boolean languageChoiceVisible = false;
     if (codeSystemVersion != null && codeSystemVersion.getAvailableLanguages() != null
@@ -972,29 +970,32 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       List<String> languageList = LanguageHelper.getLanguagesFromString(codeSystemVersion.getAvailableLanguages());
       for (final String languageCd : languageList)
       {
-        if(languageCd.equalsIgnoreCase(selectedLanguageCd))
+        if (languageCd.equalsIgnoreCase(selectedLanguageCd))
           foundSelectedLanguageCd = true;
-        
+
         String displayName = languageCd;
         if (LanguageHelper.getLanguageCodes().containsKey(languageCd))
           displayName = LanguageHelper.getLanguageCodes().get(languageCd);
         else
           logger.debug("language with code '" + languageCd + "' does not exist in map");
 
-        Button button = new Button(displayName);
-        button.setStyle("margin-left: 6px;");
-        button.setAttribute("languageCd", languageCd);
-        div.getChildren().add(button);
-
-        button.addEventListener(Events.ON_CLICK, new EventListener<Event>()
+        if (displayName != null && displayName.length() > 0)
         {
-          public void onEvent(Event t) throws Exception
+          Button button = new Button(displayName);
+          button.setStyle("margin-left: 6px;");
+          button.setAttribute("languageCd", languageCd);
+          div.getChildren().add(button);
+
+          button.addEventListener(Events.ON_CLICK, new EventListener<Event>()
           {
-            // reload code system with selected language
-            SessionHelper.setValue("selectedLanguageCd", languageCd);
-            initConceptData();
-          }
-        });
+            public void onEvent(Event t) throws Exception
+            {
+              // reload code system with selected language
+              SessionHelper.setValue("selectedLanguageCd", languageCd);
+              initConceptData();
+            }
+          });
+        }
       }
 
       // Default language
@@ -1013,10 +1014,10 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
         }
       });
     }
-    
-    if(foundSelectedLanguageCd == false)
+
+    if (foundSelectedLanguageCd == false)
       SessionHelper.removeValue("selectedLanguageCd");
-    
+
     ComponentHelper.setVisible("languageSelection", languageChoiceVisible, this);
   }
 

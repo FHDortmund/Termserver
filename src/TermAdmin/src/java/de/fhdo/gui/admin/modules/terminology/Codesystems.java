@@ -106,6 +106,30 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
 
     selectedItem = SessionHelper.getValue("CS_SelectedItem");
     selectedItemVersion = SessionHelper.getValue("CS_SelectedItemVersion");
+    
+    if(selectedItem != null)
+    {
+      if(mode == Mode.CODESYSTEM && !(selectedItem instanceof CodeSystem))
+      {
+        selectedItem = null;
+      }
+      if(mode == Mode.VALUESET && !(selectedItem instanceof ValueSet))
+      {
+        selectedItem = null;
+      }
+    }
+    if(selectedItemVersion != null)
+    {
+      if(mode == Mode.CODESYSTEM && !(selectedItemVersion instanceof CodeSystemVersion))
+      {
+        selectedItemVersion = null;
+      }
+      if(mode == Mode.VALUESET && !(selectedItemVersion instanceof ValueSetVersion))
+      {
+        selectedItemVersion = null;
+      }
+    }
+    
   }
 
   public void afterCompose()
@@ -709,6 +733,8 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
 
       selectedItemVersion = null;
       SessionHelper.setValue("CS_SelectedItemVersion", selectedItemVersion);
+      
+      SessionHelper.setValue("CS_SelectedContentTabId", null);
 
       initListVersion();
     }
@@ -716,6 +742,8 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
     {
       selectedItemVersion = data;
       SessionHelper.setValue("CS_SelectedItemVersion", data);
+      
+      SessionHelper.setValue("CS_SelectedContentTabId", null);
 
       initDetails();
     }

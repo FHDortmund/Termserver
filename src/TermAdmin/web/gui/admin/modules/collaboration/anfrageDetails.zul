@@ -7,7 +7,7 @@
           use="de.fhdo.gui.admin.modules.collaboration.EnquiryDetails" closable="true" border="normal">
     <borderlayout>
       <north border="0">
-          <grid span="true" vflex="true" height = "500px">
+          <grid span="true" vflex="true">
             <columns>
               <column width="130px" align="right" label=""/>
               <column label=""/>

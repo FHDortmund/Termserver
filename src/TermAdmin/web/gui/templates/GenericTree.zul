@@ -40,7 +40,6 @@ Die Initialisierung des Baumes geschieht über GenericTree.java
       <center border="none">
         
         <tree id="generictree"
-              height="100%"
               width="100%"
               vflex="true"
               zclass="z-tree"

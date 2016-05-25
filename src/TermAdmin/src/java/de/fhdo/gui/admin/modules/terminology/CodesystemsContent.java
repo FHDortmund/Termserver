@@ -30,6 +30,8 @@ import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Include;
 import org.zkoss.zul.Label;
+import org.zkoss.zul.Tab;
+import org.zkoss.zul.Tabbox;
 import org.zkoss.zul.Window;
 
 /**
@@ -60,9 +62,9 @@ public class CodesystemsContent extends Window implements AfterCompose
 
   private void loadData()
   {
-    if(selectedItem != null)
+    if (selectedItem != null)
       logger.debug("selectedItem: " + selectedItem.getClass().getCanonicalName());
-      
+
     if (selectedItem instanceof CodeSystem)
     {
       loadDataCS();
@@ -72,12 +74,34 @@ public class CodesystemsContent extends Window implements AfterCompose
     {
       loadDataVS();
     }
-    
+
     if (selectedItem != null)
     {
       ((Include) getFellow("incMetadata")).setSrc(null);
       ((Include) getFellow("incMetadata")).setSrc("/gui/admin/modules/terminology/metadata/metadatenCS.zul");
-      
+
+    }
+
+    // select tab from Session
+    try
+    {
+      Tabbox tabbox = ((Tabbox) getFellow("tabboxMode"));
+
+      String selTabId = SessionHelper.getStringValue("CS_SelectedContentTabId");
+      if (selTabId != null && selTabId.length() > 0)
+      {
+        Tab selTab = (Tab) getFellow(selTabId);
+        if (selTab.isVisible())
+        {
+          // select this tab
+          tabbox.setSelectedTab(selTab);
+          onTabSelect(null);
+        }
+      }
+    }
+    catch (Exception e)
+    {
+      logger.warn(e.getLocalizedMessage());
     }
   }
 
@@ -113,8 +137,9 @@ public class CodesystemsContent extends Window implements AfterCompose
 
     ((Include) getFellow("incTaxonomy")).setSrc(null);
     ((Include) getFellow("incTaxonomy")).setSrc("/gui/admin/modules/terminology/taxonomy.zul");
-    
+
     getFellow("tabTaxonomy").setVisible(true);
+    getFellow("tabTranslations").setVisible(true);
   }
 
   private void loadDataVS()
@@ -130,7 +155,7 @@ public class CodesystemsContent extends Window implements AfterCompose
     {
       getFellow("incDetails").setVisible(false);
       getFellow("gridDetails").setVisible(true);
-      
+
       ValueSetVersion vsv = (ValueSetVersion) selectedItemVersion;
 
       logger.debug("loadDataVS with vsv-id: " + vsv.getVersionId());
@@ -143,9 +168,9 @@ public class CodesystemsContent extends Window implements AfterCompose
       getFellow("rowLicense").setVisible(false);
       getFellow("rowLanguages").setVisible(false);
     }
-    
+
     getFellow("tabTaxonomy").setVisible(false);
-   
+    getFellow("tabTranslations").setVisible(false);
 
   }
 
@@ -160,10 +185,25 @@ public class CodesystemsContent extends Window implements AfterCompose
     }
     return s;
   }
-  
+
   public void onTabSelect(Event event)
   {
-    
+    // Load dynamically content here
+    //logger.debug("onTabSelect: " + event.getClass().getCanonicalName());
+    //org.zkoss.zk.ui.event.SelectEvent selectEvent = (org.zkoss.zk.ui.event.SelectEvent) event;
+
+    Tab selectedTab = ((Tabbox) getFellow("tabboxMode")).getSelectedTab();
+
+    if (selectedTab != null)
+    {
+      if (selectedTab.getId().equals("tabTranslations"))
+      {
+        ((Include) getFellow("incTranslations")).setSrc(null);
+        ((Include) getFellow("incTranslations")).setSrc("/gui/admin/modules/terminology/codesystemTranslations.zul");
+      }
+
+      SessionHelper.setValue("CS_SelectedContentTabId", selectedTab.getId());
+    }
   }
 
 }

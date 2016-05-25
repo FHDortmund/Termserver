@@ -221,6 +221,18 @@ public class SessionHelper
     else return null;
   }
   
+  public static String getStringValue(String Name)
+  {
+    org.zkoss.zk.ui.Session session = Sessions.getCurrent();
+    if(session.hasAttribute(Name))
+    {
+      Object o = session.getAttribute(Name);
+      if(o != null)
+        return o.toString();
+    }
+    return "";
+  }
+  
   public static String getCollaborationUserRole()
   {
     Object o = getValue("collaboration_user_role");

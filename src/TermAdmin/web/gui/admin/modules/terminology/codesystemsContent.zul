@@ -8,6 +8,7 @@
         <tab id="tabTerminology" label="${labels.details}" height="32px"/>
         <tab id="tabCollaboration" label="${labels.metadata}" height="32px"/>
         <tab id="tabTaxonomy" label="${labels.taxonomyClassify}" height="32px"/>
+        <tab id="tabTranslations" label="${labels.translations}" height="32px"/>
       </tabs>
       <tabpanels>
         <tabpanel>
@@ -56,6 +57,11 @@
         <!-- TAXONOMY -->
         <tabpanel> 
           <include id="incTaxonomy" height="100%" width="100%"/>
+        </tabpanel>
+        
+        <!-- TRANSLATIONS -->
+        <tabpanel> 
+          <include id="incTranslations" height="100%" width="100%"/>
         </tabpanel>
       </tabpanels>
     </tabbox>

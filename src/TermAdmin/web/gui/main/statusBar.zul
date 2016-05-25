@@ -3,8 +3,8 @@
 <zk xmlns="http://www.zkoss.org/2005/zul">
 
   <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./win"?>
-  <window id="win" use="de.fhdo.gui.main.StatusBar">
-    <toolbar id="tb" height="20px" align="start" width="100%">
+  <window id="win" use="de.fhdo.gui.main.StatusBar" height="26px">
+    <toolbar id="tb" align="start" width="100%" mold="panel" style="margin-top:-8px;" >
       <toolbarbutton id="tb_user" image="/rsc/img/symbols/user_16x16.png" label="-" onClick='win.onUserClicked()'
                      tooltiptext="${labels.editUserData}"/>
       <toolbarbutton id="tb_loginInfo" image="/rsc/img/symbols/info16_16.png" label="-"

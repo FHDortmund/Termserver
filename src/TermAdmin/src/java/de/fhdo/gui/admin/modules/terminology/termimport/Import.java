@@ -73,28 +73,28 @@ public class Import extends Window implements AfterCompose
     else
       tabSelected("tabAll");
 
-    Tabs tabs = tb.getTabs();
-    List<Component> tabList = tabs.getChildren();
+    /*Tabs tabs = tb.getTabs();
+     List<Component> tabList = tabs.getChildren();
 
-    if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN))
-    {
+     if (SessionHelper.getCollaborationUserRole().equals(CODES.ROLE_ADMIN))
+     {
 
-      for (Component c : tabList)
-      {
+     for (Component c : tabList)
+     {
 
-        if (c.getId().equals("tabLOINC"))
-          c.setVisible(true);
+     if (c.getId().equals("tabLOINC"))
+     c.setVisible(true);
 
-        if (c.getId().equals("tabLEIKAT"))
-          c.setVisible(true);
+     if (c.getId().equals("tabLEIKAT"))
+     c.setVisible(true);
 
-        if (c.getId().equals("tabICDBMG"))
-          c.setVisible(true);
+     if (c.getId().equals("tabICDBMG"))
+     c.setVisible(true);
 
-        if (c.getId().equals("tabKBV"))
-          c.setVisible(true);
-      }
-    }
+     if (c.getId().equals("tabKBV"))
+     c.setVisible(true);
+     }
+     }*/
   }
 
   public void onNavigationSelect(SelectEvent event)
@@ -115,6 +115,10 @@ public class Import extends Window implements AfterCompose
     if (ID.equals("tabCLAML"))
     {
       includePage("incCLAML", "/gui/admin/modules/terminology/termimport/importClaML.zul");
+    }
+    else if (ID.equals("tabTranslation"))
+    {
+      includePage("incTranslation", "/gui/admin/modules/terminology/termimport/importCSV.zul");
     }
     else if (ID.equals("tabCS_CSV"))
     {

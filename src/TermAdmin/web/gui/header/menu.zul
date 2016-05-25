@@ -6,13 +6,17 @@
     .z-cell,div.z-grid { border: none; overflow: hidden; zoom: 1;
     background: white; border-top: none; border-left: none;
     border-right: none; border-bottom: none; }
+    
+    
+    
+
   </style>
 	
 
   <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./win"?>
   
   <window id="win" use="de.fhdo.gui.header.Menu">
-    <menubar autodrop="false" id="menubar">
+    <!--<menubar autodrop="false" id="menubar">-->
        
       <!--<menu label="Standard Browser">
         <menupopup>
@@ -26,7 +30,7 @@
           <menuitem label="Über Standard Browser" onClick="win.onUeberClicked()"></menuitem>
         </menupopup>
       </menu>-->
-    </menubar>
+    <!--</menubar>-->
     <!--<menubar autodrop="true" id="menubar">
       <menu label="ophEPA">
         <menupopup>
@@ -44,14 +48,12 @@
 
     <!--http://docs.zkoss.org/wiki/New_ZK_Demo_Introduction-->
 
-    <grid height="74px" sclass="GridLayoutNoBorder">
-      <columns height="60px">
-        <column height="60px" width="200px" align="center" valign="middle" >
-          <toolbar height="64px"  style="margin-top:-4px;">
-            <!--<toolbarbutton label="Terminologie-Browser" 
-            tooltiptext="Zurück zum Terminologie-Browser" 
-            image="/rsc/img/symbols/back_32x32.png" orient="vertical"
-            onClick="win.onBackToTermBrowser()" />-->
+    <grid  sclass="GridLayoutNoBorder">
+      <columns >
+        <!--<column height="60px" width="200px" align="center" valign="middle" >-->
+        <column hflex="min" align="center" valign="middle" >
+          <toolbar  mold="panel">
+           
             <toolbarbutton label="${labels.logout}" 
                            tooltiptext="${labels.logoutHint}" 
                            image="/rsc/img/symbols/unlock_32x32.png" orient="vertical"
@@ -62,7 +64,7 @@
           <label zclass="headerTitle" value="@{win.HeaderStr}" pre="true" />                      
         </column>
         <column height="64px" >
-          <toolbar height="64px">
+          <toolbar height="64px" mold="panel">
             <toolbarbutton tooltiptext="Fachhochschule Dortmund"                        image="/rsc/img/fh_logo_klein.png"    onClick="win.onLogoFHClicked()" />            
             <toolbarbutton tooltiptext="eBPG-Projekt"                                   image="/rsc/img/logo_ebpg_40.png"     onClick="win.onLogoEBPGClicked()" />                                    
             <toolbarbutton tooltiptext="${labels.europeanUnion}"                              image="/rsc/img/logo_EU.png"          onClick="win.onLogoEUClicked()" />             

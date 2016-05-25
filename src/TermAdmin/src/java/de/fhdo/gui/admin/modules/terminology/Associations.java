@@ -16,8 +16,6 @@
  */
 package de.fhdo.gui.admin.modules.terminology;
 
-import de.fhdo.helper.DomainHelper;
-import de.fhdo.helper.SessionHelper;
 import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.list.GenericList;
 import de.fhdo.list.GenericListCellType;
@@ -25,7 +23,6 @@ import de.fhdo.list.GenericListHeaderType;
 import de.fhdo.list.GenericListRowType;
 import de.fhdo.list.IGenericListActions;
 import de.fhdo.logging.LoggingOutput;
-import de.fhdo.terminologie.db.Definitions;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntity;
 import de.fhdo.terminologie.db.hibernate.CodeSystemEntityVersion;
@@ -34,22 +31,15 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import org.hibernate.Cache;
 import org.hibernate.CacheMode;
-import org.hibernate.FlushMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.persister.collection.AbstractCollectionPersister;
-import org.hibernate.persister.entity.EntityPersister;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Include;
 import org.zkoss.zul.Messagebox;
-import org.zkoss.zul.South;
 import org.zkoss.zul.Window;
 
 /**
@@ -135,29 +125,10 @@ public class Associations extends Window implements AfterCompose, IGenericListAc
     header.add(new GenericListHeaderType(Labels.getLabel("nameReverse"), 250, "", true, "String", true, true, false, false));
     header.add(new GenericListHeaderType(Labels.getLabel("codesystem"), 350, "", true, "String", true, true, false, false));
 
-    //CacheManager.getInstance().clearAll();
-    //clearHibernateCache();
-    // Daten laden
-    //SessionFactory sf = HibernateUtil.getSessionFactory();
+    // load data (no caching)
     SessionFactory sf = HibernateUtil.getNewSessionFactory();
     
-
-    //sf.evictQueries();
-    //sf.getCurrentSession().clear();
-    /*Cache cache = sf.getCache();
-    
-    cache.evictEntityRegions();
-    cache.evictCollectionRegions();
-    cache.evictDefaultQueryRegion();
-    cache.evictQueryRegions();
-    //cache.evictNaturalIdRegions();
-    //cache.evictAllRegions();
-
-    cache.evictAllRegions(); // Evict data from all query regions.*/
-    
     Session hb_session = sf.openSession();
-    
-    //hb_session.getTransaction().begin();
 
     List<GenericListRowType> dataList = new LinkedList<GenericListRowType>();
     try
@@ -199,7 +170,7 @@ public class Associations extends Window implements AfterCompose, IGenericListAc
       hb_session.close();
     }
 
-    // Liste initialisieren
+    // initialize list
     Include inc = (Include) getFellow("incList");
     Window winGenericList = (Window) inc.getFellow("winGenericList");
     genericList = (GenericList) winGenericList;
@@ -208,8 +179,15 @@ public class Associations extends Window implements AfterCompose, IGenericListAc
     genericList.setButton_new(true);
     genericList.setButton_edit(true);
     genericList.setButton_delete(true);
+    
+    // enable paging
+    genericList.getListbox().setMold("paging");
+    genericList.getListbox().setPagingPosition("both");
+    genericList.getListbox().setPageSize(30);
+    
     genericList.setListHeader(header);
     genericList.setDataList(dataList);
+    
   }
 
   public void onNewClicked(String id)
