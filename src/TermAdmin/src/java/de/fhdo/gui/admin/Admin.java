@@ -180,10 +180,10 @@ public class Admin extends Window implements AfterCompose
     {
       includePage("incUserManagement", "/gui/admin/modules/terminology/userManagement.zul");
     }
-//    else if (ID.equals("tabTaxonomie"))
-//    {
-//      includePage("incTaxonomie", "/gui/admin/modules/terminology/codesysteme.zul");
-//    }
+    else if (ID.equals("tabTaxonomie"))
+    {
+      includePage("incTaxonomie", "/gui/admin/modules/terminology/taxonomy.zul");
+    }
     else if (ID.equals("tabDatenbank"))
     {
       includePage("incDatenbank", "/gui/admin/modules/terminology/datenbank.zul");
@@ -199,6 +199,10 @@ public class Admin extends Window implements AfterCompose
     else if (ID.equals("tabVS"))
     {
       includePage("incVS", "/gui/admin/modules/terminology/codesystems.zul?mode=vs");
+    }
+    else if (ID.equals("tabSystemLogs"))
+    {
+      includePage("incSystemLogs", "/gui/admin/modules/terminology/systemLogs.zul");
     }
     // KOLLABORATION
     else if (ID.equals("tabKollabBenutzer"))

@@ -161,8 +161,9 @@ public class GenericList extends Window implements IDoubleClick, IUpdateData
 
       if (listModelFilter != null && listModelFilter.size() != listModel.size())
         s = "Anzahl: " + listModelFilter.size() + " / " + listModel.size();
-      else
+      else if(listModel != null)
         s = "Anzahl: " + listModel.size();
+      else s = "Anzahl: 0";
 
       ((Footer) getFellow("footer_category")).setLabel(s);
       ((Grid) getFellow("gridCount")).setVisible(s.length() > 0);
@@ -200,6 +201,40 @@ public class GenericList extends Window implements IDoubleClick, IUpdateData
     logger.debug("getSelection()");
 
     Object object = null;
+
+    try
+    {
+      Listbox box = (Listbox) getFellow("listbox");
+      //int selIndex = box.getSelectedIndex();
+      //if (selIndex >= 0)
+      {
+        //object = (Task) taskListModel.getListModel().getElementAt(box.getSelectedIndex());
+        Listitem li = box.getSelectedItem();
+
+        if (li != null)
+        {
+          object = li.getValue();
+          selectedId = ((GenericListRowType) object).getId();
+          logger.debug("selectedId: " + selectedId);
+        }
+        else
+          logger.debug("listitem null");
+      }
+    }
+    catch (Exception ex)
+    {
+      logger.warn("[GenericList.java] getSelection-Fehler: " + ex.getLocalizedMessage());
+      ex.printStackTrace();
+    }
+
+    return object;
+  }
+  
+  public GenericListRowType getSelectionRowType()
+  {
+    logger.debug("getSelection()");
+
+    GenericListRowType object = null;
 
     try
     {

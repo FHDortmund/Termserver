@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="winSysLogs" border="none" width="100%" height="100%"
+          use="de.fhdo.gui.admin.modules.terminology.SystemLogs">
+    <borderlayout>
+      <north border="0">
+        <div style="margin-top:4px; margin-bottom:4px;">
+          <hbox>
+            <div style="margin-top:3px; ">
+              <label value="Pfad:"/>
+            </div>
+            <textbox id="tbPath" width="500px" />
+            <button label="Pfad speichern" onClick="winSysLogs.savePath()" autodisable="self"/>
+            <button label="Aktualisieren" onClick="winSysLogs.reload()" autodisable="self"/>
+          </hbox>
+        </div>
+      </north>
+      <center border="0">
+        <include id="incList" src="/gui/templates/GenericList.zul"/>
+      </center>
+      <south id="south" height="50%">
+        <textbox id="tbView" multiline="true" vflex="true" hflex="true" style="font-family: sans-serif; " />
+      </south>
+    </borderlayout>
+  </window>
+</zk>

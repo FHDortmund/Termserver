@@ -137,13 +137,13 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
 
       if (media != null)
       {
-        if (media.getContentType().equals("text/xml") || media.getContentType().equals("application/ms-excel") || media.getContentType().equals("text/csv")
+        /*if (media.getContentType().equals("text/xml") || media.getContentType().equals("application/ms-excel") || media.getContentType().equals("text/csv")
                 || media.getContentType().equals("application/vnd.ms-excel")
                 || media.getContentType().contains("excel")
                 || media.getContentType().contains("csv")
                 || media.getContentType().contains("text/plain")
                 || media.getContentType().equals("application/x-zip-compressed")
-                || media.getContentType().contains("zip"))
+                || media.getContentType().contains("zip"))*/
         {
           if (media.isBinary())
           {
@@ -180,10 +180,10 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
             bytes = media.getStringData().getBytes("UTF-8");
           }
         }
-        else
+        /*else
         {
           Messagebox.show(Labels.getLabel("foundNotSupportedDatatype") + ": " + media.getContentType());
-        }
+        }*/
 
         logger.debug("ct: " + media.getContentType());
         format = media.getFormat();

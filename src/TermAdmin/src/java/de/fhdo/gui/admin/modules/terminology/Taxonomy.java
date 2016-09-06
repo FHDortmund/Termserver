@@ -16,15 +16,10 @@
  */
 package de.fhdo.gui.admin.modules.terminology;
 
-import de.fhdo.gui.admin.modules.terminology.metadata.MetadatenCS;
 import de.fhdo.terminologie.db.Definitions;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.DomainValue;
 import de.fhdo.helper.SessionHelper;
-import de.fhdo.list.GenericList;
-import de.fhdo.list.GenericListCellType;
-import de.fhdo.list.GenericListHeaderType;
-import de.fhdo.list.GenericListRowType;
 import de.fhdo.list.IGenericListActions;
 import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.db.hibernate.CodeSystem;
@@ -37,7 +32,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import jdk.nashorn.internal.runtime.options.LoggingOption;
 import org.hibernate.Session;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;

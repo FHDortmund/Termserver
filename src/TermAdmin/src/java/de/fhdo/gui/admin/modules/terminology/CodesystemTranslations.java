@@ -47,6 +47,7 @@ import org.zkoss.zss.api.Importers;
 import org.zkoss.zss.api.model.Book;
 import org.zkoss.zss.api.model.Sheet;
 import org.zkoss.zss.model.SCell;
+import org.zkoss.zss.model.SCellStyle;
 import org.zkoss.zss.model.SSheet;
 import org.zkoss.zss.ui.Spreadsheet;
 import org.zkoss.zul.Button;
@@ -117,7 +118,7 @@ public class CodesystemTranslations extends Window implements AfterCompose//, Ev
     final Button buttonImport = (Button) getFellow("buttonImport");
     final North northLogs = (North) getFellow("northLogs");
     final Spreadsheet ss = (Spreadsheet) getFellow("spreadsheet");
-    
+
     Textbox tb = (Textbox) getFellow("tbLogs");
 
     // enable server push (asynchron)
@@ -125,7 +126,7 @@ public class CodesystemTranslations extends Window implements AfterCompose//, Ev
     if (desktop.isServerPushEnabled() == false)
       desktop.enableServerPush(true);
     //final EventListener el = this;
-    
+
     tb.setText("");
 
     // set buttons
@@ -163,10 +164,10 @@ public class CodesystemTranslations extends Window implements AfterCompose//, Ev
           try
           {
             hb_session.getTransaction().begin();
-            
+
             CodeSystemVersion csv_db = (CodeSystemVersion) hb_session.get(CodeSystemVersion.class, codeSystemVersion.getVersionId());
             String availableLanguages = "";
-            if(csv_db.getAvailableLanguages() != null)
+            if (csv_db.getAvailableLanguages() != null)
               availableLanguages = csv_db.getAvailableLanguages();
 
             // iterate all rows in the sheet
@@ -175,9 +176,11 @@ public class CodesystemTranslations extends Window implements AfterCompose//, Ev
               logger.debug("import row " + i);
 
               SCell cell = ssheet.getCell(i, 0);
-              String code = cell.getStringValue();
-              String translation = ssheet.getCell(i, 1).getStringValue();
-              String languageCd = ssheet.getCell(i, 2).getStringValue();
+
+              String code = getCellValue(cell);
+
+              String translation = getCellValue(ssheet.getCell(i, 1));
+              String languageCd = getCellValue(ssheet.getCell(i, 2));
 
               logger.debug("code: " + code + ", translation: " + translation + ", languageCd: " + languageCd);
 
@@ -192,9 +195,9 @@ public class CodesystemTranslations extends Window implements AfterCompose//, Ev
               if (msg.length() == 0)
               {
                 rowsSuccess++;
-                
+
                 // check, if languageCd is in available languages for codesystem version
-                if(availableLanguages.contains(languageCd) == false)
+                if (availableLanguages.contains(languageCd) == false)
                 {
                   availableLanguages += (availableLanguages.length() > 0 ? ";" : "") + languageCd;
                 }
@@ -216,13 +219,13 @@ public class CodesystemTranslations extends Window implements AfterCompose//, Ev
             if (rowsError == 0)
             {
               // insert language(s) to available languages to code system version
-              if(availableLanguages.equals(csv_db.getAvailableLanguages()) == false)
+              if (availableLanguages.equals(csv_db.getAvailableLanguages()) == false)
               {
                 // available languages changed, update in database
                 csv_db.setAvailableLanguages(availableLanguages);
                 hb_session.update(csv_db);
               }
-              
+
               // commit to database
               hb_session.getTransaction().commit();
             }
@@ -231,7 +234,7 @@ public class CodesystemTranslations extends Window implements AfterCompose//, Ev
           catch (Exception ex)
           {
             addLogMessage("import failure: " + ex.getLocalizedMessage());
-            
+
             LoggingOutput.outputException(ex, this);
           }
           finally
@@ -276,6 +279,37 @@ public class CodesystemTranslations extends Window implements AfterCompose//, Ev
     t.start();
   }
 
+  private String getCellValue(SCell cell)
+  {
+    if(cell == null)
+      return "";
+    
+    //logger.debug("cell1: " + cell.getFormulaValue());
+    //logger.debug("cell2: " + cell.getReferenceString());
+    
+    //logger.debug("cell3: " + cell.getStringValue());
+    //logger.debug("cell4: " + cell.getRichTextValue());
+    //logger.debug("cell5: " + cell.getValue());
+    
+    
+    //return cell.getReferenceString();
+    //cell.setCellStyle(CellStyle.);
+    if(cell.getType() == SCell.CellType.STRING)
+      return cell.getStringValue();
+    else if(cell.getType() == SCell.CellType.NUMBER)
+    {
+      Double dbl = cell.getNumberValue();
+      if(dbl != null)
+      {
+        return Long.toString(dbl.longValue());
+      }
+      //return String.valueOf(cell.getNumberValue().longValue());
+    }
+    else if(cell.getValue() != null)
+      return String.valueOf(cell.getValue());
+    return "";
+  }
+
   private String importTranslationForCode(Session hb_session, String code, String translation, String languageCd)
   {
     String msg = "";
@@ -302,7 +336,7 @@ public class CodesystemTranslations extends Window implements AfterCompose//, Ev
     List<CodeSystemConcept> cscList = q.list();
 
     logger.debug("import translation, list size: " + cscList.size());
-    
+
     if (cscList == null || cscList.size() == 0)
     {
       // no match
@@ -310,7 +344,6 @@ public class CodesystemTranslations extends Window implements AfterCompose//, Ev
     }
     else
     {
-      
 
       // 3. check if translation for given languageCd exists
       CodeSystemConcept csc = cscList.get(0);
@@ -361,7 +394,7 @@ public class CodesystemTranslations extends Window implements AfterCompose//, Ev
 
     cancelImport = true;
   }
-  
+
   public void openFile(Event event)
   {
     // open an excel sheet from local filesystem
@@ -431,11 +464,11 @@ public class CodesystemTranslations extends Window implements AfterCompose//, Ev
         // load data into sheet
         InputStream input = new ByteArrayInputStream(bytes);
         Spreadsheet ss = (Spreadsheet) getFellow("spreadsheet");
-        
+
         Importer importer = Importers.getImporter();
         Book book = importer.imports(input, "translation");
         ss.setBook(book);
-        
+
         InitData();
       }
     }

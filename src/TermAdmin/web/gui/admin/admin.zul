@@ -28,6 +28,8 @@
                   
                   <!--<tab label="${labels.taxonomyClassify}" id="tabTaxonomie"/>-->
                   <tab label="${labels.associations}" id="tabAssociations"/>
+                  
+                  <tab label="${labels.systemLogs}" id="tabSystemLogs"/>
                   <!--<tab label="Datenbank" id="tabDatenbank"/>-->
                 </tabs>
                 <tabpanels id="tabbox_tabpanels">
@@ -54,10 +56,14 @@
                   </tabpanel>
 
 <!--                  <tabpanel>
-                    <include id="incTaxonomie"/><include src="/gui/admin/modules/codesysteme.zul"/>
+                    <include id="incTaxonomie"/>
                   </tabpanel>-->
                   <tabpanel>
                     <include id="incAssociations"/>
+                  </tabpanel>
+                  
+                  <tabpanel>
+                    <include id="incSystemLogs"/>
                   </tabpanel>
                   <!--<tabpanel>
                     <include id="incDatenbank"/>

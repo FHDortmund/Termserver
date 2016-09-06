@@ -6,3 +6,5 @@ src/TermBrowser/dist/
 src/TermAdmin/dist/
 /src/Client/SendBackTest/nbproject/private/
 /src/Client/SendBackTest/build/
+*.war
+*.sql
