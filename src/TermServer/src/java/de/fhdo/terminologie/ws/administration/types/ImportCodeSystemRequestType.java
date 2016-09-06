@@ -47,6 +47,7 @@ public class ImportCodeSystemRequestType
   public static final long IMPORT_MESH_XML_ID = 10;
   public static final long IMPORT_LOINC_254_ID = 11;
   public static final long IMPORT_LOINC_254_RELATIONS_ID = 12;
+  public static final long IMPORT_OWL = 13;
   
 
   public static String getPossibleFormats()

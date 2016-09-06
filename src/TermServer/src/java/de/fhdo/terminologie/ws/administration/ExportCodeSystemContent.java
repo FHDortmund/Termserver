@@ -19,6 +19,7 @@ package de.fhdo.terminologie.ws.administration;
 import de.fhdo.terminologie.ws.administration._export.ExportCSV;
 import de.fhdo.terminologie.ws.administration._export.ExportClaml;
 import de.fhdo.terminologie.ws.administration._export.ExportCodeSystemSVS;
+import de.fhdo.terminologie.ws.administration._export.ExportOWL;
 import de.fhdo.terminologie.ws.administration.types.ExportCodeSystemContentRequestType;
 import de.fhdo.terminologie.ws.administration.types.ExportCodeSystemContentResponseType;
 import de.fhdo.terminologie.ws.authorization.Authorization;
@@ -167,6 +168,36 @@ public class ExportCodeSystemContent
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         response.getReturnInfos().setMessage("Fehler beim SVS-Export: " + e.getLocalizedMessage());
+
+        e.printStackTrace();
+      }
+    }
+    else if (formatId == ExportCodeSystemContentRequestType.EXPORT_OWL)
+    {
+      try
+      {
+        ExportOWL exportOWL = new ExportOWL(parameter);
+
+        String s = exportOWL.exportCSV(response);
+
+        if (s.length() == 0)
+        {
+          response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
+          response.getReturnInfos().setStatus(ReturnType.Status.OK);
+          response.getReturnInfos().setCount(exportOWL.getCountExported());
+        }
+        else
+        {
+          response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
+          response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+          response.getReturnInfos().setMessage("Fehler beim CSV-Export: " + s);
+        }
+      }
+      catch (Exception e)
+      {
+        response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
+        response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+        response.getReturnInfos().setMessage("Fehler beim CSV-Export: " + e.getLocalizedMessage());
 
         e.printStackTrace();
       }

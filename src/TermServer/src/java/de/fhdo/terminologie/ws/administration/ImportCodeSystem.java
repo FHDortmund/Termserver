@@ -28,6 +28,7 @@ import de.fhdo.terminologie.ws.administration._import.ImportLOINC;
 import de.fhdo.terminologie.ws.administration._import.ImportLOINC_V254;
 import de.fhdo.terminologie.ws.administration._import.ImportLeiKatAt;
 import de.fhdo.terminologie.ws.administration._import.ImportMeSH;
+import de.fhdo.terminologie.ws.administration._import.ImportOWL;
 import de.fhdo.terminologie.ws.administration.types.ImportCodeSystemRequestType;
 import de.fhdo.terminologie.ws.administration.types.ImportCodeSystemResponseType;
 import de.fhdo.terminologie.ws.authorization.Authorization;
@@ -457,6 +458,39 @@ public class ImportCodeSystem
         else
           response.getReturnInfos().setMessage("Import completed.");
         response.getReturnInfos().setCount(importMeSH.getCountImported());
+      }
+      catch (Exception e)
+      {
+        response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
+        response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
+        String msg = e.getLocalizedMessage();
+        if (msg == null || msg.length() == 0)
+        {
+          if (e.getCause() != null)
+            msg = e.getCause().getLocalizedMessage();
+        }
+
+        response.getReturnInfos().setMessage("Error at import: " + msg);
+
+        LoggingOutput.outputException(e, this);
+      }
+
+    }
+    else if (formatId == ImportCodeSystemRequestType.IMPORT_OWL)
+    {
+      try
+      {
+        StaticStatus.importRunning = true;
+        ImportOWL importOWL = new ImportOWL(loginInfoType);
+        importOWL.startImport(parameter);
+
+        response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
+        response.getReturnInfos().setStatus(ReturnType.Status.OK);
+        if (StaticStatus.cancel)
+          response.getReturnInfos().setMessage("Import cancelled.");
+        else
+          response.getReturnInfos().setMessage("Import completed.");
+        response.getReturnInfos().setCount(importOWL.getCountImported());
       }
       catch (Exception e)
       {

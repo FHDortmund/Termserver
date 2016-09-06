@@ -31,6 +31,7 @@ public class ExportCodeSystemContentRequestType
   public static final long EXPORT_CLAML_ID = 193;
   public static final long EXPORT_CSV_ID = 194;
   public static final long EXPORT_SVS_ID = 195;
+  public static final long EXPORT_OWL = 196;
 
   public static String getPossibleFormats()
   {

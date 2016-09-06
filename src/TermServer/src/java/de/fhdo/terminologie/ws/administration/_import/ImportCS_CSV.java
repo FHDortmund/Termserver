@@ -259,7 +259,7 @@ public class ImportCS_CSV
             csc.setDescription(s_temp);
 
           s_temp = csv.get("is_preferred");
-          if (s_temp != null)
+          if (s_temp != null && s_temp.length() > 0)
           {
             if (s_temp.equals("1") || s_temp.equals("true"))
               csc.setIsPreferred(true);
@@ -503,21 +503,21 @@ public class ImportCS_CSV
         if (count == 0)
         {
           tx.rollback();
-          reponse.getReturnInfos().setMessage("Keine Konzepte importiert.");
+          reponse.getReturnInfos().setMessage("No concepts imported.");
         }
         else
         {
           if (StaticStatus.cancel)
           {
             tx.rollback();
-            reponse.getReturnInfos().setMessage("Import abgebrochen.");
+            reponse.getReturnInfos().setMessage("Import cancelled.");
           }
           else
           {
 
             tx.commit();
             countImported = count;
-            reponse.getReturnInfos().setMessage("Import abgeschlossen. " + count + " Konzept(e) importiert, " + countFehler + " Fehler");
+            reponse.getReturnInfos().setMessage("Import completed. " + count + " concept(s) imported, " + countFehler + " error(s)");
           }
 
         }
@@ -527,7 +527,7 @@ public class ImportCS_CSV
         //ex.printStackTrace();
         LoggingOutput.outputException(ex, this);
         //logger.error(ex.getMessage());
-        s = "Fehler beim Import einer CSV-Datei: " + ex.getLocalizedMessage();
+        s = "Error while importing csv file: " + ex.getLocalizedMessage();
 
         try
         {
@@ -550,8 +550,9 @@ public class ImportCS_CSV
     catch (Exception ex)
     {
       //java.util.logging.Logger.getLogger(ImportCodeSystem.class.getName()).log(Level.SEVERE, null, ex);
-      s = "Fehler beim Import: " + ex.getLocalizedMessage();
+      s = "Error at import csv: " + ex.getLocalizedMessage();
       logger.error(s);
+      LoggingOutput.outputException(ex, this);
       //ex.printStackTrace();
     }
 
