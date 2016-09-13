@@ -7,7 +7,7 @@
       <!-- specifies information about the cs/vs, defines filter, ... -->
       <north border="0" flex="true" vflex="min">
         <div style="margin-top:8px; margin-bottom:8px; ">
-          <div style="margin-left: 8px; margin-right:8px;">
+          <div id="divVersion" style="margin-left: 8px; margin-right:8px;">
             <div align="left" style="float:left; margin-bottom: 4px;">
               <label value="${labels.common.version}: "/>
               <combobox id="cbVersion" readonly="true" width="250px" onSelect="winConcepts.onVersionChanged()"/>

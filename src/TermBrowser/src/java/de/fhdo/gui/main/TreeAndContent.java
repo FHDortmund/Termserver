@@ -103,6 +103,9 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
   private Boolean paramHideSelection = null;
   private Boolean paramHideStatusbar = null;
   private Boolean paramHideMenu = null;
+  private Boolean paramHideVersion = null;
+  
+  
 
   public TreeAndContent()
   {
@@ -178,6 +181,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     paramHideSelection = ParameterHelper.getBoolean("hideSelection");
     paramHideMenu = ParameterHelper.getBoolean("hideMenu");
     paramHideStatusbar = ParameterHelper.getBoolean("hideStatusbar");
+    paramHideVersion = ParameterHelper.getBoolean("hideVersion", false);
 
     String loadType = ParameterHelper.getString("loadType");
     paramLoadName = ParameterHelper.getString("loadName");
@@ -233,6 +237,9 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     // Statusleiste ausblenden
     if (paramHideStatusbar != null)
       ((South) this.getRoot().getFellow("blMainSouth")).setVisible(!paramHideStatusbar);
+    
+    //if(paramHideVersion != null)
+    //  getFellow("divVersion").setVisible(!paramHideVersion);
 
     if (externMode)
     {

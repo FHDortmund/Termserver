@@ -301,7 +301,7 @@ public class ImportCS_CSV
               logger.debug("find code from other codesystem (cross mapping) for code: " + s_temp);
               long crossmappingCsvId = 0;
               String s_temp2 = csv.get("crossmapping_csv_id");
-              if (s_temp2 != null)
+              if (s_temp2 != null && s_temp2.length() > 0)
               {
                 crossmappingCsvId = Integer.parseInt(s_temp2);
               }
@@ -357,7 +357,7 @@ public class ImportCS_CSV
               requestAssociation.getCodeSystemEntityVersionAssociation().getCodeSystemEntityVersionByCodeSystemEntityVersionId1().setVersionId(mapEntry.getEntityVersionID());
 
               s_temp = csv.get("association_kind");
-              if (s_temp != null)
+              if (s_temp != null && s_temp.length() > 0)
                 requestAssociation.getCodeSystemEntityVersionAssociation().setAssociationKind(Integer.parseInt(s_temp));
               else
                 requestAssociation.getCodeSystemEntityVersionAssociation().setAssociationKind(2);

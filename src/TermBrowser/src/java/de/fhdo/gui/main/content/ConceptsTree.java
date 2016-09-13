@@ -100,6 +100,7 @@ public class ConceptsTree implements IUpdateModal
   private boolean onDropListenerAdded = false;
   private String selectedLanguageCd = "";
   private String selectedTranslationLanguageCd = "";
+  private String rootConceptCode = "";
 
   private enum DISPLAY_MODE
   {
@@ -143,7 +144,7 @@ public class ConceptsTree implements IUpdateModal
   {
     logger.debug("reload code system with language code: " + languageCd);
     logger.debug("... and translation language code: " + translationLanguageCd);
-    
+
     selectedLanguageCd = languageCd;
     selectedTranslationLanguageCd = translationLanguageCd;
 
@@ -329,29 +330,117 @@ public class ConceptsTree implements IUpdateModal
     if (codeSystemVersionId > 0)
     {
       // do web service call
-      ListCodeSystemConceptsRequestType parameter = createParameterForCodeSystems(onlyMainClasses);
-      ListCodeSystemConceptsResponse.Return response = WebServiceHelper.listCodeSystemConcepts(parameter);
-
-      logger.debug("ListCodeSystemConceptsResponse: " + response.getReturnInfos().getMessage());
-
-      if (response.getReturnInfos().getStatus() == Status.OK && response.getReturnInfos().getCount() > 0)
+      if (rootConceptCode == null || rootConceptCode.length() == 0)
       {
-        cseList = response.getCodeSystemEntity();
+        ListCodeSystemConceptsRequestType parameter = createParameterForCodeSystems(onlyMainClasses);
+        ListCodeSystemConceptsResponse.Return response = WebServiceHelper.listCodeSystemConcepts(parameter);
 
-        if (response.getPagingInfos() != null)
+        logger.debug("ListCodeSystemConceptsResponse: " + response.getReturnInfos().getMessage());
+
+        if (response.getReturnInfos().getStatus() == Status.OK && response.getReturnInfos().getCount() > 0)
         {
-          // Paging Parameter auswerten
-          enablePaging(response.getPagingInfos());
+          cseList = response.getCodeSystemEntity();
+
+          if (response.getPagingInfos() != null)
+          {
+            // Paging Parameter auswerten
+            enablePaging(response.getPagingInfos());
+          }
+          else
+          {
+            disablePaging();
+          }
         }
         else
         {
-          disablePaging();
+          // Fehlermeldung ausgeben (Ausrufezeichen mit Meldung)
+          msg = response.getReturnInfos().getMessage();
         }
       }
       else
       {
-        // Fehlermeldung ausgeben (Ausrufezeichen mit Meldung)
-        msg = response.getReturnInfos().getMessage();
+        // get csev_id from code
+        long csev_id = findEntityVersionIdFromCode(rootConceptCode);
+        logger.debug("ROOT csev_id: " + csev_id);
+        if (csev_id > 0)
+        {
+          // show only subconcepts from given concept
+          ListConceptAssociationsRequestType parameter_ListCA = new ListConceptAssociationsRequestType();
+          parameter_ListCA.setLoginToken(SessionHelper.getSessionId());
+
+          // CSE erstellen und CSEV einsetzen (CSE Nachladen falls noetig)
+          parameter_ListCA.setCodeSystemEntity(new CodeSystemEntity());
+          CodeSystemEntityVersion csev_ws = new CodeSystemEntityVersion();
+          csev_ws.setVersionId(csev_id);
+          parameter_ListCA.getCodeSystemEntity().getCodeSystemEntityVersions().add(csev_ws);
+
+          // Zusatzinformationen anfordern um anzuzeigen ob noch Kinder vorhanden sind oder nicht
+          parameter_ListCA.setLookForward(false);
+          parameter_ListCA.setDirectionBoth(true);
+
+          // call webservice
+          de.fhdo.terminologie.ws.conceptassociation.ListConceptAssociationsResponse.Return response;
+          response = WebServiceHelper.listConceptAssociations(parameter_ListCA);
+
+          logger.debug("webservice response: " + response.getReturnInfos().getMessage());
+
+          // das TreeModel um die entsprechenden (unter)Konzepte erweitern
+          // Für alle Kinder: Dem Baum erweitern und ggf. DUMMIES in die neuen Kinder einfügen
+          if (response.getReturnInfos().getStatus() == de.fhdo.terminologie.ws.conceptassociation.Status.OK)
+          {
+            logger.debug("Anzahl: " + response.getCodeSystemEntityVersionAssociation().size());
+
+            cseList = new LinkedList<CodeSystemEntity>();
+
+            for (CodeSystemEntityVersionAssociation cseva : response.getCodeSystemEntityVersionAssociation())
+            {
+              // Assiziierte CSEV
+              CodeSystemEntityVersion csev_Child = cseva.getCodeSystemEntityVersionByCodeSystemEntityVersionId2();
+
+//              CodeSystemEntity cse = csev_Child.getCodeSystemEntity();
+//              if (cse == null)
+//                cse = new CodeSystemEntity();
+//              cse.getCodeSystemEntityVersions().add(csev_Child);
+//
+//              cseList.add(cse);
+              switch (cseva.getAssociationKind())
+              {
+                case 1:
+                  // ontological, do nothing for now
+                  break;
+                case 2:
+                  // taxonomic, add childs to TreeNode
+                  if (csev_Child != null)
+                  {
+                    CodeSystemEntity cse = csev_Child.getCodeSystemEntity();
+                    if (cse == null)
+                      cse = new CodeSystemEntity();
+                    cse.getCodeSystemEntityVersions().add(csev_Child);
+
+                    cseList.add(cse);
+                  }
+                  //addChildElement(csev_Child, treeNode);
+                  break;
+                case 3:
+                  // cross-mapping
+                  break;
+                case 4:
+                  // link
+                  break;
+              }
+
+            }
+
+          }
+          else
+          {
+            msg = response.getReturnInfos().getMessage();
+          }
+        }
+        else
+        {
+          msg = "Code '" + rootConceptCode + "' not valid";
+        }
       }
     }
     else if (valueSetVersionId > 0)
@@ -984,6 +1073,56 @@ public class ConceptsTree implements IUpdateModal
     return parameter;
   }
 
+  private long findEntityVersionIdFromCode(String code)
+  {
+    logger.debug("findEntityVersionIdFromCode: " + code);
+    ListCodeSystemConceptsRequestType parameter = new ListCodeSystemConceptsRequestType();
+
+    // only full code
+    parameter.setSearchParameter(new SearchType());
+    parameter.getSearchParameter().setWholeWords(true);
+
+    // CodeSystemEntity
+    parameter.setCodeSystemEntity(new CodeSystemEntity());
+
+    // CodeSystem(VersionsID) angeben
+    CodeSystemVersion csv = new CodeSystemVersion();
+    csv.setVersionId(codeSystemVersionId);
+    parameter.setCodeSystem(new CodeSystem());
+    parameter.getCodeSystem().getCodeSystemVersions().add(csv);
+
+    // login
+    if (SessionHelper.isUserLoggedIn())
+    {
+      parameter.setLoginToken(SessionHelper.getSessionId());
+    }
+
+    // add search code
+    CodeSystemEntity cse = new CodeSystemEntity();
+    CodeSystemEntityVersion csev = new CodeSystemEntityVersion();
+    CodeSystemConcept csc = new CodeSystemConcept();
+
+    cse.getCodeSystemEntityVersions().add(csev);
+    csev.getCodeSystemConcepts().add(csc);
+
+    csc.setCode(code);
+    //csc.setIsPreferred(searchPreferred);
+    parameter.setCodeSystemEntity(cse);
+
+    ListCodeSystemConceptsResponse.Return response = WebServiceHelper.listCodeSystemConcepts(parameter);
+    logger.debug("response: " + response.getReturnInfos().getMessage());
+
+    if (response.getReturnInfos().getStatus() == Status.OK)
+    {
+      if (response.getCodeSystemEntity().size() > 0)
+      {
+        return response.getCodeSystemEntity().get(0).getCodeSystemEntityVersions().get(0).getVersionId();
+      }
+    }
+
+    return 0;
+  }
+
   private ListCodeSystemConceptsRequestType createParameterForCodeSystems(boolean onlyMainClasses)
   {
     ListCodeSystemConceptsRequestType parameter = new ListCodeSystemConceptsRequestType();
@@ -1122,9 +1261,9 @@ public class ConceptsTree implements IUpdateModal
         }
       }
     }
-    
+
     // translations
-    if(selectedTranslationLanguageCd != null && selectedTranslationLanguageCd.length() > 0)
+    if (selectedTranslationLanguageCd != null && selectedTranslationLanguageCd.length() > 0)
     {
       parameter.setLoadTranslation(true);
     }
@@ -1441,10 +1580,19 @@ public class ConceptsTree implements IUpdateModal
   }
 
   /**
-   * @param selectedTranslationLanguageCd the selectedTranslationLanguageCd to set
+   * @param selectedTranslationLanguageCd the selectedTranslationLanguageCd to
+   * set
    */
   public void setSelectedTranslationLanguageCd(String selectedTranslationLanguageCd)
   {
     this.selectedTranslationLanguageCd = selectedTranslationLanguageCd;
+  }
+
+  /**
+   * @param rootConceptCode the rootConceptCode to set
+   */
+  public void setRootConceptCode(String rootConceptCode)
+  {
+    this.rootConceptCode = rootConceptCode;
   }
 }

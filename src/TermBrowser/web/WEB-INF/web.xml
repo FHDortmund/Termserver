@@ -159,12 +159,11 @@ Copyright (C) 2004 Potix Corporation. All Rights Reserved.
   </servlet-mapping>
   <!-- /////////// -->
   <!-- Miscellaneous -->
-  <session-config>
-    <tracking-mode>COOKIE</tracking-mode>
-  </session-config> 
   <!--<session-config>
     <session-timeout>60</session-timeout>
-  </session-config>-->
+    <tracking-mode>COOKIE</tracking-mode>
+  </session-config> -->
+  
     
   <!--<filter>
     <filter-name>SecurityFilter</filter-name>

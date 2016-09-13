@@ -107,7 +107,10 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   private long paramLoadId = 0;
   private boolean externMode = false;
   private boolean paramSearch = false;
+  private boolean paramHideVersion = false;
   private boolean lookForward = false;
+  
+  private String paramRootConceptCode = "";
 
   private boolean sendBack = false;
   private boolean dragAndDrop = false;
@@ -298,11 +301,13 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
   public void afterCompose()
   {
     logger.debug("ContentConcepts - afterCompose()");
-
+    
     fillVersionList();
 
     showLanguageButtons();
 
+    processURLParameter();
+    
     loadConcepts();
 
     showButtons();
@@ -327,6 +332,9 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     paramLoadName = ParameterHelper.getString("loadName");
     paramLoadId = ParameterHelper.getLong("loadId");
     paramLoadOid = ParameterHelper.getString("loadOID");
+    
+    paramHideVersion = ParameterHelper.getBoolean("hideVersion", false);
+    paramRootConceptCode = ParameterHelper.getString("rootConceptCode");
 
     paramLoadType = TreeAndContent.LOADTYPE.NONE;
     if (loadType != null)
@@ -353,6 +361,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     logger.debug("paramLoadName: " + paramLoadName);
     logger.debug("paramLoadId: " + paramLoadId);
     logger.debug("paramLoadOid: " + paramLoadOid);
+    logger.debug("paramHideVersion: " + paramHideVersion);
 
     logger.debug("dragAndDrop: " + dragAndDrop);
     logger.debug("dragAndDropTree: " + dragAndDropTree);
@@ -368,6 +377,13 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       externMode = true;
     }
     logger.debug("externMode: " + externMode);
+  }
+  
+  private void processURLParameter()
+  {
+    logger.debug("processURLParameter()");
+    
+    getFellow("divVersion").setVisible(!paramHideVersion);
   }
 
   private void fillVersionList()
@@ -497,6 +513,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     concepts.setDragAndDrop(dragAndDrop);
     concepts.setDragAndDropTree(dragAndDropTree);
     concepts.setUpdateDropListener(updateListener);
+    concepts.setRootConceptCode(paramRootConceptCode);
 
     ((Treecol) getFellow("tcTerm")).setSortAscending(new ComparatorConceptDesignationAscending());
     ((Treecol) getFellow("tcTerm")).setSortDescending(new ComparatorConceptDesignationDescending());
