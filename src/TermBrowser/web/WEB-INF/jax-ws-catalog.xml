@@ -26,5 +26,8 @@
     <system systemId="https://www.it4health.eu:8083/TermServer/Search?wsdl" uri="wsdl/www.it4health.eu_8083/TermServer/Search.wsdl"/>
     <system systemId="https://www.it4health.eu:443/TermServer/Search?xsd=1" uri="wsdl/www.it4health.eu_443/TermServer/Search.xsd_1.xsd"/>
     <system systemId="https://www.it4health.eu:443/TermServer/Search?xsd=2" uri="wsdl/www.it4health.eu_443/TermServer/Search.xsd_2.xsd"/>
+    <system systemId="http://localhost:8080/TermServer/Search?wsdl" uri="wsdl/localhost_8080/TermServer/Search.wsdl"/>
+    <system systemId="http://localhost:8080/TermServer/Search?xsd=1" uri="wsdl/localhost_8080/TermServer/Search.xsd_1.xsd"/>
+    <system systemId="http://localhost:8080/TermServer/Search?xsd=2" uri="wsdl/localhost_8080/TermServer/Search.xsd_2.xsd"/>
 </catalog>
 

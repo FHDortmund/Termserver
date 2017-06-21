@@ -95,7 +95,14 @@ public class SendBackHelper
   {
     if(s == null || s.length() == 0)
       return "";
-    return Base64.encodeBase64String(s.getBytes());
+    try
+    {
+      return Base64.encodeBase64String(s.getBytes("UTF-8"));
+    }
+    catch(Exception e)
+    {
+      return Base64.encodeBase64String(s.getBytes());
+    }
   }
   
 

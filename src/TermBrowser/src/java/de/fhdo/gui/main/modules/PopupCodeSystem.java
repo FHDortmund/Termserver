@@ -668,7 +668,7 @@ public class PopupCodeSystem extends Window implements AfterCompose, IUpdateData
       //List<de.fhdo.terminologie.db.hibernate.DomainValue> dvList = hb_session.createQuery(hql).list();
 
       //for (int i = 0; i < dvList.size(); ++i)
-      for (DomainValue domainValue : CodesystemGenericTreeModel.getInstance().getListDV())
+      for (DomainValue domainValue : SessionHelper.getDomainValueList())
       {
         if(domainValue.getDomainValueId() == null || domainValue.getDomainValueId() == 0)
           continue;  // z.B. "Sonstige"

@@ -203,8 +203,10 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       logger.debug("Codesystem given with id: " + codeSystem.getId());
       logger.debug("Count versions: " + codeSystem.getCodeSystemVersions().size());
 
-      Object o = SessionHelper.getValue("selectedCSV");
-      if (o != null)
+      //Object o = SessionHelper.getValue("selectedCSV");
+      Object o = SessionHelper.getSelectedCatalogVersion();
+      
+      if (o != null && o instanceof CodeSystemVersion)
       {
         logger.debug("selectedCSV is not null");
 
@@ -258,8 +260,9 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
       logger.debug("ValueSet given with id: " + valueSet.getId());
       logger.debug("Count versions: " + valueSet.getValueSetVersions().size());
 
-      Object o = SessionHelper.getValue("selectedVSV");
-      if (o != null)
+      //Object o = SessionHelper.getValue("selectedVSV");
+      Object o = SessionHelper.getSelectedCatalogVersion();
+      if (o != null && o instanceof ValueSetVersion)
       {
         valueSetVersion = (ValueSetVersion) o;
 
@@ -467,8 +470,9 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     {
       CodeSystemVersion csv = (CodeSystemVersion) o;
       csv.setCodeSystem(codeSystem);
-      SessionHelper.setValue("selectedCSV", csv);
-      SessionHelper.setValue("selectedVSV", null);
+      SessionHelper.setSelectedCatalogVersion(csv);
+      //SessionHelper.setValue("selectedCSV", csv);
+      //SessionHelper.setValue("selectedVSV", null);
 
       logger.debug("CSV selected: " + csv.getVersionId());
       //codeSystem = csv.getCodeSystem();
@@ -481,8 +485,10 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
     {
       ValueSetVersion vsv = (ValueSetVersion) o;
       vsv.setValueSet(valueSet);
-      SessionHelper.setValue("selectedVSV", vsv);
-      SessionHelper.setValue("selectedCSV", null);
+      
+      SessionHelper.setSelectedCatalogVersion(vsv);
+      //SessionHelper.setValue("selectedVSV", vsv);
+      //SessionHelper.setValue("selectedCSV", null);
 
       logger.debug("VSV selected: " + vsv.getVersionId());
       //valueSet = vsv.getValueSet();
@@ -650,8 +656,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
             if (response.getReturnInfos().getStatus() == Status.OK)
             {
               // reload cs tree
-              SessionHelper.setValue("selectedCS", null);
-              SessionHelper.setValue("selectedVS", null);
+              SessionHelper.setSelectedCatalog(null);
 
               CodesystemGenericTreeModel.getInstance().reloadData();
 
@@ -678,8 +683,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
             if (response.getReturnInfos().getStatus() == Status.OK)
             {
               // reload vs tree
-              SessionHelper.setValue("selectedCS", null);
-              SessionHelper.setValue("selectedVS", null);
+              SessionHelper.setSelectedCatalog(null);
 
               ValuesetGenericTreeModel.getInstance().reloadData();
 
@@ -1103,8 +1107,7 @@ public class ContentConcepts extends Window implements AfterCompose, IUpdateModa
         SessionHelper.setValue("loadCSV", cs.getCodeSystemVersions().get(0).getVersionId());
       }
 
-      SessionHelper.setValue("selectedCS", null);
-      SessionHelper.setValue("selectedVS", null);
+      SessionHelper.setSelectedCatalog(null);
 
       CodesystemGenericTreeModel.getInstance().reloadData();
       Executions.sendRedirect(null);  // page reload

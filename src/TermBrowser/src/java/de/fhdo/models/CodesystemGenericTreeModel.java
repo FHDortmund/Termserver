@@ -165,15 +165,14 @@ public class CodesystemGenericTreeModel
 
     List<GenericTreeHeaderType> header = new LinkedList<GenericTreeHeaderType>();
     header.add(new GenericTreeHeaderType("Name", 0, "", true, "String", false, true, false));
+    //header.add(new GenericTreeHeaderType("Typ", 50, "", true, "String", false, true, false));
 
-    // Daten erzeugen und der Liste hinzufügen
-    //List<GenericTreeRowType> dataList = new LinkedList<GenericTreeRowType>();
+    // create data and add to tree
     List<GenericTreeRowType> dataList = createModel();
 
-    // Liste initialisieren
+    // init tree
     //tree.setMultiple(true);
     tree.setTreeActions(treeActions);
-    //genericList.setUpdateDataListener(this);
     tree.setButton_new(false);
     tree.setButton_edit(false);
     tree.setButton_delete(false);
@@ -269,8 +268,9 @@ public class CodesystemGenericTreeModel
         if (cs_id == cs.getId())
         {
           logger.debug("load CS with id " + cs_id);
-          SessionHelper.setValue("selectedCS", cs);
-          SessionHelper.setValue("loadCS", null);
+          SessionHelper.setSelectedCatalog(cs);
+          //SessionHelper.setValue("selectedCS", cs);
+          //SessionHelper.setValue("loadCS", null);
         }
       }
 
@@ -347,7 +347,9 @@ public class CodesystemGenericTreeModel
             logger.debug("Found CS with id: " + cs.getId());
             logger.debug("Found CSV with versionId: " + csv.getVersionId());
             csv.setCodeSystem(cs);
-            SessionHelper.setValue("selectedCSV", csv);
+            //SessionHelper.setValue("selectedCSV", csv);
+            SessionHelper.setSelectedCatalogVersion(csv);
+            
             return cs;
           }
         }
@@ -371,14 +373,7 @@ public class CodesystemGenericTreeModel
     return errorMessage;
   }
 
-  /**
-   * @return the listDV
-   */
-  public List<DomainValue> getListDV()
-  {
-    return SessionHelper.getDomainValueList();
-    //return listDV;
-  }
+ 
 
   /**
    * @return the listCS

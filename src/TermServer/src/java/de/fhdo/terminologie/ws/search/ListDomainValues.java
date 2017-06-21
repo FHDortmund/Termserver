@@ -19,6 +19,7 @@ package de.fhdo.terminologie.ws.search;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.CodeSystem;
 import de.fhdo.terminologie.db.hibernate.DomainValue;
+import de.fhdo.terminologie.db.hibernate.ValueSet;
 import de.fhdo.terminologie.helper.HQLParameterHelper;
 import de.fhdo.terminologie.ws.search.types.ListDomainValuesRequestType;
 import de.fhdo.terminologie.ws.search.types.ListDomainValuesResponseType;
@@ -68,7 +69,9 @@ public class ListDomainValues
       try // 2. try-catch-Block zum Abfangen von Hibernate-Fehlern
       {
         // HQL erstellen
-        String hql = "select distinct dmv from DomainValue dmv left join fetch dmv.codeSystems cs ";
+        String hql = "select distinct dmv from DomainValue dmv"
+                + " left join fetch dmv.codeSystems cs "
+                + " left join fetch dmv.valueSets vs ";
 
         // Parameter dem Helper hinzufügen
         // bitte immer den Helper verwenden oder manuell Parameter per Query.setString() hinzufügen,
@@ -251,22 +254,21 @@ public class ListDomainValues
         cs.setMetadataParameters(null);
       }
     }
-
-    /*logger.debug("Pruefe: " + dv.getDomainCode());
-
-    if (dv.getDomainValuesForDomainValueId1() != null && dv.getDomainValuesForDomainValueId1().size() > 0)
+    
+    // Zugehörige Valuesets mit zurückgeben (ohne Versionen)
+    if (dv.getValueSets()!= null)
     {
-      logger.debug("Value1: " + ((DomainValue) dv.getDomainValuesForDomainValueId1().toArray()[0]).getDomainCode());
+      //Iterator<CodeSystem> iteratorCS = dv.getCodeSystems().iterator();
+      //while (iteratorCS.hasNext())
+      for(ValueSet vs : dv.getValueSets())
+      {
+        //CodeSystem cs = iteratorCS.next();
+        vs.setValueSetVersions(null);
+        vs.setDescription(null);
+        vs.setCurrentVersionId(null);
+        vs.setMetadataParameters(null);
+      }
     }
-    else
-      logger.debug("Value1: null");
-
-    if (dv.getDomainValuesForDomainValueId2() != null && dv.getDomainValuesForDomainValueId2().size() > 0)
-    {
-      logger.debug("Value2: " + ((DomainValue) dv.getDomainValuesForDomainValueId2().toArray()[0]).getDomainCode());
-    }
-    else
-      logger.debug("Value2: null");*/
 
     // Beziehungen
     boolean root = (dv.getDomainValuesForDomainValueId1() == null || dv.getDomainValuesForDomainValueId1().size() == 0);

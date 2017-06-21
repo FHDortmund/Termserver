@@ -37,9 +37,30 @@
             </vbox>
           </hbox> 
           <separator bar="false" width="300px" height="10px"/>
-          <label value="Projekt Terminologieserver"/>
-          <label value=""/>
+          
           <separator bar="true" hflex="true"/>
+          <label value="Projekt Terminologieserver - FH Dortmund" style="font-weight:bold;"/>
+          
+          <separator bar="false"/> 
+          <hbox width="100%">
+            <vbox width="140px">
+              <label value="${labels.about.leadership}" />
+              <label value="${labels.about.programming}"/>
+            </vbox>
+            <vbox>
+              <label value="${labels.common.pHaas}"/>
+              <!--<label value="${labels.common.rMuetzner}, ${labels.common.sBecker}"/>-->
+              <label value="${labels.common.rMuetzner}"/>
+            </vbox>
+          </hbox>
+          <separator bar="false"/> 
+          <label value="unterstützt durch die Forschungsprojekte eBPG, I/E-Health.NRW" style="font-style: italic;"/>
+          
+          
+          <separator bar="true" hflex="true"/>
+          <label value="Projekt Terminologieserver - Österreich" style="font-weight:bold;"/>
+          <!--<label value=""/>-->
+          <!--<separator bar="true" hflex="true"/>-->
           <separator bar="false"/> 
           <hbox width="100%">
             <vbox width="140px">
@@ -55,7 +76,9 @@
               <label value="Zemlyak, Wällisch"/>
             </vbox>
           </hbox>
-          <separator bar="false"/> 
+          
+          
+<!--          <separator bar="false"/> 
           <separator bar="true" width="300px"/>
           <separator bar="false"/> 
           <label value="${labels.about.projectEBPG}"/>
@@ -69,19 +92,20 @@
             </vbox>
             <vbox>
               <label value="${labels.common.pHaas}"/>
-              <!--<label value="${labels.common.rMuetzner}, ${labels.common.sBecker}"/>-->
+              <label value="${labels.common.rMuetzner}, ${labels.common.sBecker}"/>
               <label value="${labels.common.rMuetzner}"/>
             </vbox>
           </hbox>
           <separator bar="false" width="300px"/> 
           <separator bar="true" width="300px"/>
-          <separator bar="false" width="300px"/> 
+          <separator bar="false" width="300px"/> -->
           
         </vbox>
       </center>
       
       <south border="none">
-        <button label="${labels.common.close}" style="margin-top:5px;" onClick="win.detach();" width="100%"/>
+        <button label="${labels.common.close}" style="margin-top:5px;" onClick="win.detach();" width="100%"
+                height="40px"/>
       </south>
     </borderlayout>
   </window>

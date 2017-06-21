@@ -17,12 +17,14 @@
 package de.fhdo.terminologie.ws.search.types;
 
 import de.fhdo.terminologie.db.hibernate.CodeSystem;
+import javax.xml.bind.annotation.XmlType;
 
 
 /**
  *
  * @author Robert Mützner (robert.muetzner@fh-dortmund.de)
  */
+@XmlType(propOrder = {})
 public class ListCodeSystemsRequestType 
 {
   private String loginToken;

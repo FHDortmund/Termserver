@@ -26,7 +26,10 @@ import javax.servlet.http.HttpSession;
 import org.hibernate.Session;
 import org.zkoss.zk.ui.Sessions;
 import types.termserver.fhdo.de.CodeSystem;
+import types.termserver.fhdo.de.CodeSystemVersion;
 import types.termserver.fhdo.de.DomainValue;
+import types.termserver.fhdo.de.ValueSet;
+import types.termserver.fhdo.de.ValueSetVersion;
 
 /**
  *
@@ -565,6 +568,63 @@ public class SessionHelper
   {
     setValue("VIEW_MODE", mode);
   }
+  
+  public static Object getSelectedCatalog()
+  {
+    Object o = getValue("selectedCatalog");
+    //if(o != null)
+    //  return (CodeSystem)o;
+    
+    return o;
+  }
+  public static Object getSelectedCatalogVersion()
+  {
+    return getValue("selectedCatalogVersion");
+  }
+  
+  public static void setSelectedCatalog(Object obj)
+  {
+    setValue("selectedCatalog", obj);
+  }
+  
+  public static void setSelectedCatalogVersion(Object obj)
+  {
+    setValue("selectedCatalogVersion", obj);
+  }
+  
+//  public static CodeSystem getSelectedCodesystem()
+//  {
+//    Object o = getValue("selectedCS");
+//    if(o != null)
+//      return (CodeSystem)o;
+//    
+//    return null;
+//  }
+//  public static ValueSet getSelectedValueset()
+//  {
+//    Object o = getValue("selectedVS");
+//    if(o != null)
+//      return (ValueSet)o;
+//    
+//    return null;
+//  }
+//  
+//  public static CodeSystemVersion getSelectedCodesystemVersion()
+//  {
+//    Object o = getValue("selectedCSV");
+//    if(o != null)
+//      return (CodeSystemVersion)o;
+//    
+//    return null;
+//  }
+//  public static ValueSetVersion getSelectedValuesetVersion()
+//  {
+//    Object o = getValue("selectedVSV");
+//    if(o != null)
+//      return (ValueSetVersion)o;
+//    
+//    return null;
+//  }
 
 //    
 //    // Soll beim Anklicken eines CS/VS sofort die aktuelle Version geladen werden?

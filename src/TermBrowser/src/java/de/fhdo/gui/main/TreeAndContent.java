@@ -20,13 +20,16 @@ import de.fhdo.authorization.Authorization;
 import de.fhdo.gui.main.modules.PopupCodeSystem;
 import de.fhdo.gui.main.modules.PopupValueSet;
 import de.fhdo.helper.ArgumentHelper;
+import de.fhdo.helper.ClassHelper;
 import de.fhdo.helper.ComponentHelper;
 import de.fhdo.helper.ParameterHelper;
 import de.fhdo.helper.PropertiesHelper;
 import de.fhdo.helper.SessionHelper;
 import de.fhdo.interfaces.IUpdateModal;
 import de.fhdo.logging.LoggingOutput;
+import de.fhdo.models.CS_VS_GenericTreeModel;
 import de.fhdo.models.CodesystemGenericTreeModel;
+//import de.fhdo.models.CodesystemGenericTreeModel;
 import de.fhdo.models.ValuesetGenericTreeModel;
 import de.fhdo.tree.GenericTree;
 import de.fhdo.tree.GenericTreeRowType;
@@ -96,7 +99,6 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     NONE, CODESYSTEM, VALUESET
   }
   private LOADTYPE paramLoadType = LOADTYPE.NONE;
-  //private String paramLoadType = "";
   private String paramLoadName = "";
   private String paramLoadOid = "";
   private long paramLoadId = 0;
@@ -104,8 +106,6 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
   private Boolean paramHideStatusbar = null;
   private Boolean paramHideMenu = null;
   private Boolean paramHideVersion = null;
-  
-  
 
   public TreeAndContent()
   {
@@ -156,22 +156,34 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     Clients.clearBusy();
 
     // reload opened code system
-    Object o = SessionHelper.getValue("selectedCS");
+    Object o = SessionHelper.getSelectedCatalog();
     if (o != null)
     {
-      // TODO codesystem in Tree auswählen
-
-      openCodeSystem((CodeSystem) o);
-    }
-    else
-    {
-      o = SessionHelper.getValue("selectedVS");
-      if (o != null)
+      if (o instanceof CodeSystem)
       {
-        // TODO 
-        //openCodeSystem((CodeSystem) o);
+        openCodeSystem((CodeSystem) o);
+      }
+      else if (o instanceof ValueSet)
+      {
+        openValueSet((ValueSet) o);
       }
     }
+    /*Object o = SessionHelper.getValue("selectedCS");
+     if (o != null)
+     {
+     // TODO codesystem in Tree auswählen
+
+     openCodeSystem((CodeSystem) o);
+     }
+     else
+     {
+     o = SessionHelper.getValue("selectedVS");
+     if (o != null)
+     {
+     // TODO 
+     //openCodeSystem((CodeSystem) o);
+     }
+     }*/
   }
 
   private void getURLParameter()
@@ -237,18 +249,18 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     // Statusleiste ausblenden
     if (paramHideStatusbar != null)
       ((South) this.getRoot().getFellow("blMainSouth")).setVisible(!paramHideStatusbar);
-    
+
     //if(paramHideVersion != null)
     //  getFellow("divVersion").setVisible(!paramHideVersion);
-
     if (externMode)
     {
       // load codesystem/valueset and save in session
       if (paramLoadType == LOADTYPE.CODESYSTEM)
       {
         // load codesystem
-        CodeSystem cs = CodesystemGenericTreeModel.getInstance().findCodeSystem(paramLoadName, paramLoadOid, paramLoadId);
-        SessionHelper.setValue("selectedCS", cs);
+        // TODO findCodesystem aus DomainValue Baum suchen
+//        CodeSystem cs = CS_VS_GenericTreeModel.getInstance().findCodeSystem(paramLoadName, paramLoadOid, paramLoadId);
+//        SessionHelper.setValue("selectedCS", cs);
       }
       else if (paramLoadType == LOADTYPE.VALUESET)
       {
@@ -381,7 +393,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     Window winGenericTree = (Window) inc.getFellow("winGenericTree");
     genericTreeCS = (GenericTree) winGenericTree;
 
-    int count = CodesystemGenericTreeModel.getInstance().initGenericTree(genericTreeCS, this);
+    int count = CS_VS_GenericTreeModel.getInstance().initGenericTree(genericTreeCS, this);
     genericTreeCS.setTreeId("codesystems");
     logger.debug("Count: " + count);
 
@@ -404,6 +416,11 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
           {
             CodeSystem cs = (CodeSystem) row.getData();
             popupCodeSystem(cs, PopupCodeSystem.EDITMODES.DETAILSONLY, false);
+          }
+          if (row != null && row.getData() instanceof ValueSet)
+          {
+            ValueSet vs = (ValueSet) row.getData();
+            popupValueSet(vs, PopupValueSet.EDITMODES.DETAILSONLY, false);
           }
         }
       });
@@ -614,6 +631,132 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
 //    }
   }
 
+  private void createTabContent_All()
+  {
+    if (genericTreeCS != null || externMode)
+      return;
+
+    logger.debug("createTabContent_CS()");
+
+    Include inc = (Include) getFellow("incTreeCS");
+    Window winGenericTree = (Window) inc.getFellow("winGenericTree");
+    genericTreeCS = (GenericTree) winGenericTree;
+
+    int count = CS_VS_GenericTreeModel.getInstance().initGenericTree(genericTreeCS, this);
+    genericTreeCS.setTreeId("codesystems");
+    logger.debug("Count: " + count);
+
+    genericTreeCS.setButton_new(allowEditing && PropertiesHelper.getInstance().isGuiEditCodesystemsShowNew());
+    genericTreeCS.setButton_edit(allowEditing && PropertiesHelper.getInstance().isGuiEditCodesystemsShowEdit());
+    genericTreeCS.setShowRefresh(true);
+    genericTreeCS.setAutoExpandAll(count <= PropertiesHelper.getInstance().getExpandTreeAutoCount());
+
+    genericTreeCS.removeCustomButtons();
+
+    if (PropertiesHelper.getInstance().isGuiEditCodesystemsShowDetails())
+    {
+      Button buttonDetails = new Button(Labels.getLabel("common.details"), "/rsc/img/design/details_16x16.png");
+      buttonDetails.addEventListener(Events.ON_CLICK, new EventListener<Event>()
+      {
+        public void onEvent(Event t) throws Exception
+        {
+          GenericTreeRowType row = (GenericTreeRowType) genericTreeCS.getSelection();
+          if (row != null && row.getData() instanceof CodeSystem)
+          {
+            CodeSystem cs = (CodeSystem) row.getData();
+            popupCodeSystem(cs, PopupCodeSystem.EDITMODES.DETAILSONLY, false);
+          }
+        }
+      });
+
+      genericTreeCS.addCustomButton(buttonDetails);
+    }
+
+    // add context menu
+    Menupopup menu = new Menupopup();
+    menu.setParent(this);
+
+    Menuitem miDetails = new Menuitem(Labels.getLabel("common.details"));
+    Menuitem miEdit = new Menuitem(Labels.getLabel("popupCodeSystem.editCodeSystem"));
+    Menuitem miNew = new Menuitem(Labels.getLabel("popupCodeSystem.createCodeSystem"));
+    // TODO Menuitem miDeepLink = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miCreateDeepLink"));
+    //Menuitem miRemoveVS = null;// = new Menuitem(Labels.getLabel("treeitemRendererCSEV.miRemoveFromVS"));
+
+    // set icons
+    miDetails.setImage("/rsc/img/design/details_16x16.png");
+    miEdit.setImage("/rsc/img/design/edit_16x16.png");
+    miNew.setImage("/rsc/img/design/add_16x16.png");
+
+    miDetails.setParent(menu);
+
+    if (allowEditing)
+    {
+      new Menuseparator().setParent(menu);
+      miNew.setParent(menu);
+      miEdit.setParent(menu);
+    }
+
+    genericTreeCS.setContextMenu(menu);
+
+    miDetails.addEventListener(Events.ON_CLICK, new EventListener<Event>()
+    {
+      public void onEvent(Event t) throws Exception
+      {
+        GenericTreeRowType row = (GenericTreeRowType) genericTreeCS.getSelection();
+        if (row != null && row.getData() instanceof CodeSystem)
+        {
+          CodeSystem cs = (CodeSystem) row.getData();
+          popupCodeSystem(cs, PopupCodeSystem.EDITMODES.DETAILSONLY, false);
+        }
+      }
+    });
+
+    miNew.addEventListener(Events.ON_CLICK, new EventListener<Event>()
+    {
+      public void onEvent(Event t) throws Exception
+      {
+        popupCodeSystem(null, PopupCodeSystem.EDITMODES.CREATE, true);
+      }
+    });
+
+    miEdit.addEventListener(Events.ON_CLICK, new EventListener<Event>()
+    {
+      public void onEvent(Event t) throws Exception
+      {
+        GenericTreeRowType row = (GenericTreeRowType) genericTreeCS.getSelection();
+        if (row != null && row.getData() instanceof CodeSystem)
+        {
+          CodeSystem cs = (CodeSystem) row.getData();
+          if (allowEditing)
+            popupCodeSystem(cs, PopupCodeSystem.EDITMODES.MAINTAIN, false);
+        }
+      }
+    });
+
+    if (CS_VS_GenericTreeModel.getInstance().getErrorMessage() != null
+            && CS_VS_GenericTreeModel.getInstance().getErrorMessage().length() > 0)
+    {
+      // show error message
+      ComponentHelper.setVisible("incTreeCS", false, this);
+      ComponentHelper.setVisible("message", true, this);
+
+      ((Label) getFellow("labelMessage")).setValue(CS_VS_GenericTreeModel.getInstance().getErrorMessage());
+    }
+    else
+    {
+      ComponentHelper.setVisible("message", false, this);
+      ComponentHelper.setVisible("incTreeCS", true, this);
+    }
+
+//    logger.debug("Count: " + count);
+//    logger.debug("Expand till: " + PropertiesHelper.getInstance().getExpandTreeAutoCount());
+//    
+//    if(count <= PropertiesHelper.getInstance().getExpandTreeAutoCount())
+//    {
+//      genericTreeCS.expandAll();
+//    }
+  }
+
   private void createTabContent_Search()
   {
 //    if (genericListSearch != null || externMode)
@@ -625,6 +768,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
 
   public void onTreeNewClicked(String id, Object data)
   {
+    // TODO hier Auswahl einfügen
     if (id != null && id.equals("codesystems"))
       popupCodeSystem(null, PopupCodeSystem.EDITMODES.CREATE, true);
     else if (id != null && id.equals("valuesets"))
@@ -633,7 +777,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
 
   public void onTreeEditClicked(String id, Object data)
   {
-    if (id != null && id.equals("codesystems"))
+    //if (id != null && id.equals("codesystems"))
     {
       if (data instanceof CodeSystem)
       {
@@ -646,10 +790,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
         else
           popupCodeSystem(cs, PopupCodeSystem.EDITMODES.DETAILSONLY, false);
       }
-    }
-    else if (id != null && id.equals("valuesets"))
-    {
-      if (data instanceof ValueSet)
+      else if (data instanceof ValueSet)
       {
         // open selected CodeSystem
         ValueSet vs = (ValueSet) data;
@@ -661,6 +802,10 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
           popupValueSet(vs, PopupValueSet.EDITMODES.DETAILSONLY, false);
       }
     }
+//    else if (id != null && id.equals("valuesets"))
+//    {
+//      
+//    }
 
   }
 
@@ -672,9 +817,10 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     if (id.equals("codesystems"))
     {
       genericTreeCS = null;
-      CodesystemGenericTreeModel.getInstance().reloadData();
+      CS_VS_GenericTreeModel.getInstance().reloadData();
 
-      createTabContent_CS();
+      //createTabContent_CS();
+      createTabContent_All();
     }
     else if (id.equals("valuesets"))
     {
@@ -695,7 +841,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     if (id == null)
       return;
 
-    if (id.equals("codesystems"))
+    //if (id.equals("codesystems"))
     {
       if (data instanceof CodeSystem)
       {
@@ -730,9 +876,6 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
           }
         }
       }
-    }
-    else if (id.equals("valuesets"))
-    {
       if (data instanceof ValueSet)
       {
         // open selected CodeSystem
@@ -741,6 +884,17 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
         // open Codesystem
         openValueSet(vs);
       }
+    }
+    //else if (id.equals("valuesets"))
+    {
+//      if (data instanceof ValueSet)
+//      {
+//        // open selected CodeSystem
+//        ValueSet vs = (ValueSet) data;
+//
+//        // open Codesystem
+//        openValueSet(vs);
+//      }
     }
 
   }
@@ -753,21 +907,24 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
     logger.debug("openCodeSystem with id: " + cs.getId());
 
     // check if Codesystem already loaded
-    /*Object o = SessionHelper.getValue("selectedCS");
-     if (o != null)
-     {
-     CodeSystem cs_session = (CodeSystem) o;
+    Object selCatalog = SessionHelper.getSelectedCatalog();
+    if (selCatalog != null && selCatalog instanceof CodeSystem)
+    {
+      CodeSystem selectedCS = (CodeSystem) selCatalog;
 
-     if (cs_session.getId().longValue() == cs.getId().longValue())
-     {
-     // already loaded
-     logger.debug("already loaded");
-     return;
-     }
-     }*/
+      if (selectedCS.getId().longValue() != cs.getId().longValue())
+      {
+        // codesystem changed, set selected cs version (default value from db)
+        SessionHelper.setSelectedCatalogVersion(ClassHelper.getCurrentCodesystemVersion(cs));
+      }
+    }
+    else
+    {
+      SessionHelper.setSelectedCatalogVersion(ClassHelper.getCurrentCodesystemVersion(cs));
+    }
+
     // remember choice
-    SessionHelper.setValue("selectedCS", cs);
-    SessionHelper.setValue("selectedVS", null);
+    SessionHelper.setValue("selectedCatalog", cs);
 
     // open Codesystem
     Clients.showBusy(Labels.getLabel("common.loading"));
@@ -802,9 +959,23 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
 
     logger.debug("openValueSet with id: " + vs.getId());
 
+    Object selectedCatalog = SessionHelper.getSelectedCatalog();
+
+    if (selectedCatalog != null && selectedCatalog instanceof ValueSet)
+    {
+      //ValueSet selectedVS = SessionHelper.getSelectedValueset();
+      ValueSet selectedVS = (ValueSet) selectedCatalog;
+      if (selectedVS.getId().longValue() != vs.getId().longValue())
+      {
+        // valueset changed, set selected vs version (default value from db)
+        SessionHelper.setSelectedCatalogVersion(ClassHelper.getCurrentValuesetVersion(vs));
+      }
+    }
+    else
+      SessionHelper.setSelectedCatalogVersion(ClassHelper.getCurrentValuesetVersion(vs));
+
     // remember choice
-    SessionHelper.setValue("selectedCS", null);
-    SessionHelper.setValue("selectedVS", vs);
+    SessionHelper.setValue("selectedCatalog", vs);
 
     // open Codesystem
     Clients.showBusy(Labels.getLabel("common.loading"));
@@ -836,14 +1007,14 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
   {
     Center center = (Center) getFellow("center");
 
-    Object o = SessionHelper.getValue("selectedCS");
+    Object o = SessionHelper.getSelectedCatalog();
     String name = "";
-    if (o != null)
+    if (o != null && o instanceof CodeSystem)
     {
       CodeSystem cs = (CodeSystem) o;
       name = cs.getName();
 
-      Object oVersion = SessionHelper.getValue("selectedCSV");
+      Object oVersion = SessionHelper.getSelectedCatalogVersion();
       if (oVersion != null && oVersion instanceof CodeSystemVersion)
       {
         CodeSystemVersion csv = (CodeSystemVersion) oVersion;
@@ -857,14 +1028,26 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
         }
       }
     }
-    else
+    else if (o != null && o instanceof ValueSet)
     {
-      o = SessionHelper.getValue("selectedVS");
-      if (o != null)
+      //o = SessionHelper.getValue("selectedVS");
+
+      ValueSet vs = (ValueSet) o;
+      name = vs.getName();
+
+      ValueSetVersion vsv = (ValueSetVersion) SessionHelper.getSelectedCatalogVersion();
+      if (vsv != null)
       {
-        ValueSet vs = (ValueSet) o;
-        name = vs.getName();
+        if (StringHelper.isNotEmpty(vsv.getName()))
+        {
+          name += " - " + vsv.getName();
+          if (StringHelper.isNotEmpty(vsv.getOid()))
+          {
+            name += " (" + vsv.getOid() + ")";
+          }
+        }
       }
+
     }
 
     center.setTitle(name);
@@ -935,7 +1118,7 @@ public class TreeAndContent extends Window implements AfterCompose, IGenericTree
        }*/
       // reload tree
       genericTreeCS = null;
-      CodesystemGenericTreeModel.getInstance().reloadData();
+      CS_VS_GenericTreeModel.getInstance().reloadData();
 
       createTabContent_CS();
     }

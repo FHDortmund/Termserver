@@ -2,13 +2,31 @@
 
 <xs:import namespace="http://search.ws.terminologie.fhdo.de/" schemaLocation="http://localhost:8080/TermServer/Search?xsd=1" />
 
-<xs:complexType name="valueSetMetadataValue">
+<xs:complexType name="codeSystemConcept">
 <xs:sequence>
+<xs:element name="code" type="xs:string" minOccurs="0" />
+<xs:element name="codeSystemConceptTranslations" type="tns:codeSystemConceptTranslation" nillable="true" minOccurs="0" maxOccurs="unbounded" />
 <xs:element name="codeSystemEntityVersion" type="tns:codeSystemEntityVersion" minOccurs="0" />
+<xs:element name="codeSystemEntityVersionId" type="xs:long" minOccurs="0" />
+<xs:element name="description" type="xs:string" minOccurs="0" />
+<xs:element name="hints" type="xs:string" minOccurs="0" />
+<xs:element name="isPreferred" type="xs:boolean" minOccurs="0" />
+<xs:element name="meaning" type="xs:string" minOccurs="0" />
+<xs:element name="term" type="xs:string" minOccurs="0" />
+<xs:element name="termAbbrevation" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="codeSystemConceptTranslation">
+<xs:sequence>
+<xs:element name="codeSystemConcept" type="tns:codeSystemConcept" minOccurs="0" />
+<xs:element name="description" type="xs:string" minOccurs="0" />
+<xs:element name="hints" type="xs:string" minOccurs="0" />
 <xs:element name="id" type="xs:long" minOccurs="0" />
-<xs:element name="metadataParameter" type="tns:metadataParameter" minOccurs="0" />
-<xs:element name="parameterValue" type="xs:string" minOccurs="0" />
-<xs:element name="valuesetVersionId" type="xs:long" minOccurs="0" />
+<xs:element name="languageCd" type="xs:string" minOccurs="0" />
+<xs:element name="meaning" type="xs:string" minOccurs="0" />
+<xs:element name="term" type="xs:string" minOccurs="0" />
+<xs:element name="termAbbrevation" type="xs:string" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
@@ -59,34 +77,6 @@
 <xs:element name="leftId" type="xs:long" minOccurs="0" />
 <xs:element name="status" type="xs:int" minOccurs="0" />
 <xs:element name="statusDate" type="xs:dateTime" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="codeSystemConcept">
-<xs:sequence>
-<xs:element name="code" type="xs:string" minOccurs="0" />
-<xs:element name="codeSystemConceptTranslations" type="tns:codeSystemConceptTranslation" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="codeSystemEntityVersion" type="tns:codeSystemEntityVersion" minOccurs="0" />
-<xs:element name="codeSystemEntityVersionId" type="xs:long" minOccurs="0" />
-<xs:element name="description" type="xs:string" minOccurs="0" />
-<xs:element name="hints" type="xs:string" minOccurs="0" />
-<xs:element name="isPreferred" type="xs:boolean" minOccurs="0" />
-<xs:element name="meaning" type="xs:string" minOccurs="0" />
-<xs:element name="term" type="xs:string" minOccurs="0" />
-<xs:element name="termAbbrevation" type="xs:string" minOccurs="0" />
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="codeSystemConceptTranslation">
-<xs:sequence>
-<xs:element name="codeSystemConcept" type="tns:codeSystemConcept" minOccurs="0" />
-<xs:element name="description" type="xs:string" minOccurs="0" />
-<xs:element name="hints" type="xs:string" minOccurs="0" />
-<xs:element name="id" type="xs:long" minOccurs="0" />
-<xs:element name="languageCd" type="xs:string" minOccurs="0" />
-<xs:element name="meaning" type="xs:string" minOccurs="0" />
-<xs:element name="term" type="xs:string" minOccurs="0" />
-<xs:element name="termAbbrevation" type="xs:string" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 
@@ -167,6 +157,7 @@
 <xs:element name="orderNo" type="xs:int" minOccurs="0" />
 <xs:element name="sysParamsForModifyLevel" type="tns:sysParam" nillable="true" minOccurs="0" maxOccurs="unbounded" />
 <xs:element name="sysParamsForValidityDomain" type="tns:sysParam" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="valueSets" type="tns:valueSet" nillable="true" minOccurs="0" maxOccurs="unbounded" />
 </xs:sequence>
 </xs:complexType>
 
@@ -198,6 +189,21 @@
 </xs:sequence>
 </xs:complexType>
 
+<xs:complexType name="valueSet">
+<xs:sequence>
+<xs:element name="currentVersionId" type="xs:long" minOccurs="0" />
+<xs:element name="description" type="xs:string" minOccurs="0" />
+<xs:element name="descriptionEng" type="xs:string" minOccurs="0" />
+<xs:element name="id" type="xs:long" minOccurs="0" />
+<xs:element name="metadataParameters" type="tns:metadataParameter" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="name" type="xs:string" minOccurs="0" />
+<xs:element name="status" type="xs:int" minOccurs="0" />
+<xs:element name="statusDate" type="xs:dateTime" minOccurs="0" />
+<xs:element name="valueSetVersions" type="tns:valueSetVersion" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+<xs:element name="website" type="xs:string" minOccurs="0" />
+</xs:sequence>
+</xs:complexType>
+
 <xs:complexType name="metadataParameter">
 <xs:sequence>
 <xs:element name="codeSystem" type="tns:codeSystem" minOccurs="0" />
@@ -224,18 +230,13 @@
 </xs:sequence>
 </xs:complexType>
 
-<xs:complexType name="valueSet">
+<xs:complexType name="valueSetMetadataValue">
 <xs:sequence>
-<xs:element name="currentVersionId" type="xs:long" minOccurs="0" />
-<xs:element name="description" type="xs:string" minOccurs="0" />
-<xs:element name="descriptionEng" type="xs:string" minOccurs="0" />
+<xs:element name="codeSystemEntityVersion" type="tns:codeSystemEntityVersion" minOccurs="0" />
 <xs:element name="id" type="xs:long" minOccurs="0" />
-<xs:element name="metadataParameters" type="tns:metadataParameter" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="name" type="xs:string" minOccurs="0" />
-<xs:element name="status" type="xs:int" minOccurs="0" />
-<xs:element name="statusDate" type="xs:dateTime" minOccurs="0" />
-<xs:element name="valueSetVersions" type="tns:valueSetVersion" nillable="true" minOccurs="0" maxOccurs="unbounded" />
-<xs:element name="website" type="xs:string" minOccurs="0" />
+<xs:element name="metadataParameter" type="tns:metadataParameter" minOccurs="0" />
+<xs:element name="parameterValue" type="xs:string" minOccurs="0" />
+<xs:element name="valuesetVersionId" type="xs:long" minOccurs="0" />
 </xs:sequence>
 </xs:complexType>
 

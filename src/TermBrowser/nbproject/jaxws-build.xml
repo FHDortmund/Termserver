@@ -92,8 +92,8 @@
     </target>
     <target name="wsimport-client-Search" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/Search"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/Search" destdir="${build.generated.dir}/jax-wsCache/Search" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/Search/wsdl/www.it4health.eu_8083/TermServer/Search.wsdl" catalog="catalog.xml" extension="true" verbose="true" wsdlLocation="https://www.it4health.eu:8083/TermServer/Search?wsdl" xnocompile="true" xendorsed="true" target="2.1">
-            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/Search/wsdl/www.it4health.eu_8083/TermServer/Search.wsdl"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/Search" destdir="${build.generated.dir}/jax-wsCache/Search" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.wsdl" catalog="catalog.xml" extension="true" verbose="true" wsdlLocation="https://www.it4health.eu:8083/TermServer/Search?wsdl" xnocompile="true" xendorsed="true" target="2.1">
+            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/Search/wsdl/localhost_8080/TermServer/Search.wsdl"/>
             <produces dir="${build.generated.dir}/jax-wsCache/Search"/>
         </wsimport>
         <copy todir="${build.generated.sources.dir}/jax-ws">

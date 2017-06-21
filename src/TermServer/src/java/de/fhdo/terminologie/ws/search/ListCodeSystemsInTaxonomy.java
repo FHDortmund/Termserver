@@ -16,12 +16,15 @@
  */
 package de.fhdo.terminologie.ws.search;
 
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.Definitions;
 import de.fhdo.terminologie.DomainIDs;
 import de.fhdo.terminologie.db.HibernateUtil;
 import de.fhdo.terminologie.db.hibernate.CodeSystem;
 import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
 import de.fhdo.terminologie.db.hibernate.DomainValue;
+import de.fhdo.terminologie.db.hibernate.ValueSet;
+import de.fhdo.terminologie.db.hibernate.ValueSetVersion;
 import de.fhdo.terminologie.helper.HQLParameterHelper;
 import de.fhdo.terminologie.helper.LoginHelper;
 import de.fhdo.terminologie.ws.authorization.Authorization;
@@ -30,6 +33,8 @@ import de.fhdo.terminologie.ws.search.types.ListCodeSystemsInTaxonomyRequestType
 import de.fhdo.terminologie.ws.search.types.ListCodeSystemsInTaxonomyResponseType;
 import de.fhdo.terminologie.ws.search.types.ListCodeSystemsRequestType;
 import de.fhdo.terminologie.ws.search.types.ListCodeSystemsResponseType;
+import de.fhdo.terminologie.ws.search.types.ListValueSetsRequestType;
+import de.fhdo.terminologie.ws.search.types.ListValueSetsResponseType;
 import de.fhdo.terminologie.ws.types.ReturnType;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -46,40 +51,29 @@ public class ListCodeSystemsInTaxonomy
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
 
   /**
-   * Listet Domains des Terminologieservers auf
+   * lists code systems and value sets in a taxonomy of a specific domain
    *
-   * @param parameter Die Parameter des Webservices
-   * @return Ergebnis des Webservices, alle gefundenen Domains mit angegebenen
-   * Filtern
+   * @param parameter parameters for this webservice
+   * @return all domain values (tree) with linked codesystems/valuesets
+   * 
+   * edited 2017-06-21 <robert.muetzner@fh-dortmund.de>: return value sets, too
    */
   public ListCodeSystemsInTaxonomyResponseType ListCodeSystemsInTaxonomy(ListCodeSystemsInTaxonomyRequestType parameter, String ipAddress)
   {
     if (logger.isInfoEnabled())
-      logger.info("====== ListCodeSystemsInTaxonomy gestartet ======");
-    
-    // Alle Codesysteme lesen
-    List<CodeSystem> allCodesystemList;
-    ListCodeSystemsRequestType lcsRequest = new ListCodeSystemsRequestType();
-    if (parameter != null)
-      lcsRequest.setLoginToken(parameter.getLoginToken());
-    ListCodeSystems lcs = new ListCodeSystems();
-    ListCodeSystemsResponseType lcsResponse = lcs.ListCodeSystems(lcsRequest, ipAddress);
-    allCodesystemList = lcsResponse.getCodeSystem();
-    
-    if(allCodesystemList == null)
-      allCodesystemList = new LinkedList<CodeSystem>();
+      logger.info("====== ListCodeSystemsInTaxonomy started ======");
 
-    // Return-Informationen anlegen
+    // create return information
     ListCodeSystemsInTaxonomyResponseType response = new ListCodeSystemsInTaxonomyResponseType();
     response.setReturnInfos(new ReturnType());
 
-    // Parameter prüfen
+    // check parameters
     if (validateParameter(parameter, response) == false)
     {
-      return response; // Fehler bei den Parametern
+      return response; // error with parameters
     }
 
-    // Login-Informationen auswerten (gilt für jeden Webservice)
+    // check login information (valid for all webservices)
     boolean loggedIn = false;
     boolean isAdmin = false;
     AuthenticateInfos loginInfoType = null;
@@ -92,24 +86,49 @@ public class ListCodeSystemsInTaxonomy
     }
 
     if (logger.isDebugEnabled())
-      logger.debug("Benutzer ist eingeloggt: " + loggedIn);
+      logger.debug("user is logged in: " + loggedIn);
 
 
+    // read all code systems
+    List<CodeSystem> allCodesystemList;
+    ListCodeSystemsRequestType lcsRequest = new ListCodeSystemsRequestType();
+    if (parameter != null)
+      lcsRequest.setLoginToken(parameter.getLoginToken());
+    ListCodeSystems lcs = new ListCodeSystems();
+    ListCodeSystemsResponseType lcsResponse = lcs.ListCodeSystems(lcsRequest, ipAddress);
+    allCodesystemList = lcsResponse.getCodeSystem();
+    
+    if(allCodesystemList == null)
+      allCodesystemList = new LinkedList<CodeSystem>();
+    
+    // read all value sets
+    List<ValueSet> allValuesetList;
+    ListValueSetsRequestType lvsRequest = new ListValueSetsRequestType();
+    if (parameter != null)
+      lvsRequest.setLoginToken(parameter.getLoginToken());
+    ListValueSets lvs = new ListValueSets();
+    ListValueSetsResponseType lvsResponse = lvs.ListValueSets(lvsRequest, ipAddress);
+    allValuesetList = lvsResponse.getValueSet();
+    
+    if(allValuesetList == null)
+      allValuesetList = new LinkedList<ValueSet>();
+    
+    
     try
     {
       java.util.List<DomainValue> list = null;
 
       // Hibernate-Block, Session öffnen
       org.hibernate.Session hb_session = HibernateUtil.getSessionFactory().openSession();
-      //hb_session.getTransaction().begin();
       
       try // 2. try-catch-Block zum Abfangen von Hibernate-Fehlern
       {
         // HQL erstellen
         String hql = "select distinct dmv from DomainValue dmv left join fetch dmv.codeSystems cs ";
-
-        //hql += " join fetch dmv.codeSystems cs";
         hql += " left join fetch cs.codeSystemVersions csv";
+        
+        hql += " left join fetch dmv.valueSets vs";
+        hql += " left join fetch vs.valueSetVersions vsv";
 
         // Parameter dem Helper hinzufügen
         // bitte immer den Helper verwenden oder manuell Parameter per Query.setString() hinzufügen,
@@ -124,6 +143,8 @@ public class ListCodeSystemsInTaxonomy
         if (loggedIn == false)
         {
           where += " and (csv.status=" + Definitions.STATUS_CODES.ACTIVE.getCode() + " or cs is null)";
+          
+          where += " and (vsv.status=" + Definitions.STATUS_CODES.ACTIVE.getCode() + " or vs is null)";
         }
 
         hql += where;
@@ -153,8 +174,6 @@ public class ListCodeSystemsInTaxonomy
         // Datenbank-Aufruf durchführen
         list = q.list();
 
-        //tx.commit();
-
         // Hibernate-Block wird in 'finally' geschlossen
         // Ergebnis auswerten
         // Später wird die Klassenstruktur von Jaxb in die XML-Struktur umgewandelt
@@ -165,13 +184,14 @@ public class ListCodeSystemsInTaxonomy
 
         if (list != null)
         {
-          Iterator<DomainValue> iterator = list.iterator();
+          /*Iterator<DomainValue> iterator = list.iterator();
           logger.debug("Size: " + list.size());
 
           while (iterator.hasNext())
           {
-            DomainValue dmv = iterator.next();
-
+            DomainValue dmv = iterator.next();*/
+          for(DomainValue dmv : list)
+          {
             if (dmv.getDomainValuesForDomainValueId1() != null && dmv.getDomainValuesForDomainValueId1().size() > 0)
             {
               // kein Root-Element
@@ -179,29 +199,42 @@ public class ListCodeSystemsInTaxonomy
             }
             //else logger.debug("NORMAL: " + dmv.getDomainCode());
 
-            count += applyDomainValue(dmv, response.getDomainValue(), 0, allCodesystemList);
+            count += applyAllDomainValue(dmv, response.getDomainValue(), 0, allCodesystemList, allValuesetList);
+            //count += applyDomainValue(dmv, response.getDomainValue(), 0, allCodesystemList);
+            //count += applyVSDomainValue(dmv, response.getDomainValue(), 0, allValuesetList);
           }
 
-          // Liste bereinigen
+          // cleanup list
           cleanUpList(response.getDomainValue());
 
-          if (allCodesystemList != null && allCodesystemList.size() > 0)
+          if (allCodesystemList.size() > 0 || allValuesetList.size() > 0)
           {
-            // Alle übrigens Codesysteme hinzufügen
+            // add all other code systems and value sets
             DomainValue otherDV = new DomainValue();
             otherDV.setDomainCode("other");
             otherDV.setDomainDisplay("Sonstige");
-            otherDV.setCodeSystems(new HashSet<CodeSystem>());
+            //otherDV.setCodeSystems(new HashSet<CodeSystem>());
 
             for (int i = 0; i < allCodesystemList.size(); ++i)
             {
+              if(otherDV.getCodeSystems() == null)
+                otherDV.setCodeSystems(new HashSet<CodeSystem>());
+              
               //otherDV.setDomainValuesForDomainValueId2(new HashSet<DomainValue>());
               otherDV.getCodeSystems().add(allCodesystemList.get(i));
+            }
+            
+            for (int i = 0; i < allValuesetList.size(); ++i)
+            {
+              if(otherDV.getValueSets() == null)
+                otherDV.setValueSets(new HashSet<ValueSet>());
+              
+              otherDV.getValueSets().add(allValuesetList.get(i));
             }
 
             response.getDomainValue().add(otherDV);
           }
-
+          
 
 
           response.getReturnInfos().setCount(count);
@@ -209,11 +242,9 @@ public class ListCodeSystemsInTaxonomy
           // Status an den Aufrufer weitergeben
           response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
           response.getReturnInfos().setStatus(ReturnType.Status.OK);
-          response.getReturnInfos().setMessage("CodeSysteme erfolgreich in Taxonomie gelesen");
+          response.getReturnInfos().setMessage("taxonomy successfully obtained");
         }
 
-
-        //hb_session.getTransaction().commit();
       }
       catch (Exception e)
       {
@@ -221,26 +252,25 @@ public class ListCodeSystemsInTaxonomy
         // Fehlermeldung an den Aufrufer weiterleiten
         response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-        response.getReturnInfos().setMessage("Fehler bei 'ListCodeSystemsInTaxonomy', Hibernate: " + e.getLocalizedMessage());
+        response.getReturnInfos().setMessage("error at 'ListCodeSystemsInTaxonomy', hibernate: " + e.getLocalizedMessage());
 
-        logger.error("Fehler bei 'ListCodeSystemsInTaxonomy', Hibernate: " + e.getLocalizedMessage());
-        e.printStackTrace();
+        logger.error("error at 'ListCodeSystemsInTaxonomy', hibernate: " + e.getLocalizedMessage());
+        LoggingOutput.outputException(e, this);
       }
       finally
       {
         hb_session.close();
       }
-
-
     }
     catch (Exception e)
     {
       // Fehlermeldung an den Aufrufer weiterleiten
       response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.ERROR);
       response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
-      response.getReturnInfos().setMessage("Fehler bei 'ListCodeSystemsInTaxonomy': " + e.getLocalizedMessage());
+      response.getReturnInfos().setMessage("error at 'ListCodeSystemsInTaxonomy': " + e.getLocalizedMessage());
 
-      logger.error("Fehler bei 'ListCodeSystemsInTaxonomy': " + e.getLocalizedMessage());
+      logger.error("error at 'ListCodeSystemsInTaxonomy': " + e.getLocalizedMessage());
+      LoggingOutput.outputException(e, this);
     }
 
     return response;
@@ -345,6 +375,190 @@ public class ListCodeSystemsInTaxonomy
       {
         DomainValue dv2 = iteratorDV2.next();
         count = applyDomainValue(dv2, list, sum, allCodesystemList);
+      }
+    }
+    else
+      dv.setDomainValuesForDomainValueId2(null);
+
+    if (root)
+    {
+      list.add(dv);
+    }
+    count++;
+    return count;
+  }
+  
+  private int applyVSDomainValue(DomainValue dv, List<DomainValue> list, int sum, List<ValueSet> allValuesetList)
+  {
+    int count = sum;
+
+    dv.setDomain(null);
+    dv.setSysParamsForModifyLevel(null);
+    dv.setSysParamsForValidityDomain(null);
+
+    // assigned value sets with versions
+    if (dv.getValueSets() != null)
+    {
+      for(ValueSet vs : dv.getValueSets())
+      {
+        //vs.setDomainValues(null);
+        vs.setMetadataParameters(null);
+
+        for(ValueSetVersion vsv : vs.getValueSetVersions())
+        {
+          vsv.setValueSet(null);
+          vsv.setConceptValueSetMemberships(null);
+        }
+
+        // remove from list (others)
+        for (int i = 0; i < allValuesetList.size(); ++i)
+        {
+          if (allValuesetList.get(i).getId().longValue() == vs.getId().longValue())
+          {
+            allValuesetList.remove(i);
+            break;
+          }
+        }
+      }
+    }
+
+    logger.debug("Pruefe: " + dv.getDomainCode());
+
+    if (dv.getDomainValuesForDomainValueId1() != null && dv.getDomainValuesForDomainValueId1().size() > 0)
+    {
+      logger.debug("Value1: " + ((DomainValue) dv.getDomainValuesForDomainValueId1().toArray()[0]).getDomainCode());
+    }
+    else
+      logger.debug("Value1: null");
+
+    if (dv.getDomainValuesForDomainValueId2() != null && dv.getDomainValuesForDomainValueId2().size() > 0)
+    {
+      logger.debug("Value2: " + ((DomainValue) dv.getDomainValuesForDomainValueId2().toArray()[0]).getDomainCode());
+    }
+    else
+      logger.debug("Value2: null");
+
+    // relations
+    boolean root = (dv.getDomainValuesForDomainValueId1() == null || dv.getDomainValuesForDomainValueId1().size() == 0);
+    
+    // kann hier noch nicht auf null gesetzt werden, da die Liste sonst durcheinander gerät
+    if (dv.getDomainValuesForDomainValueId2() != null && dv.getDomainValuesForDomainValueId2().size() > 0)
+    {
+      //Iterator<DomainValue> iteratorDV2 = dv.getDomainValuesForDomainValueId2().iterator();
+
+      //while (iteratorDV2.hasNext())
+      for(DomainValue dv2 : dv.getDomainValuesForDomainValueId2())
+      {
+        //DomainValue dv2 = iteratorDV2.next();
+        count = applyVSDomainValue(dv2, list, sum, allValuesetList);
+      }
+    }
+    else
+      dv.setDomainValuesForDomainValueId2(null);
+
+    if (root)
+    {
+      list.add(dv);
+    }
+    count++;
+    return count;
+  }
+  
+  
+  private int applyAllDomainValue(DomainValue dv, List<DomainValue> list, int sum, List<CodeSystem> allCodesystemList, List<ValueSet> allValuesetList)
+  {
+    int count = sum;
+
+    dv.setDomain(null);
+    dv.setSysParamsForModifyLevel(null);
+    dv.setSysParamsForValidityDomain(null);
+
+    // Zugehörige Codesysteme mit zurückgeben (mit Versionen)
+    // TODO Berechtigung prüfen
+    if (dv.getCodeSystems() != null)
+    {
+      Iterator<CodeSystem> iteratorCS = dv.getCodeSystems().iterator();
+
+      while (iteratorCS.hasNext())
+      {
+        CodeSystem cs = iteratorCS.next();
+        cs.setDomainValues(null);
+        cs.setMetadataParameters(null);
+
+        Iterator<CodeSystemVersion> iteratorCSV = cs.getCodeSystemVersions().iterator();
+        while (iteratorCSV.hasNext())
+        {
+          CodeSystemVersion csv = iteratorCSV.next();
+          csv.setCodeSystem(null);
+          csv.setCodeSystemVersionEntityMemberships(null);
+          csv.setLicenceTypes(null);
+          csv.setLicencedUsers(null);
+        }
+
+        // In Liste entfernen
+        for (int i = 0; i < allCodesystemList.size(); ++i)
+        {
+          if (allCodesystemList.get(i).getId().longValue() == cs.getId().longValue())
+          {
+            allCodesystemList.remove(i);
+            break;
+          }
+        }
+      }
+    }
+    
+    // assigned value sets with versions
+    if (dv.getValueSets() != null)
+    {
+      for(ValueSet vs : dv.getValueSets())
+      {
+        //vs.setDomainValues(null);
+        vs.setMetadataParameters(null);
+
+        for(ValueSetVersion vsv : vs.getValueSetVersions())
+        {
+          vsv.setValueSet(null);
+          vsv.setConceptValueSetMemberships(null);
+        }
+
+        // remove from list (others)
+        for (int i = 0; i < allValuesetList.size(); ++i)
+        {
+          if (allValuesetList.get(i).getId().longValue() == vs.getId().longValue())
+          {
+            allValuesetList.remove(i);
+            break;
+          }
+        }
+      }
+    }
+
+    logger.debug("Pruefe: " + dv.getDomainCode());
+
+    if (dv.getDomainValuesForDomainValueId1() != null && dv.getDomainValuesForDomainValueId1().size() > 0)
+    {
+      logger.debug("Value1: " + ((DomainValue) dv.getDomainValuesForDomainValueId1().toArray()[0]).getDomainCode());
+    }
+    else
+      logger.debug("Value1: null");
+
+    if (dv.getDomainValuesForDomainValueId2() != null && dv.getDomainValuesForDomainValueId2().size() > 0)
+    {
+      logger.debug("Value2: " + ((DomainValue) dv.getDomainValuesForDomainValueId2().toArray()[0]).getDomainCode());
+    }
+    else
+      logger.debug("Value2: null");
+
+    // Beziehungen
+    boolean root = (dv.getDomainValuesForDomainValueId1() == null || dv.getDomainValuesForDomainValueId1().size() == 0);
+    // kann hier noch nicht auf null gesetzt werden, da die Liste sonst durcheinander gerät
+    //dv.setDomainValuesForDomainValueId1(null);
+    //dv.setDomainValuesForDomainValueId2(null);
+    if (dv.getDomainValuesForDomainValueId2() != null && dv.getDomainValuesForDomainValueId2().size() > 0)
+    {
+      for(DomainValue dv2 : dv.getDomainValuesForDomainValueId2())
+      {
+        count = applyAllDomainValue(dv2, list, sum, allCodesystemList, allValuesetList);
       }
     }
     else

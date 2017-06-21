@@ -178,7 +178,7 @@ public class ExportCodeSystemContent
       {
         ExportOWL exportOWL = new ExportOWL(parameter);
 
-        String s = exportOWL.exportCSV(response);
+        String s = exportOWL.exportOWL(response);
 
         if (s.length() == 0)
         {

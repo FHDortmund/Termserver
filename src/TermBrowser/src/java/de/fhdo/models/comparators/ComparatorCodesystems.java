@@ -20,6 +20,7 @@ package de.fhdo.models.comparators;
 import java.util.Comparator;
 import types.termserver.fhdo.de.CodeSystem;
 import types.termserver.fhdo.de.DomainValue;
+import types.termserver.fhdo.de.ValueSet;
 
 /**
  *
@@ -37,10 +38,23 @@ public class ComparatorCodesystems implements Comparator
 
   public int compare(Object o1, Object o2)
   {
-    CodeSystem cs1 = (CodeSystem) o1,
-            cs2 = (CodeSystem) o2;
+    String name1 = "";
+    String name2 = "";
+    
+    if(o1 instanceof CodeSystem)
+      name1 = ((CodeSystem)o1).getName();
+    else if(o1 instanceof ValueSet)
+      name1 = ((ValueSet)o1).getName();
+    
+    if(o2 instanceof CodeSystem)
+      name2 = ((CodeSystem)o2).getName();
+    else if(o2 instanceof ValueSet)
+      name2 = ((ValueSet)o2).getName();
+    
+    //CodeSystem cs1 = (CodeSystem) o1,
+    //        cs2 = (CodeSystem) o2;
 
-    int v = cs1.getName().compareToIgnoreCase(cs2.getName());
+    int v = name1.compareToIgnoreCase(name2);
 
     return asc ? v : -v;
   }
