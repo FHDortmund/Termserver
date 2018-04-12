@@ -32,10 +32,10 @@ Die Initialisierung des Baumes geschieht über GenericTree.java
             
             
 
-            <div id="divFilter">
+            <div id="divFilter" style="margin-bottom:0px;">
               <hbox>
                 <separator orient="vertical" />
-                <image src="/rsc/img/generictree/filter_16x16.png" width="16px" height="16px"/>
+                <image src="/rsc/img/generictree/filter_16x16.png" width="16px" height="16px" style="margin-top:8px;"/>
                 <textbox id="filter_classes" width="120px" 
                          onChanging="winGenericTree.filterChanged(event)" />
               </hbox>
@@ -46,40 +46,20 @@ Die Initialisierung des Baumes geschieht über GenericTree.java
       <center border="none">
         
         <tree id="generictree"
-              height="100%"
+              
               width="100%"
               vflex="true"
               zclass="z-tree"
               onSelect="winGenericTree.onTreeSelected(event)"
              
         >
-          <!--<treecols id="treecols" sizable="true" width="100%" hflex="true">
-            
-          </treecols>-->
           <treecols id="treecols" sizable="true">
             
           </treecols>
         </tree>
-        <!--<listbox id="listbox"
-                 emptyMessage="Keine Einträge mit aktuellen Filtern"
-                 onSelect="winGenericTree.onListSelected(event)"
-                 height="100%"
-                 vflex="true" 
-                 checkmark="false"
-                 multiple="true">
-          <listhead sizable="true" id="listHeader">
-            <listheader label="" width="18px" align="right">
-            </listheader>
-            <listheader label="Projekt" sort="auto(name)">
-            </listheader>
-            <listheader label="#" width="40px" align="right">
-            </listheader>
-                
-                
-          </listhead>
-        </listbox>-->
+     
       </center>
-      <south size="33px" border="none" id="south">
+      <south  border="none" id="south">
         <div style="padding-top:5px; padding-left: 0px;">
           <div align="left" style="float:left;" id="divEditButtons">
             <button id="buttonNew" label="Neu..." onClick="winGenericTree.onNew()" image="/rsc/img/generictree/add.png"

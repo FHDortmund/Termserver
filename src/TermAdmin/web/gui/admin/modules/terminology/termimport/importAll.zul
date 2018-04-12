@@ -39,6 +39,10 @@
           <!--<label value="${labels.preview}: "/>-->
           <include id="incListPreview" src="/gui/templates/GenericList.zul"
                    height="160px" width="99%" visible="false"/>
+          
+          <label value="${labels.preview}: "/>
+          <textbox id="tbPreview" rows="10" value="" width="99%"/>
+          
         </div>
       </north>
       <west title="${labels.codesystem} - ${labels.selection}" size="500px" visible="false" id="westCS">

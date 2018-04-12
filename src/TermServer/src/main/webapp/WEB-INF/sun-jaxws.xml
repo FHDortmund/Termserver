@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoints version="2.0" xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime">
+  <endpoint implementation="de.fhdo.terminologie.ws.authoring.Authoring" name="Authoring" url-pattern="/Authoring"/>
+  <endpoint implementation="de.fhdo.terminologie.ws.conceptAssociation.ConceptAssociations" name="ConceptAssociations" url-pattern="/ConceptAssociations"/>
+  <endpoint implementation="de.fhdo.terminologie.ws.administration.Administration" name="Administration" url-pattern="/Administration"/>
+  <endpoint implementation="de.fhdo.terminologie.ws.administration.SVS_ValueSetRepository" name="SVS_ValueSetRepository" url-pattern="/SVS_ValueSetRepository"/>
+  <endpoint implementation="de.fhdo.terminologie.ws.search.Search" name="Search" url-pattern="/Search"/>
+  <endpoint implementation="de.fhdo.terminologie.ws.authorization.Authorization" name="Authorization" url-pattern="/Authorization"/>
+</endpoints>

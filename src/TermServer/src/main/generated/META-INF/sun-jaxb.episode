@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<bindings xmlns="http://java.sun.com/xml/ns/jaxb" if-exists="true" version="2.1">
+  <!--
+
+Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.11 generiert 
+Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
+Generiert: 2018.04.09 um 12:40:45 PM CEST 
+
+  -->
+  <bindings xmlns:tns="urn:ehd/001" if-exists="true" scd="x-schema::tns">
+    <schemaBindings map="false">
+      <package name="ehd._001"/>
+    </schemaBindings>
+    <bindings if-exists="true" scd="~tns:keytabs_typ">
+      <class ref="ehd._001.KeytabsTyp"/>
+    </bindings>
+    <bindings if-exists="true" scd="~tns:keytab_typ">
+      <class ref="ehd._001.KeytabTyp"/>
+    </bindings>
+    <bindings if-exists="true" scd="tns:key">
+      <class ref="ehd._001.Key"/>
+    </bindings>
+    <bindings if-exists="true" scd="~tns:key_typ">
+      <class ref="ehd._001.KeyTyp"/>
+    </bindings>
+    <bindings if-exists="true" scd="~tns:fkey_typ">
+      <class ref="ehd._001.FkeyTyp"/>
+    </bindings>
+  </bindings>
+</bindings>

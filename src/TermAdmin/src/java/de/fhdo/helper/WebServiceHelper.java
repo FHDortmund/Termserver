@@ -404,7 +404,7 @@ public class WebServiceHelper
     Authoring port;
     try
     {
-      // Service mit bestimmter URL ?ffnen
+      // Service mit bestimmter URL oeffnen
       service = new Authoring_Service(new URL(optimizeUrl(urlHost) + urlService + "Authoring?wsdl"),
               new QName("http://authoring.ws.terminologie.fhdo.de/", "Authoring"));
     }

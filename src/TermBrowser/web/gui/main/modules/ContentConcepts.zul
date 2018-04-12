@@ -19,7 +19,7 @@
               </toolbar>    
               <borderlayout vflex="true">
                 <center border="none"  vflex="min">
-                  <tree id="treeConcepts" vflex="true" width="100%" height="100%" zclass="z-tree" span="0"
+                  <tree id="treeConcepts" vflex="true" width="100%" zclass="z-tree" span="0"
                         >
                     <treecols sizable="true">
                       <treecol label="${labels.common.name}" sort="auto" id="tcTerm" hflex="min"></treecol>

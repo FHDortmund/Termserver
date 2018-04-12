@@ -31,6 +31,7 @@ import de.fhdo.list.GenericListHeaderType;
 import de.fhdo.list.GenericListRowType;
 import de.fhdo.list.IGenericListActions;
 import de.fhdo.logging.LoggingOutput;
+import de.fhdo.terminologie.db.hibernate.LicencedUser;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -341,6 +342,8 @@ public class LizenzDetails extends Window implements AfterCompose, IGenericListA
         {
           hb_session.merge(licencedUser);
         }
+        
+        checkCodesystemLicense(hb_session, licencedUser.getCodeSystemVersion().getVersionId());
 
         hb_session.getTransaction().commit();
       }
@@ -372,6 +375,33 @@ public class LizenzDetails extends Window implements AfterCompose, IGenericListA
   {
     this.setVisible(false);
     this.detach();
+  }
+  
+  /**
+   * checks, if a codesystem has licensed users and sets the flag "underLicence"
+   * 
+   * @param hb_session
+   * @param codeSystemVersionId 
+   */
+  private void checkCodesystemLicense(Session hb_session, long codeSystemVersionId)
+  {
+    logger.debug("checkCodesystemLicense for csv-id: " + codeSystemVersionId);
+    
+    String hql = "select distinct lu from LicencedUser lu join fetch lu.codeSystemVersion csv";
+    List<LicencedUser> luList = hb_session.createQuery(hql).list();
+
+    logger.debug("count licenced users: " + luList.size());
+    
+    boolean underLicense = luList.size() > 0;
+    
+    CodeSystemVersion csv = (CodeSystemVersion) hb_session.get(CodeSystemVersion.class, codeSystemVersionId);
+    if(csv.getUnderLicence() == null || csv.getUnderLicence().booleanValue() != underLicense)
+    {
+      // change in db
+      logger.debug("change 'underLicence' for csvid: " + codeSystemVersionId);
+      csv.setUnderLicence(underLicense);
+      hb_session.update(csv);
+    }
   }
 
   public void editLicenceTypes()

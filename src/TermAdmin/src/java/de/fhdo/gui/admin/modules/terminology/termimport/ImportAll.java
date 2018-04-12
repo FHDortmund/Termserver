@@ -32,8 +32,12 @@ import de.fhdo.terminologie.db.hibernate.CodeSystemVersion;
 import de.fhdo.terminologie.db.hibernate.ValueSet;
 import de.fhdo.terminologie.db.hibernate.ValueSetVersion;
 import de.fhdo.terminologie.ws.administration.ImportCodeSystemResponse;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -138,12 +142,12 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
       if (media != null)
       {
         /*if (media.getContentType().equals("text/xml") || media.getContentType().equals("application/ms-excel") || media.getContentType().equals("text/csv")
-                || media.getContentType().equals("application/vnd.ms-excel")
-                || media.getContentType().contains("excel")
-                || media.getContentType().contains("csv")
-                || media.getContentType().contains("text/plain")
-                || media.getContentType().equals("application/x-zip-compressed")
-                || media.getContentType().contains("zip"))*/
+         || media.getContentType().equals("application/vnd.ms-excel")
+         || media.getContentType().contains("excel")
+         || media.getContentType().contains("csv")
+         || media.getContentType().contains("text/plain")
+         || media.getContentType().equals("application/x-zip-compressed")
+         || media.getContentType().contains("zip"))*/
         {
           if (media.isBinary())
           {
@@ -178,12 +182,13 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
           {
             logger.debug("media.isBinary() is false");
             bytes = media.getStringData().getBytes("UTF-8");
+            //bytes = media.getStringData().getBytes("ISO-8859-1");
           }
         }
         /*else
-        {
-          Messagebox.show(Labels.getLabel("foundNotSupportedDatatype") + ": " + media.getContentType());
-        }*/
+         {
+         Messagebox.show(Labels.getLabel("foundNotSupportedDatatype") + ": " + media.getContentType());
+         }*/
 
         logger.debug("ct: " + media.getContentType());
         format = media.getFormat();
@@ -233,6 +238,27 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
   public void preview()
   {
     logger.debug("preview()");
+
+    // load bytes in textbox (first 1000)
+    try
+    {
+      InputStream is = new ByteArrayInputStream(bytes);
+      BufferedReader in = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));  // "UTF-8"
+      String str = "";
+      while (str.length() < 4000)
+      {
+        String temp = in.readLine();
+        if(temp == null)
+          break;
+        str += temp;
+      }
+
+      ((Textbox) getFellow("tbPreview")).setText(str); 
+    }
+    catch (Exception ex)
+    {
+      ex.printStackTrace();
+    }
 
     // create interface
     importClass = null;
@@ -336,6 +362,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
   {
     fillValuesetList(null);
   }
+
   private void fillValuesetList(ValueSet selectedVS)
   {
     try
@@ -348,7 +375,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
       //header.add(new GenericListHeaderType("Version", 0, "", true, "String", true, true, false, false));
 
       int selIndex = -1;
-      
+
       // Daten laden
       SessionFactory sf = HibernateUtil.getNewSessionFactory();
       Session hb_session = sf.openSession();
@@ -369,7 +396,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
           GenericListRowType row = createRowFromValueset(vsList.get(i));
 
           dataList.add(row);
-          
+
           if (selectedVS != null && vsList.get(i).getId().longValue() == selectedVS.getId())
           {
             selIndex = i;
@@ -398,7 +425,7 @@ public class ImportAll extends Window implements AfterCompose, IGenericListActio
       genericList.setListHeader(header);
       genericList.setDataList(dataList);
       genericList.setListId("1");
-      
+
       if (selIndex >= 0)
         genericList.setSelectedIndex(selIndex);
 

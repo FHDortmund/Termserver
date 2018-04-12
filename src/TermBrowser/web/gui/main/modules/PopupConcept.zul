@@ -2,13 +2,13 @@
 
 <zk xmlns="http://www.zkoss.org/2005/zul">
   <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winConceptDetails"?>
-  <window id="winConceptDetails" use="de.fhdo.gui.main.modules.PopupConcept" width="950px"
-          closable="true" border="normal" sizable="true" title="-" >
+  <window id="winConceptDetails" use="de.fhdo.gui.main.modules.PopupConcept" width="1000px"
+          height="90%"  closable="true" border="normal" sizable="true" title="-" >
     
-    <borderlayout vflex="min" id="borderlayout">
-    <!--<borderlayout>--> 
-      <center border="none" >
-        <tabbox id="tabboxFilter" vflex="min" onSelect="winConceptDetails.tabSelected()">
+    <borderlayout height="100%" id="borderlayout">
+      <!--<borderlayout>--> 
+      <center border="none" flex="true" vflex="min">
+        <tabbox id="tabboxFilter" onSelect="winConceptDetails.tabSelected()">
           <tabs>
             <tab id="tabDetails" label="${labels.common.details}" />
             <tab id="tabMetadata" label="${labels.common.metadata}"/>
@@ -18,26 +18,27 @@
             <tab id="tabOntologies" label="${labels.popupConcept.ontologies}" visible="true" />
           </tabs>
           <tabpanels>
-            <tabpanel id="tabpanelDetails">
-              <div id="divId" align="right" style="float:right; margin-top:-24px;">
-                <label style="color:grey;" value="ID: "></label>
-                <label id="labelId" style="color:grey;" value="@{winConceptDetails.csc.codeSystemEntityVersionId}"></label>
-              </div>
+            <tabpanel id="tabpanelDetails" style="overflow:auto">
               
-              <groupbox id="gbCS" mold="3d" width="100%" title="${labels.common.concept}"
-                        closable="false" vflex="min">
-                <caption>
-                  <toolbar hflex="min">
-                    <hbox >
+              
+              <groupbox id="gbCS" mold="3d" width="100%" 
+                        closable="false" vflex="min" style="margin-bottom: 24px;">
+                <caption style="margin-left:600px; align:right; margin: 0px;">
+                  <hbox>
+                    <div style="margin: 0px;">
                       <toolbarbutton id="buttonExpand" image="/rsc/img/symbols/expand_16x16.png"
                                      onClick="winConceptDetails.onClickExpand()"/>
-                    </hbox>
-                  </toolbar>
+                    </div>
+                    <div style="margin-top: 10px;">
+                      <label value="${labels.common.concept}" sclass="z-caption-content"/> 
+                    </div>
+                  </hbox>
                 </caption>
+                
               
-                <grid width="100%" height="100%">
+                <grid hflex="true" height="100%">
                   <columns sizable="true">
-                    <column width="240px"/>
+                    <column hflex="min"/>
                     <column/>
                   </columns>
                   <rows style="vertical-align: top"> 
@@ -132,13 +133,13 @@
                     <row id="rowLeaf">
                       <label value="${labels.common.isLeaf}:"/>               
                       <checkbox id="cbIsLeaf" value="@{winConceptDetails.csev.isLeaf}" checked="@{winConceptDetails.csev.isLeaf}"
-                              disabled="true"/>
+                                disabled="true"/>
                     </row>
                   </rows>
                 </grid>
               </groupbox>
             </tabpanel>
-<!--            <tabpanel id="tabpanelMetadata" apply="de.fhdo.gui.main.modules.MetaDataComposer">-->
+            <!--            <tabpanel id="tabpanelMetadata" apply="de.fhdo.gui.main.modules.MetaDataComposer">-->
             <tabpanel id="tabpanelMetadata" >
               <!--<listbox id="listMetadata" vflex="true" height="65%" width="99%" >
                 <listhead></listhead>
@@ -158,7 +159,7 @@
               </div>-->
               
             </tabpanel>
-<!--            <tabpanel id="tabpanelTranslations" apply="de.fhdo.gui.main.modules.TranslationComposer">-->
+            <!--            <tabpanel id="tabpanelTranslations" apply="de.fhdo.gui.main.modules.TranslationComposer">-->
             <tabpanel id="tabpanelTranslations" >
               <include id="incListTranslation" src="~./zul/pages/GenericList.zul"/>
               <!--              <borderlayout>
@@ -206,13 +207,32 @@
           </tabpanels>
         </tabbox>
       </center>
-      <south border="none" vflex="min" style="text-align:right">
-        <div style="padding-top:5px; margin-right:4px; margin-bottom:4px;">
-          <checkbox id="cbNewVersion" label="${labels.common.createNewVersion}"/> 
-          <separator orient="vertical"/>
-          <button id="bCreate" label="${labels.common.save}" onClick="winConceptDetails.onOkClicked()" autodisable="self"/>         
-          <button label="${labels.common.close}" onClick="self.Parent.Parent.Parent.Parent.detach()" />  
-        </div>         
+      <south border="none" style="text-align:right; padding-bottom: 4px; padding-top: 4px;">
+        <div>
+          <div align="left" style="float:left;" id="divEditButtons">
+            <div id="divId" style="margin-left:16px; margin-top:16px;">
+                <label style="color:grey;" value="ID: "></label>
+                <label id="labelId" style="color:grey;" value="@{winConceptDetails.csc.codeSystemEntityVersionId}"></label>
+              </div>
+            <!--<div id="divId" style="margin-left:16px; margin-top:16px;">
+              <hbox>
+                <label style="color:grey;" value="ID: "></label>
+                <label id="labelId" style="color:grey;" value="@{winCSDetails.codeSystem.id}"></label>
+                
+                <div visible="@{winCSDetails.showVersion}">
+                  <label style="color:grey;" value=" | Version-ID: "></label>
+                  <label id="labelVersionId" style="color:grey;" value="@{winCSDetails.codeSystemVersion.versionId}"></label>
+                </div>
+              </hbox>
+            </div>-->
+          </div>
+          <div style="padding-top:5px; margin-right:4px; margin-bottom:4px;">
+            <checkbox id="cbNewVersion" label="${labels.common.createNewVersion}"/> 
+            <separator orient="vertical"/>
+            <button id="bCreate" label="${labels.common.save}" onClick="winConceptDetails.onOkClicked()" autodisable="self"/>         
+            <button label="${labels.common.close}" onClick="winConceptDetails.onCancelClicked()" />  
+          </div>
+        </div>       
       </south>
     </borderlayout>
   </window>

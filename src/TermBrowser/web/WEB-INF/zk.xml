@@ -19,6 +19,11 @@
   <language-config>
     <addon-uri>/WEB-INF/lang-addon.xml</addon-uri>
   </language-config>
+  
+  <desktop-config>
+        <!--    <theme-provider-class>org.zkoss.sapphire</theme-provider-class>-->
+        <theme-uri>/rsc/style/TermBrowser.css</theme-uri>
+    </desktop-config>
 
   <session-config>
     <session-timeout>3600</session-timeout><!-- 3600 -->

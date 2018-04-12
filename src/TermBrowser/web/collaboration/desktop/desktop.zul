@@ -6,6 +6,8 @@
           use="de.fhdo.collaboration.desktop.Desktop">
     
     <include id="incProposals" src="proposals.zul?mode=all"/>
+    
+    
 <!--    <borderlayout>
       <west id="westId" title="Vorschläge" collapsible="false" flex="true" >
         <include id="incList" src="~./zul/pages/GenericList.zul"/>

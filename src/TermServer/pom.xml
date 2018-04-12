@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>de.fhdortmund.mi.termserver</groupId>
+  <artifactId>TermServer</artifactId>
+  <version>1.1.0</version>
+  <packaging>war</packaging>
+
+  <name>TermServer</name>
+
+  <properties>
+    <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+    
+  <dependencies>
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-web-api</artifactId>
+      <version>7.0</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
+      <type>jar</type>
+    </dependency>
+    
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.6</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>5.0.8.Final</version>
+    </dependency>
+    
+<!--    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-annotations</artifactId>
+      <version>3.5.6-Final</version>
+    </dependency>-->
+    
+   
+    
+    <dependency>
+      <groupId>com.sun.xml.ws</groupId>
+      <artifactId>jaxws-rt</artifactId>
+      <version>2.1.4</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+      <version>2.9.9</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>net.sourceforge.owlapi</groupId>
+      <artifactId>owlapi-apibinding</artifactId>
+      <version>5.1.4</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>net.java.dev.stax-utils</groupId>
+      <artifactId>stax-utils</artifactId>
+      <version>20070216</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+<!--    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <targetPath>${project.build.directory}/schema</targetPath>
+      </resource>
+    </resources>-->
+    <plugins>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+
+<!--      <plugin>
+        <groupId>org.jvnet.jaxb2.maven2</groupId>
+        <artifactId>maven-jaxb2-plugin</artifactId>
+        <version>0.13.2</version>
+        <executions>
+          <execution>
+            <id>Build POJOs from Schema</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <phase>process-resources</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <extension>true</extension>
+
+          <generatePackage>clamlBindingXSD</generatePackage>
+
+          <schemaDirectory>${project.build.directory}/schema</schemaDirectory>
+          <schemaIncludes>
+            <schemaInclude>claml_Schema.xsd</schemaInclude>
+          </schemaIncludes>
+
+          <generateDirectory>src/main/generated</generateDirectory>
+
+          <enableIntrospection>true</enableIntrospection>
+
+        </configuration>
+      </plugin>-->
+      
+      <!--      <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>xml-maven-plugin</artifactId>
+          <version>1.0.1</version>
+          <executions>
+              <execution>
+                  <id>validate-schema</id>
+                  <goals>
+                      <goal>validate</goal>
+                  </goals>
+                  <phase>generate-resources</phase>
+                  <configuration>
+                      <validationSets>
+                          <validationSet>
+                              <dir>${project.build.directory}/schema</dir>
+                              <systemId>http://www.w3.org/2001/XMLSchema</systemId>
+                          </validationSet>
+                      </validationSets>
+                  </configuration>
+              </execution>
+              <execution>
+                  <id>validate-examples</id>
+                  <goals>
+                      <goal>validate</goal>
+                  </goals>
+                  <phase>test</phase>
+                  <configuration>
+                      <validationSets>
+                          <validationSet>
+                              <dir>src/test/resources</dir>
+                              <systemId>${project.build.directory}/schema/claml_Schema.xsd</systemId>
+                          </validationSet>
+                      </validationSets>
+                  </configuration>
+              </execution>
+          </executions>
+      </plugin>-->
+      
+      
+<!--      <plugin>
+        <groupId>org.jvnet.jaxb2.maven2</groupId>
+        <artifactId>maven-jaxb2-plugin</artifactId>
+        <version>0.13.2</version>
+        <executions>
+          <execution>
+            <id>Build POJOs from Schema</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <phase>process-resources</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <extension>true</extension>
+          <generatePackage>ehd._001</generatePackage>
+          <schemaDirectory>${project.build.directory}/schema</schemaDirectory>
+          <schemaIncludes>
+            <schemaInclude>keytabs.xsd</schemaInclude>
+          </schemaIncludes>
+          <generateDirectory>src/main/generated</generateDirectory>
+          <enableIntrospection>true</enableIntrospection>
+        </configuration>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+          <compilerArguments>
+            <endorseddirs>${endorsed.dir}</endorseddirs>
+          </compilerArguments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.6</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${endorsed.dir}</outputDirectory>
+              <silent>true</silent>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>javax</groupId>
+                  <artifactId>javaee-endorsed-api</artifactId>
+                  <version>7.0</version>
+                  <type>jar</type>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>-->
+      
+      <!--      <plugin>
+        <groupId>org.jvnet.jaxb2.maven2</groupId>
+        <artifactId>maven-jaxb2-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+               if you want to put DTD somewhere else <schemaDirectory>src/main/jaxb</schemaDirectory> 
+              <schemaDirectory>src/main/resources</schemaDirectory>
+              <generateDirectory>${basedir}/src/main/java</generateDirectory>
+              <packagename>com.my.package</packagename>
+              <extension>true</extension>
+              <schemaLanguage>DTD</schemaLanguage>
+              <schemaIncludes>
+                <schemaInclude>*.dtd</schemaInclude>
+              </schemaIncludes>
+              <bindingIncludes>
+                <bindingInclude>*.jaxb</bindingInclude>
+              </bindingIncludes>
+              <args>
+                <arg>-Xinject-listener-code</arg>
+              </args>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.jvnet.jaxb2-commons</groupId>
+            <artifactId>property-listener-injector</artifactId>
+            <version>1.0</version>
+          </dependency>
+        </dependencies>
+      </plugin>-->
+      
+    </plugins>
+  </build>
+
+</project>

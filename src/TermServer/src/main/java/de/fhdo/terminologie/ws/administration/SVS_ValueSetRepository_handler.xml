@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<handler-chains xmlns="http://java.sun.com/xml/ns/javaee">
+  <handler-chain>
+    <handler>
+      <handler-name>de.fhdo.terminologie.ws.administration.SVSHandler</handler-name>
+      <handler-class>de.fhdo.terminologie.ws.administration.SVSHandler</handler-class>
+    </handler>
+  </handler-chain>
+</handler-chains>

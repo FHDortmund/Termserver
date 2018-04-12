@@ -29,16 +29,17 @@
       <center border="none">
         <grid sclass="loginGrid">            
           <columns>                
-            <column width="100px" />            
+            <column hflex="min" />
+            <column  />
           </columns>            
           <rows>                
             <row> 
               <label value="${labels.common.username}" />
-              <textbox id="name" value="" width="95%"/>
+              <textbox id="name" value="" width="100%"/>
             </row>
             <row>
               <label value="${labels.common.password}" />
-              <textbox id="pwd" type="password" width="95%"/>
+              <textbox id="pwd" type="password" width="100%"/>
             </row>
             <row id="warningRow" visible="false" >
               <div align="right">
@@ -58,8 +59,8 @@
           </rows>
         </grid>
       </center>
-      <south height="30px" border="0" collapsible="true">
-        <div align="right" style="margin-right:8px;">
+      <south border="0" collapsible="true">
+        <div align="right" style="margin-right:16px; margin-bottom:8px;">
           <!--<button id="loginButton" label="${labels.common.doLogin}" onClick="loginWin.loginCheck()" autodisable="self"
                   image="/rsc/img/symbols/LoginServer_16x16.png"/> -->
           <button id="loginButton" label="${labels.common.doLogin}" onClick="loginWin.loginCheck()" autodisable="self"

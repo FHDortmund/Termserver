@@ -8,7 +8,7 @@
     <div sclass="z-toolbar" style="padding:0">
       <hbox pack="stretch" 
             width="100%">
-        <toolbar id="tb" height="20px" align="start" width="100%" >
+        <toolbar id="tb"  align="start" width="100%" >
           <toolbarbutton id="labelVersion" label="" tooltiptext="${labels.statusBar.tbVersion}" visible="false">
             <attribute name="onClick">
           <![CDATA[       
@@ -39,7 +39,7 @@
           <!--<toolbarbutton  label="|"/>-->
         </toolbar>
     
-        <toolbar id="tb3" height="20px" align="end">
+        <toolbar id="tb3" align="end">
           <div style="margin-right:4px;margin-top:2px;">
             <label id="labelTermserver" value="" style="font-size:10pt;color:black;" />
           </div>

@@ -520,6 +520,11 @@ public class PopupConcept extends Window implements AfterCompose, IUpdateData, I
     }
 
   }
+  
+  public void onCancelClicked()
+  {
+    this.detach();
+  }
 
   public void showAllMetadata()
   {

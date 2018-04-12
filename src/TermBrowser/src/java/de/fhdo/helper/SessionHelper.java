@@ -330,6 +330,19 @@ public class SessionHelper
 
     return Default;
   }
+  
+  public static long getLongValue(String Name, long Default)
+  {
+    org.zkoss.zk.ui.Session session = Sessions.getCurrent();
+    if (session != null)
+    {
+      Object o = session.getAttribute(Name);
+      if (o != null)
+        return (Long) o;
+    }
+
+    return Default;
+  }
 
   public static String getStringValue(String Name, String Default)
   {

@@ -1,0 +1,203 @@
+/*
+CTS2 based Terminology Server and Terminology Browser
+Copyright (C) 2014 FH Dortmund: Peter Haas, Robert Muetzner
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+/* 
+    Created on : 17.01.2018, 10:13:32
+    Author     : rober
+*/
+
+.z-window
+{
+  /*position: relative;
+  top: -2px;*/
+  padding: 0px;
+  
+}
+
+.z-menu-text 
+{
+   font-size: 16px;
+}
+.z-menuitem-text 
+{
+   font-size: 14px;
+}
+.z-toolbarbutton-content 
+{
+   font-size: 14px;
+}
+.z-label
+{
+   font-size: 14px;
+}
+
+
+.z-treecol
+{
+  background-color: #EAEAEA;
+  color: #000;
+  border-left: 1px solid;
+}
+.z-treecol-bars
+{
+  color: #000;
+  border-left: 1px solid;
+}
+.z-treecols-bar
+{
+  color: #000;
+  border-left: 1px solid;
+}
+.z-treecols
+{
+  background-color: #EAEAEA;
+  border-bottom-color: #A0A0A0;
+  border-left-color: #A0A0A0;
+  border-left: 1px solid;
+}
+.z-treecol-content
+{
+  color: #000000;
+  border-bottom-color: #A0A0A0;
+  /*font-weight: bold;*/
+}
+.z-tree-header
+{
+  background-color: #EAEAEA;
+  /*border-left: 1px solid;*/
+}
+.z-tree-header-border
+{
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/*.z-groupbox-3d .z-groupbox-title .z-caption-readonly
+{
+  background-color: #DDDDDD;
+}
+.z-groupbox-header
+{
+  background-color: #DDDDDD;
+}
+.z-caption
+{
+  background-color: #DDDDDD;
+}
+.z-caption-content
+{
+  background-color: #DDDDDD;
+}*/
+
+/*.z-window-header
+{
+  padding-left: 16px;
+}*/
+
+
+
+.z-north-body, .z-south-body, .z-west-body, .z-center-body, .z-east-body, .z-div{
+    border: 0;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+.z-window-content{
+    padding: 2px 2px 2px 2px;
+}
+.modal_win, .z-groupbox-3d>.z-groupbox-content{
+    padding: 5px;
+}
+.z-caption-content{
+    padding: 10px 0px 5px 10px;
+}
+.z-menubar .z-menubar-horizontal{
+    border: none;
+}
+
+.z-groupbox-3d>.z-groupbox-header .z-caption, .z-groupbox-3d>.z-groupbox-header .z-groupbox-title {
+    padding: 6px 8px;
+}
+
+.z-north-body, .z-south-body, .z-west-body, .z-center-body, .z-east-body, .z-window,.z-center, z-center-noborder, z-borderlayout  {
+    width: 100%;
+    height: 100%
+}
+
+.grid_layout_column{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-gap: 5px;
+    height: 100vh;
+}
+
+.grid_layout_column_content{
+    grid-column: 1;
+    overflow: auto;
+}
+
+.grid_layout_row{
+    display: grid;
+    grid-gap: 5px;
+    grid-template-column: auto;
+}
+
+/* NAVBAR */
+.z-north-body, .z-south-body, .z-west-body, .z-center-body, .z-east-body, z-window-content, .z-column-content{
+    border: 0;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+}
+
+.z-toolbarbutton-content>img, .z-toolbarbutton-content>i {
+    max-height: 50px; 
+    max-width: 160px; 
+    margin-right: 0px;
+}
+
+.z-window-content{
+    padding: 4px 4px 4px 4px;
+}
+
+.nav_toolbar{
+    padding: 0px 0px 0px 0px;
+}
+
+.modal_win{
+    padding: 5px 5px 5px 5px;
+}
+
+.z-caption-content{
+    padding: 10px 0px 5px 10px;
+}
+
+.z-column {
+    background-color: #FFFFFF;
+    background: #FFFFFF;
+    border-left: 1px solid #FFFFFF;
+    border-bottom: 1px solid #FFFFFF;
+}
+
+.z-toolbarbutton{
+    /* padding-left: 130; */
+    border: 1;
+}
+.z-grid{
+    padding: 4px 4px 4px 4px;
+}
+.z-grid-header-border{
+    border-bottom: 1px solid #FFFFFF;
+}

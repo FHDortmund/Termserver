@@ -358,6 +358,7 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
         header.add(new GenericListHeaderType("ID", 60, "", true, "String", true, true, false, false));
         header.add(new GenericListHeaderType(Labels.getLabel("name"), 0, "", true, "String", true, true, false, false));
         header.add(new GenericListHeaderType(Labels.getLabel("status"), 80, "", true, "String", true, true, false, false));
+        header.add(new GenericListHeaderType(Labels.getLabel("license"), 60, "", true, "bool", true, true, false, true));
 
         // load data from db
         Session hb_session = HibernateUtil.getSessionFactory().openSession();
@@ -575,11 +576,12 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
 
     logger.debug("style: " + style);
 
-    GenericListCellType[] cells = new GenericListCellType[3];
+    GenericListCellType[] cells = new GenericListCellType[4];
     cells[0] = new GenericListCellType(createListcellText(csv.getVersionId() + "", style), false, csv.getVersionId() + "");
     cells[1] = new GenericListCellType(createListcellText(csv.getName(), style), false, csv.getName());
     cells[2] = new GenericListCellType(createListcellText(Definitions.STATUS_CODES.readLabel(csv.getStatus()), style), false, Definitions.STATUS_CODES.readLabel(csv.getStatus()));
-
+    cells[3] = new GenericListCellType(csv.getUnderLicence(), false, null);
+    
     row.setData(csv);
     row.setCells(cells);
 
@@ -599,10 +601,11 @@ public class Codesystems extends Window implements AfterCompose, IUpdateModal, I
   {
     GenericListRowType row = new GenericListRowType();
 
-    GenericListCellType[] cells = new GenericListCellType[3];
+    GenericListCellType[] cells = new GenericListCellType[4];
     cells[0] = new GenericListCellType(vsv.getVersionId(), false, "");
     cells[1] = new GenericListCellType(vsv.getName(), false, "");
     cells[2] = new GenericListCellType(Definitions.STATUS_CODES.readLabel(vsv.getStatus()), false, "");
+    cells[3] = new GenericListCellType(false, false, "");
 
     row.setData(vsv);
     row.setCells(cells);

@@ -206,19 +206,25 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
   private List<TreeNode> createTreeNodeList(List<GenericTreeRowType> dataList)
   {
     List<TreeNode> list = new ArrayList<TreeNode>();
+    
+    if(dataList == null)
+      return list;
 
     for (int i = 0; i < dataList.size(); ++i)
     {
       GenericTreeRowType row = dataList.get(i);
-      if (row.getChildRows().size() == 0)
+      if (row != null && row.getChildRows() != null)
       {
-        //logger.debug("addLeaf: " + ((GenericTreeCellType)row.getCells()[0]).getData());
-        list.add(new DefaultTreeNode(row));
-      }
-      else
-      {
-        //logger.debug("addTree: " + ((GenericTreeCellType)row.getCells()[0]).getData());
-        list.add(new DefaultTreeNode(row, createTreeNodeList(row.getChildRows())));
+        if (row.getChildRows().size() == 0)
+        {
+          //logger.debug("addLeaf: " + ((GenericTreeCellType)row.getCells()[0]).getData());
+          list.add(new DefaultTreeNode(row));
+        }
+        else
+        {
+          //logger.debug("addTree: " + ((GenericTreeCellType)row.getCells()[0]).getData());
+          list.add(new DefaultTreeNode(row, createTreeNodeList(row.getChildRows())));
+        }
       }
       //TreeNode treeNode = new DefaultTreeNode()
       //list.add(new DefaultTreeNode(item, ));
@@ -233,7 +239,7 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
     logger.debug("createTreeModel()");
 
     //treeModel.setMultiple(multiple);
-    if(multiple)
+    if (multiple)
     {
       //tree.set
       //treeModel.setMultiple(true);
@@ -254,14 +260,12 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
      dataList.add(new DefaultTreeNode(createRow(new Organisation("Westfalenstadion", "Dortmund", false, new Date(68,4,14)))));
      */
 
-
-
     //TreeNode root = new DefaultTreeNode(root)
     //TreeNode tnRoot = new DefaultTreeNode(null, dataList); 
     TreeNode tnRoot = new DefaultTreeNode(null, createTreeNodeList(dataList));
     //TreeNode tnRoot = new DefaultTreeNode(dataList); 
     treeModel = new DefaultTreeModel(tnRoot);
-    
+
     treeModel.setMultiple(multiple);
 
     //Tree tree = (Tree) getFellow("generictree");
@@ -279,7 +283,6 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
       treeitemRenderer.setDraggable(draggable);
       tree.setItemRenderer(treeitemRenderer);
     }
-
 
     showButtonMode();
     /*
@@ -305,7 +308,8 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
     Div div = (Div) getFellow("divEditButtons");
     if (div.isVisible())
     {
-      south.setSize("33px");
+      //south.setSize("33px");
+      south.setSize(null);
       south.setVisible(true);
     }
     else
@@ -390,7 +394,6 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
        break;
        }
        }*/
-
       for (int i = 0; i < listHeader.size(); ++i)
       {
         listHeader.get(i).setIndex(i);
@@ -420,7 +423,6 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
          lh.appendChild(new Separator());
          }
          }*/
-
         treecols.getChildren().add(treecol);
       }
     }
@@ -571,7 +573,6 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
         //        -> Treechildren
         //           -> Treeitem
         //              -> Treerow
-
         // Aufbau Model
         // Root
         // -> (Default)TreeNode
@@ -582,7 +583,6 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
         //    -> (Default)TreeNode
         //    -> (Default)TreeNode
         // -> (Default)TreeNode
-
         List<TreeNode> children = new LinkedList<TreeNode>();
         children.add(new DefaultTreeNode(row));
 
@@ -610,7 +610,6 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
     
      selectedTreeNode.add(new DefaultTreeNode(row));*
      */
-
     if (lastSelectedTreeitem != null)
     {
       // Center -> Tree -> Treechildren -> Treeitem
@@ -651,7 +650,6 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
           //    -> (Default)TreeNode
           //    -> (Default)TreeNode
           // -> (Default)TreeNode
-
           //selectedTreeNode.getParent()
 
           /*List childrenSaved = new LinkedList(selectedTreeNode.getChildren());
@@ -667,7 +665,6 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
            selectedTreeNode.getChildren().addAll(childrenSaved);
 
            logger.debug("isLeaf 4: " + selectedTreeNode.isLeaf());*/
-
           TreeNode parent = selectedTreeNode.getParent();
           int index = parent.getIndex(selectedTreeNode);
           parent.remove(selectedTreeNode);
@@ -676,7 +673,6 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
 
         }
       }
-
 
     }
     else
@@ -689,7 +685,6 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
     //treeModel.
 
     //getSelection()
-
   }
 
   /**
@@ -721,12 +716,12 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
   {
     if (component instanceof Treeitem)
     {
-      logger.debug("Component ist Treeitem, jetzt aufklappen");
+      //logger.debug("Component ist Treeitem, jetzt aufklappen");
       Treeitem treeitem = (Treeitem) component;
       treeitem.setOpen(aufklappen);
     }
-    else
-      logger.debug("Component ist kein Treeitem, sondern: " + component.getClass().getCanonicalName());
+    //else
+    //  logger.debug("Component ist kein Treeitem, sondern: " + component.getClass().getCanonicalName());
 
     Collection<?> com = component.getChildren();
     if (com != null)
@@ -766,10 +761,10 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
     initFellowTree();
     doCollapseExpandAll(tree, false);
   }
-  
+
   public void refresh()
   {
-    if(treeActions != null)
+    if (treeActions != null)
       treeActions.onTreeRefresh(listId);
   }
 
@@ -796,7 +791,7 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
 
   private void filterTree(String text, Tree tree)
   {
-    logger.debug("Filter tree");
+    logger.debug("Filter tree, search text: " + text);
 
     text = text.toLowerCase();
 
@@ -823,14 +818,12 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
       Object o = it.next();
 
       //logger.debug("Class: " + o.getClass().getCanonicalName());
-
       if (o instanceof Treechildren)
       {
         isLeaf = false;
         Treechildren tc = (Treechildren) o;
 
         //Iterator<Treeitem> it2 = tc.getChildren().iterator();
-
         //while (it2.hasNext())
         for (Component c_it2 : tc.getChildren())
         {
@@ -862,6 +855,7 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
               Label l = (Label) tc.getChildren().get(0);
               s = l.getValue();
             }
+            break; // only first cell (name)
           }
         }
       }
@@ -871,8 +865,8 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
     if (isLeaf && s.length() > 0)
     {
       // Blatt-Element, hier muss gefiltert werden
-
-
+      logger.debug("isLeaf: " + s + ", Suchtext: " + text);
+      
       if (s.toLowerCase().contains(text))
       {
         anzahlSub++;
@@ -889,7 +883,6 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
       }
 
       //logger.debug("Leaf: " + s);
-
     }
     else if (isLeaf == false && s.length() > 0)
     {
@@ -954,7 +947,7 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
       if (it != null && it.iterator() != null && it.iterator().hasNext() == false)
       {
         logger.debug("Drop-Event Listener hinzufügen");
-        
+
         tree.addEventListener(Events.ON_DROP, new EventListener<Event>()
         {
           public void onEvent(Event t) throws Exception
@@ -1000,7 +993,7 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
 
     ((Div) getFellow("divExpandCollapse")).setVisible(showFilter);
   }
-  
+
   public void setShowRefresh(boolean refresh)
   {
     this.showRefresh = refresh;
@@ -1040,18 +1033,18 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
   {
     this.multiple = multiple;
   }
-  
+
   public void cleanup()
   {
     Tree tree2 = getTree();
     tree2.getChildren().clear();
-    
+
     Treecols cols = new Treecols();
     cols.setSizable(true);
     cols.setId("treecols");
     tree2.appendChild(cols);
   }
-  
+
   public void addCustomButton(Button button)
   {
     logger.debug("addCustomButton");
@@ -1060,7 +1053,7 @@ public class GenericTree extends Window implements IDoubleClick, IUpdateData
     if (o == null || (Boolean) o == true)
       button.setDisabled(true);
 
-    button.setHeight("24px");
+    // button.setHeight("24px");
 
     if (customButtonList.contains(button) == false)
     {

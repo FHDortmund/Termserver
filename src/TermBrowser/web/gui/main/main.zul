@@ -49,13 +49,12 @@
         <include src="../header/menu.zul" />                               
       </north>
             
-      <south id="blMainSouth" height="26px">
+      <south id="blMainSouth" >
         <include src="../header/statusBar.zul" />
       </south> 
                         
       <!--muss ganz zum schluss stehe, da sonst auf north, south,etc, nicht zugegriffen werden kann-->
       <center id="blMainCenter">
-        <!--<include id="mainWindowCenter" src="./ContentCSVSDefault.zul"  moder="defer"/>-->
         <include id="mainWindowCenter" src="./TreeAndContent.zul" moder="defer"/>
       </center>    
     </borderlayout>

@@ -49,6 +49,7 @@ import types.termserver.fhdo.de.ValueSet;
  */
 public class CS_VS_GenericTreeModel
 {
+
   private static CS_VS_GenericTreeModel instance = null;
 
   public static CS_VS_GenericTreeModel getInstance()
@@ -62,7 +63,6 @@ public class CS_VS_GenericTreeModel
   private static org.apache.log4j.Logger logger = de.fhdo.logging.Logger4j.getInstance().getLogger();
   //private List<CodeSystem> publicCodeSystemList = null;
   private String errorMessage;
-  
 
   public CS_VS_GenericTreeModel()
   {
@@ -73,7 +73,7 @@ public class CS_VS_GenericTreeModel
   {
     SessionHelper.setCodesystemList(null);
     SessionHelper.setDomainValueList(null);
-    
+
     //publicCodeSystemList = null;
     //loaded = false;
     initData();
@@ -83,7 +83,7 @@ public class CS_VS_GenericTreeModel
   {
     //List<CodeSystem> listCS = SessionHelper.getCodesystemList();
     List<DomainValue> listDV = SessionHelper.getDomainValueList();
-    
+
     if (listDV != null)  // data already loaded
       return;
 
@@ -105,7 +105,7 @@ public class CS_VS_GenericTreeModel
 
       ListCodeSystemsInTaxonomyResponse.Return response = WebServiceHelper.listCodeSystemsInTaxonomy(parameter);
 
-      logger.debug("Response: " + response.getReturnInfos().getMessage());
+      logger.debug("Response: " + response.getReturnInfos().getMessage() + ", count: " + response.getReturnInfos().getCount());
 
       if (response.getReturnInfos().getStatus() == Status.OK)
       {
@@ -116,7 +116,7 @@ public class CS_VS_GenericTreeModel
         // show error message
         errorMessage = response.getReturnInfos().getMessage();
       }
-      
+
 //      initPublicCodesystemList();
     }
     catch (Exception e)
@@ -125,27 +125,25 @@ public class CS_VS_GenericTreeModel
       LoggingOutput.outputException(e, this);
       //treeModel = new TreeModel(new TreeNode(null, new LinkedList()));
     }
-    
-    
+
   }
-  
+
   /*private void initPublicCodesystemList()
-  {
-    if(publicCodeSystemList == null)
-    {
-      ListCodeSystemsRequestType parameter = new ListCodeSystemsRequestType();
-      // don't use login!
+   {
+   if(publicCodeSystemList == null)
+   {
+   ListCodeSystemsRequestType parameter = new ListCodeSystemsRequestType();
+   // don't use login!
 
-      ListCodeSystemsResponse.Return response = WebServiceHelper.listCodeSystems(parameter);
-      logger.debug("Response public: " + response.getReturnInfos().getMessage());
+   ListCodeSystemsResponse.Return response = WebServiceHelper.listCodeSystems(parameter);
+   logger.debug("Response public: " + response.getReturnInfos().getMessage());
 
-      if (response.getReturnInfos().getStatus() == Status.OK)
-      {
-        publicCodeSystemList = response.getCodeSystem();
-      }
-    }
-  }*/
-
+   if (response.getReturnInfos().getStatus() == Status.OK)
+   {
+   publicCodeSystemList = response.getCodeSystem();
+   }
+   }
+   }*/
   /**
    *
    * @param tree
@@ -161,7 +159,17 @@ public class CS_VS_GenericTreeModel
     header.add(new GenericTreeHeaderType("Typ", 50, "", true, "String", false, true, false));
 
     // create data and add to tree
-    List<GenericTreeRowType> dataList = createModel();
+    List<GenericTreeRowType> dataList;
+
+    if (SessionHelper.getBoolValue("useFilterTaxonomyId", false))
+    {
+      // only subtree
+      dataList = createModel(SessionHelper.getLongValue("filterTaxonomyId", 0));
+    }
+    else
+    {
+      dataList = createModel(0);
+    }
 
     // init tree
     //tree.setMultiple(true);
@@ -176,9 +184,9 @@ public class CS_VS_GenericTreeModel
     //return count;
   }
 
-  private List<GenericTreeRowType> createModel()
+  private List<GenericTreeRowType> createModel(long filterDomainValueId)
   {
-    logger.debug("createModel()");
+    logger.debug("createModel(), filterDomainValueId: " + filterDomainValueId);
 
     SessionHelper.setCodesystemListCount(0);
     //Integer count = 0;
@@ -191,26 +199,42 @@ public class CS_VS_GenericTreeModel
       List<GenericTreeRowType> list = new LinkedList<GenericTreeRowType>();
 
       //provideOrderChoosen by AdminSettings
-      Map<Integer, DomainValue> mapDomVal = new HashMap<Integer, DomainValue>();
+      //Map<Integer, DomainValue> mapDomVal = new HashMap<Integer, DomainValue>();
 
       List<DomainValue> listDV = SessionHelper.getDomainValueList();
 
-      // Domain Values mit untergeordneten DV,CS und CSVs
-      for (DomainValue dv : listDV)
+      if (filterDomainValueId > 0)
       {
-        if (dv.getOrderNo() != null)
-        {
-          mapDomVal.put(dv.getOrderNo(), dv);
-        }
-        else
-        {
-          mapDomVal.put(listDV.size(), dv);
-        }
+        List<DomainValue> newListDV = new LinkedList<DomainValue>();
+        getDomainValueListFromId(listDV, newListDV, filterDomainValueId);
+        if(newListDV.size() > 0)
+          listDV = newListDV;
       }
 
-      for (int i = 1; i < mapDomVal.size() + 1; i++)
+      // Domain Values mit untergeordneten DV,CS und CSVs
+      /*for (DomainValue dv : listDV)
+       {
+       logger.debug("createModel(), root domain value: " + dv.getDomainCode() + ", display: " + dv.getDomainDisplay());
+        
+       if (dv.getOrderNo() != null)
+       {
+       mapDomVal.put(dv.getOrderNo(), dv);
+       }
+       else
+       {
+       mapDomVal.put(listDV.size(), dv);
+       }
+       }
+
+       for (int i = 1; i < mapDomVal.size() + 1; i++)
+       {
+       list.add(createTreeNode(mapDomVal.get(i), listCS, listVS));
+       }*/
+      for (DomainValue dv : listDV)
       {
-        list.add(createTreeNode(mapDomVal.get(i), listCS, listVS));
+        logger.debug("createModel(), root domain value: " + dv.getDomainCode() + ", display: " + dv.getDomainDisplay());
+
+        list.add(createTreeNode(dv, listCS, listVS));
       }
 
       // save values in session
@@ -229,6 +253,37 @@ public class CS_VS_GenericTreeModel
       LoggingOutput.outputException(e, this);
     }
     return new LinkedList<GenericTreeRowType>();
+  }
+
+  private void getDomainValueListFromId(List<DomainValue> listDV, List<DomainValue> newListDV, long domainValueId)
+  {
+    logger.debug("getDomainValueListFromId(), filterDomainValueId: " + domainValueId);
+    
+    for (DomainValue dv : listDV)
+    {
+      if(dv == null || dv.getDomainValueId() == null)
+        continue;
+      
+      logger.debug("check domain value with id: " + dv.getDomainValueId() + ", name: " + dv.getDomainDisplay());
+      
+      if (dv.getDomainValueId() == domainValueId)
+      {
+        logger.debug("subdomain found, filling list...");
+        // found subdomain
+        //List<DomainValue> list = new LinkedList<DomainValue>();
+        newListDV.add(dv);
+      }
+
+      // check subdomains
+      List<DomainValue> subDomains = dv.getDomainValuesForDomainValueId2();
+      if (subDomains != null)
+      {
+        getDomainValueListFromId(subDomains, newListDV, domainValueId);
+      }
+    }
+
+    // nothing found, return default list
+    logger.debug("nothing found, return default list");
   }
 
   public GenericTreeRowType createTreeNode(Object obj, List<CodeSystem> listCS, List<ValueSet> listVS)
@@ -282,13 +337,13 @@ public class CS_VS_GenericTreeModel
     else if (obj instanceof ValueSet)
     {
       ValueSet vs = (ValueSet) obj;
-      
+
       Label label = new Label(vs.getName());
       label.setTooltiptext(vs.getDescription());
-      
+
       Treecell tc = new Treecell();
       tc.appendChild(label);
-      
+
       cells[0] = new GenericTreeCellType(tc, false, "");
       cells[1] = new GenericTreeCellType("VS", false, "");
       row.setData(vs);
@@ -303,26 +358,35 @@ public class CS_VS_GenericTreeModel
 
       // Gibts DomainValues im DV? Wenn ja, einfügen
       List<DomainValue> subDomains = dv.getDomainValuesForDomainValueId2();
-      Collections.sort(subDomains, new ComparatorDomainValues(true));
-      for (DomainValue dv2 : subDomains)
+      if (subDomains != null)
       {
-        row.getChildRows().add(createTreeNode(dv2, listCS, listVS));
+        Collections.sort(subDomains, new ComparatorDomainValues(true));
+        for (DomainValue dv2 : subDomains)
+        {
+          row.getChildRows().add(createTreeNode(dv2, listCS, listVS));
+        }
       }
 
       // Gibts CSs im DV? Wenn ja, einfügen
       List<CodeSystem> subCSList = dv.getCodeSystems();
-      Collections.sort(subCSList, new ComparatorCodesystems(true));
-      for (CodeSystem cs : subCSList)
+      if (subCSList != null)
       {
-        row.getChildRows().add(createTreeNode(cs, listCS, listVS));
+        Collections.sort(subCSList, new ComparatorCodesystems(true));
+        for (CodeSystem cs : subCSList)
+        {
+          row.getChildRows().add(createTreeNode(cs, listCS, listVS));
+        }
       }
-      
+
       // Gibts VSs im DV? Wenn ja, einfügen
       List<ValueSet> subVSList = dv.getValueSets();
-      Collections.sort(subVSList, new ComparatorCodesystems(true));
-      for (ValueSet vs : subVSList)
+      if (subVSList != null)
       {
-        row.getChildRows().add(createTreeNode(vs, listCS, listVS));
+        Collections.sort(subVSList, new ComparatorCodesystems(true));
+        for (ValueSet vs : subVSList)
+        {
+          row.getChildRows().add(createTreeNode(vs, listCS, listVS));
+        }
       }
     }
     else
@@ -374,7 +438,6 @@ public class CS_VS_GenericTreeModel
 //
 //    return null;
 //  }
-
   /**
    * @return the errorMessage
    */
@@ -382,8 +445,6 @@ public class CS_VS_GenericTreeModel
   {
     return errorMessage;
   }
-
- 
 
   /**
    * @return the listCS

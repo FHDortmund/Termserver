@@ -9,7 +9,7 @@
         <div style="margin-top:8px; margin-bottom:8px; ">
           <div id="divVersion" style="margin-left: 8px; margin-right:8px;">
             <div align="left" style="float:left; margin-bottom: 4px;">
-              <label value="${labels.common.version}: "/>
+              <label value="${labels.common.version}: " style="font-size: 16px; "/>
               <combobox id="cbVersion" readonly="true" width="250px" onSelect="winConcepts.onVersionChanged()"/>
               <button id="buttonDetailVersion" 
                       onClick="winConcepts.onDetailVersionClicked()" 
@@ -54,13 +54,20 @@
             </div>
           </div>
           
-          <groupbox id="searchContainer" mold="3d" width="100%" height="98px" visible="false"
+          <groupbox id="searchContainer" mold="3d" width="100%"  visible="false"
                     style="margin-top:8px; margin-bottom:4px; " closable="false">
-            <caption label="${labels.common.search}" >
-              <toolbar hflex="min" height="10px">
-                <toolbarbutton image="/rsc/img/design/close_16x16.png" onClick="winConcepts.onSwitchSearch()"/>
-              </toolbar>
+            <caption label="${labels.common.search}" width="100%" >
+<!--               <span id="arrow" class="open-true" />-->
             </caption>
+<!--            <caption label="${labels.common.search}">
+              <hbox>
+                <toolbar hflex="min" height="10px">
+                  <toolbarbutton image="/rsc/img/design/close_16x16.png" onClick="winConcepts.onSwitchSearch()"/>
+                </toolbar>
+                <label value="${labels.common.search}"/>
+              </hbox>
+              
+            </caption>-->
 
             <hbox style="margin-left: 4px; margin-top:4px; margin-bottom: 4px">
               <vbox>
@@ -81,7 +88,7 @@
               <div>
                 <button id="bSearch"  
                         label="${labels.popupSearch.startSearch}" 
-                        height="46px"
+                        height="100%"
                         onClick="winConcepts.onSearchClicked()"
                         image="/rsc/img/design/search_start_16x16.png"
                         autodisable="self"/> 
@@ -121,7 +128,7 @@
         <div width="100%" height="100%">
           
           <paging id="paging" visible="false" onPaging="winConcepts.onPaging(event)" />
-          <tree id="treeConcepts" vflex="true" width="100%" height="100%" zclass="z-tree" span="0" visible="true"
+          <tree id="treeConcepts" vflex="true" width="100%"  zclass="z-tree" span="0" visible="true"
                 onSelect="winConcepts.onConceptSelect(event)" 
                 onPaging="winConcepts.onPaging(event)">
             <treecols sizable="true">

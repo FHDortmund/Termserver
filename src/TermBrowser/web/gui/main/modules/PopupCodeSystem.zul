@@ -2,10 +2,11 @@
 
 <zk xmlns="http://www.zkoss.org/2005/zul">
   <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" root="./winCSDetails"?>
-  <window id="winCSDetails" use="de.fhdo.gui.main.modules.PopupCodeSystem" width="900px"
+  <window id="winCSDetails" use="de.fhdo.gui.main.modules.PopupCodeSystem" width="1000px"
+          height="90%"
           closable="true" border="normal" sizable="true" >
     
-    <borderlayout vflex="min">
+    <borderlayout height="100%">
       <center border="none" flex="true" vflex="min">
         <tabbox id="tabboxFilter" >
           <tabs>
@@ -14,28 +15,21 @@
             <tab id="tabTaxonomy" label="${labels.common.taxonomy}"/>
           </tabs>
           <tabpanels>
-            <tabpanel id="tabpanelDetails">
-              <div id="divId" align="right" style="float:right; margin-top:-24px;">
-                <hbox>
-                  <label style="color:grey;" value="ID: "></label>
-                  <label id="labelId" style="color:grey;" value="@{winCSDetails.codeSystem.id}"></label>
-                
-                  <div visible="@{winCSDetails.showVersion}">
-                    <label style="color:grey;" value=" | Version-ID: "></label>
-                    <label id="labelVersionId" style="color:grey;" value="@{winCSDetails.codeSystemVersion.versionId}"></label>
-                  </div>
-                </hbox>
-              </div>
+            <tabpanel id="tabpanelDetails" style="overflow:auto">
+              
             
-              <groupbox id="gbCS" mold="3d" width="100%" title="${labels.common.codeSystem}"
+              <groupbox id="gbCS" mold="3d" width="100%" 
                         closable="false" vflex="min">
-                <caption>
-                  <toolbar hflex="min">
-                    <hbox >
+                <caption style="margin-left:600px; align:right; margin: 0px;">
+                  <hbox>
+                    <div style="margin: 0px;">
                       <toolbarbutton id="buttonExpandCS" image="/rsc/img/symbols/expand_16x16.png"
                                      onClick="winCSDetails.onClickExpandCS()"/>
-                    </hbox>
-                  </toolbar>
+                    </div>
+                    <div style="margin-top: 10px;">
+                      <label value="${labels.common.codeSystem}" sclass="z-caption-content"/> 
+                    </div>
+                  </hbox>
                 </caption>
                 
                 <grid id="gridCS" hflex="true" height="100%" >
@@ -68,16 +62,28 @@
                 </grid>
               </groupbox>
               <separator/>
-              <groupbox id="gbVersion" mold="3d" width="100%" title="${labels.common.version}"
-                        closable="false" >
-                <caption>
+              <groupbox id="gbVersion" mold="3d" width="100%" 
+                        closable="false" style="margin-bottom: 24px;" >
+                <!--<caption>
                   <toolbar hflex="min">
                     <hbox>
                       <toolbarbutton id="buttonExpandCSV" image="/rsc/img/symbols/expand_16x16.png"
                                      onClick="winCSDetails.onClickExpandCSV()"/>
                     </hbox>
                   </toolbar>
+                </caption>-->
+                <caption style="margin-left:600px; align:right; margin: 0px;">
+                  <hbox>
+                    <div style="margin: 0px;">
+                      <toolbarbutton id="buttonExpandCSV" image="/rsc/img/symbols/expand_16x16.png"
+                                     onClick="winCSDetails.onClickExpandCSV()"/>
+                    </div>
+                    <div style="margin-top: 10px;">
+                      <label value="${labels.common.version}" sclass="z-caption-content"/> 
+                    </div>
+                  </hbox>
                 </caption>
+                
                 <grid hflex="true" height="100%" >
                   <columns sizable="true">
                     <column width="220px"/>
@@ -159,14 +165,29 @@
           </tabpanels>
         </tabbox>
       </center>
-      <south border="none" style="text-align:right">
-        <div style="padding-top:5px; margin-right:4px; margin-bottom:4px;">
-          <checkbox id="cbNewVersion" label="${labels.common.createNewVersion}" onCheck="cbCopyConcepts.visible=cbNewVersion.checked" /> 
-          <checkbox id="cbCopyConcepts" label="${labels.common.copyConcepts}" visible="false"/> 
-          <separator orient="vertical"/>
-          <button id="bCreate" label="${labels.common.save}" onClick="winCSDetails.onOkClicked()" autodisable="self"/>
-          <button id="bCancel" label="${labels.common.close}" onClick="winCSDetails.onCancelClicked()"/>
-        </div>         
+      <south border="none" style="text-align:right; padding-bottom: 4px; padding-top: 4px;">
+        <div>
+          <div align="left" style="float:left;" id="divEditButtons">
+            <div id="divId" style="margin-left:16px; margin-top:16px;">
+                <hbox>
+                  <label style="color:grey;" value="ID: "></label>
+                  <label id="labelId" style="color:grey;" value="@{winCSDetails.codeSystem.id}"></label>
+                
+                  <div visible="@{winCSDetails.showVersion}">
+                    <label style="color:grey;" value=" | Version-ID: "></label>
+                    <label id="labelVersionId" style="color:grey;" value="@{winCSDetails.codeSystemVersion.versionId}"></label>
+                  </div>
+                </hbox>
+              </div>
+          </div>
+          <div align="right" style="padding-top:5px; margin-right:12px; margin-bottom:4px;">
+            <checkbox id="cbNewVersion" label="${labels.common.createNewVersion}" onCheck="cbCopyConcepts.visible=cbNewVersion.checked" /> 
+            <checkbox id="cbCopyConcepts" label="${labels.common.copyConcepts}" visible="false"/> 
+            <separator orient="vertical"/>
+            <button id="bCreate" label="${labels.common.save}" onClick="winCSDetails.onOkClicked()" autodisable="self"/>
+            <button id="bCancel" label="${labels.common.close}" onClick="winCSDetails.onCancelClicked()"/>
+          </div>
+        </div>
       </south>
     </borderlayout>    
   </window>
