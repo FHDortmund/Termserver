@@ -8,3 +8,5 @@ src/TermAdmin/dist/
 /src/Client/SendBackTest/build/
 *.war
 *.sql
+/src/TermServer/target/
+/src/TermBrowser/TermBrowser/target/

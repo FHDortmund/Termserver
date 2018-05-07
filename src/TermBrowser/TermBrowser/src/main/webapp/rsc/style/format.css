@@ -1,0 +1,118 @@
+
+.header
+{
+  background:#EEEEEE;
+}
+
+.menubg
+{
+  background: #F6F6F6;
+  background-color: #F6F6F6;
+  /*border: 1px solid #606060;*/
+}
+
+.special-menubar 
+{
+  border: 1px solid #606060;
+  background: #EEEEEE;
+}
+.special-menubar .z-menubar-hor {
+  padding: 0px;
+  border-top: 0px;
+  border-bottom: 0px;
+  background: #EEEEEE;
+}
+
+.special-menubar .z-menubar-hor .z-menu,
+.special-menubar .z-menubar-hor .z-menu-btn,
+.special-menubar .z-menubar-hor .z-menuitem,
+.special-menubar .z-menubar-hor .z-menuitem-btn,
+.special-menubar .z-menubar-hor span
+.special-menubar .z-menubar-hor a,
+.special-menubar .z-menubar-hor div {
+  font-size: 1em;
+  color: #FFF;
+  height: 40px;
+  font-weight: bold;
+}
+
+.special-menubar .z-menubar-hor .z-menuitem {
+  padding: 0px;
+}
+
+.special-menubar .z-menu-body-text-img .z-menu-inner-m .z-menu-btn,
+.special-menubar .z-menu-body-img .z-menu-inner-m .z-menu-btn,
+.special-menubar .z-menuitem-body-text-img .z-menuitem-inner-m .z-menuitem-btn {
+  padding-left: 25px;
+}
+
+.special-menubar .z-menu-body-over .z-menu-inner-l,
+.special-menubar .z-menuitem-body-over .z-menuitem-inner-l,
+.special-menubar .z-menu-body-over .z-menu-inner-r,
+.special-menubar .z-menuitem-body-over .z-menuitem-inner-r,
+.special-menubar .z-menu-body-over .z-menu-inner-m,
+.special-menubar .z-menuitem-body-over .z-menuitem-inner-m,
+.special-menubar .z-menu-body-seld .z-menu-inner-l,
+.special-menubar .z-menu-body-seld .z-menu-inner-r,
+.special-menubar .z-menu-body-seld .z-menu-inner-m,
+.special-menupopup .z-menupopup-cnt .z-menuitem-over .z-menuitem-cl,
+.special-menupopup .z-menupopup-cnt .z-menuitem-over .z-menuitem-cr,
+.special-menupopup .z-menupopup-cnt .z-menuitem-over .z-menuitem-cm,
+.special-menupopup .z-menupopup-cnt .z-menu-over .z-menu-cl,
+.special-menupopup .z-menupopup-cnt .z-menu-over .z-menu-cr,
+.special-menupopup .z-menupopup-cnt .z-menu-over .z-menu-cm {
+  color: #FFF;
+  background-color: #BBB;
+  background-image: none;
+  height: 40px;
+}
+
+.special-menubar .z-label {
+  color: #FFF;
+  background-color: #BBB;
+  background-image: none;
+  height: 40px;
+}
+
+.cyan {background-image: none;background-color: cyan;}
+
+.special-menupopup .z-menupopup-cnt .z-menuitem,
+.special-menupopup .z-menupopup-cnt .z-menu a.z-menu-cnt,
+.special-menupopup .z-menupopup-cnt .z-menuitem a.z-menuitem-cnt {
+  display: block;
+  color: #FFF;
+  line-height: 40px;
+  outline: 0 none;
+  padding: 2px 21px 2px 3px;
+  white-space: nowrap;
+  
+}
+
+.special-menupopup .z-menupopup-cnt .z-menuitem,
+.special-menupopup .z-menupopup-cnt .z-menu a.z-menu-cnt {
+  background-color: #000;
+}
+
+.special-menupopup .z-menupopup-cnt .z-menu .z-menu-img,
+.special-menupopup .z-menupopup-cnt .z-menuitem .z-menuitem-img {
+  height: 40px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  margin-left: 2px;
+}
+.special-menupopup .z-menupopup-cnt .z-menu-over a.z-menu-cnt,
+.special-menupopup .z-menupopup-cnt .z-menuitem-over a.z-menuitem-cnt {
+  padding: 0px;
+}
+
+.mandatory
+{
+  background: #FFE0BB;
+}
+
+.headerTitle
+{
+  color: #606060;
+  font-size: 26px;
+}
+

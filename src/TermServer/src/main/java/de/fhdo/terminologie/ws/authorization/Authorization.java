@@ -155,6 +155,7 @@ public class Authorization
     }
   }
 
+  @WebMethod(operationName = "ChangePassword")
   public ChangePasswordResponseType ChangePassword(@WebParam(name = "parameter") List<String> parameterList)
   {
     //SecurityHelper.applyIPAdress(parameter.getLogin(), webServiceContext);

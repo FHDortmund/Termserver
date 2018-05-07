@@ -72,6 +72,7 @@ public class GetTermserverVersionResponseType
 //      prop.load(resourceAsStream);
       
 //      version = prop.getProperty("version");
+      version = "1.1.0";
       System.out.println("Implementation Version:" + version);
 
     }

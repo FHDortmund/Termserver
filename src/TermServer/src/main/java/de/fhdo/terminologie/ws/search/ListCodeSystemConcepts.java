@@ -234,7 +234,7 @@ public class ListCodeSystemConcepts
       {
         if (codeSystemVersionOid != null && codeSystemVersionOid.length() > 0)
         {
-          logger.debug("get csv-id from oid");
+          logger.debug("get csv-id from oid: " + codeSystemVersionOid);
           // get csv-id from oid (current version)
           String hql = "select distinct csv from CodeSystemVersion csv"
                   + " join csv.codeSystem cs"
@@ -251,6 +251,8 @@ public class ListCodeSystemConcepts
           }
           else
           {
+            logger.debug("Codesystem with given OID can't be found: " + codeSystemVersionOid);
+            
             response.setCodeSystemEntity(new LinkedList<CodeSystemEntity>());
             response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.WARN);
             response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
@@ -450,6 +452,9 @@ public class ListCodeSystemConcepts
 
           if (isHierachical)
             allEntries = true;
+          
+          logger.debug("isHierachical: " + isHierachical);
+          logger.debug("allEntries: " + allEntries);
 
           // MaxResults mit Wert aus SysParam prüfen
           if (traverseConceptsToRoot)
@@ -513,7 +518,9 @@ public class ListCodeSystemConcepts
           sql += sortStr;
 
           int anzahl = 0;
-          //logger.debug("SQL: " + sql);
+          logger.debug("sortStr: " + sortStr);
+          logger.debug("SQL: " + sql);
+          
           // Query erstellen
           SQLQuery q = hb_session.createSQLQuery(sql);
           q.addScalar("csc2.code", StandardBasicTypes.TEXT);  // Index: 0

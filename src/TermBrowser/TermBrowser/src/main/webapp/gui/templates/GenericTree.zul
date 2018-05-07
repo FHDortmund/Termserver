@@ -1,0 +1,118 @@
+<!--
+Generischer Baum. Diese zul-Datei sollte an der Stelle per include 
+eingebunden werden, wo die Liste angezeigt werden soll.
+
+Die Initialisierung des Baumes geschieht über GenericTree.java
+
+@author Robert Mützner <robert.muetzner@fh-dortmund.de>
+-->
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="winGenericTree" border="none" height="100%" 
+          use="de.fhdo.tree.GenericTree">
+
+    <borderlayout>
+      <north border="none">
+        <toolbar id="toolbarFilterCollapse" style="background:#F2F2F2; border: 1px solid #DDD;">
+          <hbox>
+            <div id="divRefresh" visible="false">
+              <toolbarbutton id="tbb_Refresh"
+                             image="/rsc/img/generictree/refresh_16x16.png"
+                             onClick="winGenericTree.refresh()" tooltiptext="Aktualisiert die Ansicht"/>
+            </div>
+
+            <div id="divExpandCollapse">
+              <toolbarbutton id="tbb_Expand"
+                             image="/rsc/img/generictree/expand_16x16.png"
+                             onClick="winGenericTree.expandTree()" tooltiptext="Klappt alle Einträge auf"/>
+              <toolbarbutton id="tbb_Collapse"
+                             image="/rsc/img/generictree/collapse_16x16.png" 
+                             onClick="winGenericTree.collapseTree()" tooltiptext="Klappt alle Einträge zusammen" />
+            </div>
+            
+            
+
+            <div id="divFilter" style="margin-bottom:0px;">
+              <hbox>
+                <separator orient="vertical" />
+                <image src="/rsc/img/generictree/filter_16x16.png" width="16px" height="16px" style="margin-top:8px;"/>
+                <textbox id="filter_classes" width="120px" 
+                         onChanging="winGenericTree.filterChanged(event)" />
+              </hbox>
+            </div>
+          </hbox>
+        </toolbar>
+      </north>
+      <center border="none">
+        
+        <tree id="generictree"
+              
+              width="100%"
+              vflex="true"
+              zclass="z-tree"
+              onSelect="winGenericTree.onTreeSelected(event)"
+             
+        >
+          <treecols id="treecols" sizable="true">
+            
+          </treecols>
+        </tree>
+     
+      </center>
+      <south  border="none" id="south">
+        <div style="padding-top:5px; padding-left: 0px;">
+          <div align="left" style="float:left;" id="divEditButtons">
+            <button id="buttonNew" label="Neu..." onClick="winGenericTree.onNew()" image="/rsc/img/generictree/add.png"
+                    autodisable="self" tooltiptext="Fügt einen neuen Eintrag der Liste hinzu..."
+                    disabled="@{winContent.standardNewDecline}" visible="false"/>
+            <button id="buttonEdit" label="Bearbeiten..." onClick="winGenericTree.onEdit()"
+                    image="/rsc/img/generictree/pencil.png"
+                    autodisable="self" tooltiptext="Bearbeitet den markierten Eintrag"
+                    disabled="true" visible="false"/>
+            <button id="buttonDelete" label="Löschen" onClick="winGenericTree.onDelete()"
+                    image="/rsc/img/generictree/delete.png" tooltiptext="Löscht den markierten Eintrag"
+                    disabled="true" visible="false"/>
+          </div>
+          
+          <div align="right">
+            <hbox>
+              <div id="divEditButtonsRight" style="margin-top:-2px;">
+              
+              </div>
+              <grid width="140px" style="margin-top:-8px;" visible="false" id="gridCount">
+                <foot>
+                  <footer id="footer_category" label=" "/>
+                </foot>
+              </grid>
+            </hbox>
+          </div>
+          <!--<div align="right">
+            <button id="buttonExport" label="Exportieren..." onClick="winStandards.onExport(event)" image="/rsc/img/symbols/export_16x16.png"
+            autodisable="self" disabled="true"/>
+          </div>-->
+        </div>
+      </south>
+    </borderlayout>
+    <menupopup id="treePopupItem">
+      <menuitem label="Neuer Untereintrag..." image="/rsc/img/design/add_16x16.png" onClick="winGenericTree.onNewSubentry()"/>
+      <menuseparator/>
+      <menuitem label="Eintrag bearbeiten..." image="/rsc/img/list/pencil.png" onClick="winGenericTree.onEdit()"/>
+      <menuitem label="Eintrag löschen" image="/rsc/img/list/delete.png" onClick="winGenericTree.onDelete()"/>
+    </menupopup>
+    
+    <!--<menupopup id="treePopupItem">
+      <menuitem label="Neuer Eintrag..." image="/rsc/img/design/add_16x16.png" onClick="winContent.navigationFrame.onNew()"/>
+      <menuseparator/>
+      <menuitem label="Eintrag bearbeiten..." image="/rsc/img/list/pencil.png" onClick="winContent.navigationFrame.onEdit()"/>
+      <menuitem label="Eintrag löschen" image="/rsc/img/list/delete.png" onClick="winContent.navigationFrame.onDelete()"/>
+    </menupopup>-->
+    
+    <!--<menupopup id="listPopup">
+      <menuitem label="Neuer Eintrag..." image="/rsc/img/design/add_16x16.png" onClick="winContent.navigationFrame.onNew()"/>
+      <menuseparator/>
+      <menuitem label="Eintrag bearbeiten..." image="/rsc/img/list/pencil.png" onClick="winContent.navigationFrame.onEdit()"/>
+      <menuitem label="Eintrag löschen" image="/rsc/img/list/delete.png" onClick="winContent.navigationFrame.onDelete()"/>
+    </menupopup>-->
+    
+  </window>
+</zk>

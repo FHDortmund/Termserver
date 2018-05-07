@@ -1,71 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-    <!--    <listener>
-        <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
-    </listener>
-    <servlet>
-        <servlet-name>Administration</servlet-name>
-        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
-        <servlet-name>Search</servlet-name>
-        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
-        <servlet-name>ConceptAssociations</servlet-name>
-        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
-        <servlet-name>Authorization</servlet-name>
-        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
-        <servlet-name>Authoring</servlet-name>
-        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
-        <servlet-name>ValueSetRepository_Service</servlet-name>
-        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
-        <servlet-name>SVS_ValueSetRepository</servlet-name>
-        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Administration</servlet-name>
-        <url-pattern>/Administration</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Search</servlet-name>
-        <url-pattern>/Search</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ConceptAssociations</servlet-name>
-        <url-pattern>/ConceptAssociations</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Authorization</servlet-name>
-        <url-pattern>/Authorization</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Authoring</servlet-name>
-        <url-pattern>/Authoring</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ValueSetRepository_Service</servlet-name>
-        <url-pattern>/ValueSetRepository_Service</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>SVS_ValueSetRepository</servlet-name>
-        <url-pattern>/SVS_ValueSetRepository</url-pattern>
-    </servlet-mapping>-->
     <listener>
         <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
     </listener>
@@ -122,6 +56,20 @@
     <servlet-mapping>
         <servlet-name>Authorization</servlet-name>
         <url-pattern>/Authorization</url-pattern>
+    </servlet-mapping>
+    <!-- REST Webservices -->
+    <servlet>
+        <servlet-name>Infobutton-Termserver</servlet-name>
+        <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>de.fhdo.mi.infobutton.service</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Infobutton-Termserver</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

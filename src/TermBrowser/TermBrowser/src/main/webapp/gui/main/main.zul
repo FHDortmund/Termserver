@@ -1,0 +1,62 @@
+<?page title="Terminologie-Browser" contentType="text/html;charset=UTF-8"?>
+<!--<?link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"?>-->
+<zk xmlns="http://www.zkoss.org/2005/zul">       
+  <style>            
+    span.z-tree-line, span.z-tree-ico{ 
+    display:block; 
+    float:left;
+    width:18px; 
+    }
+    .tree_item{ 
+    margin-left: 20px; 
+    margin-bottom:10px; 
+    }
+    .tree_sous_item{ 
+    margin-left: 40px; 
+    margin-bottom:10px;
+    } 
+        
+    .z-datebox-disd, .z-datebox-focus .z-datebox-disd {
+    opacity: 1;
+    -moz-opacity: 1;
+    filter: alpha(opacity=100);
+    }
+    .z-datebox-text-disd {
+    background-color: white;
+    color: black !important;
+    }   
+            
+    .z-combobox-disd, 
+    .z-combobox-focus .z-combobox-disd {
+    opacity: 1;
+    -moz-opacity: 1;
+    filter: alpha(opacity=100);
+    }
+    .z-combobox-text-disd {
+    background-color: white;
+    color: black !important;
+    } 
+            
+    .z-label{ color: black; }
+    <!--            tr.z-treerow:nth-child(even) {background: #F2F2F2} -->                       
+    <!--            tr.z-treerow-over { background: #AA0000; }           -->
+    <!--            tr.z-treerow-seld { background: #0000FF; }-->
+  </style>
+  <window border="none" height="100%" width="100%" >   
+   
+    <borderlayout>
+      <north id="blMainNorth">
+        <include src="../header/menu.zul" />
+      </north>
+            
+      <south id="blMainSouth" >
+        <include src="../header/statusBar.zul" />
+      </south> 
+                        
+      <!--muss ganz zum schluss stehe, da sonst auf north, south,etc, nicht zugegriffen werden kann-->
+      <center id="blMainCenter">
+        <include id="mainWindowCenter" src="./TreeAndContent.zul" moder="defer"/>
+      </center>    
+    </borderlayout>
+  </window>
+</zk>

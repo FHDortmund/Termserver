@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<zk xmlns="http://www.zkoss.org/2005/zul">
+  <window id="winConcepts" border="none" height="100%" width="100%" use="de.fhdo.gui.main.content.ContentConcepts"
+          ctrlKeys="^f" onCtrlKey="winConcepts.onSwitchSearch()" >
+    <borderlayout vflex="true">
+      <!-- specifies information about the cs/vs, defines filter, ... -->
+      <north border="0" flex="true" vflex="min">
+        <div style="margin-top:8px; margin-bottom:8px; ">
+          <div id="divVersion" style="margin-left: 8px; margin-right:8px;">
+            <div align="left" style="float:left; margin-bottom: 4px;">
+              <label value="${labels.common.version}: " style="font-size: 16px;"/>
+              <combobox id="cbVersion" readonly="true" width="250px" onSelect="winConcepts.onVersionChanged()"/>
+              <button id="buttonDetailVersion" 
+                      onClick="winConcepts.onDetailVersionClicked()" 
+                      image="/rsc/img/list/magnifier.png" 
+                      tooltiptext="${labels.common.details}"
+                      autodisable="self"
+                      disabled="false"/>
+              <button id="buttonNewVersion" 
+                      onClick="winConcepts.onNewVersionClicked()" 
+                      image="/rsc/img/design/add_16x16.png"    
+                      visible="false" />
+              <button id="buttonEditVersion" 
+                      onClick="winConcepts.onEditVersionClicked()" 
+                      image="/rsc/img/design/edit_16x16.png" 
+                      autodisable="self"
+                      visible="false" 
+                      disabled="false"/>
+              <button id="buttonDeleteVersion" 
+                      onClick="winConcepts.onDeleteVersionClicked()" 
+                      image="/rsc/img/design/delete_16x16.png" 
+                      autodisable="self"
+                      visible="false" 
+                      disabled="false"/>
+              
+              <label id="valueSelectedLanguage" value="${labels.common.selectedLanguage}: "/>
+              <label id="labelSelectedLanguage" value="-"/>
+            </div>
+          
+            <div align="right">
+              <button id="buttonExport" 
+                      label="${labels.treeitemRenderer_CS_VS_DV.exportCodeSystemVersion}..."
+                      onClick="winConcepts.onExportClicked()" 
+                      image="/rsc/img/design/export_16x16.png" 
+                      autodisable="self"
+              />
+              <button id="buttonSearch" 
+                      label="${labels.common.search}"
+                      onClick="winConcepts.onSwitchSearch()" 
+                      image="/rsc/img/design/search_16x16.png" 
+                      autodisable="self"
+              />
+            </div>
+          </div>
+          
+          <groupbox id="searchContainer" mold="3d" width="100%"  visible="false"
+                    style="margin-top:8px; margin-bottom:4px; " closable="false">
+            <caption label="${labels.common.search}" width="100%" >
+<!--               <span id="arrow" class="open-true" />-->
+            </caption>
+<!--            <caption label="${labels.common.search}">
+              <hbox>
+                <toolbar hflex="min" height="10px">
+                  <toolbarbutton image="/rsc/img/design/close_16x16.png" onClick="winConcepts.onSwitchSearch()"/>
+                </toolbar>
+                <label value="${labels.common.search}"/>
+              </hbox>
+              
+            </caption>-->
+
+            <hbox style="margin-left: 4px; margin-top:4px; margin-bottom: 4px">
+              <vbox>
+                <hbox>
+                  <div width="60px" style="margin-top:3px;">
+                    <label value="${labels.common.term}:" width="100px"/>
+                  </div>
+                  <textbox id="tbSearchTerm" width="200px" focus="true" onOK="winConcepts.onSearchClicked()"/>
+                </hbox>
+                <hbox>
+                  <div width="60px" style="margin-top:3px;">
+                    <label value="${labels.common.code}:" width="100px"/> 
+                  </div>
+                  <textbox id="tbSearchCode" width="200px" maxlength="99" onOK="winConcepts.onSearchClicked()"/>
+                </hbox>
+              </vbox>
+              
+              <div>
+                <button id="bSearch"  
+                        label="${labels.popupSearch.startSearch}" 
+                        height="100%"
+                        onClick="winConcepts.onSearchClicked()"
+                        image="/rsc/img/design/search_start_16x16.png"
+                        autodisable="self"/> 
+              </div>
+              
+              
+              <div>
+                <label id="lHitsPerPage" value="${labels.popupSearch.hitsPerPage}:" style="margin-left:4px;"/>
+                <!--<label value=":"/>--> 
+                <textbox id="tbHitsPerPage" width="30px" value="@{pagingType.pageSize}"/>
+                <separator /> 
+                <checkbox id ="cbShowHierachyDetails" 
+                          label="${labels.popupSearch.showHierachyDetails}" 
+                          disabled="false" 
+                          checked="@{searchType.traverseConceptsToRoot}" 
+                          value="@{searchType.traverseConceptsToRoot}" /> 
+              </div>
+              
+              <div style="margin-top:-6px; margin-left:8px;">
+                <radiogroup id="rgPreferred" orient="vertical">
+                  <radio label="${labels.popupSearch.onlyPreferredTerms}" value="true" selected="true"/>
+                  <radio label="${labels.popupSearch.onlyNonPreferredTerms}" value="false"/>
+                  <radio label="${labels.popupSearch.showAllTerms}" value ="nomatter" />
+                </radiogroup> 
+              </div>
+             
+            </hbox>
+          
+          </groupbox>
+        </div>
+
+        
+          
+     
+      </north>
+      <center border="0" flex="false" vflex="true">
+        <div width="100%" height="100%">
+          
+          <paging id="paging" visible="false" onPaging="winConcepts.onPaging(event)" />
+          <tree id="treeConcepts" vflex="true" width="100%"  zclass="z-tree" span="0" visible="true"
+                onSelect="winConcepts.onConceptSelect(event)" 
+                onPaging="winConcepts.onPaging(event)">
+            <treecols sizable="true">
+              <treecol label="${labels.common.designation}" id="tcTerm" hflex="min" />
+              <treecol label="${labels.common.translation}" id="treecolTranslation" hflex="min" visible="false" />
+              <treecol label="${labels.common.code}" id="tcCode" width="180px" sortDirection="ascending" />
+              <treecol label="${labels.common.details}" id="tcDetails" width="80px" />
+              <treecol label="${labels.common.source}" id="treecolSource" hflex="min" visible="false" />
+            </treecols>
+          </tree>
+          
+          
+          <hbox id="message" visible="false" style="margin-left: 8px; margin-top:8px; margin-bottom:8px;">
+            <image src="/rsc/img/design/warning_32x32.png"/>
+            <div style="margin-left: 8px; margin-top:8px;">
+              <label id="labelMessage" value="" />
+            </div>
+          </hbox>
+          
+        </div>
+      </center>
+      <south border="0">
+        <div style="padding-top:5px; padding-left: 0px; ">
+          <div align="left" style="float:left; margin-bottom: 4px;">
+            <!--            <button id="bAssume" label="${labels.common.assumeConcept}" onClick="windowConcepts.assumeConcept()" 
+            visible="false" />-->
+                      
+            <!-- Kollaboration -->
+            <!--            <button id="bProposeNewConcept" label="${labels.collab.proposeNewConcept}" onClick="windowConcepts.proposeNewConcept()" 
+            visible="{windowConcepts.isCollaboration}" />-->
+            <!-- Kollaboration Ende -->
+            <button id="buttonNew" 
+                    label="${labels.contentConcepts.newRootConcept}"
+                    onClick="winConcepts.onNewClicked()" 
+                    image="/rsc/img/design/add_16x16.png"    
+                    visible="false" />
+            <button id="buttonNewSub" 
+                    label="${labels.popupConcept.createSubconcept}"
+                    onClick="winConcepts.onNewSubClicked()" 
+                    image="/rsc/img/design/add_16x16.png"    
+                    visible="false" />
+            <button id="buttonEdit" 
+                    label="${labels.common.edit}"
+                    onClick="winConcepts.onEditClicked()" 
+                    image="/rsc/img/list/pencil.png" 
+                    visible="false" 
+                    disabled="true"/>
+            <button id="buttonDelete" 
+                    label="${labels.common.delete}"
+                    onClick="winConcepts.onDeleteClicked()" 
+                    image="/rsc/img/list/delete.png" 
+                    visible="false" 
+                    disabled="true"/>
+            <!--            <button id="bSearch" 
+            label="${labels.common.search}" 
+            onClick="winConcepts.showPopupConceptSearch()"
+            image="/rsc/img/list/folder_magnify.png"/>-->
+            <button id="buttonDetails"
+                    label="${labels.common.details}" 
+                    onClick="winConcepts.onDetailsClicked()" 
+                    image="/rsc/img/list/magnifier.png"
+                    disabled="true"/>
+            
+            <button id="buttonAssumeConcept"
+                    visible="false"
+                    label="${labels.common.assumeConcept}" 
+                    onClick="winConcepts.onAssumeConcept()" 
+                    disabled="true"/>
+            
+            <div id="divCollaboration" style="float:right; margin-left:12px;" visible="false">
+              <!--<separator orient="vertical" bar="true"/>-->
+              
+              <button id="buttonCollabNew" 
+                      label="${labels.collab.proposeNewConcept}"
+                      onClick="winConcepts.onCollabNewClicked()" 
+                      image="/rsc/img/design/add_16x16.png"    
+              />
+              <button id="buttonCollabNewSub" 
+                      label="${labels.collab.proposeNewSubConcept}"
+                      onClick="winConcepts.onCollabNewSubClicked()" 
+                      image="/rsc/img/design/add_16x16.png"    
+              />
+              <button id="buttonCollabEdit" 
+                      label="${labels.collab.proposeToExistingEntry}"
+                      onClick="winConcepts.onCollabEditClicked()" 
+                      image="/rsc/img/list/pencil.png"
+              />
+              <button id="buttonCollabDelete" 
+                      label="${labels.collab.deleteConcept}"
+                      onClick="winConcepts.onCollabDeletedClicked()" 
+                      image="/rsc/img/list/delete.png"
+              />
+              
+            </div>
+          </div>
+          <div align="right">
+            <!--            <button id="buttonDeleteVersion"
+            label="${labels.common.deleteVersion}" 
+            onClick="winConcepts.onDeleteClicked()" 
+            image="/rsc/img/symbols/delete_12x12.png"
+            disabled="false"/>-->
+            <div id="languageSelection" visible="false">
+              <button id="buttonEng"
+                      label="English" 
+                      image="/rsc/img/list/magnifier.png"
+              />
+            </div>
+            
+            <!--            <label value="${labels.contentConcepts.moreFunctions}" style="color:gray"/>
+            <button id="bNew" label="${labels.contentConcepts.newConcept}" onClick="windowConcepts.onClickedNewRootConcept()" image="/rsc/img/design/add_16x16.png"    visible="false" />
+            <button id="bEdit" label="${labels.common.edit}" onClick="windowConcepts.onClickedEditConcept()" image="/rsc/img/list/pencil.png" visible="false" disabled="true"/>
+            <button id="bSearch" label="${labels.common.search}" onClick="windowConcepts.showPopupConceptSearch()" image="/rsc/img/list/folder_magnify.png"/>
+            <button id="bDetails" label="${labels.common.details}" onClick="windowConcepts.onClickedShowConcept()" image="/rsc/img/list/magnifier.png"              disabled="true"/>             -->
+          </div>
+        </div>
+      </south>
+    </borderlayout>
+  </window>
+</zk>
