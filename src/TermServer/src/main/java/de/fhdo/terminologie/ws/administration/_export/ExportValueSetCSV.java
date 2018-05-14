@@ -212,7 +212,7 @@ public class ExportValueSetCSV
                   CodeSystemConcept csc = csev.getCodeSystemConcepts().iterator().next();
 
                   if (logger.isDebugEnabled())
-                    logger.debug("Schreibe Code: " + csc.getCode());
+                    logger.debug("Schreibe Code VS CSV: " + csc.getCode());
 
                   if (csc.getCode() != null)
                   {

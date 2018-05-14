@@ -84,14 +84,16 @@ public class RetrieveValueSet
       ReturnValueSetDetails rcsd = new ReturnValueSetDetails();
       ReturnValueSetDetailsResponseType responseValueSetDetails = rcsd.ReturnValueSetDetails(requestValueSetDetails, "");
 
-      logger.debug("Response: " + responseValueSetDetails.getReturnInfos().getMessage());
+      logger.debug("Response: " + responseValueSetDetails.getReturnInfos().getMessage() + ", Status: " + responseValueSetDetails.getReturnInfos().getStatus());
 
       if (responseValueSetDetails.getReturnInfos().getStatus() == ReturnType.Status.OK)
       {
+        logger.debug("responseValueSetDetails.getValueSet(): " + responseValueSetDetails.getValueSet());
         if (responseValueSetDetails.getValueSet() != null)
         {
           for (ValueSetVersion vsv_ws : responseValueSetDetails.getValueSet().getValueSetVersions())
           {
+            logger.debug("vsv_ws.getOid(): " + vsv_ws.getOid() + ", id: " + vsv_ws.getVersionId());
             if (vsv_ws.getOid() != null && vsv_ws.getOid().equalsIgnoreCase(id))
             {
               vsv = vsv_ws;

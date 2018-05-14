@@ -201,7 +201,7 @@ public class ExportCodeSystemSVS
                     CodeSystemConcept csc = csev.getCodeSystemConcepts().iterator().next();
                     if(csev.getStatusVisibility() == 1){
                         if(logger.isDebugEnabled())
-                          logger.debug("Schreibe Code: " + csc.getCode());
+                          logger.debug("Schreibe Code SVS: " + csc.getCode());
 
                         
                         xmlsw.writeStartElement("concept");

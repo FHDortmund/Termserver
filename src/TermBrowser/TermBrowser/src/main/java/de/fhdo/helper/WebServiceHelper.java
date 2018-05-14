@@ -160,6 +160,7 @@ public class WebServiceHelper
     }
     catch (Exception ex)
     {
+      LoggingOutput.outputException(ex,  "exportCodeSystemContent-Fehler");
       Logger.getLogger(WebServiceHelper.class.getName()).log(Level.SEVERE, null, ex);
 
       // Standard Service ?ffnen

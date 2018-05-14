@@ -270,7 +270,7 @@ public class ExportValueSetSVS
                   CodeSystemConcept csc = csev.getCodeSystemConcepts().iterator().next();
 
                   if (logger.isDebugEnabled())
-                    logger.debug("Schreibe Code: " + csc.getCode());
+                    logger.debug("Schreibe Code SVS: " + csc.getCode());
 
                   Element concept = doc.createElement("concept");
 

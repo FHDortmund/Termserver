@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <zk xmlns="http://www.zkoss.org/2005/zul">
-  <window apply="de.fhdo.gui.main.modules.PopupExport" width="550px" vflex="min" 
+  <window apply="de.fhdo.gui.main.modules.PopupExport" width="600px" height="350px"
           closable="true" border="normal" position="center,center"
           title="Export">
-    <borderlayout vflex="min">
-      <center border="none" vflex="min">
+    <borderlayout>
+      <center border="none">
         <grid width="100%" height="100%" >
           <columns sizable="true">
-            <column width="175px"/>
+            <column hflex="min"/>
             <column/>
           </columns>
           <rows> 
@@ -34,7 +34,7 @@
           </rows>
         </grid> 
       </center>
-      <south border="none" vflex="min" style="text-align:right">
+      <south border="none" style="text-align:right">
         <div style="padding-top:5px; padding-right:8px; padding-bottom:4px;">
           <button id="bExport" label="Exportieren" autodisable="self"/>
           <button id="bClose" label="${labels.common.close}" autodisable="self" />

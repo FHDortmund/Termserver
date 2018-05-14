@@ -18,6 +18,7 @@ package de.fhdo.terminologie.ws.administration._export;
 
 import com.csvreader.CsvWriter;
 import de.fhdo.logging.Logger4j;
+import de.fhdo.logging.LoggingOutput;
 import de.fhdo.terminologie.db.HibernateUtil;
 
 import de.fhdo.terminologie.db.hibernate.CodeSystemConcept;
@@ -101,43 +102,42 @@ public class ExportCSV
       {
         //Request-Parameter für ReturnCodeSystemDetails erstellen
         if (logger.isInfoEnabled())
-          logger.info("[ExportCSV] Erstelle Request-Parameter für ReturnCodeSystemDetails");
+          logger.info("[ExportCSV] Erstelle Request-Parameter für ReturnCodeSystemDetails - Administration");
 
         ReturnCodeSystemDetailsRequestType requestCodeSystemDetails = new ReturnCodeSystemDetailsRequestType();
         requestCodeSystemDetails.setCodeSystem(parameter.getCodeSystem());
-        if(requestCodeSystemDetails.getCodeSystem() != null && requestCodeSystemDetails.getCodeSystem().getCodeSystemVersions() != null)
+        if (requestCodeSystemDetails.getCodeSystem() != null && requestCodeSystemDetails.getCodeSystem().getCodeSystemVersions() != null)
           requestCodeSystemDetails.getCodeSystem().getCodeSystemVersions().add((CodeSystemVersion) parameter.getCodeSystem().getCodeSystemVersions().toArray()[0]);
         requestCodeSystemDetails.setLoginToken(parameter.getLoginToken());
 
         //CodeSystemDetails abrufen
-        ReturnCodeSystemDetails rcsd = new ReturnCodeSystemDetails();
-        ReturnCodeSystemDetailsResponseType responseCodeSystemDetails = rcsd.ReturnCodeSystemDetails(requestCodeSystemDetails, "");
-        if (logger.isInfoEnabled())
-          logger.info("[ExportCSV] ReturnCodeSystemDetails abgerufen");
+        //ReturnCodeSystemDetails rcsd = new ReturnCodeSystemDetails();
+        //ReturnCodeSystemDetailsResponseType responseCodeSystemDetails = rcsd.ReturnCodeSystemDetails(requestCodeSystemDetails, "");
+        //if (logger.isInfoEnabled())
+        //  logger.info("[ExportCSV] ReturnCodeSystemDetails abgerufen");
 
         /*if (parameter.getExportInfos().isUpdateCheck())
-        {
-          if (responseCodeSystemDetails.getReturnInfos().getStatus() == Status.OK
-                  && responseCodeSystemDetails.getCodeSystem() != null)
-          {
-            if (!responseCodeSystemDetails.getCodeSystem().getCurrentVersionId().equals(((CodeSystemVersion) parameter.getCodeSystem().getCodeSystemVersions().toArray()[0]).getVersionId()))
-            {
-              ((CodeSystemVersion) parameter.getCodeSystem().getCodeSystemVersions().toArray()[0]).setVersionId(responseCodeSystemDetails.getCodeSystem().getCurrentVersionId());
+         {
+         if (responseCodeSystemDetails.getReturnInfos().getStatus() == Status.OK
+         && responseCodeSystemDetails.getCodeSystem() != null)
+         {
+         if (!responseCodeSystemDetails.getCodeSystem().getCurrentVersionId().equals(((CodeSystemVersion) parameter.getCodeSystem().getCodeSystemVersions().toArray()[0]).getVersionId()))
+         {
+         ((CodeSystemVersion) parameter.getCodeSystem().getCodeSystemVersions().toArray()[0]).setVersionId(responseCodeSystemDetails.getCodeSystem().getCurrentVersionId());
 
-              requestCodeSystemDetails = new ReturnCodeSystemDetailsRequestType();
-              requestCodeSystemDetails.setCodeSystem(parameter.getCodeSystem());
-              requestCodeSystemDetails.getCodeSystem().getCodeSystemVersions().add((CodeSystemVersion) parameter.getCodeSystem().getCodeSystemVersions().toArray()[0]);
-              requestCodeSystemDetails.setLoginToken(parameter.getLoginToken());
+         requestCodeSystemDetails = new ReturnCodeSystemDetailsRequestType();
+         requestCodeSystemDetails.setCodeSystem(parameter.getCodeSystem());
+         requestCodeSystemDetails.getCodeSystem().getCodeSystemVersions().add((CodeSystemVersion) parameter.getCodeSystem().getCodeSystemVersions().toArray()[0]);
+         requestCodeSystemDetails.setLoginToken(parameter.getLoginToken());
 
-              //CodeSystemDetails abrufen
-              rcsd = new ReturnCodeSystemDetails();
-              responseCodeSystemDetails = rcsd.ReturnCodeSystemDetails(requestCodeSystemDetails, "");
-              if (logger.isInfoEnabled())
-                logger.info("[ExportCSV] ReturnCodeSystemDetails abgerufen");
-            }
-          }
-        }*/
-
+         //CodeSystemDetails abrufen
+         rcsd = new ReturnCodeSystemDetails();
+         responseCodeSystemDetails = rcsd.ReturnCodeSystemDetails(requestCodeSystemDetails, "");
+         if (logger.isInfoEnabled())
+         logger.info("[ExportCSV] ReturnCodeSystemDetails abgerufen");
+         }
+         }
+         }*/
         //Request-Parameter für ListCodeSystemConcepts erstellen
         if (logger.isInfoEnabled())
           logger.info("[ExportCSV] Erstelle Request-Parameter für ListCodeSystemConcepts");
@@ -215,7 +215,7 @@ public class ExportCSV
           // Datum für Synchronisation hinzufügen
           hqlC += " and csev.statusVisibilityDate>:dateFrom";
         }
-        
+
         org.hibernate.Query qC = hb_session.createQuery(hqlC);
         qC.setLong("versionId", parameter.getCodeSystem().getCodeSystemVersions().iterator().next().getVersionId());
 
@@ -237,69 +237,70 @@ public class ExportCSV
             if (cse.getCurrentVersionId().longValue() == csev.getVersionId().longValue())
             {
 
-                CodeSystemConcept csc = csev.getCodeSystemConcepts().iterator().next();
-                if(csev.getStatusVisibility() == 1){
-                    if(logger.isDebugEnabled())
-                      logger.debug("Schreibe Code: " + csc.getCode());
-                    CodeSystemVersionEntityMembership member = cse.getCodeSystemVersionEntityMemberships().iterator().next();
-                    writeEntry(csv, 0, csev, member, null, csversion);
-               }
-            }
-          }
-        }
-        
-        /*
-        for (CodeSystemEntity cse : cselist)//responseListCodeSystemConcepts.getCodeSystemEntity())
-        {
-          CodeSystemVersionEntityMembership member = cse.getCodeSystemVersionEntityMemberships().iterator().next();
-          boolean isAxis = false;
-          boolean isMainClass = false;
-          if (member.getIsAxis() != null)
-            isAxis = member.getIsAxis().booleanValue();
-          if (member.getIsMainClass() != null)
-            isMainClass = member.getIsMainClass().booleanValue();
-
-          if (isAxis || isMainClass)
-          {
-            countRoot++;
-
-            for (CodeSystemEntityVersion csev : cse.getCodeSystemEntityVersions())
-            {
-              // Nur aktuellste Version exportieren
-              if (cse.getCurrentVersionId().longValue() == csev.getVersionId().longValue())
+              CodeSystemConcept csc = csev.getCodeSystemConcepts().iterator().next();
+              if (csev.getStatusVisibility() == 1)
               {
+                if (logger.isDebugEnabled())
+                  logger.debug("[1] Schreibe Code: " + csc.getCode());
+                CodeSystemVersionEntityMembership member = cse.getCodeSystemVersionEntityMemberships().iterator().next();
                 writeEntry(csv, 0, csev, member, null, csversion);
-
-                // TODO Beziehungen ausgeben
-                for (CodeSystemEntityVersionAssociation assChild : csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1())
-                {
-                  if (assChild.getCodeSystemEntityVersionByCodeSystemEntityVersionId2() != null)
-                  {
-                    long childId = assChild.getCodeSystemEntityVersionByCodeSystemEntityVersionId2().getVersionId();
-                    exportChild(csv, 1, childId, cselist, csev, csversion);
-                  }
-                }
               }
             }
           }
         }
 
-        if (countRoot == 0)
-        {
-          // Flaches Vokabular, einfach alle Einträge exportieren
-          for (CodeSystemEntity cse : cselist)
-          {
-            for (CodeSystemEntityVersion csev : cse.getCodeSystemEntityVersions())
-            {
-              // Nur aktuellste Version exportieren
-              if (cse.getCurrentVersionId().longValue() == csev.getVersionId().longValue())
-              {
-                writeEntry(csv, 0, csev, null, null, csversion);
-              }
-            }
-          }
-        }
-        */
+        /*
+         for (CodeSystemEntity cse : cselist)//responseListCodeSystemConcepts.getCodeSystemEntity())
+         {
+         CodeSystemVersionEntityMembership member = cse.getCodeSystemVersionEntityMemberships().iterator().next();
+         boolean isAxis = false;
+         boolean isMainClass = false;
+         if (member.getIsAxis() != null)
+         isAxis = member.getIsAxis().booleanValue();
+         if (member.getIsMainClass() != null)
+         isMainClass = member.getIsMainClass().booleanValue();
+
+         if (isAxis || isMainClass)
+         {
+         countRoot++;
+
+         for (CodeSystemEntityVersion csev : cse.getCodeSystemEntityVersions())
+         {
+         // Nur aktuellste Version exportieren
+         if (cse.getCurrentVersionId().longValue() == csev.getVersionId().longValue())
+         {
+         writeEntry(csv, 0, csev, member, null, csversion);
+
+         // TODO Beziehungen ausgeben
+         for (CodeSystemEntityVersionAssociation assChild : csev.getCodeSystemEntityVersionAssociationsForCodeSystemEntityVersionId1())
+         {
+         if (assChild.getCodeSystemEntityVersionByCodeSystemEntityVersionId2() != null)
+         {
+         long childId = assChild.getCodeSystemEntityVersionByCodeSystemEntityVersionId2().getVersionId();
+         exportChild(csv, 1, childId, cselist, csev, csversion);
+         }
+         }
+         }
+         }
+         }
+         }
+
+         if (countRoot == 0)
+         {
+         // Flaches Vokabular, einfach alle Einträge exportieren
+         for (CodeSystemEntity cse : cselist)
+         {
+         for (CodeSystemEntityVersion csev : cse.getCodeSystemEntityVersions())
+         {
+         // Nur aktuellste Version exportieren
+         if (cse.getCurrentVersionId().longValue() == csev.getVersionId().longValue())
+         {
+         writeEntry(csv, 0, csev, null, null, csversion);
+         }
+         }
+         }
+         }
+         */
         /*Iterator<CodeSystemEntity> it_CSE = responseListCodeSystemConcepts.getCodeSystemEntity().iterator();
 
          while (it_CSE.hasNext())
@@ -377,7 +378,6 @@ public class ExportCSV
         //ENDE CSV-Inhalt erstellen
         //Sort
         //Collections.sort(entryList, new AlphanumComparator());
-
         for (Entry e : entryList)
         {
           writeCsvEntry(csv, e.level, e.csev, e.csevParent, e.csv);
@@ -389,15 +389,18 @@ public class ExportCSV
       }
       catch (Exception ex)
       {
-        ex.printStackTrace();
-        logger.error(ex.getMessage());
+        
+        logger.error("[100] Fehler beim Erstellen des Exports!", ex);
+        //LoggingOutput.outputException(ex, "Fehler beim Erstellen des Exports!");
+        //ex.printStackTrace();
+        //logger.error(ex.getMessage());
         s = "Fehler: " + ex.getLocalizedMessage();
       }
 
       //CSV-Datei schliessen
       csv.close();
-      //if (logger.isInfoEnabled())
-      //  logger.info("[ExportCSV] CSV-Datei geschrieben. Dateipfad: " + csv_output_url);
+      if (logger.isInfoEnabled())
+        logger.info("[ExportCSV] CSV-Datei erstellt, count: " + countExported);
 
       if (countExported > 0)
       {
@@ -412,11 +415,18 @@ public class ExportCSV
          if (logger.isInfoEnabled())
          logger.info("[ExportCSV] CSV-Datei in byte[] umgewandelt. (filecontent) ");*/
         //Filecontent setzen
+        logger.debug("set filecontent...");
         exportType.setFilecontent(bos.toByteArray());
+        logger.debug("... ok");
+        
+        
+        
         //Export-URL setzen
         //exportType.setUrl(csv_output_url);
         exportType.setUrl("");
         reponse.getReturnInfos().setMessage("Export abgeschlossen. " + countExported + " Konzepte exportiert.");
+        
+        logger.debug("Return message: " + reponse.getReturnInfos().getMessage());
       }
       else
       {
@@ -433,8 +443,9 @@ public class ExportCSV
     }
     catch (Exception ex)
     {
+      logger.error("Error at ExportCSV.", ex);
       s = "Fehler: " + ex.getLocalizedMessage();
-      ex.printStackTrace();
+      //ex.printStackTrace();
     }
 
     //hb_session.getTransaction().commit();
@@ -443,7 +454,7 @@ public class ExportCSV
   }
 
   private void exportChild(CsvWriter csv, int level, long childEntityVersionId,
-          List<CodeSystemEntity> entityList, CodeSystemEntityVersion parent, CodeSystemVersion csversion) throws Exception
+                           List<CodeSystemEntity> entityList, CodeSystemEntityVersion parent, CodeSystemVersion csversion) throws Exception
   {
     for (CodeSystemEntity cse : entityList)
     {
@@ -481,7 +492,7 @@ public class ExportCSV
   }
 
   private void writeEntry(CsvWriter csv, int level, CodeSystemEntityVersion csev,
-          CodeSystemVersionEntityMembership member, CodeSystemEntityVersion csevParent, CodeSystemVersion csversion)
+                          CodeSystemVersionEntityMembership member, CodeSystemEntityVersion csevParent, CodeSystemVersion csversion)
   {
     Entry e = new Entry();
     e.setCsev(csev);
@@ -492,38 +503,50 @@ public class ExportCSV
     entryList.add(e);
   }
 
+  private void writeCsvField(CsvWriter csv, Object obj) throws Exception
+  {
+    if(obj != null)
+      logger.debug("writeCsvField, obj: " + obj.toString());
+    else logger.debug("writeCsvField, obj: null");
+    
+    if (obj == null)
+      csv.write("");
+    else
+      csv.write(obj.toString());
+  }
+
   private void writeCsvEntry(CsvWriter csv, int level, CodeSystemEntityVersion csev, CodeSystemEntityVersion csevParent, CodeSystemVersion csversion) throws Exception
   {
 
     CodeSystemConcept csc = csev.getCodeSystemConcepts().iterator().next();
     if (csev.getStatusVisibility() == 1)
     {
-      logger.debug("Schreibe Code: " + csc.getCode());
+      logger.debug("Schreibe Code Entry: " + csc.getCode());
 
-      csv.write(csc.getCode());
-      csv.write(csversion.getOid());
-      csv.write(csc.getTerm());
+      //csv.write(csc.getCode());
+      writeCsvField(csv, csc.getCode());
+      writeCsvField(csv, csversion != null ? csversion.getOid() : "");
+
+      writeCsvField(csv, csc.getTerm());
+      //csv.write(csc.getTerm());
+
       if (csevParent != null && csevParent.getCodeSystemConcepts() != null && !csevParent.getCodeSystemConcepts().isEmpty())
       {
-        csv.write(csevParent.getCodeSystemConcepts().iterator().next().getCode());
+        writeCsvField(csv, csevParent.getCodeSystemConcepts().iterator().next().getCode());
+        // csv.write(csevParent.getCodeSystemConcepts().iterator().next().getCode());
       }
       else
       {
         csv.write("");
       }
-      csv.write(csc.getDescription());
-      csv.write(csc.getMeaning());
-      csv.write(csc.getHints());
+      // csv.write(csc.getDescription());
+      // csv.write(csc.getMeaning());
+      // csv.write(csc.getHints());
 
-      /*
-       //Get vsmv for csev/cvsm
-       String hqlM = "select distinct csmv from CodeSystemMetadataValue csmv join csmv.metadataParameter mp join csmv.codeSystemEntityVersion csev"
-       + " where csev.versionId=:versionId";
+      writeCsvField(csv, csc.getDescription());
+      writeCsvField(csv, csc.getMeaning());
+      writeCsvField(csv, csc.getHints());
 
-       org.hibernate.Query qM = hb_session.createQuery(hqlM);
-       qM.setLong("versionId", csev.getVersionId());
-       List<CodeSystemMetadataValue> csmvList = qM.list();
-       */
       Set<CodeSystemMetadataValue> csmvList = csev.getCodeSystemMetadataValues();
       for (int i = 0; i < paramList.size(); i++)
       {
@@ -541,7 +564,8 @@ public class ExportCSV
 
         if (csmv != null && csmv.getParameterValue() != null)
         {
-          csv.write(csmv.getParameterValue());
+          writeCsvField(csv, csmv.getParameterValue());
+          //csv.write(csmv.getParameterValue());
         }
         else
         {
@@ -551,39 +575,13 @@ public class ExportCSV
 
       if (!levelExists)
       {
-        csv.write(formatOutput(level));
+        writeCsvField(csv, formatOutput(level));
+        //csv.write(formatOutput(level));
       }
 
-      /*
-       if (member != null)
-       {
-       if (member.getIsAxis() != null && member.getIsAxis().booleanValue())
-       csv.write("1");
-       else
-       csv.write("0");
-
-       if (member.getIsMainClass() != null && member.getIsMainClass().booleanValue())
-       csv.write("1");
-       else
-       csv.write("0");
-       }
-       else
-       {
-       csv.write("0");
-       csv.write("0");
-       }
-
-       if (csevParent == null)
-       {
-       csv.write("");
-       }
-       else
-       {
-       // Parent-ID angeben
-       csv.write(formatOutput(csevParent.getVersionId()));
-       }
-       */
+      logger.debug("...written");
       csv.endRecord();
+      logger.debug("...record ended");
       countExported++;
     }
   }

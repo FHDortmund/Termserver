@@ -132,6 +132,8 @@ public class ExportCodeSystemContent
           response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
           response.getReturnInfos().setMessage("Fehler beim CSV-Export: " + s);
         }
+        
+        logger.debug("Export CSV, Message: " + response.getReturnInfos().getMessage());
       }
       catch (Exception e)
       {
@@ -139,7 +141,7 @@ public class ExportCodeSystemContent
         response.getReturnInfos().setStatus(ReturnType.Status.FAILURE);
         response.getReturnInfos().setMessage("Fehler beim CSV-Export: " + e.getLocalizedMessage());
 
-        e.printStackTrace();
+        logger.error("Error at ExportCodeSystemContent, CSV.", e);
       }
     }
     else if (formatId == ExportCodeSystemContentRequestType.EXPORT_SVS_ID)

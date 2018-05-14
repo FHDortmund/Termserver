@@ -89,6 +89,7 @@ public class ReturnValueSetDetails
             ValueSetVersion vsvFilter = (ValueSetVersion) parameter.getValueSet().getValueSetVersions().toArray()[0];
 
             parameterHelper.addParameter("vsv.", "versionId", vsvFilter.getVersionId());
+            parameterHelper.addParameter("vsv.", "oid", vsvFilter.getOid(), true);
           }
           else
           {
@@ -106,16 +107,24 @@ public class ReturnValueSetDetails
 
         // Parameter hinzufügen (immer mit AND verbunden)
         hql += parameterHelper.getWhere("");
+        
+//        hql = "select distinct vs from ValueSet vs";
+//        hql += " join fetch vs.valueSetVersions vsv";
+//        hql += " left join fetch vs.metadataParameters where vsv.oid='1.2.3'";
 
         logger.debug("HQL: " + hql);
 
         // Query erstellen
         org.hibernate.Query q = hb_session.createQuery(hql);
 
+        logger.debug("HQL q: " + q.getQueryString());
+        
         // Die Parameter können erst hier gesetzt werden (übernimmt Helper)
         parameterHelper.applyParameter(q);
 
         List<ValueSet> liste = q.list();
+        
+        logger.debug("size: " + liste.size());
 
         if (liste != null && liste.size() > 0)
           valueSet = liste.get(0);
@@ -169,6 +178,8 @@ public class ReturnValueSetDetails
         hb_session.close();
       }
 
+      logger.debug("Count: " + response.getReturnInfos().getCount());
+      
       response.getReturnInfos().setOverallErrorCategory(ReturnType.OverallErrorCategory.INFO);
       response.getReturnInfos().setStatus(ReturnType.Status.OK);
       response.getReturnInfos().setMessage("ValueSet-Details erfolgreich gelesen");

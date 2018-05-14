@@ -26,6 +26,17 @@ limitations under the License.
   padding: 0px;
   
 }
+/*.z-caption .z-caption-l .z-catopn .z-caption-r {
+  padding: 8px 8px 0px 16px;
+}*/
+.z-window-header {
+    /*padding: 0px 8px 8px 8px;*/
+    padding: 8px 8px 0px 16px;
+}
+
+.z-window-header .z-window-header-move {
+    /*padding: 16px 8px 0px 16px;*/
+}
 
 .z-menu-text 
 {
@@ -77,37 +88,12 @@ limitations under the License.
 .z-tree-header
 {
   background-color: #EAEAEA;
-  /*border-left: 1px solid;*/
 }
 .z-tree-header-border
 {
   border-bottom: 1px solid;
   border-right: 1px solid;
 }
-
-/*.z-groupbox-3d .z-groupbox-title .z-caption-readonly
-{
-  background-color: #DDDDDD;
-}
-.z-groupbox-header
-{
-  background-color: #DDDDDD;
-}
-.z-caption
-{
-  background-color: #DDDDDD;
-}
-.z-caption-content
-{
-  background-color: #DDDDDD;
-}*/
-
-/*.z-window-header
-{
-  padding-left: 16px;
-}*/
-
-
 
 .z-north-body, .z-south-body, .z-west-body, .z-center-body, .z-east-body, .z-div{
     border: 0;
@@ -132,8 +118,8 @@ limitations under the License.
 }
 
 .z-north-body, .z-south-body, .z-west-body, .z-center-body, .z-east-body, .z-window,.z-center, z-center-noborder, z-borderlayout  {
-    width: 100%;
-    height: 100%
+    /*width: 100%;*/
+    /*height: 100%*/
 }
 
 .grid_layout_column{
